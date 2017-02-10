@@ -2,46 +2,71 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Sean on 1/27/2017.
+ * Expert System
  */
 public class ES {
-    HashMap<String, Rule> rules;
-    ArrayList<Fact> facts;
-    ArrayList<String> recommendations;
+    private HashMap<String, Rule> rules;
+    private ArrayList<Fact> facts;
+    private ArrayList<String> recommendations; // TODO: Type of recommendations?
 
     public ES() {
-        reset();
+        rules = new HashMap<>();
+        facts = new ArrayList<>();
+        recommendations = new ArrayList<>();
+        reset(); // TODO: Why call reset?
     }
 
     public void reset() {
-
+        rules.clear();
+        facts.clear();
+        recommendations.clear();
     }
 
-    public void addFact(String fact) {
-
+    public void addFact(Fact fact) { // TODO: Fact is a String?
+        facts.add(fact);
     }
 
     public void addRule(Rule rule) {
+        rules.put(rule.condition, rule); // TODO: What is the rule key in the map?
+    }
+
+    private void addRecommendation(String rec) {
+        recommendations.add(rec);
+    }
+
+    public ArrayList getRecommendations() {
+        return recommendations;
+    }
+
+    public void think() { // TODO: Complete think() method
 
     }
 
-    private void addRecommendation(String recommendation) {
 
+    class Rule { // TODO: Right types?
+        String condition;
+        String action;
+        boolean activated;
+
+        public Rule(String condition, String action, boolean activated) {
+            this.condition = condition;
+            this.action = action;
+            this.activated = activated;
+        }
     }
 
-    public ArrayList getRecommendation() {
-        return null;
-    }
+    class Fact { // TODO: What is a predicate?
+        /**
+         * Single predicate calculus predicate
+         *
+         * @return
+         */
+        boolean predicate() {
+            return false;
+        }
 
-    public void think() {
+        public Fact() {
 
-    }
-
-    class Rule {
-
-    }
-
-    class Fact {
-
+        }
     }
 }
