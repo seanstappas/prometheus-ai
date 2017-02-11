@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class ES {
     private HashMap<String, Rule> rules;
     private ArrayList<Fact> facts;
-    private ArrayList<String> recommendations; // TODO: Type of recommendations?
+    private ArrayList<String> recommendations; // TODO: Type of recommendations? Good.
 
     public ES() {
         rules = new HashMap<>();
@@ -27,7 +27,7 @@ public class ES {
     }
 
     public void addRule(Rule rule) {
-        rules.put(rule.condition, rule); // TODO: What is the rule key in the map?
+        rules.put(rule.condition, rule); // TODO: What is the rule key in the map? Yes
     }
 
     private void addRecommendation(String rec) {
@@ -38,12 +38,12 @@ public class ES {
         return recommendations;
     }
 
-    public void think() { // TODO: Complete think() method
+    public void think() { // TODO: Complete think() method: set rules from KNN, compare Facts and Rules: populate Rules, Facts
 
     }
 
 
-    class Rule { // TODO: Right types?
+    class Rule { // TODO: Right types? Yes
         String condition;
         String action;
         boolean activated;
@@ -55,7 +55,7 @@ public class ES {
         }
     }
 
-    class Fact { // TODO: What is a predicate?
+    class Fact { // TODO: What is a predicate? : each predicate as String: '(Px)'
         /**
          * Single predicate calculus predicate
          *
