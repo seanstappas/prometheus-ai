@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -5,10 +6,10 @@ import java.util.Set;
  * Expert System
  */
 public class ES {
-    private Set<Rule> rules; // TODO: HashSet OK? instead of HashMap
-    private Set<String> facts; // TODO: HashSet OK? instead of ArrayList
+    private Set<Rule> rules; // TODO: HashSet OK? instead of HashMap. In my opinion, it makes more sense to iterate first over the Rules, and check the facts for each rule
+    private Set<String> facts; // TODO: HashSet OK? instead of ArrayList. Iteration order important? HashSet has O(1) for contains() method
     // each predicate as String: '(Px)'
-    private Set<String> recommendations; // TODO: HashSet OK? instead of ArrayList
+    private Set<String> recommendations; // TODO: HashSet OK? instead of ArrayList. Iteration order important? HashSet has O(1) for contains() method
     // Type of recommendations? Good. Recommendations are for specific actions to be taken (walk, stop...). These recommendations are passed up the chain
     // Recommendations are indicated by some special symbol: (#...)
 
@@ -67,23 +68,62 @@ public class ES {
                     }
                 }
             }
-        } while (fired);
+        } while (fired); // Need to re-check rules every time
     }
 
 
     class Rule {
-        Set<String> conditions; // TODO: Is this change to set OK?
+        String[] conditions; // TODO: Is this change to array OK?
         String action;
         boolean activated; // Check if rule should be considered
 
-        public Rule(Set<String> conditions, String action, boolean activated) {
+        public Rule(String[] conditions, String action, boolean activated) {
             this.conditions = conditions;
             this.action = action;
             this.activated = activated;
         }
+
+        // TODO: Complete hashCode and equals...
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Rule rule = (Rule) o;
+
+            if (activated != rule.activated) return false;
+
+            if (conditions != null) {
+                if (rule.conditions == null)
+                    return false;
+
+                if (conditions.length != rule.conditions.length)
+                    return false;
+
+                for (int i = 0; i < conditions.length; i++) {
+                    if (!conditions[i].equals(rule.conditions[i]))
+                        return false;
+                }
+            } else {
+                if (rule.conditions != null)
+                    return false;
+            }
+
+            return action != null ? action.equals(rule.action) : rule.action == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Arrays.hashCode(conditions);
+            result = 31 * result + (action != null ? action.hashCode() : 0);
+            result = 31 * result + (activated ? 1 : 0);
+            return result;
+        }
     }
 
-    boolean isRecommendation(String action) {
+    private boolean isRecommendation(String action) {
         return action.charAt(1) == '#';
     }
 }
