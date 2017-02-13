@@ -56,7 +56,7 @@ public class KNN {
     }
 
     public void newKN(KN kn) {
-        mapKN.put(kn.hashTag, kn); // TODO: Is hashTag the map key? Yes
+        mapKN.put(kn.hashTag, kn);
     }
 
     public void delKN(String hashTag) {
@@ -88,7 +88,7 @@ public class KNN {
         String hashTag;
         int activation; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
         int threshold; // limit: When activation > threshold : fires output tags (strings array). These tags can be lists of rules or facts.
-        int age; // 0: discarded
+        int age; // 0: Starts at 100, decays to 0 (discarded)
         String[] strings; // TODO: What is this for? These are the output tags, fired when activation > threshold.
 
         public KN(String hashTag, int activation, int threshold, int age, String[] strings) {
