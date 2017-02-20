@@ -6,10 +6,10 @@ import java.util.Set;
  * Expert System
  */
 public class ES {
-    private Set<Rule> rules; // TODO: HashSet OK? instead of HashMap. In my opinion, it makes more sense to iterate first over the Rules, and check the facts for each rule
-    private Set<String> facts; // TODO: HashSet OK? instead of ArrayList. Iteration order important? HashSet has O(1) for contains() method
+    private Set<Rule> rules;
+    private Set<String> facts;
     // each predicate as String: '(Px)'
-    private Set<String> recommendations; // TODO: HashSet OK? instead of ArrayList. Iteration order important? HashSet has O(1) for contains() method
+    private Set<String> recommendations;
     // Type of recommendations? Good. Recommendations are for specific actions to be taken (walk, stop...). These recommendations are passed up the chain
     // Recommendations are indicated by some special symbol: (#...)
 
@@ -73,7 +73,7 @@ public class ES {
 
 
     class Rule {
-        String[] conditions; // TODO: Is this change to array OK?
+        String[] conditions;
         String action;
         boolean activated; // Check if rule should be considered
 
@@ -82,9 +82,6 @@ public class ES {
             this.action = action;
             this.activated = activated;
         }
-
-        // TODO: Complete hashCode and equals...
-
 
         @Override
         public boolean equals(Object o) {
