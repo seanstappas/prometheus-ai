@@ -54,7 +54,7 @@ public class ES {
                 if (!rule.activated && (!facts.contains(rule.action) || (isRecommendation(rule.action) && !recommendations.contains(rule.action)))) {
                     boolean shouldActivate = true;
                     for (String condition : rule.conditions) {
-                        if (!facts.contains(condition)) {
+                        if (!facts.contains(condition)) { // TODO: match other tokens in facts: ? < > =
                             shouldActivate = false;
                         }
                     }
@@ -120,7 +120,16 @@ public class ES {
         }
     }
 
+    /**
+     * Assuming format of (# )
+     * @param action
+     * @return
+     */
     private boolean isRecommendation(String action) {
         return action.charAt(1) == '#';
+    }
+
+    private boolean match(String condition, String fact) {
+        return condition.equals(fact);
     }
 }
