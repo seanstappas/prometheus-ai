@@ -1,4 +1,5 @@
-import java.util.Arrays;
+package es;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,11 +43,19 @@ public class ES {
         return recommendations;
     }
 
+    public Set<Rule> getRules() { // For testing purposes
+        return rules;
+    }
+
+    public Set<String> getFacts() { // For testing purposes
+        return facts;
+    }
+
     /**
      * 1. Iterate through rules, checking facts and activating if applicable.
      * 2. Repeat until no activations in a cycle.
      */
-    public void think() { // TODO: Complete think() method: set rules from KNN, compare Facts and Rules: populate Rules, Facts
+    public void think() { // TODO: Complete think() method: set rules from knn.KNN, compare Facts and Rules: populate Rules, Facts
         boolean fired;
         do {
             fired = false;
@@ -71,62 +80,13 @@ public class ES {
         } while (fired); // Need to re-check rules every time
     }
 
-
-    class Rule {
-        String[] conditions;
-        String action;
-        boolean activated; // Check if rule should be considered
-
-        public Rule(String[] conditions, String action, boolean activated) {
-            this.conditions = conditions;
-            this.action = action;
-            this.activated = activated;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Rule rule = (Rule) o;
-
-            if (activated != rule.activated) return false;
-
-            if (conditions != null) {
-                if (rule.conditions == null)
-                    return false;
-
-                if (conditions.length != rule.conditions.length)
-                    return false;
-
-                for (int i = 0; i < conditions.length; i++) {
-                    if (!conditions[i].equals(rule.conditions[i]))
-                        return false;
-                }
-            } else {
-                if (rule.conditions != null)
-                    return false;
-            }
-
-            return action != null ? action.equals(rule.action) : rule.action == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = Arrays.hashCode(conditions);
-            result = 31 * result + (action != null ? action.hashCode() : 0);
-            result = 31 * result + (activated ? 1 : 0);
-            return result;
-        }
-    }
-
     /**
      * Assuming format of (# )
      * @param action
      * @return
      */
     private boolean isRecommendation(String action) {
-        return action.charAt(1) == '#';
+        return action.length() > 1 && action.charAt(1) == '#';
     }
 
     private boolean match(String condition, String fact) {

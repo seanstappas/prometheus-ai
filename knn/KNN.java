@@ -1,3 +1,5 @@
+package knn;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
