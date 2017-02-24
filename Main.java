@@ -1,5 +1,10 @@
+import es.ES;
+import es.Rule;
+
+import java.util.Arrays;
+
 /**
- * Running ES and KNN
+ * Running es.ES and knn.KNN
  */
 public class Main {
     public static void main(String[] args) {
@@ -13,8 +18,25 @@ public class Main {
 
     private static void testES() {
         ES expert = new ES();
-        // Add facts and rules
+        String[] testFacts = {"A", "B"};
+        Rule[] testRules = {
+                new Rule("A", "B", "D"),
+                new Rule("D", "B", "E"),
+                new Rule("D", "E", "F"),
+                new Rule("G", "A", "H")
+        };
+        for (String fact : testFacts) {
+            expert.addFact(fact);
+        }
+        for (Rule rule : testRules) {
+            expert.addRule(rule);
+        }
         expert.think();
-        // Send recommendations to META (or META pulls from ES)
+
+        System.out.println("Initial facts: " + Arrays.toString(testFacts));
+        System.out.println("Final facts: " + expert.getFacts());
+
+        System.out.println("Initial rules: " + Arrays.toString(testRules));
+        System.out.println("Final rules: " + expert.getRules());
     }
 }
