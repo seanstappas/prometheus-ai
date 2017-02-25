@@ -31,6 +31,11 @@ public class Rule {
         this.activated = false;
     }
 
+    /**
+     * Necessary to properly implement a Set of Rules
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,6 +72,10 @@ public class Rule {
         return result;
     }
 
+    /**
+     * Simple String representation. For debugging purposes.
+     * @return
+     */
     @Override
     public String toString() {
         return Arrays.toString(conditions) + "=>" + action + " " + (activated ? "(activated)" : "(not activated)");

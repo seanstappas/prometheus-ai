@@ -2,21 +2,25 @@ package knn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Knowledge Node Network
  */
 public class KNN {
-    private HashMap<String, KN> mapKN;
-    private ArrayList<KN> activeKN;
-    private ArrayList<NN> activeNN;
-    private ArrayList<String> activeMETA;
+    // TODO: Once again changed data structures to sets (Is order important?)
+    private HashMap<String, KN> mapKN; // Key here is the "hashTag" field of KN
+    private Set<KN> activeKN; // TODO: Are these the KNs whose activation > threshold?
+    private Set<NN> activeNN; // TODO: How do these NN tuples translate to the String KN tags?
+    private Set<String> activeMETA; // TODO: Are these the "true" (active) tags in the system? Or is this just a set of META layers? If so, how do we keep track of activated tags? Should there be a list of "facts"?
+    int numberOfCycles; // Number of times the network should update its state and propogate. TODO: Is this a field? How will this be set?
 
     public KNN(String dbFilename) {
         mapKN = new HashMap<>();
-        activeKN = new ArrayList<>();
-        activeNN = new ArrayList<>();
-        activeMETA = new ArrayList<>();
+        activeKN = new HashSet<>();
+        activeNN = new HashSet<>();
+        activeMETA = new HashSet<>();
     }
 
     public void reset(String dbFilename) {
@@ -66,22 +70,31 @@ public class KNN {
     }
 
     /**
-     * Assumes active ArrayLists are populated
+     * Chooses one of the 3 think methods. Assumes active ArrayLists are populated.
      *
      * @return
      */
     public ArrayList think() {
         return null;
-    }
+    } // TODO: How does this method choose the proper think method?
 
+    /**
+     * Given output tags, the system attempts to find the associated input tags with some degree of confidence
+     */
     private void thinkBackwards() {
 
     }
 
+    /**
+     * Combination of thinkBackwards and thinkForwards. First the networks works backwards, then moves forward to determine the correct memory.
+     */
     private void thinkLambda() {
 
     }
 
+    /**
+     * Simple forward activation of knowledge nodes. If input tag activated and activation > threshold: output tags are activated, and this is cascaded through the network.
+     */
     private void thinkForwards() {
 
     }
