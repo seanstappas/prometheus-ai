@@ -1,9 +1,6 @@
 package knn;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Knowledge Node Network
@@ -14,13 +11,17 @@ public class KNN {
     private Set<KN> activeKN; // TODO: Are these the KNs whose activation > threshold?
     private Set<NN> activeNN; // TODO: How do these NN tuples translate to the String KN tags?
     private Set<String> activeMETA; // TODO: Are these the "true" (active) tags in the system? Or is this just a set of META layers? If so, how do we keep track of activated tags? Should there be a list of "facts"?
-    int numberOfCycles; // Number of times the network should update its state and propogate. TODO: Is this a field? How will this be set?
+    int numberOfCycles; // Number of times the network should update its state and propogate. For now, just go to quiescence. TODO: Is this a field? How will this be set?
+
+    // TODO: How to handle "facts"...
+    private Set<String> facts;
 
     public KNN(String dbFilename) {
         mapKN = new HashMap<>();
         activeKN = new HashSet<>();
         activeNN = new HashSet<>();
         activeMETA = new HashSet<>();
+        facts = new HashSet<>();
     }
 
     public void reset(String dbFilename) {
@@ -96,7 +97,19 @@ public class KNN {
      * Simple forward activation of knowledge nodes. If input tag activated and activation > threshold: output tags are activated, and this is cascaded through the network.
      */
     private void thinkForwards() {
-
+        Set<String> pendingFacts = new HashSet<>();
+        do {
+            pendingFacts.clear();
+            for(String fact : facts) {
+                KN kn = mapKN.get(fact);
+                if (kn != null) {
+                    Collections.addAll(pendingFacts, kn.strings);
+                }
+            }
+            for(String s : pendingFacts) {
+                facts.add(s);
+            }
+        } while (!pendingFacts.isEmpty());
     }
 
     class KN { // TODO: Right types?

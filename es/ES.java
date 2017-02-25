@@ -86,7 +86,7 @@ public class ES {
      * @return
      */
     private boolean isRecommendation(String action) {
-        return action.length() > 1 && action.charAt(1) == '#';
+        return action.indexOf('c') >= 0;
     }
 
     private boolean match(String condition, String fact) {
