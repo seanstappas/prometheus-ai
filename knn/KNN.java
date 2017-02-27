@@ -116,14 +116,22 @@ public class KNN {
         String hashTag;
         int activation; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
         int threshold; // limit: When activation > threshold : fires output tags (strings array). These tags can be lists of rules or facts.
-        int age; // 0: Starts at 100, decays to 0 (discarded)
+        int age; // When a node is newly formed it has an age of zero.
+                 // When the node’s age increases to a value greater than or equal to K the node is then deleted.
+                 // The age parameter ages in a particular way.  It ages only if it is not used.  Every time a node is used the age is reset to zero.
+                 // If the node is not used after an “tau” amount of time it will age.
+                 // Ages linearly or using sigmoid.
+        int strength;
+        int confidence;
         String[] strings; // TODO: What is this for? These are the output tags, fired when activation > threshold.
 
-        public KN(String hashTag, int activation, int threshold, int age, String[] strings) {
+        public KN(String hashTag, int activation, int threshold, int age, int strength, int confidence, String[] strings) {
             this.hashTag = hashTag;
             this.activation = activation;
             this.threshold = threshold;
             this.age = age;
+            this.strength = strength;
+            this.confidence = confidence;
             this.strings = strings;
         }
     }

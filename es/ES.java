@@ -65,6 +65,7 @@ public class ES {
                     for (String condition : rule.conditions) {
                         if (!facts.contains(condition)) { // TODO: match other tokens in facts: ? < > =
                             shouldActivate = false;
+                            break;
                         }
                     }
                     if (shouldActivate) {
