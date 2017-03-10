@@ -1,5 +1,6 @@
 import es.ES;
 import es.Rule;
+import knn.KNN;
 
 import java.util.Arrays;
 
@@ -8,12 +9,22 @@ import java.util.Arrays;
  */
 public class Main {
     public static void main(String[] args) {
-        testES();
+//        testES();
         testKNN();
     }
 
     private static void testKNN() {
-
+        KNN knowledge = new KNN("database");
+        String[] initialFacts = new String[] {"A"};
+        for (String fact : initialFacts) {
+            knowledge.addFact(fact);
+        }
+        knowledge.newKN("A", new String[]{"B", "C", "D"});
+        knowledge.newKN("B", new String[]{"E", "F", "G"});
+        knowledge.newKN("C", new String[]{"H", "I", "J"});
+        knowledge.think();
+        System.out.println("Initial facts: " + Arrays.toString(initialFacts));
+        System.out.println("Final facts: " + knowledge.getFacts());
     }
 
     private static void testES() {
