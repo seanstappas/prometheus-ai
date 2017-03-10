@@ -76,6 +76,7 @@ public class KNN {
      * @return
      */
     public ArrayList think() {
+        thinkForwards();
         return null;
     } // TODO: How does this method choose the proper think method?
 
@@ -83,14 +84,32 @@ public class KNN {
      * Given output tags, the system attempts to find the associated input tags with some degree of confidence
      */
     private void thinkBackwards() {
-
+        Set<String> pendingFacts = new HashSet<>();
+        do {
+            pendingFacts.clear();
+            for(KN kn : mapKN.values()) {
+                boolean inputActivated = true;
+                for (String s : kn.strings) {
+                    if (!facts.contains(s)) { // Currently only activates input if ALL output tags are true
+                        inputActivated = false;
+                        break;
+                    }
+                }
+                if (inputActivated)
+                    pendingFacts.add(kn.hashTag);
+            }
+            for(String s : pendingFacts) {
+                facts.add(s);
+            }
+        } while (!pendingFacts.isEmpty());
     }
 
     /**
      * Combination of thinkBackwards and thinkForwards. First the networks works backwards, then moves forward to determine the correct memory.
      */
     private void thinkLambda() {
-
+        thinkBackwards();
+        thinkForwards();
     }
 
     /**
@@ -101,9 +120,8 @@ public class KNN {
         do {
             pendingFacts.clear();
             for(String fact : facts) {
-                KN kn = mapKN.get(fact);
-                if (kn != null) {
-                    Collections.addAll(pendingFacts, kn.strings);
+                if (mapKN.containsKey(fact)) {
+                    Collections.addAll(pendingFacts, mapKN.get(fact).strings);
                 }
             }
             for(String s : pendingFacts) {
