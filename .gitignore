@@ -49,3 +49,5 @@ Temporary Items
 *.xml
 
 *.iml
+
+*.class

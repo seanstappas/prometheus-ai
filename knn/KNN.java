@@ -9,7 +9,7 @@ public class KNN {
     // TODO: Combine firedKNs and facts (redundant): just need fired Strings
     // Once again changed data structures to sets (Is order important?) Good.
     // Spec data structures
-    private HashMap<String, KN> mapKN; // Key here is the "hashTag" field of KN
+    private HashMap<String, KN> mapKN; // Key here is the "inputTag" field of KN
     private Set<KN> firedKNs; // Are these the KNs whose activation > threshold? What do we do with this? Fired KNs (to check if need to fire others)
     private Set<TupleNN> activeTuplesNN; // How do these TupleNN tuples translate to the String KN tags? What do we do with this? (Will need some interface to translate int + string to string)
     private Set<String> activeTagsMETA; // Commands coming from meta
@@ -65,7 +65,7 @@ public class KNN {
     }
 
     public void newKN(KN kn) {
-        mapKN.put(kn.hashTag, kn);
+        mapKN.put(kn.inputTag, kn);
     }
 
     public void delKN(String hashTag) {
@@ -98,14 +98,14 @@ public class KNN {
             pendingFacts.clear();
             for (KN kn : mapKN.values()) {
                 boolean inputActivated = true;
-                for (String s : kn.strings) {
+                for (String s : kn.outputTags) {
                     if (!facts.contains(s)) { // Currently only activates input if ALL output tags are true
                         inputActivated = false;
                         break;
                     }
                 }
                 if (inputActivated)
-                    pendingFacts.add(kn.hashTag);
+                    pendingFacts.add(kn.inputTag);
             }
             for (String s : pendingFacts) {
                 facts.add(s);
@@ -142,7 +142,7 @@ public class KNN {
         pendingFacts.clear();
         for (String fact : facts) {
             if (mapKN.containsKey(fact)) { // If facts are updated after firing...
-                Set<String> firedTags = mapKN.get(fact).excite();
+                Set<String> firedTags = excite(mapKN.get(fact));
                 if (firedTags != null && !firedTags.isEmpty()) {
                     pendingFacts.addAll(firedTags);
                 }
@@ -168,54 +168,22 @@ public class KNN {
         return facts;
     }
 
-    class KN {
-        String hashTag;
-        int activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
-        // Is threshold the same for all nodes? No
-        int threshold = 1; // limit: When activation > threshold : fires output tags (strings array). These tags can be lists of rules or facts.
-        int age = 0; // When a node is newly formed it has an age of zero.
-        // When the node’s age increases to a value greater than or equal to K the node is then deleted.
-        // The age parameter ages in a particular way.  It ages only if it is not used.  Every time a node is used the age is reset to zero.
-        // If the node is not used after an “tau” amount of time it will age.
-        // Ages linearly or using sigmoid.
-        int strength; // TODO: How is strength used? Read doc...
-        int confidence; // TODO: How is confidence used? Read doc...
-        String[] strings; // What is this for? These are the output tags, fired when activation > threshold.
-
-        public KN(String hashTag, String[] strings) {
-            this.hashTag = hashTag;
-            this.strings = strings;
+    private Set<String> excite(KN knowledgeNode) { // Returns true if firing occurs AND facts updated after firing
+        knowledgeNode.activation++;
+        if (knowledgeNode.activation >= knowledgeNode.threshold) {
+            return fire(knowledgeNode);
         }
-
-        // Added methods
-        Set<String> excite() { // Returns true if firing occurs AND facts updated after firing
-            activation++;
-            if (activation >= threshold) {
-                return fire();
-            }
-            return null;
-        }
-
-        private Set<String> fire() { // Returns Set of fired facts
-            Set<String> pendingFacts = new HashSet<>();
-            for (String outputTag : strings) {
-                if (!facts.contains(outputTag)) {
-                    pendingFacts.add(outputTag);
-                }
-            }
-            return pendingFacts.isEmpty() ? null : pendingFacts;
-
-        }
-
-        // Should age increment at every think() cycle? Or independently, after some amount of time? System will have (daily) timestamp, nodes will have timestamp updated at every firing. Look at difference between the two before deciding to fire
-        public void age() {
-            age++;
-        }
+        return null;
     }
 
-    class TupleNN {
-        String label;
-        int measurement;
+    private Set<String> fire(KN knowledgeNode) { // Returns Set of fired facts
+        Set<String> pendingFacts = new HashSet<>();
+        for (String outputTag : knowledgeNode.outputTags) {
+            if (!facts.contains(outputTag)) {
+                pendingFacts.add(outputTag);
+            }
+        }
+        return pendingFacts.isEmpty() ? null : pendingFacts;
 
     }
 }
