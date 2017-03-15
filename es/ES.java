@@ -27,7 +27,7 @@ public class ES {
         recommendations.clear();
     }
 
-    public void addFact(String fact) { // TODO: Fact is a String? Could have String constructor..
+    public void addFact(String fact) {
         facts.add(fact);
     }
 
@@ -95,11 +95,11 @@ public class ES {
 
     /**
      * Assuming format of (# )
-     * @param action
-     * @return
+     * @param tag The tag to check.
+     * @return Whether or not the tag is a recommendation.
      */
-    private boolean isRecommendation(String action) {
-        return action.indexOf('c') >= 0;
+    private boolean isRecommendation(String tag) {
+        return tag.indexOf('c') >= 0;
     }
 
     private boolean match(String condition, String fact) {
