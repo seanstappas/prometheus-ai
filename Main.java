@@ -9,7 +9,7 @@ import java.util.Arrays;
  */
 public class Main {
     public static void main(String[] args) {
-//        testES();
+        testES();
         testKNN();
     }
 
@@ -21,10 +21,10 @@ public class Main {
         }
         knowledge.newKN("A", new String[]{"B", "C", "D"});
         knowledge.newKN("B", new String[]{"E", "F", "G"});
-        knowledge.newKN("C", new String[]{"H", "I", "J"});
+        knowledge.newKN("E", new String[]{"H", "I", "J"});
         knowledge.think();
-        System.out.println("Initial facts: " + Arrays.toString(initialFacts));
-        System.out.println("Final facts: " + knowledge.getFacts());
+        System.out.println("[KNN] Initial facts: " + Arrays.toString(initialFacts));
+        System.out.println("[KNN] Final facts: " + knowledge.getFacts());
     }
 
     private static void testES() {
@@ -44,10 +44,10 @@ public class Main {
         }
         expert.think();
 
-        System.out.println("Initial facts: " + Arrays.toString(testFacts));
-        System.out.println("Final facts: " + expert.getFacts());
+        System.out.println("[ES] Initial facts: " + Arrays.toString(testFacts));
+        System.out.println("[ES] Final facts: " + expert.getFacts());
 
-        System.out.println("Initial rules: " + Arrays.toString(testRules));
-        System.out.println("Final rules: " + expert.getRules());
+        System.out.println("[ES] Initial rules: " + Arrays.toString(testRules));
+        System.out.println("[ES] Final rules: " + expert.getRules());
     }
 }

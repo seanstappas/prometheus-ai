@@ -6,14 +6,13 @@ import java.util.*;
  * Knowledge Node Network
  */
 public class KNN {
-
+    // TODO: Combine firedKNs and facts (redundant): just need fired Strings
     // Once again changed data structures to sets (Is order important?) Good.
     // Spec data structures
     private HashMap<String, KN> mapKN; // Key here is the "hashTag" field of KN
-    private Set<KN> activeKN; // Are these the KNs whose activation > threshold? What do we do with this? Fired KNs (to check if need to fire others)
-    private Set<NN> activeNN; // How do these NN tuples translate to the String KN tags? What do we do with this? (Will need some interface to translate int + string to string)
-    private Set<String> activeMETA; // Commands coming from meta
-    // TODO: Change activeKN from Set<KN> to Set<String> (since KN uniquely identifiable with tags, and we are already storing them in mapKN: unnecessary to store twice)
+    private Set<KN> firedKNs; // Are these the KNs whose activation > threshold? What do we do with this? Fired KNs (to check if need to fire others)
+    private Set<TupleNN> activeTuplesNN; // How do these TupleNN tuples translate to the String KN tags? What do we do with this? (Will need some interface to translate int + string to string)
+    private Set<String> activeTagsMETA; // Commands coming from meta
 
     // Added structures
     int numberOfCycles; // Number of times the network should update its state and propogate. For now, just go to quiescence.
@@ -21,9 +20,9 @@ public class KNN {
 
     public KNN(String dbFilename) { // What kind of database are we using? Probably CSV for now
         mapKN = new HashMap<>();
-        activeKN = new HashSet<>();
-        activeNN = new HashSet<>();
-        activeMETA = new HashSet<>();
+        firedKNs = new HashSet<>();
+        activeTuplesNN = new HashSet<>();
+        activeTagsMETA = new HashSet<>();
         facts = new HashSet<>();
     }
 
@@ -41,28 +40,28 @@ public class KNN {
 
     }
 
-    public void addNN(NN nn) {
-        activeNN.add(nn);
+    public void addTupleNN(TupleNN nn) {
+        activeTuplesNN.add(nn);
     }
 
     public void addMETA(String s) {
-        activeMETA.add(s);
+        activeTagsMETA.add(s);
     }
 
     public void addKN(KN kn) {
-        activeKN.add(kn);
+        firedKNs.add(kn);
     }
 
     public void clearNN() {
-        activeNN.clear();
+        activeTuplesNN.clear();
     }
 
     public void clearMETA() {
-        activeMETA.clear();
+        activeTagsMETA.clear();
     }
 
     public void clearKN() {
-        activeKN.clear();
+        firedKNs.clear();
     }
 
     public void newKN(KN kn) {
@@ -78,12 +77,16 @@ public class KNN {
      *
      * @return
      */
-    // How does this method choose the proper think method? For now, it will decide based on command from META. (activeMETA)
-    // TODO: What does think() return? ...
+    // How does this method choose the proper think method? For now, it will decide based on command from META. (activeTagsMETA)
+    // TODO: What does think() return? The activated KNs?
     public ArrayList think() {
         thinkForwards(); // What we want in the future: If no RECOMMENDATIONS fired = thinkForwards failed, resort to either thinkBackwards or thinkLambda (Not theoretically well understood)
         // People generally thinkBackwards all the time in the background. In the future, could have a background thread that thinks backwards...
         return null;
+    }
+
+    public void think(int numberOfCycles) {
+        thinkForwards(numberOfCycles);
     }
 
     /**
@@ -124,19 +127,30 @@ public class KNN {
     private void thinkForwards() { // How is a cycle defined? Just activate current tags in Facts, no more
         Set<String> pendingFacts = new HashSet<>();
         do {
-            pendingFacts.clear();
-            for (String fact : facts) {
-                if (mapKN.containsKey(fact)) { // If facts are updated after firing...
-                    Set<String> firedTags = mapKN.get(fact).excite();
-                    if (firedTags != null && !firedTags.isEmpty()) {
-                        pendingFacts.addAll(firedTags);
-                    }
+            forwardThinkCycle(pendingFacts);
+        } while (!pendingFacts.isEmpty());
+    }
+
+    private void thinkForwards(int numberOfCycles) {
+        Set<String> pendingFacts = new HashSet<>();
+        for (int i = 0; i < numberOfCycles; i++) {
+            forwardThinkCycle(pendingFacts);
+        }
+    }
+
+    private void forwardThinkCycle(Set<String> pendingFacts) {
+        pendingFacts.clear();
+        for (String fact : facts) {
+            if (mapKN.containsKey(fact)) { // If facts are updated after firing...
+                Set<String> firedTags = mapKN.get(fact).excite();
+                if (firedTags != null && !firedTags.isEmpty()) {
+                    pendingFacts.addAll(firedTags);
                 }
             }
-            for (String pendingFact : pendingFacts) {
-                facts.add(pendingFact);
-            }
-        } while (!pendingFacts.isEmpty());
+        }
+        for (String pendingFact : pendingFacts) {
+            facts.add(pendingFact);
+        }
     }
 
     // Added methods
@@ -164,8 +178,8 @@ public class KNN {
         // The age parameter ages in a particular way.  It ages only if it is not used.  Every time a node is used the age is reset to zero.
         // If the node is not used after an “tau” amount of time it will age.
         // Ages linearly or using sigmoid.
-        int strength; // How is strength used? Read doc...
-        int confidence; // How is confidence used? Read doc...
+        int strength; // TODO: How is strength used? Read doc...
+        int confidence; // TODO: How is confidence used? Read doc...
         String[] strings; // What is this for? These are the output tags, fired when activation > threshold.
 
         public KN(String hashTag, String[] strings) {
@@ -182,7 +196,7 @@ public class KNN {
             return null;
         }
 
-        private Set<String> fire() { // Returns true if facts updated after firing
+        private Set<String> fire() { // Returns Set of fired facts
             Set<String> pendingFacts = new HashSet<>();
             for (String outputTag : strings) {
                 if (!facts.contains(outputTag)) {
@@ -193,13 +207,13 @@ public class KNN {
 
         }
 
-        // TODO: Should age increment at every think() cycle? Or independently, after some amount of time? System will have (daily) timestamp, nodes will have timestamp updated at every firing. Look at difference between the two before deciding to fire
+        // Should age increment at every think() cycle? Or independently, after some amount of time? System will have (daily) timestamp, nodes will have timestamp updated at every firing. Look at difference between the two before deciding to fire
         public void age() {
             age++;
         }
     }
 
-    class NN {
+    class TupleNN {
         String label;
         int measurement;
 
