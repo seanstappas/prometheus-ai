@@ -7,6 +7,8 @@ import java.util.*;
  */
 public class KNN {
     // TODO: Combine firedKNs and facts (redundant): just need fired Strings
+    // TODO: Perhaps have a Tag class with Recommendation, Rule, Fact subclasses (good OOP design), or simply a flag specifying the type (in the database itself, we can still store as strings)
+    // TODO: If we don't do the Tag class, does the ES convert the "facts" list from the KNN to Rules, Facts and Recommendations based on parsing? Or does the KNN do the parsing before passing it on?
     // Once again changed data structures to sets (Is order important?) Good.
     // Spec data structures
     private HashMap<String, KN> mapKN; // Key here is the "inputTag" field of KN
