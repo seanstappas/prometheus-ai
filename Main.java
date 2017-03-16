@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Running es.ES and knn.KNN
  */
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) { // TODO: Test ES and KNN together
         testES();
         testKNN();
     }
