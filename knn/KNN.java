@@ -6,9 +6,8 @@ import java.util.*;
  * Knowledge Node Network
  */
 public class KNN {
-    // TODO: Combine firedKNs and facts (redundant): just need fired Strings
-    // TODO: Perhaps have a Tag class with Recommendation, Rule, Fact subclasses (good OOP design), or simply a flag specifying the type (in the database itself, we can still store as strings)
-    // TODO: If we don't do the Tag class, does the ES convert the "facts" list from the KNN to Rules, Facts and Recommendations based on parsing? Or does the KNN do the parsing before passing it on?
+    // Combine firedKNs and facts (redundant): just need fired Strings. Yes
+    // Perhaps have a Tag class with Recommendation, Rule, Fact subclasses (good OOP design), or simply a flag specifying the type (in the database itself, we can still store as strings). Yes (Json possibility)
     // Once again changed data structures to sets (Is order important?) Good.
     // Spec data structures
     private HashMap<String, KN> mapKN; // Key here is the "inputTag" field of KN
@@ -80,7 +79,7 @@ public class KNN {
      * @return
      */
     // How does this method choose the proper think method? For now, it will decide based on command from META. (activeTagsMETA)
-    // TODO: What does think() return? The activated KNs?
+    // What does think() return? The activated KNs? Yes. Passed on to ES
     public ArrayList think() {
         thinkForwards(); // What we want in the future: If no RECOMMENDATIONS fired = thinkForwards failed, resort to either thinkBackwards or thinkLambda (Not theoretically well understood)
         // People generally thinkBackwards all the time in the background. In the future, could have a background thread that thinks backwards...

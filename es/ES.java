@@ -12,13 +12,13 @@ public class ES {
     private Set<String> recommendations;
     // Type of recommendations? Good. Recommendations are for specific actions to be taken (walk, stop...). These recommendations are passed up the chain
     // Recommendations are indicated by some special symbol: (#...)
-    // TODO: Should there be a set of already activated rules
+    // Should there be a set of already activated rules (or just boolean like now?) Yes... reset will bring them back
 
     public ES() {
         rules = new HashSet<>();
         facts = new HashSet<>();
         recommendations = new HashSet<>();
-//        reset(); // TODO: Why call reset?
+//        reset(); // Why call reset? Bring back used rules
     }
 
     public void reset() {
@@ -51,13 +51,13 @@ public class ES {
         return facts;
     }
 
-    // TODO: Should there be a threshold number of iterations to think()? If so, does iterations represent a cycle like the KNN, or the number of rules activated/facts fired (right now it works with number of facts)
+    // Should there be a threshold number of iterations to think()? If so, does iterations represent a cycle like the KNN, or the number of rules activated/facts fired (right now it works with number of facts) The cycle should be like the KNN
 
     /**
      * 1. Iterate through rules, checking facts and activating if applicable.
      * 2. Repeat until no activations in a cycle.
      */
-    public void think() { // TODO: Complete think() method: set rules from knn.KNN, compare Facts and Rules: populate Rules, Facts
+    public void think() {
         boolean fired;
         do {
             fired = thinkCycle();
