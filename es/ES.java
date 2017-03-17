@@ -51,7 +51,7 @@ public class ES {
         return facts;
     }
 
-    // Should there be a threshold number of iterations to think()? If so, does iterations represent a cycle like the KNN, or the number of rules activated/facts fired (right now it works with number of facts) The cycle should be like the KNN
+    // Should there be a threshold number of iterations to think()? If so, does iterations represent a cycle like the KNN, or the number of rules activated/facts fired (right now it works with number of facts) The cycle should be like the KNN (one run-through of rules)
 
     /**
      * 1. Iterate through rules, checking facts and activating if applicable.
