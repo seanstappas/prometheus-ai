@@ -1,11 +1,11 @@
-package es;
+package tags;
 
 import java.util.Arrays;
 
-public class Rule {
-    String[] conditions;
-    String action;
-    boolean activated; // Check if rule should be considered
+public class Rule extends Tag  {
+    public String[] conditions;
+    public String action;
+    public boolean activated; // Check if rule should be considered
 
     /**
      * Full constructor

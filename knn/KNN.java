@@ -6,6 +6,7 @@ import java.util.*;
  * Knowledge Node Network
  */
 public class KNN {
+    // TODO: Refactor everything with Tag objects
     // Combine firedKNs and facts (redundant): just need fired Strings. Yes
     // Perhaps have a Tag class with Recommendation, Rule, Fact subclasses (good OOP design), or simply a flag specifying the type (in the database itself, we can still store as strings). Yes (Json possibility)
     // Once again changed data structures to sets (Is order important?) Good.

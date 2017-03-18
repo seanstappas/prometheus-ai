@@ -1,5 +1,5 @@
 import es.ES;
-import es.Rule;
+import tags.Rule;
 import knn.KNN;
 
 import java.util.Arrays;

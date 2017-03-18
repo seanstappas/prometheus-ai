@@ -1,5 +1,7 @@
 package es;
 
+import tags.Rule;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,7 +9,9 @@ import java.util.Set;
  * Expert System
  */
 public class ES {
+    // TODO: Refactor everything with Tag objects
     private Set<Rule> rules;
+    private Set<Rule> activatedRules;
     private Set<String> facts; // each predicate as String: '(Px)'
     private Set<String> recommendations;
     // Type of recommendations? Good. Recommendations are for specific actions to be taken (walk, stop...). These recommendations are passed up the chain
@@ -71,8 +75,9 @@ public class ES {
     }
 
     private boolean thinkCycle() { // Returns true if a rule activated
+        boolean fired = false;
         for (Rule rule : rules) {
-            if (!rule.activated && (!facts.contains(rule.action) || (isRecommendation(rule.action) && !recommendations.contains(rule.action)))) {
+            if (!rule.activated && (!facts.contains(rule.action) || (isRecommendation(rule.action) && !recommendations.contains(rule.action)))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
                 boolean shouldActivate = true;
                 for (String condition : rule.conditions) {
                     if (!facts.contains(condition)) { // TODO: match other tokens in facts: ? < > =
@@ -81,16 +86,16 @@ public class ES {
                     }
                 }
                 if (shouldActivate) {
+                    fired = true;
                     rule.activated = true;
-                    if (isRecommendation(rule.action))
+                    if (isRecommendation(rule.action)) // Can do instanceof check here instead...
                         recommendations.add(rule.action);
                     else
                         facts.add(rule.action);
-                    return true;
                 }
             }
         }
-        return false;
+        return fired;
     }
 
     /**
