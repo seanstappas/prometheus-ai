@@ -7,25 +7,23 @@ import java.util.*;
  */
 public class KNN {
     // TODO: Refactor everything with Tag objects
-    // Combine firedKNs and facts (redundant): just need fired Strings. Yes
+    // Combine firedKNs and firedTags (redundant): just need fired Strings. Yes
     // Perhaps have a Tag class with Recommendation, Rule, Fact subclasses (good OOP design), or simply a flag specifying the type (in the database itself, we can still store as strings). Yes (Json possibility)
     // Once again changed data structures to sets (Is order important?) Good.
     // Spec data structures
     private HashMap<String, KN> mapKN; // Key here is the "inputTag" field of KN
-    private Set<KN> firedKNs; // Are these the KNs whose activation > threshold? What do we do with this? Fired KNs (to check if need to fire others)
+    private Set<String> firedTags; // "Facts", activated tags stored here Is this the right way to store firedTags? Yes
     private Set<TupleNN> activeTuplesNN; // How do these TupleNN tuples translate to the String KN tags? What do we do with this? (Will need some interface to translate int + string to string)
     private Set<String> activeTagsMETA; // Commands coming from meta
 
     // Added structures
     int numberOfCycles; // Number of times the network should update its state and propogate. For now, just go to quiescence.
-    private Set<String> facts; // "Facts", activated tags stored here Is this the right way to store facts? Yes
 
     public KNN(String dbFilename) { // What kind of database are we using? Probably CSV for now
         mapKN = new HashMap<>();
-        firedKNs = new HashSet<>();
         activeTuplesNN = new HashSet<>();
         activeTagsMETA = new HashSet<>();
-        facts = new HashSet<>();
+        firedTags = new HashSet<>();
     }
 
     public void reset(String dbFilename) {
@@ -50,9 +48,6 @@ public class KNN {
         activeTagsMETA.add(s);
     }
 
-    public void addKN(KN kn) {
-        firedKNs.add(kn);
-    }
 
     public void clearNN() {
         activeTuplesNN.clear();
@@ -63,15 +58,29 @@ public class KNN {
     }
 
     public void clearKN() {
-        firedKNs.clear();
+        mapKN.clear();
+        firedTags.clear();
     }
 
-    public void newKN(KN kn) {
+    public void addKN(KN kn) {
         mapKN.put(kn.inputTag, kn);
     }
 
     public void delKN(String hashTag) {
         mapKN.remove(hashTag);
+    }
+
+    public void addFiredTag(String tag) {
+        firedTags.add(tag);
+    }
+
+    public void addKN(String inputTag, String[] outputTags) {
+        KN kn = new KN(inputTag, outputTags);
+        mapKN.put(inputTag, kn);
+    }
+
+    public Set<String> getFiredTags() {
+        return firedTags;
     }
 
     /**
@@ -81,10 +90,9 @@ public class KNN {
      */
     // How does this method choose the proper think method? For now, it will decide based on command from META. (activeTagsMETA)
     // What does think() return? The activated KNs? Yes. Passed on to ES
-    public ArrayList think() {
-        thinkForwards(); // What we want in the future: If no RECOMMENDATIONS fired = thinkForwards failed, resort to either thinkBackwards or thinkLambda (Not theoretically well understood)
+    public Set<String> think() {
+        return thinkForwards(); // What we want in the future: If no RECOMMENDATIONS fired = thinkForwards failed, resort to either thinkBackwards or thinkLambda (Not theoretically well understood)
         // People generally thinkBackwards all the time in the background. In the future, could have a background thread that thinks backwards...
-        return null;
     }
 
     public void think(int numberOfCycles) {
@@ -101,7 +109,7 @@ public class KNN {
             for (KN kn : mapKN.values()) {
                 boolean inputActivated = true;
                 for (String s : kn.outputTags) {
-                    if (!facts.contains(s)) { // Currently only activates input if ALL output tags are true
+                    if (!firedTags.contains(s)) { // Currently only activates input if ALL output tags are true
                         inputActivated = false;
                         break;
                     }
@@ -110,7 +118,7 @@ public class KNN {
                     pendingFacts.add(kn.inputTag);
             }
             for (String s : pendingFacts) {
-                facts.add(s);
+                firedTags.add(s);
             }
         } while (!pendingFacts.isEmpty());
     }
@@ -126,51 +134,45 @@ public class KNN {
     /**
      * Simple forward activation of knowledge nodes. If input tag activated and activation > threshold: output tags are activated, and this is cascaded through the network.
      */
-    private void thinkForwards() { // How is a cycle defined? Just activate current tags in Facts, no more
-        Set<String> pendingFacts = new HashSet<>();
+    private Set<String> thinkForwards() { // How is a cycle defined? Just activate current tags in Facts, no more
+        Set<String> newlyFiredTags = new HashSet<>();
+        Set<String> pendingTags;
         do {
-            forwardThinkCycle(pendingFacts);
-        } while (!pendingFacts.isEmpty());
+            pendingTags = forwardThinkCycle();
+            firedTags.addAll(pendingTags);
+            newlyFiredTags.addAll(pendingTags);
+        } while(!pendingTags.isEmpty());
+        return newlyFiredTags;
     }
 
-    private void thinkForwards(int numberOfCycles) {
-        Set<String> pendingFacts = new HashSet<>();
+    private Set<String> thinkForwards(int numberOfCycles) {
+        Set<String> newlyFiredTags = new HashSet<>();
         for (int i = 0; i < numberOfCycles; i++) {
-            forwardThinkCycle(pendingFacts);
+            Set<String> pendingTags = forwardThinkCycle();
+            if (pendingTags.isEmpty()) {
+                break;
+            }
+            firedTags.addAll(pendingTags);
+            newlyFiredTags.addAll(pendingTags);
         }
+        return newlyFiredTags;
     }
 
-    private void forwardThinkCycle(Set<String> pendingFacts) {
-        pendingFacts.clear();
-        for (String fact : facts) {
-            if (mapKN.containsKey(fact)) { // If facts are updated after firing...
+    private Set<String> forwardThinkCycle() { // returns true if tag fired
+        Set<String> pendingFiredTags = new HashSet<>();
+        for (String fact : firedTags) {
+            if (mapKN.containsKey(fact)) { // If firedTags are updated after firing...
                 Set<String> firedTags = excite(mapKN.get(fact));
                 if (firedTags != null && !firedTags.isEmpty()) {
-                    pendingFacts.addAll(firedTags);
+                    pendingFiredTags.addAll(firedTags);
                 }
             }
         }
-        for (String pendingFact : pendingFacts) {
-            facts.add(pendingFact);
-        }
+        firedTags.addAll(pendingFiredTags);
+        return pendingFiredTags;
     }
 
-    // Added methods
-
-    public void addFact(String fact) {
-        facts.add(fact);
-    }
-
-    public void newKN(String inputTag, String[] outputTags) {
-        KN kn = new KN(inputTag, outputTags);
-        mapKN.put(inputTag, kn);
-    }
-
-    public Set<String> getFacts() {
-        return facts;
-    }
-
-    private Set<String> excite(KN knowledgeNode) { // Returns true if firing occurs AND facts updated after firing
+    private Set<String> excite(KN knowledgeNode) { // Returns true if firing occurs AND firedTags updated after firing
         knowledgeNode.activation++;
         if (knowledgeNode.activation >= knowledgeNode.threshold) {
             return fire(knowledgeNode);
@@ -178,10 +180,10 @@ public class KNN {
         return null;
     }
 
-    private Set<String> fire(KN knowledgeNode) { // Returns Set of fired facts
+    private Set<String> fire(KN knowledgeNode) { // Returns Set of fired firedTags
         Set<String> pendingFacts = new HashSet<>();
         for (String outputTag : knowledgeNode.outputTags) {
-            if (!facts.contains(outputTag)) {
+            if (!firedTags.contains(outputTag)) {
                 pendingFacts.add(outputTag);
             }
         }
