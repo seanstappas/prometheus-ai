@@ -2,21 +2,18 @@ package tags;
 
 import java.util.Arrays;
 
-public class Rule extends Tag  {
+public class Rule {
     public String[] conditions;
-    public String action;
-    public boolean activated; // Check if rule should be considered
+    public Tag action;
 
     /**
      * Full constructor
      * @param conditions
      * @param action
-     * @param activated
      */
-    public Rule(String[] conditions, String action, boolean activated) {
+    public Rule(String[] conditions, Tag action) {
         this.conditions = conditions;
         this.action = action;
-        this.activated = activated;
     }
 
     /**
@@ -27,8 +24,7 @@ public class Rule extends Tag  {
         String[] conditions = new String[args.length - 1];
         System.arraycopy(args, 0, conditions, 0, args.length - 1);
         this.conditions = conditions;
-        this.action = args[args.length - 1];
-        this.activated = false;
+        this.action = new Tag(args[args.length - 1], false);
     }
 
     /**
@@ -42,8 +38,6 @@ public class Rule extends Tag  {
         if (o == null || getClass() != o.getClass()) return false;
 
         Rule rule = (Rule) o;
-
-        if (activated != rule.activated) return false;
 
         if (conditions != null) {
             if (rule.conditions == null)
@@ -68,7 +62,6 @@ public class Rule extends Tag  {
     public int hashCode() {
         int result = Arrays.hashCode(conditions);
         result = 31 * result + (action != null ? action.hashCode() : 0);
-        result = 31 * result + (activated ? 1 : 0);
         return result;
     }
 
@@ -78,6 +71,6 @@ public class Rule extends Tag  {
      */
     @Override
     public String toString() {
-        return Arrays.toString(conditions) + "=>" + action + " " + (activated ? "(activated)" : "(not activated)");
+        return Arrays.toString(conditions) + "=>" + action;
     }
 }
