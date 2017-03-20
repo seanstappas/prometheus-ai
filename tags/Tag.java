@@ -3,7 +3,7 @@ package tags;
 /**
  * Created by Sean on 3/18/2017.
  */
-public class Tag {
+public class Tag { // TODO: Add Type enumeration to differentiate Tags
     public String value;
     public boolean isReccomendation;
 
