@@ -24,7 +24,7 @@ public class Rule {
         String[] conditions = new String[args.length - 1];
         System.arraycopy(args, 0, conditions, 0, args.length - 1);
         this.conditions = conditions;
-        this.action = new Tag(args[args.length - 1], false);
+        this.action = new Tag(args[args.length - 1], Tag.Type.RULE);
     }
 
     /**

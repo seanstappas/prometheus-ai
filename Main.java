@@ -8,15 +8,15 @@ import java.util.Set;
 /**
  * Running es.ES and knn.KNN
  */
-public class Main {
-    // TODO: How will transfer happen between ES and KNN? Will there be an outer Main?
+public class Main { // TODO: Test with Google's GSON libary
+    // TODO: How will transfer happen between ES and KNN? Will there be an outer Main to determine which Tags are Facts, Rules or Recommendations?
     public static void main(String[] args) { // TODO: Test ES and KNN together
         testKNN();
         testES();
         testKNNandES();
     }
 
-    private static void testKNN() {
+    private static Set<String> testKNN() {
         KNN knowledge = new KNN("database");
         String[] initialFacts = new String[] {"A"};
         for (String fact : initialFacts) {
@@ -29,6 +29,7 @@ public class Main {
         System.out.println("[KNN] Initial tags: " + Arrays.toString(initialFacts));
         System.out.println("[KNN] Newly fired tags: " + firedTags);
         System.out.println("[KNN] All fired tags: " + knowledge.getFiredTags());
+        return firedTags;
     }
 
     private static void testES() {
@@ -57,6 +58,10 @@ public class Main {
     }
 
     private static void testKNNandES() {
+
+    }
+
+    private static void parseKNNTags(Set<String> tags) {
 
     }
 }

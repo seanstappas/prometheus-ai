@@ -83,7 +83,7 @@ public class ES {
         boolean fired = false;
         Set<Rule> pendingActivatedRules = new HashSet<>();
         for (Rule rule : readyRules) {
-            if ((!facts.contains(rule.action.value) || (rule.action.isReccomendation && !recommendations.contains(rule.action.value)))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
+            if ((!facts.contains(rule.action.value) || (rule.action.isRecommendation() && !recommendations.contains(rule.action.value)))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
                 boolean shouldActivate = true;
                 for (String condition : rule.conditions) {
                     if (!facts.contains(condition)) { // TODO: match other tokens in facts: ? < > =
@@ -100,7 +100,7 @@ public class ES {
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
             activatedRules.add(rule);
-            if (rule.action.isReccomendation)
+            if (rule.action.isRecommendation())
                 recommendations.add(rule.action.value);
             else
                 facts.add(rule.action.value);

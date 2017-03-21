@@ -5,11 +5,28 @@ package tags;
  */
 public class Tag { // TODO: Add Type enumeration to differentiate Tags
     public String value;
-    public boolean isReccomendation;
+    private Type type;
+    public enum Type {
+        FACT,
+        RULE,
+        RECOMMENDATION
+    }
 
-    public Tag(String value, boolean isReccomendation) {
+    Tag(String value, Type type) {
         this.value = value;
-        this.isReccomendation = isReccomendation;
+        this.type = type;
+    }
+
+    public boolean isRecommendation() {
+        return type == Type.RECOMMENDATION;
+    }
+
+    public boolean isFact() {
+        return type == Type.FACT;
+    }
+
+    public boolean isRule() {
+        return type == Type.RULE;
     }
 
     @Override
@@ -19,18 +36,18 @@ public class Tag { // TODO: Add Type enumeration to differentiate Tags
 
         Tag tag = (Tag) o;
 
-        return isReccomendation == tag.isReccomendation && (value != null ? value.equals(tag.value) : tag.value == null);
+        return value != null ? value.equals(tag.value) : tag.value == null;
     }
 
     @Override
     public int hashCode() {
         int result = value != null ? value.hashCode() : 0;
-        result = 31 * result + (isReccomendation ? 1 : 0);
+        result = 31 * result;
         return result;
     }
 
     @Override
     public String toString() {
-        return value + (isReccomendation ? "(recommendation)" : "");
+        return value;
     }
 }
