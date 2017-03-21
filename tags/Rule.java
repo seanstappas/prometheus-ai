@@ -2,8 +2,8 @@ package tags;
 
 import java.util.Arrays;
 
-public class Rule {
-    public String[] conditions;
+public class Rule extends Tag{
+    public Tag[] conditions;
     public Tag action;
 
     /**
@@ -11,20 +11,26 @@ public class Rule {
      * @param conditions
      * @param action
      */
-    public Rule(String[] conditions, Tag action) {
+    public Rule(Tag[] conditions, Tag action) {
         this.conditions = conditions;
         this.action = action;
+        this.type = TagType.RULE;
+        this.value = this.toString();
     }
 
     /**
-     * Easy constructor
+     * Easy constructor (for debugging purposes). Assumes all tags are facts.
      * @param args The conditions and action, in that order
      */
     public Rule(String... args) {
-        String[] conditions = new String[args.length - 1];
-        System.arraycopy(args, 0, conditions, 0, args.length - 1);
+        Tag[] conditions = new Tag[args.length - 1];
+        for (int i = 0; i < args.length - 1; i++) {
+            conditions[i] = new Tag(args[i], TagType.FACT);
+        }
         this.conditions = conditions;
-        this.action = new Tag(args[args.length - 1], Tag.Type.RULE);
+        this.action = new Tag(args[args.length - 1], TagType.FACT);
+        this.type = TagType.RULE;
+        this.value = this.toString();
     }
 
     /**

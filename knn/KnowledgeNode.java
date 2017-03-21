@@ -1,7 +1,10 @@
 package knn;
 
-class KN { // (inputTag -> outputTags)
-    String inputTag;
+import tags.Tag;
+import tags.TagType;
+
+public class KnowledgeNode { // (inputTag -> outputTags)
+    Tag inputTag;
     int activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
     // Is threshold the same for all nodes? No
     int threshold = 1; // limit: When activation > threshold : fires output tags (outputTags array). These tags can be lists of rules or facts.
@@ -12,11 +15,20 @@ class KN { // (inputTag -> outputTags)
     // Ages linearly or using sigmoid.
     int strength; // How is strength used? Read doc...
     int confidence; // How is confidence used? Read doc...
-    String[] outputTags; // What is this for? These are the output tags, fired when activation > threshold.
+    Tag[] outputTags; // What is this for? These are the output tags, fired when activation > threshold.
 
-    public KN(String inputTag, String[] outputTags) {
+    public KnowledgeNode(Tag inputTag, Tag[] outputTags) {
         this.inputTag = inputTag;
         this.outputTags = outputTags;
+    }
+
+    public KnowledgeNode(String inputTag, String[] outputTags) {
+        this.inputTag = new Tag(inputTag, TagType.FACT);
+        int n = outputTags.length;
+        this.outputTags = new Tag[n];
+        for (int i = 0; i < n; i++) {
+            this.outputTags[i] = new Tag(outputTags[i], TagType.FACT);
+        }
     }
 
     // Should age increment at every think() cycle? Or independently, after some amount of time? System will have (daily) timestamp, nodes will have timestamp updated at every firing. Look at difference between the two before deciding to fire

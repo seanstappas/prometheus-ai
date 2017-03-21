@@ -1,6 +1,7 @@
 package es;
 
 import tags.Rule;
+import tags.Tag;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,17 +9,16 @@ import java.util.Set;
 /**
  * Expert System
  */
-public class ES {
-    // TODO: Refactor everything with Tag objects
+public class ExpertSystem {
     private Set<Rule> readyRules;
     private Set<Rule> activatedRules;
-    private Set<String> facts; // each predicate as String: '(Px)'
-    private Set<String> recommendations;
-    // Type of recommendations? Good. Recommendations are for specific actions to be taken (walk, stop...). These recommendations are passed up the chain
+    private Set<Tag> facts; // each predicate as String: '(Px)'
+    private Set<Tag> recommendations;
+    // TagType of recommendations? Good. Recommendations are for specific actions to be taken (walk, stop...). These recommendations are passed up the chain
     // Recommendations are indicated by some special symbol: (#...)
     // Should there be a set of already activated readyRules (or just boolean like now?) Yes... reset will bring them back
 
-    public ES() {
+    public ExpertSystem() {
         readyRules = new HashSet<>();
         facts = new HashSet<>();
         recommendations = new HashSet<>();
@@ -31,7 +31,24 @@ public class ES {
         recommendations.clear();
     }
 
-    public void addFact(String fact) {
+    public void addTag(Tag t) {
+        switch (t.type) {
+            case FACT:
+                addFact(t);
+            case RECOMMENDATION:
+                addRecommendation(t);
+            case RULE:
+                addRule((Rule) t);
+        }
+    }
+
+    public void addTags(Set<Tag> tags) {
+        for (Tag t : tags) {
+            addTag(t);
+        }
+    }
+
+    public void addFact(Tag fact) {
         facts.add(fact);
     }
 
@@ -39,7 +56,7 @@ public class ES {
         readyRules.add(rule);
     }
 
-    private void addRecommendation(String rec) {
+    public void addRecommendation(Tag rec) {
         recommendations.add(rec);
     }
 
@@ -55,11 +72,11 @@ public class ES {
         return activatedRules;
     }
 
-    public Set<String> getFacts() { // For testing purposes
+    public Set<Tag> getFacts() { // For testing purposes
         return facts;
     }
 
-    // Should there be a threshold number of iterations to think()? If so, does iterations represent a cycle like the KNN, or the number of readyRules activated/facts fired (right now it works with number of facts) The cycle should be like the KNN (one run-through of readyRules)
+    // Should there be a threshold number of iterations to think()? If so, does iterations represent a cycle like the KnowledgeNodeNetwork, or the number of readyRules activated/facts fired (right now it works with number of facts) The cycle should be like the KnowledgeNodeNetwork (one run-through of readyRules)
 
     /**
      * 1. Iterate through readyRules, checking facts and activating if applicable.
@@ -83,9 +100,9 @@ public class ES {
         boolean fired = false;
         Set<Rule> pendingActivatedRules = new HashSet<>();
         for (Rule rule : readyRules) {
-            if ((!facts.contains(rule.action.value) || (rule.action.isRecommendation() && !recommendations.contains(rule.action.value)))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
+            if ((!facts.contains(rule.action) || (rule.action.isRecommendation() && !recommendations.contains(rule.action)))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
                 boolean shouldActivate = true;
-                for (String condition : rule.conditions) {
+                for (Tag condition : rule.conditions) {
                     if (!facts.contains(condition)) { // TODO: match other tokens in facts: ? < > =
                         shouldActivate = false;
                         break;
@@ -101,9 +118,9 @@ public class ES {
             readyRules.remove(rule);
             activatedRules.add(rule);
             if (rule.action.isRecommendation())
-                recommendations.add(rule.action.value);
+                recommendations.add(rule.action);
             else
-                facts.add(rule.action.value);
+                facts.add(rule.action);
         }
         return fired;
     }

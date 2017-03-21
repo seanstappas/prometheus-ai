@@ -3,30 +3,28 @@ package tags;
 /**
  * Created by Sean on 3/18/2017.
  */
-public class Tag { // TODO: Add Type enumeration to differentiate Tags
+public class Tag {
     public String value;
-    private Type type;
-    public enum Type {
-        FACT,
-        RULE,
-        RECOMMENDATION
+    public TagType type;
+
+    Tag() {
     }
 
-    Tag(String value, Type type) {
+    public Tag(String value, TagType type) {
         this.value = value;
         this.type = type;
     }
 
     public boolean isRecommendation() {
-        return type == Type.RECOMMENDATION;
+        return type == TagType.RECOMMENDATION;
     }
 
     public boolean isFact() {
-        return type == Type.FACT;
+        return type == TagType.FACT;
     }
 
     public boolean isRule() {
-        return type == Type.RULE;
+        return type == TagType.RULE;
     }
 
     @Override
@@ -36,13 +34,13 @@ public class Tag { // TODO: Add Type enumeration to differentiate Tags
 
         Tag tag = (Tag) o;
 
-        return value != null ? value.equals(tag.value) : tag.value == null;
+        return (value != null ? value.equals(tag.value) : tag.value == null) && type == tag.type;
     }
 
     @Override
     public int hashCode() {
         int result = value != null ? value.hashCode() : 0;
-        result = 31 * result;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
 

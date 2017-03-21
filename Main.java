@@ -1,47 +1,59 @@
-import es.ES;
-import knn.KNN;
+import es.ExpertSystem;
+import knn.KnowledgeNode;
+import knn.KnowledgeNodeNetwork;
 import tags.Rule;
+import tags.Tag;
+import tags.TagType;
 
 import java.util.Arrays;
 import java.util.Set;
 
 /**
- * Running es.ES and knn.KNN
+ * Running es.ExpertSystem and knn.KnowledgeNodeNetwork
  */
 public class Main { // TODO: Test with Google's GSON libary
-    // TODO: How will transfer happen between ES and KNN? Will there be an outer Main to determine which Tags are Facts, Rules or Recommendations?
-    public static void main(String[] args) { // TODO: Test ES and KNN together
+    public static void main(String[] args) { // TODO: Test ExpertSystem and KnowledgeNodeNetwork together
         testKNN();
         testES();
         testKNNandES();
     }
 
-    private static Set<String> testKNN() {
-        KNN knowledge = new KNN("database");
-        String[] initialFacts = new String[] {"A"};
-        for (String fact : initialFacts) {
-            knowledge.addFiredTag(fact);
+    private static Set<Tag> testKNN() {
+        KnowledgeNodeNetwork knowledge = new KnowledgeNodeNetwork("database");
+        Tag[] initialFiredTags = new Tag[] {
+                new Tag("A", TagType.FACT)
+        };
+        for (Tag t : initialFiredTags) {
+            knowledge.addFiredTag(t);
         }
-        knowledge.addKN("A", new String[]{"B", "C", "D"});
-        knowledge.addKN("B", new String[]{"E", "F", "G"});
-        knowledge.addKN("E", new String[]{"H", "I", "J"});
-        Set<String> firedTags = knowledge.think();
-        System.out.println("[KNN] Initial tags: " + Arrays.toString(initialFacts));
-        System.out.println("[KNN] Newly fired tags: " + firedTags);
-        System.out.println("[KNN] All fired tags: " + knowledge.getFiredTags());
+        KnowledgeNode[] knowledgeNodes = new KnowledgeNode[] {
+                new KnowledgeNode("A", new String[]{"B", "C", "D"}),
+                new KnowledgeNode("B", new String[]{"E", "F", "G"}),
+                new KnowledgeNode("E", new String[]{"H", "I", "J"})
+        };
+        for (KnowledgeNode node : knowledgeNodes) {
+            knowledge.addKN(node);
+        }
+        Set<Tag> firedTags = knowledge.think();
+        System.out.println("[KnowledgeNodeNetwork] Initial fired tags: " + Arrays.toString(initialFiredTags));
+        System.out.println("[KnowledgeNodeNetwork] Newly fired tags: " + firedTags);
+        System.out.println("[KnowledgeNodeNetwork] All fired tags: " + knowledge.getFiredTags());
         return firedTags;
     }
 
     private static void testES() {
-        ES expert = new ES();
-        String[] testFacts = {"A", "B"};
+        ExpertSystem expert = new ExpertSystem();
+        Tag[] testFacts = {
+                new Tag("A", TagType.FACT),
+                new Tag("B", TagType.FACT)
+        };
         Rule[] testRules = {
                 new Rule("A", "B", "D"),
                 new Rule("D", "B", "E"),
                 new Rule("D", "E", "F"),
                 new Rule("G", "A", "H")
         };
-        for (String fact : testFacts) {
+        for (Tag fact : testFacts) {
             expert.addFact(fact);
         }
         for (Rule rule : testRules) {
@@ -49,19 +61,18 @@ public class Main { // TODO: Test with Google's GSON libary
         }
         expert.think();
 
-        System.out.println("[ES] Initial facts: " + Arrays.toString(testFacts));
-        System.out.println("[ES] Final facts: " + expert.getFacts());
+        System.out.println("[ExpertSystem] Initial facts: " + Arrays.toString(testFacts));
+        System.out.println("[ExpertSystem] Final facts: " + expert.getFacts());
 
-        System.out.println("[ES] Initial rules: " + Arrays.toString(testRules));
-        System.out.println("[ES] Final ready rules: " + expert.getReadyRules());
-        System.out.println("[ES] Final activated rules: " + expert.getActivatedRules());
+        System.out.println("[ExpertSystem] Initial rules: " + Arrays.toString(testRules));
+        System.out.println("[ExpertSystem] Final ready rules: " + expert.getReadyRules());
+        System.out.println("[ExpertSystem] Final activated rules: " + expert.getActivatedRules());
     }
 
     private static void testKNNandES() {
+        Set<Tag> firedTags = testKNN();
 
-    }
-
-    private static void parseKNNTags(Set<String> tags) {
-
+        ExpertSystem es = new ExpertSystem();
+        es.addTags(firedTags);
     }
 }
