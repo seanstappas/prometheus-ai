@@ -1,7 +1,6 @@
 package knn;
 
 import tags.Tag;
-import tags.TagType;
 
 public class KnowledgeNode { // (inputTag -> outputTags)
     Tag inputTag;
@@ -23,11 +22,11 @@ public class KnowledgeNode { // (inputTag -> outputTags)
     }
 
     public KnowledgeNode(String inputTag, String[] outputTags) {
-        this.inputTag = new Tag(inputTag, TagType.FACT);
+        this.inputTag = new Tag(inputTag, Tag.Type.FACT);
         int n = outputTags.length;
         this.outputTags = new Tag[n];
         for (int i = 0; i < n; i++) {
-            this.outputTags[i] = new Tag(outputTags[i], TagType.FACT);
+            this.outputTags[i] = new Tag(outputTags[i], Tag.Type.FACT);
         }
     }
 

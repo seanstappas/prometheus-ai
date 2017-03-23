@@ -10,11 +10,12 @@ import java.util.Set;
  * Expert System
  */
 public class ExpertSystem {
+    // TODO: Should think() return the newly activated recommendations? Or simply all of them?
     private Set<Rule> readyRules;
     private Set<Rule> activatedRules;
     private Set<Tag> facts; // each predicate as String: '(Px)'
     private Set<Tag> recommendations;
-    // TagType of recommendations? Good. Recommendations are for specific actions to be taken (walk, stop...). These recommendations are passed up the chain
+    // Type of recommendations? Good. Recommendations are for specific actions to be taken (walk, stop...). These recommendations are passed up the chain
     // Recommendations are indicated by some special symbol: (#...)
     // Should there be a set of already activated readyRules (or just boolean like now?) Yes... reset will bring them back
 
@@ -33,12 +34,15 @@ public class ExpertSystem {
 
     public void addTag(Tag t) {
         switch (t.type) {
-            case FACT:
-                addFact(t);
-            case RECOMMENDATION:
-                addRecommendation(t);
             case RULE:
                 addRule((Rule) t);
+                break;
+            case FACT:
+                addFact(t);
+                break;
+            case RECOMMENDATION:
+                addRecommendation(t);
+                break;
         }
     }
 
@@ -103,7 +107,7 @@ public class ExpertSystem {
             if ((!facts.contains(rule.action) || (rule.action.isRecommendation() && !recommendations.contains(rule.action)))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
                 boolean shouldActivate = true;
                 for (Tag condition : rule.conditions) {
-                    if (!facts.contains(condition)) { // TODO: match other tokens in facts: ? < > =
+                    if (!facts.contains(condition) && !recommendations.contains(condition)) { // TODO: match other tokens in facts: ? < > =
                         shouldActivate = false;
                         break;
                     }

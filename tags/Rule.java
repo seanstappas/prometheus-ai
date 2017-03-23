@@ -3,7 +3,7 @@ package tags;
 import java.util.Arrays;
 
 public class Rule extends Tag{
-    public Tag[] conditions;
+    public Tag[] conditions; // TODO: Can a recommendation be a condition (or only facts..)?
     public Tag action;
 
     /**
@@ -14,7 +14,7 @@ public class Rule extends Tag{
     public Rule(Tag[] conditions, Tag action) {
         this.conditions = conditions;
         this.action = action;
-        this.type = TagType.RULE;
+        this.type = Type.RULE;
         this.value = this.toString();
     }
 
@@ -25,11 +25,11 @@ public class Rule extends Tag{
     public Rule(String... args) {
         Tag[] conditions = new Tag[args.length - 1];
         for (int i = 0; i < args.length - 1; i++) {
-            conditions[i] = new Tag(args[i], TagType.FACT);
+            conditions[i] = new Tag(args[i], Type.FACT);
         }
         this.conditions = conditions;
-        this.action = new Tag(args[args.length - 1], TagType.FACT);
-        this.type = TagType.RULE;
+        this.action = new Tag(args[args.length - 1], Type.FACT);
+        this.type = Type.RULE;
         this.value = this.toString();
     }
 
