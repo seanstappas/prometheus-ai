@@ -107,7 +107,7 @@ public class ExpertSystem {
             if ((!facts.contains(rule.action) || !recommendations.contains(rule.action))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
                 boolean shouldActivate = true;
                 for (Tag condition : rule.conditions) {
-                    if (!facts.contains(condition) && !recommendations.contains(condition)) { // TODO: match other tokens in facts: ? < > = (What was question mark again? Any value?)
+                    if (!facts.contains(condition) && !recommendations.contains(condition)) { // TODO: match other tokens in facts: ? < > = (What was question mark again? Any value?) Think how to make this efficient, without iterating through entire set...
                         shouldActivate = false;
                         break;
                     }
