@@ -1,5 +1,6 @@
 package knn;
 
+import interfaces.PrometheusLayer;
 import tags.Tag;
 
 import java.util.HashMap;
@@ -7,100 +8,156 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Knowledge Node Network
+ * Knowledge Node Network (KNN)
  */
-public class KnowledgeNodeNetwork {
-    // Combine firedKNs and firedTags (redundant): just need fired Strings. Yes
-    // Perhaps have a Tag class with Recommendation, Rule, Fact subclasses (good OOP design), or simply a flag specifying the type (in the database itself, we can still store as strings). Yes (Json possibility)
-    // Once again changed data structures to sets (Is order important?) Good.
-    // Spec data structures
-    private HashMap<Tag, KnowledgeNode> mapKN; // Key here is the "inputTag" field of KnowledgeNode
-    private Set<Tag> firedTags; // "Facts", activated tags stored here Is this the right way to store firedTags? Yes
-    private Set<TupleNN> activeTuplesNN; // How do these TupleNN tuples translate to the String KnowledgeNode tags? What do we do with this? (Will need some interface to translate int + string to string)
-    private Set<Tag> activeTagsMETA; // Commands coming from meta
+public class KnowledgeNodeNetwork implements PrometheusLayer {
+    private HashMap<Tag, KnowledgeNode> mapKN;
+    private Set<Tag> activeTags;
+    private Set<TupleNN> activeTuplesNN;
+    private Set<Tag> activeTagsMETA;
 
     // TODO: Add Sigmoid cache + sigmoid function (perhaps in outside class)
 
-    // Added structures
-    int numberOfCycles; // Number of times the network should update its state and propogate. For now, just go to quiescence.
-
-    public KnowledgeNodeNetwork(String dbFilename) { // What kind of database are we using? Probably CSV for now
+    /**
+     * Creates a new Knowledge Node Network (KNN) based on a database.
+     *
+     * @param dbFilename the filename of the database to be read from (probably CSV or JSON).
+     */
+    public KnowledgeNodeNetwork(String dbFilename) {
         mapKN = new HashMap<>();
         activeTuplesNN = new HashSet<>();
         activeTagsMETA = new HashSet<>();
-        firedTags = new HashSet<>();
+        activeTags = new HashSet<>();
     }
 
+    /**
+     * Resets the KNN to a state from a database.
+     *
+     * @param dbFilename the filename of the database to be read from.
+     */
     public void reset(String dbFilename) {
 
     }
 
+    /**
+     * Resets the KNN by clearing all data structures.
+     */
     public void resetEmpty() {
         clearKN();
         clearMETA();
         clearNN();
     }
 
+    /**
+     * Saves the current state of the KNN to a database.
+     *
+     * @param dbFilename the filename of the database.
+     */
     public void saveKNN(String dbFilename) {
 
     }
 
+    /**
+     * Adds a tuple from the NN to the KNN.
+     *
+     * @param nn the NN tuple to be added.
+     */
     public void addTupleNN(TupleNN nn) {
         activeTuplesNN.add(nn);
     }
 
-    public void addMETA(Tag t) {
-        activeTagsMETA.add(t);
+    /**
+     * Adds a command from the META to the KNN.
+     *
+     * @param tag the Tag command from the META
+     */
+    public void addMETA(Tag tag) {
+        activeTagsMETA.add(tag);
     }
 
 
+    /**
+     * Clears the tuples from the NN.
+     */
     public void clearNN() {
         activeTuplesNN.clear();
     }
 
+    /**
+     * Clears the commands from META.
+     */
     public void clearMETA() {
         activeTagsMETA.clear();
     }
 
+    /**
+     * Clears all the Knowledge Nodes from the KNN.
+     */
     public void clearKN() {
         mapKN.clear();
-        firedTags.clear();
+        activeTags.clear();
     }
 
+    /**
+     * Adds a Knowledge Node to the KNN.
+     *
+     * @param kn the Knowledge Node to be added
+     */
     public void addKN(KnowledgeNode kn) {
         mapKN.put(kn.inputTag, kn);
     }
 
-    public void delKN(String hashTag) {
-        mapKN.remove(hashTag);
-    }
-
-    public void addFiredTag(Tag tag) {
-        firedTags.add(tag);
-    }
-
-    public Set<Tag> getFiredTags() {
-        return firedTags;
-    }
-
     /**
-     * Chooses one of the 3 think methods. Assumes active ArrayLists are populated.
+     * Deletes a Knowledge Node from the KNN.
      *
-     * @return
+     * @param tag the input Tag of the Knowledge Node to be deleted.
      */
-    // How does this method choose the proper think method? For now, it will decide based on command from META. (activeTagsMETA)
-    // What does think() return? The activated KNs? Yes. Passed on to ExpertSystem
-    public Set<Tag> think() {
-        return thinkForwards(); // What we want in the future: If no RECOMMENDATIONS fired = thinkForwards failed, resort to either thinkBackwards or thinkLambda (Not theoretically well understood)
-        // People generally thinkBackwards all the time in the background. In the future, could have a background thread that thinks backwards...
-    }
-
-    public void think(int numberOfCycles) {
-        thinkForwards(numberOfCycles);
+    public void delKN(Tag tag) {
+        mapKN.remove(tag);
     }
 
     /**
-     * Given output tags, the system attempts to find the associated input tags with some degree of confidence
+     * Adds a fired Tag to the KNN.
+     *
+     * @param tag the fired Tag to be added.
+     */
+    public void addFiredTag(Tag tag) {
+        activeTags.add(tag);
+    }
+
+    public Set<Tag> getActiveTags() {
+        return activeTags;
+    }
+
+
+    /**
+     * Makes the KNN think, and start cascaded activation and firing if possible. Chooses either thinkForwards(),
+     * thinkBackwards() or thinkLambda() internally based on a command from the META (activeTagsMETA).
+     * TODO: If no recommendations are fired, think() will resort to either thinkBackwards or thinkLambda. (Not theoretically well understood)
+     * TODO: People generally thinkBackwards all the time in the background. In the future, could have a background thread that thinks backwards...
+     *
+     * @return the Tags fired as a result of thinking.
+     */
+    public Set<Tag> think() {
+        return thinkForwards();
+    }
+
+    /**
+     * Thinks for a fixed number of cycles. The number of cycles represents how much effort is being put into thinking.
+     * Each cycle is a run-through of all the fired Tags, activating and firing new Tags if possible. Note that a Tag
+     * that becomes active in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
+     * cascade further activation.
+     *
+     * @param numberOfCycles the number of cycles to think for.
+     * @return the Tags activated as a result of thinking.
+     */
+    public Set<Tag> think(int numberOfCycles) {
+        return thinkForwards(numberOfCycles);
+    }
+
+    /**
+     * Thinking backwards works as follows: given output tags, the system attempts to find the associated input Tags
+     * with some degree of confidence.
      */
     private void thinkBackwards() {
         Set<Tag> pendingFacts = new HashSet<>();
@@ -109,7 +166,7 @@ public class KnowledgeNodeNetwork {
             for (KnowledgeNode kn : mapKN.values()) {
                 boolean inputActivated = true;
                 for (Tag t : kn.outputTags) {
-                    if (!firedTags.contains(t)) { // Currently only activates input if ALL output tags are true
+                    if (!activeTags.contains(t)) { // Currently only activates input if ALL output Tags are true
                         inputActivated = false;
                         break;
                     }
@@ -118,13 +175,14 @@ public class KnowledgeNodeNetwork {
                     pendingFacts.add(kn.inputTag);
             }
             for (Tag t : pendingFacts) {
-                firedTags.add(t);
+                activeTags.add(t);
             }
         } while (!pendingFacts.isEmpty());
     }
 
     /**
-     * Combination of thinkBackwards and thinkForwards. First the networks works backwards, then moves forward to determine the correct memory.
+     * Combination of thinkBackwards and thinkForwards. First the networks works backwards, then moves forward to
+     * determine the correct memory.
      */
     private void thinkLambda() {
         thinkBackwards();
@@ -132,19 +190,29 @@ public class KnowledgeNodeNetwork {
     }
 
     /**
-     * Simple forward activation of knowledge nodes. If input tag activated and activation > threshold: output tags are activated, and this is cascaded through the network.
+     * Makes the ES think forwards using simple forward activation of knowledge nodes. If input tag is activated and
+     * activation is greater than the threshold, the output tags are activated, and this is cascaded through the
+     * network.
+     *
+     * @return the Tags activated as a result of thinking.
      */
-    private Set<Tag> thinkForwards() { // How is a cycle defined? Just activate current tags in Facts, no more
+    private Set<Tag> thinkForwards() {
         Set<Tag> newlyFiredTags = new HashSet<>();
         Set<Tag> pendingTags;
         do {
             pendingTags = forwardThinkCycle();
-            firedTags.addAll(pendingTags);
+            activeTags.addAll(pendingTags);
             newlyFiredTags.addAll(pendingTags);
-        } while(!pendingTags.isEmpty());
+        } while (!pendingTags.isEmpty());
         return newlyFiredTags;
     }
 
+    /**
+     * Makes the ES think forwards for a fixed number of cycles.
+     *
+     * @param numberOfCycles the number of cycles to think for.
+     * @return the Tags activated as a result of thinking.
+     */
     private Set<Tag> thinkForwards(int numberOfCycles) {
         Set<Tag> newlyFiredTags = new HashSet<>();
         for (int i = 0; i < numberOfCycles; i++) {
@@ -152,42 +220,60 @@ public class KnowledgeNodeNetwork {
             if (pendingTags.isEmpty()) {
                 break;
             }
-            firedTags.addAll(pendingTags);
+            activeTags.addAll(pendingTags);
             newlyFiredTags.addAll(pendingTags);
         }
         return newlyFiredTags;
     }
 
+    /**
+     * Makes the ES think for a single cycle.
+     *
+     * @return the Tags activated as a result of thinking.
+     */
     private Set<Tag> forwardThinkCycle() { // returns true if tag fired
         Set<Tag> pendingFiredTags = new HashSet<>();
-        for (Tag t : firedTags) {
-            if (mapKN.containsKey(t)) { // If firedTags are updated after firing...
+        for (Tag t : activeTags) {
+            if (mapKN.containsKey(t)) { // If activeTags are updated after firing...
                 Set<Tag> firedTags = excite(mapKN.get(t));
-                if (firedTags != null && !firedTags.isEmpty()) {
+                if (!firedTags.isEmpty()) {
                     pendingFiredTags.addAll(firedTags);
                 }
             }
         }
-        firedTags.addAll(pendingFiredTags);
+        activeTags.addAll(pendingFiredTags);
         return pendingFiredTags;
     }
 
-    private Set<Tag> excite(KnowledgeNode knowledgeNode) { // Returns true if firing occurs AND firedTags updated after firing
+    /**
+     * Excites a Knowledge Node. If excitation leads to firing, this will return the output Tags fired.
+     *
+     * @param knowledgeNode the Knowledge Node to excite.
+     * @return the Tags activated as a result of excitation.
+     */
+    private Set<Tag> excite(KnowledgeNode knowledgeNode) {
+        Set<Tag> firedTags = new HashSet<>();
         knowledgeNode.activation++;
         if (knowledgeNode.activation >= knowledgeNode.threshold) {
-            return fire(knowledgeNode);
+            firedTags = fire(knowledgeNode);
         }
-        return null;
+        return firedTags;
     }
 
-    private Set<Tag> fire(KnowledgeNode knowledgeNode) { // Returns Set of fired firedTags
+    /**
+     * Fires a Knowledge Node.
+     *
+     * @param knowledgeNode the Knowledge Node to fire.
+     * @return the Tags activated as a result of firing.
+     */
+    private Set<Tag> fire(KnowledgeNode knowledgeNode) {
         Set<Tag> pendingFacts = new HashSet<>();
         for (Tag outputTag : knowledgeNode.outputTags) {
-            if (!firedTags.contains(outputTag)) {
+            if (!activeTags.contains(outputTag)) {
                 pendingFacts.add(outputTag);
             }
         }
-        return pendingFacts.isEmpty() ? null : pendingFacts;
+        return pendingFacts;
 
     }
 }

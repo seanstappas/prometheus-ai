@@ -2,14 +2,17 @@ package tags;
 
 import java.util.Arrays;
 
+/**
+ * Represents a rule in the expert system.
+ */
 public class Rule extends Tag{
     public Tag[] conditions; // TODO: Can a recommendation be a condition (or only facts..)?
     public Tag action;
 
     /**
-     * Full constructor
-     * @param conditions
-     * @param action
+     * Creates a Rule.
+     * @param conditions condition tags of the rule
+     * @param action action tag of the rule
      */
     public Rule(Tag[] conditions, Tag action) {
         this.conditions = conditions;
@@ -19,25 +22,20 @@ public class Rule extends Tag{
     }
 
     /**
-     * Easy constructor (for debugging purposes). Assumes all tags are facts.
-     * @param args The conditions and action, in that order
+     * Creates a Rule (for debugging purposes). Assumes all tags are facts.
+     * @param args the conditions and action, in that order
      */
     public Rule(String... args) {
         Tag[] conditions = new Tag[args.length - 1];
         for (int i = 0; i < args.length - 1; i++) {
-            conditions[i] = new Tag(args[i], Type.FACT);
+            conditions[i] = new Fact(args[i]);
         }
         this.conditions = conditions;
-        this.action = new Tag(args[args.length - 1], Type.FACT);
+        this.action = new Fact(args[args.length - 1]);
         this.type = Type.RULE;
         this.value = this.toString();
     }
 
-    /**
-     * Necessary to properly implement a Set of Rules
-     * @param o
-     * @return
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,10 +69,6 @@ public class Rule extends Tag{
         return result;
     }
 
-    /**
-     * Simple String representation. For debugging purposes.
-     * @return
-     */
     @Override
     public String toString() {
         return Arrays.toString(conditions) + "=>" + action;

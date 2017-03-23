@@ -14,15 +14,19 @@ import java.util.Set;
  */
 public class Main { // TODO: Test with Google's GSON libary
     public static void main(String[] args) { // TODO: Test ExpertSystem and KnowledgeNodeNetwork together
-//        testKNN();
+        testKNN();
         testES();
 //        testKNNandES();
     }
 
+    /**
+     * Tests the Knowledge Node Network.
+     * @return the activated Tags.
+     */
     private static Set<Tag> testKNN() {
         KnowledgeNodeNetwork knowledge = new KnowledgeNodeNetwork("database");
         Tag[] initialFiredTags = new Tag[] {
-                new Tag("A", Tag.Type.FACT)
+                new Fact("A")
         };
         for (Tag t : initialFiredTags) {
             knowledge.addFiredTag(t);
@@ -38,20 +42,23 @@ public class Main { // TODO: Test with Google's GSON libary
         Set<Tag> firedTags = knowledge.think();
         System.out.println("[KNN] Initial fired tags: " + Arrays.toString(initialFiredTags));
         System.out.println("[KNN] Newly fired tags: " + firedTags);
-        System.out.println("[KNN] All fired tags: " + knowledge.getFiredTags());
+        System.out.println("[KNN] All fired tags: " + knowledge.getActiveTags());
         return firedTags;
     }
 
+    /**
+     * Tests the Expert System (ES).
+     */
     private static void testES() {
         ExpertSystem expert = new ExpertSystem();
-        Tag[] testFacts = {
+        Fact[] testFacts = {
                 new Fact("A"),
                 new Fact("B")
         };
-        Tag recX =  new Recommendation("X");
-        Tag recY =  new Recommendation("Y");
-        Tag recZ =  new Recommendation("Z");
-        Tag[] testRecommendations = {
+        Recommendation recX =  new Recommendation("X");
+        Recommendation recY =  new Recommendation("Y");
+        Recommendation recZ =  new Recommendation("Z");
+        Recommendation[] testRecommendations = {
                 recX,
                 recY
         };
@@ -60,30 +67,35 @@ public class Main { // TODO: Test with Google's GSON libary
                 new Rule("D", "B", "E"),
                 new Rule("D", "E", "F"),
                 new Rule("G", "A", "H"),
-                new Rule(new Tag[]{recX, recY}, recZ)
+                new Rule(new Recommendation[]{recX, recY}, recZ)
         };
-        for (Tag fact : testFacts) {
+        for (Fact fact : testFacts) {
             expert.addFact(fact);
         }
         for (Rule rule : testRules) {
             expert.addRule(rule);
         }
-        for (Tag recommendation : testRecommendations) {
+        for (Recommendation recommendation : testRecommendations) {
             expert.addRecommendation(recommendation);
         }
-        expert.think();
+        Set<Tag> activatedTags = expert.think();
 
         System.out.println("[ES] Initial facts: " + Arrays.toString(testFacts));
-        System.out.println("[ES] Final facts: " + expert.getFacts());
-
         System.out.println("[ES] Initial recommendations: " + Arrays.toString(testRecommendations));
+        System.out.println("[ES] Initial rules: " + Arrays.toString(testRules));
+
+        System.out.println("[ES] Activated tags: " + activatedTags);
+
+        System.out.println("[ES] Final facts: " + expert.getFacts());
         System.out.println("[ES] Final recommendations: " + expert.getRecommendations());
 
-        System.out.println("[ES] Initial rules: " + Arrays.toString(testRules));
         System.out.println("[ES] Final ready rules: " + expert.getReadyRules());
-        System.out.println("[ES] Final activated rules: " + expert.getActivatedRules());
+        System.out.println("[ES] Final activated rules: " + expert.getActiveRules());
     }
 
+    /**
+     * Tests the ES and KNN together.
+     */
     private static void testKNNandES() {
         Set<Tag> firedTags = testKNN();
 

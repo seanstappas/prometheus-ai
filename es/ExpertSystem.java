@@ -1,5 +1,8 @@
 package es;
 
+import interfaces.PrometheusLayer;
+import tags.Fact;
+import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
@@ -7,125 +10,201 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Expert System
+ * Expert System (ES)
  */
-public class ExpertSystem {
-    // TODO: Should think() return the newly activated recommendations? Or simply all of them?
+public class ExpertSystem implements PrometheusLayer {
     private Set<Rule> readyRules;
-    private Set<Rule> activatedRules;
-    private Set<Tag> facts; // each predicate as String: '(Px)'
-    private Set<Tag> recommendations;
-    // Type of recommendations? Good. Recommendations are for specific actions to be taken (walk, stop...). These recommendations are passed up the chain
-    // Recommendations are indicated by some special symbol: (#...)
-    // Should there be a set of already activated readyRules (or just boolean like now?) Yes... reset will bring them back
+    private Set<Rule> activeRules;
+    private Set<Fact> facts;
+    private Set<Recommendation> recommendations;
 
+    /**
+     * Creates an Expert System (ES).
+     */
     public ExpertSystem() {
         readyRules = new HashSet<>();
         facts = new HashSet<>();
         recommendations = new HashSet<>();
-        activatedRules = new HashSet<>();
+        activeRules = new HashSet<>();
     }
 
-    public void reset() { // TODO: Should reset clear all data structures, or only de-activate activated rules?
-        readyRules.clear();
+    /**
+     * Resets the ES by deactivating all Rules, clearing all Facts, and clearing all Recommendations.
+     * TODO?: Should reset clear Facts and Recommendations as well?
+     */
+    public void reset() {
+        readyRules.addAll(activeRules);
+        activeRules.clear();
+
         facts.clear();
         recommendations.clear();
     }
 
-    public void addTag(Tag t) {
-        switch (t.type) {
+    /**
+     * Adds a Tag to the ES. Will cast the tag to either a Rule, a Fact, or a Recommendation.
+     *
+     * @param tag the Tag to be added.
+     * @return true if the Tag is successfully added.
+     */
+    public boolean addTag(Tag tag) {
+        switch (tag.type) {
             case RULE:
-                addRule((Rule) t);
-                break;
+                addRule((Rule) tag);
+                return true;
             case FACT:
-                addFact(t);
-                break;
+                addFact((Fact) tag);
+                return true;
             case RECOMMENDATION:
-                addRecommendation(t);
-                break;
+                addRecommendation((Recommendation) tag);
+                return true;
         }
+        return false;
     }
 
-    public void addTags(Set<Tag> tags) {
+    /**
+     * Adds multiple Tags to the ES.
+     *
+     * @param tags the Tags to be added.
+     * @return true if all the Tags are added successfully.
+     */
+    public boolean addTags(Set<Tag> tags) {
+        boolean allAdded = true;
         for (Tag t : tags) {
-            addTag(t);
+            if (!addTag(t)) allAdded = false;
         }
+        return allAdded;
     }
 
-    public void addFact(Tag fact) {
+    /**
+     * Adds a Fact to the ES.
+     *
+     * @param fact the Fact to be added.
+     */
+    public void addFact(Fact fact) {
         facts.add(fact);
     }
 
+    /**
+     * Adds a Rule to the ES.
+     *
+     * @param rule the Rule to be added.
+     */
     public void addRule(Rule rule) {
         readyRules.add(rule);
     }
 
-    public void addRecommendation(Tag rec) {
+    /**
+     * Adds a Recommendation to the ES.
+     *
+     * @param rec the Recommendation to be added.
+     */
+    public void addRecommendation(Recommendation rec) {
         recommendations.add(rec);
     }
 
+    /**
+     * Gets all the Recommendations of the ES.
+     *
+     * @return the Recommendations of the ES.
+     */
     public Set getRecommendations() {
         return recommendations;
     }
 
+    /**
+     * Gets the ready Rules of the ES.
+     *
+     * @return the ready Rules of the ES.
+     */
     public Set<Rule> getReadyRules() { // For testing purposes
         return readyRules;
     }
 
-    public Set<Rule> getActivatedRules() { // For testing purposes
-        return activatedRules;
+    /**
+     * Gets the active Rules of the ES.
+     *
+     * @return the active Rules of the ES.
+     */
+    public Set<Rule> getActiveRules() { // For testing purposes
+        return activeRules;
     }
 
-    public Set<Tag> getFacts() { // For testing purposes
+    /**
+     * Gets the Facts of the ES.
+     *
+     * @return the Facts of the ES.
+     */
+    public Set<Fact> getFacts() { // For testing purposes
         return facts;
     }
 
-    // Should there be a threshold number of iterations to think()? If so, does iterations represent a cycle like the KnowledgeNodeNetwork, or the number of readyRules activated/facts fired (right now it works with number of facts) The cycle should be like the KnowledgeNodeNetwork (one run-through of readyRules)
+    /**
+     * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
+     * possible. Stops once the system reaches quiescence.
+     * TODO?: Should think() return only the newly activated Recommendations? Or simply all of them? (right now it returns all of them)
+     *
+     * @return the activated Tags as a result of thinking.
+     */
+    public Set<Tag> think() {
+        Set<Tag> allActivatedTags = new HashSet<>();
+        Set<Tag> activatedTags;
+        do {
+            activatedTags = thinkCycle();
+            allActivatedTags.addAll(activatedTags);
+        } while (!activatedTags.isEmpty());
+        return allActivatedTags;
+    }
 
     /**
-     * 1. Iterate through readyRules, checking facts and activating if applicable.
-     * 2. Repeat until no activations in a cycle.
+     * Makes the ES think for a fixed number of cycles. The number of cycles represents how much effort is being put
+     * into thinking. Each cycle is a run-through of all the ready Rules, activating Rules if possible. Note that a Rule
+     * that is activated in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
+     * cascade further activation.
+     *
+     * @param numberOfCycles the number of cycles to think for.
+     * @return the activated Tags as a result of thinking.
      */
-    public void think() {
-        boolean fired;
-        do {
-            fired = thinkCycle();
-        } while (fired); // Need to re-check readyRules every time
-    }
-
-    public void think(int numberOfCycles) {
+    public Set<Tag> think(int numberOfCycles) {
+        Set<Tag> allActivatedTags = new HashSet<>();
         for (int i = 0; i < numberOfCycles; i++) {
-            if (!thinkCycle())
-                return;
+            Set<Tag> activatedTags = thinkCycle();
+            if (activatedTags.isEmpty())
+                break;
+            allActivatedTags.addAll(activatedTags);
         }
+        return allActivatedTags;
     }
 
-    private boolean thinkCycle() { // Returns true if a rule activated
-        boolean fired = false;
+
+    /**
+     * Makes the ES think for a single cycle.
+     * TODO: match other tokens in facts: ? < > = (Think how to make this efficient, without iterating through entire set...)
+     * TODO?: What was question mark again? Any value?
+     *
+     * @return the activated Tags as a result of thinking.
+     */
+    private Set<Tag> thinkCycle() {
+        Set<Tag> activatedTags = new HashSet<>();
         Set<Rule> pendingActivatedRules = new HashSet<>();
         for (Rule rule : readyRules) {
-            if ((!facts.contains(rule.action) || !recommendations.contains(rule.action))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
+            if ((!facts.contains(rule.action) || !recommendations.contains(rule.action))) {
                 boolean shouldActivate = true;
                 for (Tag condition : rule.conditions) {
-                    if (!facts.contains(condition) && !recommendations.contains(condition)) { // TODO: match other tokens in facts: ? < > = (What was question mark again? Any value?) Think how to make this efficient, without iterating through entire set...
+                    if (!facts.contains(condition) && !recommendations.contains(condition)) {
                         shouldActivate = false;
                         break;
                     }
                 }
-                if (shouldActivate) {
-                    pendingActivatedRules.add(rule);
-                    fired = true;
-                }
+                if (shouldActivate) pendingActivatedRules.add(rule);
             }
         }
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
-            activatedRules.add(rule);
-            if (rule.action.isRecommendation())
-                recommendations.add(rule.action);
-            else
-                facts.add(rule.action);
+            activeRules.add(rule);
+            activatedTags.add(rule.action);
+            if (rule.action.isRecommendation()) recommendations.add((Recommendation) rule.action);
+            else if (rule.action.isFact()) facts.add((Fact) rule.action);
         }
-        return fired;
+        return activatedTags;
     }
 }
