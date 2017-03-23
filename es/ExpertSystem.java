@@ -104,10 +104,10 @@ public class ExpertSystem {
         boolean fired = false;
         Set<Rule> pendingActivatedRules = new HashSet<>();
         for (Rule rule : readyRules) {
-            if ((!facts.contains(rule.action) || (rule.action.isRecommendation() && !recommendations.contains(rule.action)))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
+            if ((!facts.contains(rule.action) || !recommendations.contains(rule.action))) { // With Tag superclass, don't need to distinguish between Recommendation and Fact here
                 boolean shouldActivate = true;
                 for (Tag condition : rule.conditions) {
-                    if (!facts.contains(condition) && !recommendations.contains(condition)) { // TODO: match other tokens in facts: ? < > =
+                    if (!facts.contains(condition) && !recommendations.contains(condition)) { // TODO: match other tokens in facts: ? < > = (What was question mark again? Any value?)
                         shouldActivate = false;
                         break;
                     }
