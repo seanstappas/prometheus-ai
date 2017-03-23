@@ -26,7 +26,7 @@ public class ExpertSystem {
         activatedRules = new HashSet<>();
     }
 
-    public void reset() {
+    public void reset() { // TODO: Should reset clear all data structures, or only de-activate activated rules?
         readyRules.clear();
         facts.clear();
         recommendations.clear();
