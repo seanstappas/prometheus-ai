@@ -78,13 +78,13 @@ public class Main { // TODO: Test with Google's GSON libary
         for (Recommendation recommendation : testRecommendations) {
             expert.addRecommendation(recommendation);
         }
-        Set<Tag> activatedTags = expert.think();
+        Set<Tag> activatedRecommendations = expert.think();
 
         System.out.println("[ES] Initial facts: " + Arrays.toString(testFacts));
         System.out.println("[ES] Initial recommendations: " + Arrays.toString(testRecommendations));
         System.out.println("[ES] Initial rules: " + Arrays.toString(testRules));
 
-        System.out.println("[ES] Activated tags: " + activatedTags);
+        System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
 
         System.out.println("[ES] Final facts: " + expert.getFacts());
         System.out.println("[ES] Final recommendations: " + expert.getRecommendations());

@@ -140,10 +140,9 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
-     * possible. Stops once the system reaches quiescence.
-     * TODO?: Should think() return only the newly activated Recommendations? Or simply all of them? (right now it returns all of them)
+     * possible. Stops once the system reaches natural quiescence.
      *
-     * @return the activated Tags as a result of thinking.
+     * @return the activated Recommendations as a result of thinking.
      */
     public Set<Tag> think() {
         Set<Tag> allActivatedTags = new HashSet<>();
@@ -152,17 +151,23 @@ public class ExpertSystem implements PrometheusLayer {
             activatedTags = thinkCycle();
             allActivatedTags.addAll(activatedTags);
         } while (!activatedTags.isEmpty());
-        return allActivatedTags;
+        Set<Tag> activatedRecommendations = new HashSet<>();
+        for (Tag tag : allActivatedTags) {
+            if (tag.isRecommendation())
+                activatedRecommendations.add(tag);
+        }
+        return activatedRecommendations;
     }
 
     /**
      * Makes the ES think for a fixed number of cycles. The number of cycles represents how much effort is being put
      * into thinking. Each cycle is a run-through of all the ready Rules, activating Rules if possible. Note that a Rule
      * that is activated in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
-     * cascade further activation.
+     * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
+     * quiescence.
      *
      * @param numberOfCycles the number of cycles to think for.
-     * @return the activated Tags as a result of thinking.
+     * @return the activated Recommendations as a result of thinking.
      */
     public Set<Tag> think(int numberOfCycles) {
         Set<Tag> allActivatedTags = new HashSet<>();
@@ -172,7 +177,12 @@ public class ExpertSystem implements PrometheusLayer {
                 break;
             allActivatedTags.addAll(activatedTags);
         }
-        return allActivatedTags;
+        Set<Tag> activatedRecommendations = new HashSet<>();
+        for (Tag tag : allActivatedTags) {
+            if (tag.isRecommendation())
+                activatedRecommendations.add(tag);
+        }
+        return activatedRecommendations;
     }
 
 
