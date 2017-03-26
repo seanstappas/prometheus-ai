@@ -5,13 +5,15 @@ import tags.Tag;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Knowledge Node Network (KNN)
  */
 public class KnowledgeNodeNetwork implements PrometheusLayer {
-    private HashMap<Tag, KnowledgeNode> mapKN;
+    // TODO?: Are recursive structures allowed?
+    private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
     private Set<TupleNN> activeTuplesNN;
     private Set<Tag> activeTagsMETA;
@@ -197,14 +199,13 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return the Tags activated as a result of thinking.
      */
     private Set<Tag> thinkForwards() {
-        Set<Tag> newlyFiredTags = new HashSet<>();
-        Set<Tag> pendingTags;
+        Set<Tag> totalActivatedTags = new HashSet<>();
+        Set<Tag> activatedTags;
         do {
-            pendingTags = forwardThinkCycle();
-            activeTags.addAll(pendingTags);
-            newlyFiredTags.addAll(pendingTags);
-        } while (!pendingTags.isEmpty());
-        return newlyFiredTags;
+            activatedTags = forwardThinkCycle();
+            totalActivatedTags.addAll(activatedTags);
+        } while (!activatedTags.isEmpty());
+        return totalActivatedTags;
     }
 
     /**
@@ -214,16 +215,15 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return the Tags activated as a result of thinking.
      */
     private Set<Tag> thinkForwards(int numberOfCycles) {
-        Set<Tag> newlyFiredTags = new HashSet<>();
+        Set<Tag> totalActivatedTags = new HashSet<>();
         for (int i = 0; i < numberOfCycles; i++) {
-            Set<Tag> pendingTags = forwardThinkCycle();
-            if (pendingTags.isEmpty()) {
+            Set<Tag> activatedTags = forwardThinkCycle();
+            if (activatedTags.isEmpty()) {
                 break;
             }
-            activeTags.addAll(pendingTags);
-            newlyFiredTags.addAll(pendingTags);
+            totalActivatedTags.addAll(activatedTags);
         }
-        return newlyFiredTags;
+        return totalActivatedTags;
     }
 
     /**
@@ -232,17 +232,20 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return the Tags activated as a result of thinking.
      */
     private Set<Tag> forwardThinkCycle() { // returns true if tag fired
-        Set<Tag> pendingFiredTags = new HashSet<>();
+        Set<Tag> pendingActiveTags = new HashSet<>();
         for (Tag t : activeTags) {
             if (mapKN.containsKey(t)) { // If activeTags are updated after firing...
                 Set<Tag> firedTags = excite(mapKN.get(t));
                 if (!firedTags.isEmpty()) {
-                    pendingFiredTags.addAll(firedTags);
+                    for (Tag tag : firedTags) {
+                        if (!activeTags.contains(tag))
+                            pendingActiveTags.add(tag);
+                    }
                 }
             }
         }
-        activeTags.addAll(pendingFiredTags);
-        return pendingFiredTags;
+        activeTags.addAll(pendingActiveTags);
+        return pendingActiveTags;
     }
 
     /**
