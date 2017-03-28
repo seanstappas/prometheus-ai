@@ -3,7 +3,7 @@ package tags;
 /**
  * Tag to be used throughout the Prometheus system.
  */
-public class Tag {
+public abstract class Tag {
     /**
      * The value of the Tag.
      */
@@ -25,9 +25,27 @@ public class Tag {
      * @param value the value of the Tag.
      * @param type the type of the Tag.
      */
-    Tag(String value, Type type) {
+    protected Tag(String value, Type type) {
         this.value = value;
         this.type = type;
+    }
+
+    /**
+     * Creates a Tag
+     * @param value
+     * @param type
+     * @return
+     */
+    public static Tag createTagFromString(String value, Type type) {
+        switch (type) {
+            case RECOMMENDATION:
+                return new Recommendation(value);
+            case RULE:
+                return new Rule(value);
+            case FACT:
+                return new Fact(value);
+        }
+        return null;
     }
 
     /**

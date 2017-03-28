@@ -138,7 +138,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * TODO: If no recommendations are fired, think() will resort to either thinkBackwards or thinkLambda. (Not theoretically well understood)
      * TODO: People generally thinkBackwards all the time in the background. In the future, could have a background thread that thinks backwards...
      *
-     * @return the Tags fired as a result of thinking.
+     * @return the Tags activated as a result of thinking.
      */
     public Set<Tag> think() {
         return thinkForwards();
@@ -176,9 +176,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
                 if (inputActivated)
                     pendingFacts.add(kn.inputTag);
             }
-            for (Tag t : pendingFacts) {
-                activeTags.add(t);
-            }
+            activeTags.addAll(pendingFacts);
         } while (!pendingFacts.isEmpty());
     }
 

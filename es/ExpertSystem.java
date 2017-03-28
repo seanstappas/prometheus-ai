@@ -107,7 +107,7 @@ public class ExpertSystem implements PrometheusLayer {
      *
      * @return the Recommendations of the ES.
      */
-    public Set getRecommendations() {
+    public Set<Recommendation> getRecommendations() {
         return recommendations;
     }
 
@@ -197,23 +197,27 @@ public class ExpertSystem implements PrometheusLayer {
         Set<Tag> activatedTags = new HashSet<>();
         Set<Rule> pendingActivatedRules = new HashSet<>();
         for (Rule rule : readyRules) {
-            if ((!facts.contains(rule.action) || !recommendations.contains(rule.action))) {
-                boolean shouldActivate = true;
-                for (Tag condition : rule.conditions) {
-                    if (!facts.contains(condition) && !recommendations.contains(condition)) {
-                        shouldActivate = false;
-                        break;
+            for (Tag outputTag : rule.outputTags) {
+                if ((!facts.contains(outputTag) || !recommendations.contains(outputTag))) {
+                    boolean shouldActivate = true;
+                    for (Tag condition : rule.inputTags) {
+                        if (!facts.contains(condition) && !recommendations.contains(condition)) {
+                            shouldActivate = false;
+                            break;
+                        }
                     }
+                    if (shouldActivate) pendingActivatedRules.add(rule);
                 }
-                if (shouldActivate) pendingActivatedRules.add(rule);
             }
         }
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
             activeRules.add(rule);
-            activatedTags.add(rule.action);
-            if (rule.action.isRecommendation()) recommendations.add((Recommendation) rule.action);
-            else if (rule.action.isFact()) facts.add((Fact) rule.action);
+            for (Tag outputTag : rule.outputTags) {
+                activatedTags.add(outputTag);
+                if (outputTag.isRecommendation()) recommendations.add((Recommendation) outputTag);
+                else if (outputTag.isFact()) facts.add((Fact) outputTag);
+            }
         }
         return activatedTags;
     }

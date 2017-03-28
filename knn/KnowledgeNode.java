@@ -1,7 +1,8 @@
 package knn;
 
-import tags.Fact;
 import tags.Tag;
+
+import java.util.Arrays;
 
 /**
  * Represents a Knowledge Node in the Knowledge Node Network.
@@ -21,7 +22,8 @@ public class KnowledgeNode { // (inputTag -> outputTags)
 
     /**
      * Constructor
-     * @param inputTag Input tag.
+     *
+     * @param inputTag   Input tag.
      * @param outputTags Output tags.
      */
     public KnowledgeNode(Tag inputTag, Tag[] outputTags) { // TODO?: Which fields should be parameters to the constructor?
@@ -30,16 +32,18 @@ public class KnowledgeNode { // (inputTag -> outputTags)
     }
 
     /**
-     * Creates a Knowledge Node (for debugging purposes). Assumes all tags are facts.
-     * @param inputTag the input Tag of the Knowledge Node.
+     * Creates a Knowledge Node from Strings. Assumes all Tags are of the provided Type.
+     *
+     * @param inputTag   the input Tag of the Knowledge Node.
      * @param outputTags the output Tag of the Knowldge Node.
+     * @param type       the type of all Tags (input and output).
      */
-    public KnowledgeNode(String inputTag, String[] outputTags) {
-        this.inputTag = new Fact(inputTag);
+    public KnowledgeNode(String inputTag, String[] outputTags, Tag.Type type) {
         int n = outputTags.length;
+        this.inputTag = Tag.createTagFromString(inputTag, type);
         this.outputTags = new Tag[n];
         for (int i = 0; i < n; i++) {
-            this.outputTags[i] = new Fact(outputTags[i]);
+            this.outputTags[i] = Tag.createTagFromString(outputTags[i], type);
         }
     }
 
@@ -49,5 +53,10 @@ public class KnowledgeNode { // (inputTag -> outputTags)
      */
     public void age() {
         age++;
+    }
+
+    @Override
+    public String toString() {
+        return inputTag.toString() + "=>" + Arrays.toString(outputTags);
     }
 }
