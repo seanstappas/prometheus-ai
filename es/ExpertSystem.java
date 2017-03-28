@@ -29,15 +29,21 @@ public class ExpertSystem implements PrometheusLayer {
     }
 
     /**
-     * Resets the ES by deactivating all Rules, clearing all Facts, and clearing all Recommendations.
-     * TODO?: Should reset clear Facts and Recommendations as well?
+     * Resets the ES by clearing all Rules, Recommendations, and Facts.
      */
     public void reset() {
-        readyRules.addAll(activeRules);
         activeRules.clear();
-
+        readyRules.clear();
         facts.clear();
         recommendations.clear();
+    }
+
+    /**
+     * Deactivates all active Rules.
+     */
+    public void deactivateRules() {
+        readyRules.addAll(activeRules);
+        activeRules.clear();
     }
 
     /**

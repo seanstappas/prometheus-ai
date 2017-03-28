@@ -1,6 +1,7 @@
 package test;
 
 import knn.KnowledgeNodeNetwork;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -21,12 +22,16 @@ public class TestKNN {
     public void tearDown() throws Exception {
     }
 
-    @org.testng.annotations.Test
+    @Test
     public void testReset() throws Exception {
+        knn.reset("test1");
+        Assert.assertTrue(knn.getActiveTags().isEmpty());
     }
 
     @Test
     public void testResetEmpty() throws Exception {
+        knn.resetEmpty();
+        Assert.assertTrue(knn.getActiveTags().isEmpty());
     }
 
     @Test

@@ -1,6 +1,7 @@
 package test;
 
 import es.ExpertSystem;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -10,7 +11,7 @@ import org.testng.annotations.Test;
  * TODO: Complete this
  */
 public class TestES {
-    ExpertSystem es;
+    private ExpertSystem es;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -23,6 +24,11 @@ public class TestES {
 
     @Test
     public void testReset() throws Exception {
+        es.reset();
+        Assert.assertTrue(es.getActiveRules().isEmpty());
+        Assert.assertTrue(es.getFacts().isEmpty());
+        Assert.assertTrue(es.getReadyRules().isEmpty());
+        Assert.assertTrue(es.getRecommendations().isEmpty());
     }
 
     @Test
@@ -63,10 +69,12 @@ public class TestES {
 
     @Test
     public void testThink() throws Exception {
+        es.think();
     }
 
     @Test
     public void testThinkNumCycles() throws Exception {
+        es.think(0);
     }
 
 }

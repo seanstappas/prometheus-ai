@@ -19,9 +19,13 @@ import java.util.Set;
  * Running es.ExpertSystem and knn.KnowledgeNodeNetwork
  */
 public class TestIntegration { // TODO: test with Google's GSON libary
+    KnowledgeNodeNetwork knn;
+    ExpertSystem es;
 
     @BeforeTest
     public void setup() {
+        knn = new KnowledgeNodeNetwork("database");
+        es = new ExpertSystem();
 
     }
 
@@ -40,12 +44,12 @@ public class TestIntegration { // TODO: test with Google's GSON libary
      * @return the Tags activated as a result of thinking.
      */
     private Set<Tag> setupKNNandThink() {
-        KnowledgeNodeNetwork knowledge = new KnowledgeNodeNetwork("database");
+        knn.resetEmpty();
         Tag[] initialActiveTags = new Tag[]{
                 new Fact("A")
         };
         for (Tag t : initialActiveTags) {
-            knowledge.addFiredTag(t);
+            knn.addFiredTag(t);
         }
         Tag inTag4 = new Fact("J");
         Tag[] outputTagsA = {new Fact("B"), new Fact("C"), new Fact("D")};
@@ -62,13 +66,13 @@ public class TestIntegration { // TODO: test with Google's GSON libary
                 new KnowledgeNode(inTag4, new Tag[]{outputTag4})
         };
         for (KnowledgeNode node : knowledgeNodes) {
-            knowledge.addKN(node);
+            knn.addKN(node);
         }
 
         System.out.println("[KNN] Initial knowledge nodes: " + Arrays.toString(knowledgeNodes));
         System.out.println("[KNN] Initial active tags: " + Arrays.toString(initialActiveTags));
 
-        Set<Tag> activatedTags = knowledge.think();
+        Set<Tag> activatedTags = knn.think();
         Set<Tag> expectedActivatedTags = new HashSet<>();
         expectedActivatedTags.addAll(Arrays.asList(outputTagsA));
         expectedActivatedTags.addAll(Arrays.asList(outputTagsB));
@@ -77,7 +81,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertEquals(activatedTags, expectedActivatedTags);
         System.out.println("[KNN] Newly activated tags: " + activatedTags);
 
-        Set<Tag> activeTags = knowledge.getActiveTags();
+        Set<Tag> activeTags = knn.getActiveTags();
         Set<Tag> expectedActiveTags = new HashSet<>();
         expectedActiveTags.addAll(expectedActivatedTags);
         expectedActiveTags.addAll(Arrays.asList(initialActiveTags));
@@ -94,6 +98,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     private void testES() {
         System.out.println();
         System.out.println("testES");
+        es.reset();
         Fact[] testFacts = {
                 new Fact("A"),
                 new Fact("B")
@@ -122,7 +127,6 @@ public class TestIntegration { // TODO: test with Google's GSON libary
                 rule4
         };
 
-        ExpertSystem es = new ExpertSystem();
         for (Fact fact : testFacts) {
             es.addFact(fact);
         }
@@ -198,7 +202,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         System.out.println();
         System.out.println("testKNNandES");
         Set<Tag> activatedTags = setupKNNandThink();
-        ExpertSystem es = new ExpertSystem();
+        es.reset();
         es.addTags(activatedTags);
 
         Set<Fact> expectedInitialFacts = new HashSet<>();
