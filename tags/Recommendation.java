@@ -11,4 +11,9 @@ public class Recommendation extends Tag {
     public Recommendation(String value) {
         super(value, Type.RECOMMENDATION);
     }
+
+    @Override
+    public String toString() {
+        return '#' + value;
+    }
 }

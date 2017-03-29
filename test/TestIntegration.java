@@ -51,7 +51,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         for (Tag t : initialActiveTags) {
             knn.addFiredTag(t);
         }
-        Tag inTag4 = new Fact("J");
+        Tag inTag4 = new Fact("D");
         Tag[] outputTagsA = {new Fact("B"), new Fact("C"), new Fact("D")};
         Tag[] outputTagsB = {new Fact("E"), new Fact("F"), new Fact("G")};
         Tag[] outputTagsE = {new Fact("H"), new Fact("I"), new Fact("J")};
