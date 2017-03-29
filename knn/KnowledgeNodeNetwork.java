@@ -15,8 +15,6 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     // TODO?: Are recursive structures allowed?
     private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
-    private Set<TupleNN> activeTuplesNN;
-    private Set<Tag> activeTagsMETA;
 
     // TODO: Add Sigmoid cache + sigmoid function (perhaps in outside class)
 
@@ -27,8 +25,6 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      */
     public KnowledgeNodeNetwork(String dbFilename) {
         mapKN = new HashMap<>();
-        activeTuplesNN = new HashSet<>();
-        activeTagsMETA = new HashSet<>();
         activeTags = new HashSet<>();
     }
 
@@ -46,8 +42,6 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      */
     public void resetEmpty() {
         clearKN();
-        clearMETA();
-        clearNN();
     }
 
     /**
@@ -57,39 +51,6 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      */
     public void saveKNN(String dbFilename) {
 
-    }
-
-    /**
-     * Adds a tuple from the NN to the KNN.
-     *
-     * @param nn the NN tuple to be added.
-     */
-    public void addTupleNN(TupleNN nn) {
-        activeTuplesNN.add(nn);
-    }
-
-    /**
-     * Adds a command from the META to the KNN.
-     *
-     * @param tag the Tag command from the META
-     */
-    public void addMETA(Tag tag) {
-        activeTagsMETA.add(tag);
-    }
-
-
-    /**
-     * Clears the tuples from the NN.
-     */
-    public void clearNN() {
-        activeTuplesNN.clear();
-    }
-
-    /**
-     * Clears the commands from META.
-     */
-    public void clearMETA() {
-        activeTagsMETA.clear();
     }
 
     /**

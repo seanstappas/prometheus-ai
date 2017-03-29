@@ -38,22 +38,6 @@ public class TestKNN {
     }
 
     @Test
-    public void testAddTupleNN() throws Exception {
-    }
-
-    @Test
-    public void testAddMETA() throws Exception {
-    }
-
-    @Test
-    public void testClearNN() throws Exception {
-    }
-
-    @Test
-    public void testClearMETA() throws Exception {
-    }
-
-    @Test
     public void testClearKN() throws Exception {
     }
 
