@@ -31,10 +31,10 @@ public abstract class Tag {
     }
 
     /**
-     * Creates a Tag
-     * @param value
-     * @param type
-     * @return
+     * Creates a Tag from a String.
+     * @param value the String value of the Tag.
+     * @param type the Type of the Tag.
+     * @return the created Tag.
      */
     public static Tag createTagFromString(String value, Type type) {
         switch (type) {

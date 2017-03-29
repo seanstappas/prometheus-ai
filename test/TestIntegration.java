@@ -33,7 +33,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
      * Tests the Knowledge Node Network's high-level functionality.
      */
     @Test
-    private void testKNN() {
+    public void testKNN() {
         System.out.println();
         System.out.println("testKNN");
         setupKNNandThink();
@@ -43,7 +43,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
      * Sets up a KNN, makes it think(), and returns the Tags activated as a result of thinking.
      * @return the Tags activated as a result of thinking.
      */
-    private Set<Tag> setupKNNandThink() {
+    public Set<Tag> setupKNNandThink() {
         knn.resetEmpty();
         Tag[] initialActiveTags = new Tag[]{
                 new Fact("A")
@@ -95,7 +95,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
      * Tests the Expert System's high-level functionality.
      */
     @Test
-    private void testES() {
+    public void testES() {
         System.out.println();
         System.out.println("testES");
         es.reset();
@@ -106,10 +106,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Recommendation recX = new Recommendation("X");
         Recommendation recY = new Recommendation("Y");
         Recommendation recZ = new Recommendation("Z");
-        Recommendation[] testRecommendations = {
-                recX,
-                recY
-        };
+        Recommendation[] testRecommendations = {recX, recY};
         Fact[] outputTags1 = {new Fact("D")};
         Fact[] outputTags2 = {new Fact("E")};
         Fact[] outputTags3 = {new Fact("F")};
@@ -198,7 +195,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
      * Tests the ES and KNN together.
      */
     @Test
-    private void testKNNandES() {
+    public void testKNNandES() {
         System.out.println();
         System.out.println("testKNNandES");
         Set<Tag> activatedTags = setupKNNandThink();

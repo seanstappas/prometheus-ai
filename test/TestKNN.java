@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 
 /**
  * Knowledge Node Network Unit Tests
- * TODO: Complete this
  */
 public class TestKNN {
     KnowledgeNodeNetwork knn;

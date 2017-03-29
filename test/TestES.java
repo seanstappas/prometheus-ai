@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 
 /**
  * Expert System Unit Tests
- * TODO: Complete this
  */
 public class TestES {
     private ExpertSystem es;
