@@ -6,7 +6,8 @@ package tags;
 public class Recommendation extends Tag {
     /**
      * Creates a Recommendation.
-     * @param value the value of the Recommendation.
+     *
+     * @param value  the value of the Recommendation
      */
     public Recommendation(String value) {
         super(value, Type.RECOMMENDATION);

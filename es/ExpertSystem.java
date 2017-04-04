@@ -49,8 +49,8 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds a Tag to the ES. Will cast the tag to either a Rule, a Fact, or a Recommendation.
      *
-     * @param tag the Tag to be added.
-     * @return true if the Tag is successfully added.
+     * @param tag  the Tag to be added
+     * @return     <code>true</code> if the Tag is successfully added
      */
     public boolean addTag(Tag tag) {
         switch (tag.type) {
@@ -70,8 +70,8 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds multiple Tags to the ES.
      *
-     * @param tags the Tags to be added.
-     * @return true if all the Tags are added successfully.
+     * @param tags  the Tags to be added
+     * @return      <code>true</code> if all the Tags are added successfully
      */
     public boolean addTags(Set<Tag> tags) {
         boolean allAdded = true;
@@ -84,7 +84,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds a Fact to the ES.
      *
-     * @param fact the Fact to be added.
+     * @param fact  the Fact to be added
      */
     public void addFact(Fact fact) {
         facts.add(fact);
@@ -93,7 +93,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds a Rule to the ES.
      *
-     * @param rule the Rule to be added.
+     * @param rule  the Rule to be added
      */
     public void addRule(Rule rule) {
         readyRules.add(rule);
@@ -102,7 +102,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds a Recommendation to the ES.
      *
-     * @param rec the Recommendation to be added.
+     * @param rec  the Recommendation to be added
      */
     public void addRecommendation(Recommendation rec) {
         recommendations.add(rec);
@@ -111,7 +111,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Gets all the Recommendations of the ES.
      *
-     * @return the Recommendations of the ES.
+     * @return  the Recommendations of the ES
      */
     public Set<Recommendation> getRecommendations() {
         return recommendations;
@@ -120,7 +120,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Gets the ready Rules of the ES.
      *
-     * @return the ready Rules of the ES.
+     * @return  the ready Rules of the ES
      */
     public Set<Rule> getReadyRules() { // For testing purposes
         return readyRules;
@@ -129,7 +129,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Gets the active Rules of the ES.
      *
-     * @return the active Rules of the ES.
+     * @return  the active Rules of the ES
      */
     public Set<Rule> getActiveRules() { // For testing purposes
         return activeRules;
@@ -138,7 +138,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Gets the Facts of the ES.
      *
-     * @return the Facts of the ES.
+     * @return  the Facts of the ES
      */
     public Set<Fact> getFacts() { // For testing purposes
         return facts;
@@ -148,7 +148,7 @@ public class ExpertSystem implements PrometheusLayer {
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
      * possible. Stops once the system reaches natural quiescence.
      *
-     * @return the activated Recommendations as a result of thinking.
+     * @return  the activated Recommendations as a result of thinking
      */
     public Set<Tag> think() {
         Set<Tag> allActivatedTags = new HashSet<>();
@@ -172,8 +172,8 @@ public class ExpertSystem implements PrometheusLayer {
      * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
      * quiescence.
      *
-     * @param numberOfCycles the number of cycles to think for.
-     * @return the activated Recommendations as a result of thinking.
+     * @param numberOfCycles  the number of cycles to think for
+     * @return                the activated Recommendations as a result of thinking
      */
     public Set<Tag> think(int numberOfCycles) {
         Set<Tag> allActivatedTags = new HashSet<>();
@@ -197,7 +197,7 @@ public class ExpertSystem implements PrometheusLayer {
      * TODO: match other tokens in facts: ? < > = (Think how to make this efficient, without iterating through entire set...)
      * TODO?: What was question mark again? Any value?
      *
-     * @return the activated Tags as a result of thinking.
+     * @return  the activated Tags as a result of thinking
      */
     private Set<Tag> thinkCycle() {
         Set<Tag> activatedTags = new HashSet<>();

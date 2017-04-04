@@ -21,7 +21,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Creates a new Knowledge Node Network (KNN) based on a database.
      *
-     * @param dbFilename the filename of the database to be read from (probably CSV or JSON).
+     * @param dbFilename  the filename of the database to be read from (probably CSV or JSON)
      */
     public KnowledgeNodeNetwork(String dbFilename) {
         mapKN = new HashMap<>();
@@ -31,7 +31,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Resets the KNN to a state from a database.
      *
-     * @param dbFilename the filename of the database to be read from.
+     * @param dbFilename  the filename of the database to be read from
      */
     public void reset(String dbFilename) {
 
@@ -47,7 +47,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Saves the current state of the KNN to a database.
      *
-     * @param dbFilename the filename of the database.
+     * @param dbFilename the filename of the database
      */
     public void saveKNN(String dbFilename) {
 
@@ -64,7 +64,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Adds a Knowledge Node to the KNN.
      *
-     * @param kn the Knowledge Node to be added
+     * @param kn  the Knowledge Node to be added
      */
     public void addKN(KnowledgeNode kn) {
         mapKN.put(kn.inputTag, kn);
@@ -73,7 +73,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Deletes a Knowledge Node from the KNN.
      *
-     * @param tag the input Tag of the Knowledge Node to be deleted.
+     * @param tag  the input Tag of the Knowledge Node to be deleted
      */
     public void delKN(Tag tag) {
         mapKN.remove(tag);
@@ -82,7 +82,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Adds a fired Tag to the KNN.
      *
-     * @param tag the fired Tag to be added.
+     * @param tag  the fired Tag to be added
      */
     public void addFiredTag(Tag tag) {
         activeTags.add(tag);
@@ -99,7 +99,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * TODO: If no recommendations are fired, think() will resort to either thinkBackwards or thinkLambda. (Not theoretically well understood)
      * TODO: People generally thinkBackwards all the time in the background. In the future, could have a background thread that thinks backwards...
      *
-     * @return the Tags activated as a result of thinking.
+     * @return  the Tags activated as a result of thinking
      */
     public Set<Tag> think() {
         return thinkForwards();
@@ -111,8 +111,8 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * that becomes active in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
      * cascade further activation.
      *
-     * @param numberOfCycles the number of cycles to think for.
-     * @return the Tags activated as a result of thinking.
+     * @param numberOfCycles  the number of cycles to think for
+     * @return                the Tags activated as a result of thinking
      */
     public Set<Tag> think(int numberOfCycles) {
         return thinkForwards(numberOfCycles);
@@ -155,7 +155,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * activation is greater than the threshold, the output tags are activated, and this is cascaded through the
      * network.
      *
-     * @return the Tags activated as a result of thinking.
+     * @return  the Tags activated as a result of thinking
      */
     private Set<Tag> thinkForwards() {
         Set<Tag> totalActivatedTags = new HashSet<>();
@@ -170,8 +170,8 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Makes the ES think forwards for a fixed number of cycles.
      *
-     * @param numberOfCycles the number of cycles to think for.
-     * @return the Tags activated as a result of thinking.
+     * @param numberOfCycles  the number of cycles to think for
+     * @return                the Tags activated as a result of thinking
      */
     private Set<Tag> thinkForwards(int numberOfCycles) {
         Set<Tag> totalActivatedTags = new HashSet<>();
@@ -188,7 +188,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Makes the ES think for a single cycle.
      *
-     * @return the Tags activated as a result of thinking.
+     * @return  the Tags activated as a result of thinking
      */
     private Set<Tag> forwardThinkCycle() { // returns true if tag fired
         Set<Tag> pendingActiveTags = new HashSet<>();
@@ -210,8 +210,8 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Excites a Knowledge Node. If excitation leads to firing, this will return the output Tags fired.
      *
-     * @param knowledgeNode the Knowledge Node to excite.
-     * @return the Tags activated as a result of excitation.
+     * @param knowledgeNode  the Knowledge Node to excite
+     * @return               the Tags activated as a result of excitation
      */
     private Set<Tag> excite(KnowledgeNode knowledgeNode) {
         Set<Tag> firedTags = new HashSet<>();
@@ -225,8 +225,8 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Fires a Knowledge Node.
      *
-     * @param knowledgeNode the Knowledge Node to fire.
-     * @return the Tags activated as a result of firing.
+     * @param knowledgeNode  the Knowledge Node to fire
+     * @return               the Tags activated as a result of firing
      */
     private Set<Tag> fire(KnowledgeNode knowledgeNode) {
         Set<Tag> pendingFacts = new HashSet<>();

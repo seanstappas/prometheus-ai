@@ -12,8 +12,8 @@ public class Rule extends Tag {
     /**
      * Creates a Rule.
      *
-     * @param inputTags condition tags of the rule.
-     * @param outputTag outputTags tag of the rule.
+     * @param inputTags  condition tags of the rule
+     * @param outputTag  outputTags tag of the rule
      */
     public Rule(Tag[] inputTags, Tag[] outputTag) {
         this.inputTags = inputTags;
@@ -26,9 +26,9 @@ public class Rule extends Tag {
     /**
      * Creates a Rule from Strings, assuming all Tags (input and output) are of the provided Type.
      *
-     * @param inputTags  the input Tags, in String form.
-     * @param outputTags the output Tags, in String form.
-     * @param type       the Type of both input and output Tags.
+     * @param inputTags   the input Tags, in String form
+     * @param outputTags  the output Tags, in String form
+     * @param type        the Type of both input and output Tags
      */
     public Rule(String[] inputTags, String[] outputTags, Type type) {
         int m = inputTags.length;
@@ -49,7 +49,7 @@ public class Rule extends Tag {
      * Creates a Rule from a single String.
      * TODO: Parse the String to produce a Rule.
      *
-     * @param value the String representing the Rule.
+     * @param value  the String representing the Rule
      */
     public Rule(String value) {
         super(value, Type.RULE);

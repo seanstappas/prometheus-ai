@@ -12,18 +12,21 @@ public abstract class Tag {
      * The type of the Tag (FACT, RULE, or RECOMMENDATION).
      */
     public Type type;
+
     public enum Type {
         FACT,
         RULE,
         RECOMMENDATION
     }
 
-    Tag() {}
+    Tag() {
+    }
 
     /**
      * Creates a Tag.
-     * @param value the value of the Tag.
-     * @param type the type of the Tag.
+     *
+     * @param value  the value of the Tag
+     * @param type   the type of the Tag
      */
     protected Tag(String value, Type type) {
         this.value = value;
@@ -32,9 +35,10 @@ public abstract class Tag {
 
     /**
      * Creates a Tag from a String.
-     * @param value the String value of the Tag.
-     * @param type the Type of the Tag.
-     * @return the created Tag.
+     *
+     * @param value  the String value of the Tag
+     * @param type   the Type of the Tag
+     * @return       the created Tag
      */
     public static Tag createTagFromString(String value, Type type) {
         switch (type) {
@@ -50,7 +54,8 @@ public abstract class Tag {
 
     /**
      * Checks if the Tag is a Recommendation.
-     * @return true if the Tag is a Recommendation.
+     *
+     * @return  <code>true</code> if the Tag is a Recommendation.
      */
     public boolean isRecommendation() {
         return type == Type.RECOMMENDATION;
@@ -58,7 +63,8 @@ public abstract class Tag {
 
     /**
      * Checks if the Tag is a Fact.
-     * @return true if the Tag is a Fact.
+     *
+     * @return  <code>true</code> if the Tag is a Fact
      */
     public boolean isFact() {
         return type == Type.FACT;
@@ -66,7 +72,8 @@ public abstract class Tag {
 
     /**
      * Checks if the Tag is a Rule.
-     * @return true if the Tag is a Rule.
+     *
+     * @return  <code>true</code> if the Tag is a Rule
      */
     public boolean isRule() {
         return type == Type.RULE;

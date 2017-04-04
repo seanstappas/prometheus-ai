@@ -41,7 +41,8 @@ public class TestIntegration { // TODO: test with Google's GSON libary
 
     /**
      * Sets up a KNN, makes it think(), and returns the Tags activated as a result of thinking.
-     * @return the Tags activated as a result of thinking.
+     *
+     * @return the Tags activated as a result of thinking
      */
     public Set<Tag> setupKNNandThink() {
         knn.resetEmpty();
@@ -57,7 +58,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Tag[] outputTagsE = {new Fact("H"), new Fact("I"), new Fact("J")};
         Tag outputTag4 = new Rule(
                 outputTagsE,
-                new Tag[] {new Recommendation("Z")}
+                new Tag[]{new Recommendation("Z")}
         );
         KnowledgeNode[] knowledgeNodes = new KnowledgeNode[]{
                 new KnowledgeNode(new Fact("A"), outputTagsA),
@@ -255,7 +256,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Tag[] outputTagsE = {new Fact("H"), new Fact("I"), new Fact("J")};
         Tag outputTag4 = new Rule(
                 outputTagsE,
-                new Tag[] {new Recommendation("Z")}
+                new Tag[]{new Recommendation("Z")}
         );
 
         Set<Rule> readyRules = es.getReadyRules();

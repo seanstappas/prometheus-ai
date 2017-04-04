@@ -6,7 +6,8 @@ package tags;
 public class Fact extends Tag {
     /**
      * Creates a Fact.
-     * @param value the value of the Fact.
+     *
+     * @param value  the value of the Fact
      */
     public Fact(String value) {
         super(value, Type.FACT);
