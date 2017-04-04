@@ -23,8 +23,8 @@ public class KnowledgeNode { // (inputTag -> outputTags)
     /**
      * Constructor
      *
-     * @param inputTag    Input tag
-     * @param outputTags  Output tags
+     * @param inputTag    input tag
+     * @param outputTags  output tags
      */
     public KnowledgeNode(Tag inputTag, Tag[] outputTags) { // TODO?: Which fields should be parameters to the constructor?
         this.inputTag = inputTag;
@@ -35,7 +35,7 @@ public class KnowledgeNode { // (inputTag -> outputTags)
      * Creates a Knowledge Node from Strings. Assumes all Tags are of the provided Type.
      *
      * @param inputTag    the input Tag of the Knowledge Node
-     * @param outputTags  the output Tag of the Knowldge Node
+     * @param outputTags  the output Tag of the Knowledge Node
      * @param type        the type of all Tags (input and output)
      */
     public KnowledgeNode(String inputTag, String[] outputTags, Tag.Type type) {
