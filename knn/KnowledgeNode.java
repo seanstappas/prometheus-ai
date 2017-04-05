@@ -19,6 +19,7 @@ public class KnowledgeNode { // (inputTag -> outputTags)
     int strength; // TODO?: Which strength approach to take?
     int confidence; // TODO: Implement confidence.
     Tag[] outputTags;
+    // TODO?: Inquire about Elsa's final decisions on the NN layer
 
     /**
      * Constructor

@@ -12,7 +12,7 @@ import java.util.Set;
  * Knowledge Node Network (KNN)
  */
 public class KnowledgeNodeNetwork implements PrometheusLayer {
-    // TODO?: Are recursive structures allowed? Yes
+    // TODO Allow cyclic graph (recursion)
     private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
 
