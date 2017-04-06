@@ -121,6 +121,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Thinking backwards works as follows: given output tags, the system attempts to find the associated input Tags
      * with some degree of confidence.
+     * TODO?: How far backwards do you go before going forwards?
      */
     private void thinkBackwards() {
         Set<Tag> pendingFacts = new HashSet<>();
