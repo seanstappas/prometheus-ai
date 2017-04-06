@@ -47,7 +47,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Saves the current state of the KNN to a database.
      *
-     * @param dbFilename the filename of the database
+     * @param dbFilename  the filename of the database
      */
     public void saveKNN(String dbFilename) {
 
