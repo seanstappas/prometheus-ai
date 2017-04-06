@@ -188,25 +188,25 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     }
 
     /**
-     * Makes the ES think for a single cycle.
+     * Makes the ES think forwards for a single cycle.
      *
      * @return  the Tags activated as a result of thinking
      */
-    private Set<Tag> forwardThinkCycle() { // returns true if tag fired
-        Set<Tag> pendingActiveTags = new HashSet<>();
+    private Set<Tag> forwardThinkCycle() {
+        Set<Tag> allPendingActiveTags = new HashSet<>();
         for (Tag t : activeTags) {
-            if (mapKN.containsKey(t)) { // If activeTags are updated after firing...
-                Set<Tag> firedTags = excite(mapKN.get(t));
-                if (!firedTags.isEmpty()) {
-                    for (Tag tag : firedTags) {
+            if (mapKN.containsKey(t)) {
+                Set<Tag> pendingActiveTags = excite(mapKN.get(t));
+                if (!pendingActiveTags.isEmpty()) {
+                    for (Tag tag : pendingActiveTags) {
                         if (!activeTags.contains(tag))
-                            pendingActiveTags.add(tag);
+                            allPendingActiveTags.add(tag);
                     }
                 }
             }
         }
-        activeTags.addAll(pendingActiveTags);
-        return pendingActiveTags;
+        activeTags.addAll(allPendingActiveTags);
+        return allPendingActiveTags;
     }
 
     /**
@@ -216,12 +216,12 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return               the Tags activated as a result of excitation
      */
     private Set<Tag> excite(KnowledgeNode knowledgeNode) {
-        Set<Tag> firedTags = new HashSet<>();
+        Set<Tag> pendingActiveTags = new HashSet<>();
         knowledgeNode.activation++;
         if (knowledgeNode.activation >= knowledgeNode.threshold) {
-            firedTags = fire(knowledgeNode);
+            pendingActiveTags = fire(knowledgeNode);
         }
-        return firedTags;
+        return pendingActiveTags;
     }
 
     /**
@@ -231,13 +231,12 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return               the Tags activated as a result of firing
      */
     private Set<Tag> fire(KnowledgeNode knowledgeNode) {
-        Set<Tag> pendingFacts = new HashSet<>();
+        Set<Tag> pendingActiveTags = new HashSet<>();
         for (Tag outputTag : knowledgeNode.outputTags) {
             if (!activeTags.contains(outputTag)) {
-                pendingFacts.add(outputTag);
+                pendingActiveTags.add(outputTag);
             }
         }
-        return pendingFacts;
-
+        return pendingActiveTags;
     }
 }
