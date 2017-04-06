@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Represents a rule in the expert system.
  */
 public class Rule extends Tag {
-    public Tag[] inputTags;
+    public Tag[] inputTags; // TODO?: Can a Recommendation be an input Tag to a Rule?
     public Tag[] outputTags;
 
     /**
