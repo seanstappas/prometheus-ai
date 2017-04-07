@@ -212,7 +212,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     private Set<Tag> excite(KnowledgeNode knowledgeNode) {
         Set<Tag> pendingActiveTags = new HashSet<>();
         knowledgeNode.activation++;
-        if (knowledgeNode.activation >= knowledgeNode.threshold) {
+        if (knowledgeNode.activation * knowledgeNode.strength >= knowledgeNode.threshold) {
             pendingActiveTags = fire(knowledgeNode);
         }
         return pendingActiveTags;

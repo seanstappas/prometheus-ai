@@ -16,8 +16,8 @@ public class KnowledgeNode { // (inputTag -> outputTags)
     // The age parameter ages in a particular way.  It ages only if it is not used.  Every time a node is used the age is reset to zero.
     // If the node is not used after a tau amount of time it will age.
     // Ages linearly or using sigmoid.
-    int strength; // TODO?: Which strength approach to take?
-    int confidence; // TODO: Implement confidence.
+    int strength = 1; // TODO?: Which strength approach to take?
+    int confidence = 100; // TODO: Implement confidence.
     Tag[] outputTags;
 
 
