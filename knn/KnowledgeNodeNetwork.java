@@ -206,14 +206,14 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Excites a Knowledge Node. If excitation leads to firing, this will return the output Tags fired.
      *
-     * @param knowledgeNode  the Knowledge Node to excite
-     * @return               the Tags activated as a result of excitation
+     * @param kn  the Knowledge Node to excite
+     * @return    the Tags activated as a result of excitation
      */
-    private Set<Tag> excite(KnowledgeNode knowledgeNode) {
+    private Set<Tag> excite(KnowledgeNode kn) {
         Set<Tag> pendingActiveTags = new HashSet<>();
-        knowledgeNode.activation++;
-        if (knowledgeNode.activation * knowledgeNode.strength >= knowledgeNode.threshold) {
-            pendingActiveTags = fire(knowledgeNode);
+        kn.activation++;
+        if (kn.activation * kn.strength >= kn.threshold) {
+            pendingActiveTags = fire(kn);
         }
         return pendingActiveTags;
     }
@@ -221,12 +221,12 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     /**
      * Fires a Knowledge Node.
      *
-     * @param knowledgeNode  the Knowledge Node to fire
-     * @return               the Tags activated as a result of firing
+     * @param kn  the Knowledge Node to fire
+     * @return    the Tags activated as a result of firing
      */
-    private Set<Tag> fire(KnowledgeNode knowledgeNode) {
+    private Set<Tag> fire(KnowledgeNode kn) {
         Set<Tag> pendingActiveTags = new HashSet<>();
-        for (Tag outputTag : knowledgeNode.outputTags) {
+        for (Tag outputTag : kn.outputTags) {
             if (!activeTags.contains(outputTag)) {
                 pendingActiveTags.add(outputTag);
             }
