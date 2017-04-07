@@ -194,14 +194,15 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return  the Tags activated as a result of thinking
      */
     private Set<Tag> forwardThinkCycle() {
-        Set<Tag> pendingTags = new HashSet<>();
+        Set<Tag> allPendingTags = new HashSet<>();
         for (Tag tag : activeTags) {
             if (mapKN.containsKey(tag)) {
-                pendingTags.addAll(excite(mapKN.get(tag)));
+                Set<Tag> pendingTags = excite(mapKN.get(tag));
+                allPendingTags.addAll(pendingTags);
             }
         }
-        activeTags.addAll(pendingTags);
-        return pendingTags;
+        activeTags.addAll(allPendingTags);
+        return allPendingTags;
     }
 
     /**
