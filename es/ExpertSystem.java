@@ -55,14 +55,11 @@ public class ExpertSystem implements PrometheusLayer {
     public boolean addTag(Tag tag) {
         switch (tag.type) {
             case RULE:
-                addRule((Rule) tag);
-                return true;
+                return addRule((Rule) tag);
             case FACT:
-                addFact((Fact) tag);
-                return true;
+                return addFact((Fact) tag);
             case RECOMMENDATION:
-                addRecommendation((Recommendation) tag);
-                return true;
+                return addRecommendation((Recommendation) tag);
         }
         return false;
     }
@@ -85,27 +82,30 @@ public class ExpertSystem implements PrometheusLayer {
      * Adds a Fact to the ES.
      *
      * @param fact  the Fact to be added
+     * @return      <code>true</code> if the ES did not already contain the specified Fact
      */
-    public void addFact(Fact fact) {
-        facts.add(fact);
+    public boolean addFact(Fact fact) {
+        return facts.add(fact);
     }
 
     /**
      * Adds a Rule to the ES.
      *
      * @param rule  the Rule to be added
+     * @return      <code>true</code> if the ES did not already contain the specified Rule
      */
-    public void addRule(Rule rule) {
-        readyRules.add(rule);
+    public boolean addRule(Rule rule) {
+        return readyRules.add(rule);
     }
 
     /**
      * Adds a Recommendation to the ES.
      *
      * @param rec  the Recommendation to be added
+     * @return      <code>true</code> if the ES did not already contain the specified Recommendation
      */
-    public void addRecommendation(Recommendation rec) {
-        recommendations.add(rec);
+    public boolean addRecommendation(Recommendation rec) {
+        return recommendations.add(rec);
     }
 
     /**
@@ -204,8 +204,8 @@ public class ExpertSystem implements PrometheusLayer {
         Set<Rule> pendingActivatedRules = new HashSet<>();
         for (Rule rule : readyRules) {
             boolean shouldActivate = true;
-            for (Tag condition : rule.inputTags) {
-                if (!facts.contains(condition) && !recommendations.contains(condition)) {
+            for (Tag tag : rule.inputTags) {
+                if (!facts.contains(tag) && !recommendations.contains(tag)) {
                     shouldActivate = false;
                     break;
                 }
@@ -216,11 +216,10 @@ public class ExpertSystem implements PrometheusLayer {
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
             activeRules.add(rule);
-            for (Tag outputTag : rule.outputTags) {
-                if (!facts.contains(outputTag) && !recommendations.contains(outputTag)) {
-                    activatedTags.add(outputTag);
-                    if (outputTag.isRecommendation()) recommendations.add((Recommendation) outputTag);
-                    else if (outputTag.isFact()) facts.add((Fact) outputTag);
+            for (Tag tag : rule.outputTags) {
+                if (!facts.contains(tag) && !recommendations.contains(tag)) {
+                    activatedTags.add(tag);
+                    addTag(tag);
                 }
             }
         }

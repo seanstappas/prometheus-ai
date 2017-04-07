@@ -83,9 +83,10 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * Adds a fired Tag to the KNN.
      *
      * @param tag  the fired Tag to be added
+     * @return     <code>true</code> if the Tag is added successfully
      */
-    public void addFiredTag(Tag tag) {
-        activeTags.add(tag);
+    public boolean addFiredTag(Tag tag) {
+        return activeTags.add(tag);
     }
 
     public Set<Tag> getActiveTags() {
@@ -193,14 +194,14 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return  the Tags activated as a result of thinking
      */
     private Set<Tag> forwardThinkCycle() {
-        Set<Tag> pendingActiveTags = new HashSet<>();
-        for (Tag t : activeTags) {
-            if (mapKN.containsKey(t)) {
-                pendingActiveTags.addAll(excite(mapKN.get(t)));
+        Set<Tag> pendingTags = new HashSet<>();
+        for (Tag tag : activeTags) {
+            if (mapKN.containsKey(tag)) {
+                pendingTags.addAll(excite(mapKN.get(tag)));
             }
         }
-        activeTags.addAll(pendingActiveTags);
-        return pendingActiveTags;
+        activeTags.addAll(pendingTags);
+        return pendingTags;
     }
 
     /**
@@ -210,12 +211,12 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return    the Tags activated as a result of excitation
      */
     private Set<Tag> excite(KnowledgeNode kn) {
-        Set<Tag> pendingActiveTags = new HashSet<>();
+        Set<Tag> pendingTags = new HashSet<>();
         kn.activation++;
         if (kn.activation * kn.strength >= kn.threshold) {
-            pendingActiveTags = fire(kn);
+            pendingTags = fire(kn);
         }
-        return pendingActiveTags;
+        return pendingTags;
     }
 
     /**
@@ -225,12 +226,12 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return    the Tags activated as a result of firing
      */
     private Set<Tag> fire(KnowledgeNode kn) {
-        Set<Tag> pendingActiveTags = new HashSet<>();
-        for (Tag outputTag : kn.outputTags) {
-            if (!activeTags.contains(outputTag)) {
-                pendingActiveTags.add(outputTag);
+        Set<Tag> pendingTags = new HashSet<>();
+        for (Tag tag : kn.outputTags) {
+            if (!activeTags.contains(tag)) {
+                pendingTags.add(tag);
             }
         }
-        return pendingActiveTags;
+        return pendingTags;
     }
 }
