@@ -1,7 +1,8 @@
 package tags;
 
 /**
- * Helper class to create a Fact object. A Fact represents a Predicate.
+ * Represents a fact in the Expert System. Facts are simple calculus predicates that represent something that is seen as
+ * true.
  */
 public class Fact extends Tag {
     /**

@@ -3,7 +3,8 @@ package tags;
 import java.util.Arrays;
 
 /**
- * Represents a rule in the expert system.
+ * Represents a rule in the expert system. Rules are many-to-many structures with Facts and Recommendations as inputs
+ * and outputs. They only activate when all the input Tags are active.
  */
 public class Rule extends Tag {
     public Tag[] inputTags; // TODO?: Can a Recommendation be an input Tag to a Rule?
