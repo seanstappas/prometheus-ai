@@ -204,8 +204,8 @@ public class ExpertSystem implements PrometheusLayer {
         Set<Rule> pendingActivatedRules = new HashSet<>();
         for (Rule rule : readyRules) {
             boolean shouldActivate = true;
-            for (Tag tag : rule.inputTags) {
-                if (!facts.contains(tag) && !recommendations.contains(tag)) {
+            for (Fact fact : rule.inputFacts) {
+                if (!facts.contains(fact)) {
                     shouldActivate = false;
                     break;
                 }
