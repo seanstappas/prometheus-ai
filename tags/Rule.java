@@ -3,11 +3,11 @@ package tags;
 import java.util.Arrays;
 
 /**
- * Represents a rule in the expert system. Rules are many-to-many structures with Facts and Recommendations as inputs
- * and outputs. They only activate when all the input Tags are active.
+ * Represents a rule in the expert system. Rules are many-to-many structures with Facts as inputs and Facts and
+ * Recommendations as outputs. They only activate when all the input Tags are active.
  */
 public class Rule extends Tag {
-    public Tag[] inputTags; // TODO?: Can a Recommendation be an input Tag to a Rule?
+    public Fact[] inputTags; // TODO?: Can a Recommendation be an input Tag to a Rule?
     public Tag[] outputTags;
 
     /**
@@ -16,7 +16,7 @@ public class Rule extends Tag {
      * @param inputTags  condition tags of the rule
      * @param outputTag  outputTags tag of the rule
      */
-    public Rule(Tag[] inputTags, Tag[] outputTag) {
+    public Rule(Fact[] inputTags, Tag[] outputTag) {
         this.inputTags = inputTags;
         this.outputTags = outputTag;
         this.type = Type.RULE;
@@ -29,15 +29,15 @@ public class Rule extends Tag {
      *
      * @param inputTags   the input Tags, in String form
      * @param outputTags  the output Tags, in String form
-     * @param type        the Type of both input and output Tags
+     * @param type        the Type of output Tags
      */
     public Rule(String[] inputTags, String[] outputTags, Type type) {
         int m = inputTags.length;
         int n = outputTags.length;
-        this.inputTags = new Tag[m];
+        this.inputTags = new Fact[m];
         this.outputTags = new Tag[n];
         for (int i = 0; i < m; i++) {
-            this.inputTags[i] = Tag.createTagFromString(inputTags[i], type);
+            this.inputTags[i] = new Fact(inputTags[i]);
         }
         for (int i = 0; i < n; i++) {
             this.outputTags[i] = Tag.createTagFromString(outputTags[i], type);

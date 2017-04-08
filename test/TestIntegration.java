@@ -55,7 +55,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Tag inTag4 = new Fact("D");
         Tag[] outputTagsA = {new Fact("B"), new Fact("C"), new Fact("D")};
         Tag[] outputTagsB = {new Fact("E"), new Fact("F"), new Fact("G")};
-        Tag[] outputTagsE = {new Fact("H"), new Fact("I"), new Fact("J")};
+        Fact[] outputTagsE = {new Fact("H"), new Fact("I"), new Fact("J")};
         Tag outputTag4 = new Rule(
                 outputTagsE,
                 new Tag[]{new Recommendation("Z")}
@@ -112,11 +112,11 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Fact[] outputTags2 = {new Fact("E")};
         Fact[] outputTags3 = {new Fact("F")};
         Fact[] outputTags4 = {new Fact("H")};
-        Rule unactivatedRule = new Rule(new Tag[]{new Fact("G"), new Fact("A")}, outputTags4);
-        Rule rule1 = new Rule(new Tag[]{new Fact("A"), new Fact("B")}, outputTags1);
-        Rule rule2 = new Rule(new Tag[]{new Fact("D"), new Fact("B")}, outputTags2);
-        Rule rule3 = new Rule(new Tag[]{new Fact("D"), new Fact("E")}, outputTags3);
-        Rule rule4 = new Rule(new Recommendation[]{recX, recY}, new Tag[]{recZ});
+        Rule unactivatedRule = new Rule(new Fact[]{new Fact("G"), new Fact("A")}, outputTags4);
+        Rule rule1 = new Rule(new Fact[]{new Fact("A"), new Fact("B")}, outputTags1);
+        Rule rule2 = new Rule(new Fact[]{new Fact("D"), new Fact("B")}, outputTags2);
+        Rule rule3 = new Rule(new Fact[]{new Fact("D"), new Fact("E")}, outputTags3);
+        Rule rule4 = new Rule(new Fact[]{new Fact("E"), new Fact("F")}, new Tag[]{recZ});
         Rule[] testRules = {
                 rule1,
                 rule2,
@@ -253,7 +253,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertEquals(recommendations, expectedRecommendations);
         System.out.println("[ES] Final recommendations: " + recommendations);
 
-        Tag[] outputTagsE = {new Fact("H"), new Fact("I"), new Fact("J")};
+        Fact[] outputTagsE = {new Fact("H"), new Fact("I"), new Fact("J")};
         Tag outputTag4 = new Rule(
                 outputTagsE,
                 new Tag[]{new Recommendation("Z")}
