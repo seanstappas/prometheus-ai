@@ -144,9 +144,8 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
 
     /**
      * Combination of thinkBackwards and thinkForwards. First the networks works backwards, then moves forward to
-     * determine the correct memory.
+     * determine the correct memory. Lambda thinking is used as a last resort, if forwards and backwards thinking fail.
      * TODO?: How far backwards do you go before going forwards?
-     * TODO?: Specific use case for lambda thinking?
      */
     private void thinkLambda() {
         thinkBackwards();

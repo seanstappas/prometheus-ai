@@ -195,7 +195,6 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Makes the ES think for a single cycle.
      * TODO: match other tokens in facts: ? < > = (Think how to make this efficient, without iterating through entire set...)
-     * TODO?: What was question mark again? Any value?
      *
      * @return  the activated Tags as a result of thinking
      */

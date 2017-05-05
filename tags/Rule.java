@@ -7,7 +7,7 @@ import java.util.Arrays;
  * Recommendations as outputs. They only activate when all the input Tags are active.
  */
 public class Rule extends Tag {
-    public Fact[] inputFacts; // TODO?: Can a Recommendation be an input Tag to a Rule?
+    public Fact[] inputFacts;
     public Tag[] outputTags;
 
     /**
