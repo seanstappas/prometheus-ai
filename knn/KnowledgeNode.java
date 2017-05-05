@@ -50,7 +50,7 @@ public class KnowledgeNode { // (inputTag -> outputTags)
 
     /**
      * Ages the current Knowledge Node.
-     * TODO: Aging: System will have (daily) timestamp, nodes will have timestamp updated at every firing. Look at difference between the two before deciding to fire
+     * TODO: Aging: Nodes will have timestamp updated at every excitation. Look at elapsed time since last excitation before firing, deleting the node if the excitation is too far in the past.
      */
     public void age() {
         age++;
