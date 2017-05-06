@@ -12,10 +12,6 @@ public class KnowledgeNode { // (inputTag -> outputTags)
     int activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
     int threshold = 1; // limit: When activation > threshold : fires output tags (outputTags array). These tags can be lists of rules or facts.
     double age = 0; // age = 0; // When a node is newly formed it has an age of zero.
-    // When the node’s age increases to a value greater than or equal to K the node is then deleted.
-    // The age parameter ages in a particular way.  It ages only if it is not used.  Every time a node is used the age is reset to zero.
-    // If the node is not used after a tau amount of time it will age.
-    // Ages linearly or using sigmoid.
     int strength = 1; // TODO?: Which strength approach to take?
     int confidence = 100; // TODO: Implement confidence.
     Tag[] outputTags;

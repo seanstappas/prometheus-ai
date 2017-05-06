@@ -208,12 +208,13 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * Excites a Knowledge Node. If excitation leads to firing, this will return the output Tags fired.
      *
      * @param kn  the Knowledge Node to excite
+     * @param maxAge the maximum age of a node (s) for it to be fired
      * @return    the Tags activated as a result of excitation
      */
-    private Set<Tag> excite(KnowledgeNode kn, int threshold) {
+    private Set<Tag> excite(KnowledgeNode kn, int maxAge) {
         Set<Tag> pendingTags = new HashSet<>();
         kn.activation++;
-        if (kn.updateAge() > threshold) {
+        if (kn.updateAge() > maxAge) {
             delKN(kn.inputTag);
         }
         else if (kn.activation * kn.strength >= kn.threshold) {
