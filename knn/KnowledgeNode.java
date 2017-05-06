@@ -11,7 +11,7 @@ public class KnowledgeNode { // (inputTag -> outputTags)
     Tag inputTag;
     int activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
     int threshold = 1; // limit: When activation > threshold : fires output tags (outputTags array). These tags can be lists of rules or facts.
-    int age = 0; // When a node is newly formed it has an age of zero.
+    double age = 0; // age = 0; // When a node is newly formed it has an age of zero.
     // When the node’s age increases to a value greater than or equal to K the node is then deleted.
     // The age parameter ages in a particular way.  It ages only if it is not used.  Every time a node is used the age is reset to zero.
     // If the node is not used after a tau amount of time it will age.
@@ -50,10 +50,12 @@ public class KnowledgeNode { // (inputTag -> outputTags)
 
     /**
      * Ages the current Knowledge Node.
-     * TODO: Aging: Nodes will have timestamp updated at every excitation. Look at elapsed time since last excitation before firing, deleting the node if the excitation is too far in the past.
+     * @return the age (time elapsed since initialisation/last update)
      */
-    public void age() {
-        age++;
+
+    public double updateAge() {
+        this.age =  (System.currentTimeMillis() / 1000L) - this.age;
+        return this.age;
     }
 
     @Override
