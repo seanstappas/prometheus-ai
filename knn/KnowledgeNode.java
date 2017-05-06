@@ -11,7 +11,7 @@ public class KnowledgeNode { // (inputTag -> outputTags)
     Tag inputTag;
     int activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
     int threshold = 1; // limit: When activation > threshold : fires output tags (outputTags array). These tags can be lists of rules or facts.
-    double age = 0; // age = 0; // When a node is newly formed it has an age of zero.
+    double age = System.currentTimeMillis() / 1000L; // Age timestamp. Set to current UNIX time when node is newly formed.
     int strength = 1; // TODO?: Which strength approach to take?
     int confidence = 100; // TODO: Implement confidence.
     Tag[] outputTags;
