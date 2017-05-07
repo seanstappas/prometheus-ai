@@ -149,9 +149,6 @@ public class ExpertSystem implements PrometheusLayer {
      * @param x the value to apply the function to
      * @return the computed value
      */
-    public int fastSigmoidFunc(int x) {
-        return x / (1+Math.abs(x));
-    }
 
     /**
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if

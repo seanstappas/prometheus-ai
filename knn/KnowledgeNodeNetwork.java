@@ -16,8 +16,6 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
 
-    // TODO: Add Sigmoid cache + sigmoid function (perhaps in outside class)
-
     /**
      * Creates a new Knowledge Node Network (KNN) based on a database.
      *
@@ -92,7 +90,6 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
     public Set<Tag> getActiveTags() {
         return activeTags;
     }
-
 
     /**
      * Makes the KNN think, and start cascaded activation and firing if possible. Chooses either thinkForwards(),
@@ -213,7 +210,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      */
     private Set<Tag> excite(KnowledgeNode kn, int maxAge) {
         Set<Tag> pendingTags = new HashSet<>();
-        kn.activation++;
+        kn.fastSigmoidFunc();
         if (kn.updateAge() > maxAge) {
             delKN(kn.inputTag);
         }

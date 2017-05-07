@@ -54,6 +54,16 @@ public class KnowledgeNode { // (inputTag -> outputTags)
         return this.age;
     }
 
+
+    /**
+     * Updates activation value of KN to approximate value from the sigmoid function
+     */
+
+    public void fastSigmoidFunc() {
+        int x = this.activation;
+        this.activation =  x / (1+Math.abs(x));
+    }
+
     @Override
     public String toString() {
         return inputTag.toString() + "=>" + Arrays.toString(outputTags);
