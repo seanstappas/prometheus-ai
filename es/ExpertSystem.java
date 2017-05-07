@@ -145,12 +145,6 @@ public class ExpertSystem implements PrometheusLayer {
     }
 
     /**
-     * Returns an approximate value from the sigmoid function
-     * @param x the value to apply the function to
-     * @return the computed value
-     */
-
-    /**
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
      * possible. Stops once the system reaches natural quiescence.
      *

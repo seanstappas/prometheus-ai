@@ -11,6 +11,6 @@ public class Fact extends Tag {
      * @param value  the value of the Fact
      */
     public Fact(String value) {
-        super(value, Type.FACT);
+        super(value, TagType.FACT);
     }
 }

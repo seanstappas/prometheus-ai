@@ -193,7 +193,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
         Set<Tag> allPendingTags = new HashSet<>();
         for (Tag tag : activeTags) {
             if (mapKN.containsKey(tag)) {
-                Set<Tag> pendingTags = excite(mapKN.get(tag), 60);
+                Set<Tag> pendingTags = excite(mapKN.get(tag));
                 allPendingTags.addAll(pendingTags);
             }
         }
@@ -205,16 +205,15 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * Excites a Knowledge Node. If excitation leads to firing, this will return the output Tags fired.
      *
      * @param kn  the Knowledge Node to excite
-     * @param maxAge the maximum age of a node (s) for it to be fired
      * @return    the Tags activated as a result of excitation
      */
-    private Set<Tag> excite(KnowledgeNode kn, int maxAge) {
+    private Set<Tag> excite(KnowledgeNode kn) {
         Set<Tag> pendingTags = new HashSet<>();
-        kn.fastSigmoidFunc();
-        if (kn.updateAge() > maxAge) {
+        kn.increaseActivation();
+        if (kn.updateAge() > kn.maxAge) {
             delKN(kn.inputTag);
         }
-        else if (kn.activation * kn.strength >= kn.threshold) {
+        else if (kn.getActivation() * kn.strength >= kn.threshold) {
             pendingTags = fire(kn);
         }
         return pendingTags;

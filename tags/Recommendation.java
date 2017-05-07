@@ -11,7 +11,7 @@ public class Recommendation extends Tag {
      * @param value  the value of the Recommendation
      */
     public Recommendation(String value) {
-        super(value, Type.RECOMMENDATION);
+        super(value, TagType.RECOMMENDATION);
     }
 
     @Override

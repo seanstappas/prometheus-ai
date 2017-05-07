@@ -11,9 +11,9 @@ public abstract class Tag {
     /**
      * The type of the Tag (FACT, RULE, or RECOMMENDATION).
      */
-    public Type type;
+    public TagType type;
 
-    public enum Type {
+    public enum TagType {
         FACT,
         RULE,
         RECOMMENDATION
@@ -26,9 +26,9 @@ public abstract class Tag {
      * Creates a Tag.
      *
      * @param value  the value of the Tag
-     * @param type   the type of the Tag
+     * @param type   the Type of the Tag
      */
-    protected Tag(String value, Type type) {
+    protected Tag(String value, TagType type) {
         this.value = value;
         this.type = type;
     }
@@ -40,7 +40,7 @@ public abstract class Tag {
      * @param type   the Type of the Tag
      * @return       the created Tag
      */
-    public static Tag createTagFromString(String value, Type type) {
+    public static Tag createTagFromString(String value, TagType type) {
         switch (type) {
             case RECOMMENDATION:
                 return new Recommendation(value);
@@ -58,7 +58,7 @@ public abstract class Tag {
      * @return  <code>true</code> if the Tag is a Recommendation.
      */
     public boolean isRecommendation() {
-        return type == Type.RECOMMENDATION;
+        return type == TagType.RECOMMENDATION;
     }
 
     /**
@@ -67,7 +67,7 @@ public abstract class Tag {
      * @return  <code>true</code> if the Tag is a Fact
      */
     public boolean isFact() {
-        return type == Type.FACT;
+        return type == TagType.FACT;
     }
 
     /**
@@ -76,7 +76,7 @@ public abstract class Tag {
      * @return  <code>true</code> if the Tag is a Rule
      */
     public boolean isRule() {
-        return type == Type.RULE;
+        return type == TagType.RULE;
     }
 
     @Override
