@@ -173,6 +173,10 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * @return                the Tags activated as a result of thinking
      */
     private Set<Tag> thinkForwards(int numberOfCycles) {
+        if (numberOfCycles == 0) {
+            return thinkForwards();
+        }
+
         Set<Tag> totalActivatedTags = new HashSet<>();
         for (int i = 0; i < numberOfCycles; i++) {
             Set<Tag> activatedTags = forwardThinkCycle();
