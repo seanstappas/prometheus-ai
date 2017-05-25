@@ -120,7 +120,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      * Thinking backwards works as follows: given output tags, the system attempts to find the associated input Tags
      * with some degree of confidence.
      */
-    private void thinkBackwards() {
+    private void thinkBackwards() { // TODO: Backward search is a single ply search. It terminates after this single search. It does not cascade recursively.
         Set<Tag> pendingFacts = new HashSet<>();
         do {
             pendingFacts.clear();
@@ -156,7 +156,7 @@ public class KnowledgeNodeNetwork implements PrometheusLayer {
      *
      * @return  the Tags activated as a result of thinking
      */
-    private Set<Tag> thinkForwards() {
+    private Set<Tag> thinkForwards() { // TODO: Add age limit parameter (only search nodes whose age < some threshold)
         Set<Tag> totalActivatedTags = new HashSet<>();
         Set<Tag> activatedTags;
         do {
