@@ -225,8 +225,8 @@ public class ExpertSystem implements PrometheusLayer {
                 }
                 else {
                     Set factSet = facts.get(fact.toVariable());
-                    if (fact.matches(factSet)) {
-                        shouldActivate = true;
+                    if (!fact.matches(factSet)) {
+                        shouldActivate = false;
                         break;
                     }
                 }
