@@ -1,114 +1,116 @@
 package tags;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Represents a fact in the Expert System. Facts are simple calculus predicates that represent something that is seen as
  * true.
  */
+
 public class Fact extends Tag {
 
-    private factTypes factType;
-    private int numValue;
+    private String predicate;
+    private ArrayList<Argument> arguments;
+    private boolean multiMatch;
 
-    /**
-     * Denotes the types a fact may take
-     *
-     * BOOL: A (is true)
-     * CONST: A = 10
-     * GT: A > 10
-     * LT: A < 10
-     */
-
-    public enum factTypes {
-        BOOL, CONST, GT, LT
+    public Fact() {
+        this.type = TagType.FACT;
     }
-
-    /**
-     * Creates a Fact.
-     *
-     * @param value the value of the Fact
-     */
 
     public Fact(String value) {
 
         this.value = value;
         this.type = TagType.FACT;
-
-
-        if (value.contains("="))
-            this.factType = factTypes.CONST;
-        else if (value.contains(">"))
-            this.factType = factTypes.GT;
-        else if (value.contains("<"))
-            this.factType = factTypes.LT;
-        else
-            this.factType = factTypes.BOOL;
-
-
-        if (this.factType == factTypes.BOOL)
-            this.numValue = 1;
-        else
-            this.numValue = Integer.parseInt(value.replaceAll("[\\D]", ""));
+        this.predicate = value.split("\\(")[0];
+        this.multiMatch = false;
+        this.arguments = argumentParser(value);
 
     }
 
     /**
-     * Returns a string with only name of the fact i.e. A=1 -> "A"
-     * @return
+     * Parses a raw string into a list of string tokens that represent each argument
+     * @param str string input
+     * @return list of string arguments
      */
 
-    public String toVariable() {
-        return this.toString().replaceAll("[^A-Za-z]", "");
-    }
-
-    /**
-     * Getter method for variable factType
-     * @return factType of the object
-     */
-
-    public factTypes getFactType() {
-        return this.factType;
-    }
-
-    /**
-     * Getter method for variable numValue
-     * @return integer corresponding to the numeric value of the object
-     */
-
-    public int getNumValue() {
-        return this.numValue;
-    }
-
-    /**
-     * Checks if two facts are true in the same system
-     *
-     * @param factSet the list of facts to iterate over for comparisons
-     * @return true if facts match
-     */
-
-    public boolean matches(Set<Fact> factSet) {
-        for (Fact that : factSet) {
-            if ((this.getFactType() == factTypes.BOOL) || (that.getFactType() == factTypes.BOOL)) {
-                return true;
+    public ArrayList<Argument> argumentParser(String str) {
+        String args = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
+        String[] argTokens = args.split(",");
+        ArrayList<Argument> argList = new ArrayList<>();
+        for (int i = 0; i < argTokens.length; i++) {
+            if (argTokens[i].equals("*")) {
+                this.multiMatch = true;
             }
-            if (this.getFactType() == factTypes.CONST) {
-                if ((that.getFactType() == factTypes.CONST && this.getNumValue() == that.getNumValue()) ||
-                    (that.getFactType() == factTypes.GT && this.getNumValue() > that.getNumValue()) ||
-                        (that.getFactType() == factTypes.LT && this.getNumValue() < that.getNumValue()) ) {
-                    return true;
-                }
-            }
-            if (this.getFactType() == factTypes.GT) {
-                if (that.getFactType() == factTypes.CONST && that.getNumValue() > this.getNumValue())
-                    return true;
-            }
-            if (this.getFactType() == factTypes.LT) {
-                if (that.getFactType() == factTypes.CONST && that.getNumValue() < this.getNumValue())
-                    return true;
+            else {
+                Argument argument = makeArgument(argTokens[i]);
+                argList.add(argument);
             }
         }
-        return false;
+        return argList;
     }
 
+    /**
+     * Calls the appropriate Argument constructor on a string token
+     * @param string String token
+     * @return A single argument
+     */
+
+    public static Argument makeArgument(String string) {
+        String[] tokens = string.split("[=><]");
+
+        if (tokens[1].matches("-?\\d+(\\.\\d+)?")) { //cleanup
+            return new numericArgument(string, tokens);
+        } else if (tokens[0].equals("?")) {
+            return new Argument(string);
+        } else if(tokens[1].charAt(0) == '&') {
+            return new Argument(string);
+        } else {
+            return new stringArgument(string, tokens);
+        }
+    }
+
+    public String getPredicate() {
+        return predicate;
+    }
+
+    public ArrayList<Argument> getArguments() {
+        return arguments;
+    }
+
+    /**
+     * Compares two facts to see if they are compatible
+     * @param that fact being compared
+     * @return true if facts are 'matched' (notice not necessarily equal)
+     */
+
+    //TODO: Complete matches
+    public Boolean factMatches(Fact that) {
+        if (!this.predicate.equals(that.predicate)) {
+            return false;
+        }
+        else if (this.arguments.size() != that.arguments.size()) {
+        if (!this.multiMatch || !that.multiMatch) {
+                return false;
+            }
+        }
+        if (this.arguments.equals(that.arguments)) {
+            return true;
+        }
+        else {
+            for (Argument a1 : this.arguments) {
+                for (Argument a2 : that.arguments) {
+                    if (a1.matches(a2)) {
+
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+
 }
+
+

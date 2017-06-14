@@ -1,5 +1,6 @@
 package tags;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -48,14 +49,41 @@ public class Rule extends Tag {
 
     /**
      * Creates a Rule from a single String.
-     * TODO: Parse the String to produce a Rule.
      *
      * @param value  the String representing the Rule
      */
     public Rule(String value) {
-        super(value, TagType.RULE);
-    }
+        String [] tokens = value.split(" ");
+        ArrayList<Fact> inputFactList = new ArrayList<Fact>();
+        ArrayList<Tag> outputTagList= new ArrayList<Tag>();
+        String delim = "->";
+        Boolean isOutputTag = false;
+        for (String token: tokens) {
+            if (token.equals(delim)) {
+                isOutputTag = true;
+            }
+            else if (!token.contains("@")) {
+                Fact fact = new Fact(token);
+                if (!isOutputTag) {
+                    inputFactList.add(fact);
+                }
+                else {
+                    outputTagList.add(fact);
+                }
+            }
+            else {
+                Recommendation rec = new Recommendation(token);
+                outputTagList.add(rec);
+            }
+        }
+        Fact[] inputFacts = inputFactList.toArray(new Fact[inputFactList.size()]);
+        Tag[] outputTag = outputTagList.toArray(new Tag[outputTagList.size()]);
 
+        this.inputFacts = inputFacts;
+        this.outputTags = outputTag;
+        this.type = TagType.RULE;
+        this.value = this.toString();
+    }
 
     @Override
     public boolean equals(Object o) {
