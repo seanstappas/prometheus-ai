@@ -14,8 +14,8 @@ public class Rule extends Tag {
     /**
      * Creates a Rule.
      *
-     * @param inputFacts  condition facts of the rule
-     * @param outputTag   outputTags tag of the rule
+     * @param inputFacts condition facts of the rule
+     * @param outputTag  outputTags tag of the rule
      */
     public Rule(Fact[] inputFacts, Tag[] outputTag) {
         this.inputFacts = inputFacts;
@@ -28,9 +28,9 @@ public class Rule extends Tag {
     /**
      * Creates a Rule from Strings, assuming all Tags (input and output) are of the provided TagType.
      *
-     * @param inputFacts  the input Facts, in String form
-     * @param outputTags  the output Tags, in String form
-     * @param type        the Type of output Tags
+     * @param inputFacts the input Facts, in String form
+     * @param outputTags the output Tags, in String form
+     * @param type       the Type of output Tags
      */
     public Rule(String[] inputFacts, String[] outputTags, TagType type) {
         int m = inputFacts.length;
@@ -49,38 +49,35 @@ public class Rule extends Tag {
 
     /**
      * Creates a Rule from a single String.
-     *
+     * <p>
      * Example of a rule string:
-     *
+     * <p>
      * "P1(ARG1,ARG2) P2(ARG3) -> @P3(ARG4,ARG5,ARG6)"
-     *
+     * <p>
      * NB: 1. Tags are separated by " " 2. arguments with a fact tag are separated by ","
-     *     3. all facts on the left of "->" are input facts, on the right are output tags
-     *     4. if an output tag is preceeded by "@", it is a recommendation, otherwise it is a fact
+     * 3. all facts on the left of "->" are input facts, on the right are output tags
+     * 4. if an output tag is preceeded by "@", it is a recommendation, otherwise it is a fact
      *
-     * @param value  the String representing the Rule
+     * @param value the String representing the Rule
      */
 
     public Rule(String value) {
-        String [] tokens = value.split(" ");
+        String[] tokens = value.split(" ");
         ArrayList<Fact> inputFactList = new ArrayList<Fact>();
-        ArrayList<Tag> outputTagList= new ArrayList<Tag>();
+        ArrayList<Tag> outputTagList = new ArrayList<Tag>();
         String delim = "->";
         Boolean isOutputTag = false;
-        for (String token: tokens) {
+        for (String token : tokens) {
             if (token.equals(delim)) {
                 isOutputTag = true;
-            }
-            else if (!token.contains("@")) {
+            } else if (!token.contains("@")) {
                 Fact fact = new Fact(token);
                 if (!isOutputTag) {
                     inputFactList.add(fact);
-                }
-                else {
+                } else {
                     outputTagList.add(fact);
                 }
-            }
-            else {
+            } else {
                 Recommendation rec = new Recommendation(token);
                 outputTagList.add(rec);
             }

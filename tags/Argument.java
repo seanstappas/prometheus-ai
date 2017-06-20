@@ -2,7 +2,7 @@ package tags;
 
 /**
  * Arguments are composed of a name and symbol (symbol types outlined below)
- *
+ * <p>
  * STRING: argument is made up of a string (e.g. tall)
  * EQ: argument is a name equal to an integer (e.g. height = 10)
  * GT: argument is a name greater than an integer (e.g. height > 10)
@@ -10,7 +10,7 @@ package tags;
  * MATCHONE: argument matches on a corresponding argument in a fact with same predicate name (see BASH '?')
  * VAR: argument is a variable integer (e.g. height = &x)
  * MATCHALL: argument matches on >0 arguments in a fact with same predicate name (see BASH '*')
- * INT: argument is made up of an iteger value (e.g. 10)
+ * INT: argument is made up of an integer value (e.g. 10)
  */
 
 public class Argument {
@@ -27,15 +27,16 @@ public class Argument {
 
     /**
      * Constructor for Argument
-     *
+     * <p>
      * Attempts to split an argument string (e.g. height=10) on the mathematical symbol (in this case 10),
      * assigns name to first token, if there are multiple tokens
+     *
      * @param string
      */
 
     public Argument(String string) {
         String[] tokens = string.split("[=><]");
-        if (tokens.length  > 1) {
+        if (tokens.length > 1) {
             this.name = tokens[0];
         } else {
             this.name = null;
@@ -48,173 +49,228 @@ public class Argument {
      * @param that
      * @return true if two arguments match
      */
-    
+
     boolean matches(Argument that) {
         if (this.symbol.equals(argTypes.STRING)) {
-            return !that.symbol.equals(argTypes.STRING) && ((StringArgument)this).matches((StringArgument)that);
-        }
-        else if (this.symbol.equals(argTypes.MATCHONE) || this.symbol.equals(argTypes.VAR)) {
+            return !that.symbol.equals(argTypes.STRING) && ((StringArgument) this).matches((StringArgument) that);
+        } else if (this.symbol.equals(argTypes.MATCHONE) || this.symbol.equals(argTypes.VAR)) {
             return that.matches((VariableArgument) this);
-        }
-        else if (that.symbol.equals(argTypes.MATCHONE) || that.symbol.equals(argTypes.VAR)) {
-            return this.matches ((VariableArgument) that);
-        }
-        else if (!this.symbol.equals(argTypes.MATCHALL) && !that.symbol.equals(argTypes.MATCHALL)) {
+        } else if (that.symbol.equals(argTypes.MATCHONE) || that.symbol.equals(argTypes.VAR)) {
+            return this.matches((VariableArgument) that);
+        } else if (!this.symbol.equals(argTypes.MATCHALL) && !that.symbol.equals(argTypes.MATCHALL)) {
             return ((NumericArgument) this).matches((NumericArgument) that);
         }
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "" + name;
+    }
 }
 
-    /**
-     * Subclass for arguments that have integer values
-     */
+/**
+ * Subclass for arguments that have integer values
+ */
 
-    class NumericArgument extends Argument {
+class NumericArgument extends Argument {
 
-        private boolean isNeg;
-        private int value;
+    private boolean isNeg;
+    private int value;
 
 
-        public boolean isNeg() {
-            return isNeg;
+    public boolean isNeg() {
+        return isNeg;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+
+    boolean matches(NumericArgument that) {
+        if (!this.name.equals(that.name)) {
+            return false;
+        }
+        if (this.isNeg && that.isNeg) {
+            return false;
+        }
+        if (this.isNeg || that.isNeg) {
+            return (this.value != that.value);
         }
 
-        public int getValue() {
-            return value;
-        }
-
-
-        boolean matches(NumericArgument that) {
-            if (!this.name.equals(that.name)) {
-                return false;
-            }
-            if (this.isNeg && that.isNeg) {
-                return false;
-            }
-            if (this.isNeg || that.isNeg) {
-                return (this.value != that.value);
-            }
-
-            switch (this.symbol) {
-                case EQ:
-                    switch (that.symbol) {
-                        case EQ:
-                            return this.value == that.value;
-                        case GT:
-                            return this.value > that.value;
-                        case LT:
-                            return this.value < that.value;
-                    }
-                case GT:
-                    switch (that.symbol) {
-                        case EQ:
-                            return this.value > that.value;
-                        case GT:
-                            return false;
-                        case LT:
-                            return false;
-                    }
-                case LT:
-                    switch (that.symbol) {
-                        case EQ:
-                            return this.value < that.value;
-                        case GT:
-                            return false;
-                        case LT:
-                            return false;
-                    }
-                default:
-                    return true;
-            }
-        }
-
-        NumericArgument(String string, String[] tokens) {
-
-            super(string);
-            this.isNeg = (string.contains("!"));
-
-            if (string.contains("=")) {
-                this.symbol = Argument.argTypes.EQ;
-            } else if (string.contains(">")) {
-                this.symbol = Argument.argTypes.GT;
-            } else if (string.contains("<")) {
-                this.symbol = Argument.argTypes.LT;
-            } else {
-                this.symbol = Argument.argTypes.INT;
-            }
-
-            this.value = Integer.parseInt(tokens[tokens.length -1]);
-
+        switch (this.symbol) {
+            case EQ:
+                switch (that.symbol) {
+                    case EQ:
+                        return this.value == that.value;
+                    case GT:
+                        return this.value > that.value;
+                    case LT:
+                        return this.value < that.value;
+                }
+            case GT:
+                switch (that.symbol) {
+                    case EQ:
+                        return this.value > that.value;
+                    case GT:
+                        return false;
+                    case LT:
+                        return false;
+                }
+            case LT:
+                switch (that.symbol) {
+                    case EQ:
+                        return this.value < that.value;
+                    case GT:
+                        return false;
+                    case LT:
+                        return false;
+                }
+            default:
+                return true;
         }
     }
 
-    /**
-     * Subclass for arguments that have string values
-     */
+    NumericArgument(String string, String[] tokens) {
 
-    class StringArgument extends Argument {
+        super(string);
+        this.isNeg = (string.contains("!"));
 
-        private boolean isNeg;
-        private String value;
-
-        public boolean isNeg() {
-            return isNeg;
+        if (string.contains("=")) {
+            this.symbol = Argument.argTypes.EQ;
+        } else if (string.contains(">")) {
+            this.symbol = Argument.argTypes.GT;
+        } else if (string.contains("<")) {
+            this.symbol = Argument.argTypes.LT;
+        } else {
+            this.symbol = Argument.argTypes.INT;
         }
 
-        public String getValue() {
-            return value;
+        this.value = Integer.parseInt(tokens[tokens.length - 1]);
+
+    }
+
+    @Override
+    public String toString() {
+        switch (symbol) {
+            case INT:
+                return "" + value;
+            case EQ:
+                if (!isNeg()) {
+                    return name + " = " + value;
+                } else return name + " !=" + value;
+            case LT:
+                if (!isNeg()) {
+                    return name + " < " + value;
+                } else return name + " !<" + value;
+            case GT:
+                if (!isNeg()) {
+                    return name + " > " + value;
+                } else return name + " !>" + value;
+            default:
+                return super.toString();
         }
+    }
+}
 
-        boolean matches(StringArgument that) {
-            if (!this.name.equals(that.name)) {
-                return false;
-            }
-            if (this.isNeg && that.isNeg) {
-                return false;
-            }
-            if (this.isNeg || that.isNeg) {
-                return (!this.value.equals(that.value));
-            } else {
-                return this.value.equals(that.value);
-            }
+/**
+ * Subclass for arguments that have string values
+ */
+
+class StringArgument extends Argument {
+
+    private boolean isNeg;
+    private String value;
+
+    public boolean isNeg() {
+        return isNeg;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    boolean matches(StringArgument that) {
+        if (!this.name.equals(that.name)) {
+            return false;
         }
-
-        StringArgument(String string, String[] tokens) {
-
-            super(string);
-
-            isNeg = (string.contains("!"));
-            value = tokens[tokens.length -1];
-            symbol = argTypes.STRING;
-
+        if (this.isNeg && that.isNeg) {
+            return false;
+        }
+        if (this.isNeg || that.isNeg) {
+            return (!this.value.equals(that.value));
+        } else {
+            return this.value.equals(that.value);
         }
     }
 
-    /**
-     * Subclass for arguments that have name values
-     */
+    StringArgument(String string, String[] tokens) {
 
-    class VariableArgument extends Argument {
+        super(string);
 
-        VariableArgument(String string, String[] tokens) {
-
-            super(string);
-
-            if (tokens[0].equals("*")) {
-                this.symbol = argTypes.MATCHALL;
-                this.name = "*";
-            } else if (tokens[0].equals("?")) {
-                this.symbol = argTypes.MATCHONE;
-                this.name = "?";
-            } else if (tokens[1].charAt(0) == '&') {
-                this.symbol = argTypes.VAR;
-            }
-        }
-
-        boolean matches(VariableArgument that) { return true; }
+        isNeg = (string.contains("!"));
+        value = tokens[tokens.length - 1];
+        symbol = argTypes.STRING;
 
     }
+
+    @Override
+    public String toString() {
+        switch (symbol) {
+            case STRING:
+                return "" + value;
+            case EQ:
+                if (!isNeg()) {
+                    return name + " =" + value;
+                } else {
+                    return name + " !=" + value;
+                }
+            default:
+                return super.toString();
+        }
+    }
+}
+
+/**
+ * Subclass for arguments that have name values
+ */
+
+class VariableArgument extends Argument {
+
+    VariableArgument(String string, String[] tokens) {
+
+        super(string);
+
+        if (tokens[0].equals("*")) {
+            this.symbol = argTypes.MATCHALL;
+            this.name = "*";
+        } else if (tokens[0].equals("?")) {
+            this.symbol = argTypes.MATCHONE;
+            this.name = "?";
+        } else if (tokens[1].charAt(0) == '&') {
+            this.symbol = argTypes.VAR;
+        }
+    }
+
+    @Override
+    public String toString() {
+        switch (symbol) {
+            case MATCHONE:
+                return "?";
+            case MATCHALL:
+                return "*";
+            case VAR:
+                return name + " = &x";
+            default:
+                return super.toString();
+        }
+    }
+
+    boolean matches(VariableArgument that) {
+        return true;
+    }
+
+}
 
 

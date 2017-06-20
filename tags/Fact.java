@@ -6,7 +6,7 @@ import java.util.Iterator;
 /**
  * Represents a fact in the Expert System. Facts are calculus predicates that represent something that is seen as
  * true.
- *
+ * <p>
  * Facts are composed of a predicate name and a set of arguments: P(ARG1, ARG2, ...)
  */
 
@@ -17,14 +17,6 @@ public class Fact extends Tag {
 
     public Fact() {
         this.type = TagType.FACT;
-    }
-
-    public String getPredicateName() {
-        return predicateName;
-    }
-
-    public LinkedHashSet<Argument> getArguments() {
-        return arguments;
     }
 
     public Fact(String value) {
@@ -38,24 +30,31 @@ public class Fact extends Tag {
 
     /**
      * Parses a raw string into a list of string tokens that represent each argument
+     * <p>
+     * Facts have zero, or more arguments [e.g. "P()", "P(ARG1)", "P(ARG1,ARG2,..., ARGN")]
      *
      * @param str string input
      * @return list of string arguments
      */
 
+
+    //check what happens for nullary
     private LinkedHashSet<Argument> argumentParser(String str) {
         String args = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
         String[] argTokens = args.split(",");
         LinkedHashSet<Argument> argSet = new LinkedHashSet<>();
-        for (String argToken: argTokens) {
+        for (String argToken : argTokens) {
+            if (argToken.length() > 0) {
                 Argument argument = makeArgument(argToken);
                 argSet.add(argument);
+            }
         }
         return argSet;
     }
 
     /**
      * Calls the appropriate Argument constructor on a string token
+     *
      * @param string String token
      * @return A single argument
      */
@@ -63,17 +62,36 @@ public class Fact extends Tag {
     private static Argument makeArgument(String string) {
         String[] tokens = string.split("[=><]");
 
-        if (tokens[1].matches("-?\\d+(\\.\\d+)?")) { //cleanup
-            return new NumericArgument(string, tokens);
-        } else if (tokens[0].equals("[?*]") || tokens[1].charAt(0) == '&' ) {
-            return new VariableArgument(string, tokens);
+        if (tokens.length > 1) {
+            if (tokens[1].matches("-?\\d+(\\.\\d+)?")) {
+                return new NumericArgument(string, tokens);
+            } else if (tokens[0].equals("[?*]") || tokens[1].charAt(0) == '&') {
+                return new VariableArgument(string, tokens);
+            } else {
+                return new StringArgument(string, tokens);
+            }
         } else {
-            return new StringArgument(string, tokens);
+            if (tokens[0].matches("-?\\d+(\\.\\d+)?")) {
+                return new NumericArgument(string, tokens);
+            } else if (tokens[0].equals("[?*]") || tokens[0].charAt(0) == '&') {
+                return new VariableArgument(string, tokens);
+            } else {
+                return new StringArgument(string, tokens);
+            }
         }
+    }
+
+    public String getPredicateName() {
+        return predicateName;
+    }
+
+    public LinkedHashSet<Argument> getArguments() {
+        return arguments;
     }
 
     /**
      * Compares two facts to see if they are compatible
+     *
      * @param that fact being compared
      * @return true if facts are 'matched' (notice not necessarily equal)
      */
@@ -92,8 +110,7 @@ public class Fact extends Tag {
         }
         if (this.arguments.size() >= that.arguments.size()) {
             return this.matchesHelper(that);
-        }
-        else {
+        } else {
             return that.matchesHelper(this);
         }
     }
@@ -102,14 +119,15 @@ public class Fact extends Tag {
         Iterator iterOne = this.arguments.iterator();
         Iterator iterTwo = that.arguments.iterator();
         while (iterOne.hasNext()) {
-            Argument arg1 = (Argument) iterOne.next(); Argument arg2 = (Argument) iterTwo.next();
-                if (arg1.symbol.equals(Argument.argTypes.MATCHALL) || arg2.symbol.equals(Argument.argTypes.MATCHALL)) {
-                    return true;
-                }
-                if (!arg1.matches(arg2)) {
-                    return false;
-                }
+            Argument arg1 = (Argument) iterOne.next();
+            Argument arg2 = (Argument) iterTwo.next();
+            if (arg1.symbol.equals(Argument.argTypes.MATCHALL) || arg2.symbol.equals(Argument.argTypes.MATCHALL)) {
+                return true;
             }
+            if (!arg1.matches(arg2)) {
+                return false;
+            }
+        }
         return true;
     }
 }

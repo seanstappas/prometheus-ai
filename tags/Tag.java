@@ -25,8 +25,8 @@ public abstract class Tag {
     /**
      * Creates a Tag.
      *
-     * @param value  the value of the Tag
-     * @param type   the Type of the Tag
+     * @param value the value of the Tag
+     * @param type  the Type of the Tag
      */
     protected Tag(String value, TagType type) {
         this.value = value;
@@ -36,9 +36,9 @@ public abstract class Tag {
     /**
      * Creates a Tag from a String.
      *
-     * @param value  the String value of the Tag
-     * @param type   the Type of the Tag
-     * @return       the created Tag
+     * @param value the String value of the Tag
+     * @param type  the Type of the Tag
+     * @return the created Tag
      */
     public static Tag createTagFromString(String value, TagType type) {
         switch (type) {
@@ -55,7 +55,7 @@ public abstract class Tag {
     /**
      * Checks if the Tag is a Recommendation.
      *
-     * @return  <code>true</code> if the Tag is a Recommendation.
+     * @return <code>true</code> if the Tag is a Recommendation.
      */
     public boolean isRecommendation() {
         return type == TagType.RECOMMENDATION;
@@ -64,7 +64,7 @@ public abstract class Tag {
     /**
      * Checks if the Tag is a Fact.
      *
-     * @return  <code>true</code> if the Tag is a Fact
+     * @return <code>true</code> if the Tag is a Fact
      */
     public boolean isFact() {
         return type == TagType.FACT;
@@ -73,7 +73,7 @@ public abstract class Tag {
     /**
      * Checks if the Tag is a Rule.
      *
-     * @return  <code>true</code> if the Tag is a Rule
+     * @return <code>true</code> if the Tag is a Rule
      */
     public boolean isRule() {
         return type == TagType.RULE;
