@@ -50,8 +50,17 @@ public class Rule extends Tag {
     /**
      * Creates a Rule from a single String.
      *
+     * Example of a rule string:
+     *
+     * "P1(ARG1,ARG2) P2(ARG3) -> @P3(ARG4,ARG5,ARG6)"
+     *
+     * NB: 1. Tags are separated by " " 2. arguments with a fact tag are separated by ","
+     *     3. all facts on the left of "->" are input facts, on the right are output tags
+     *     4. if an output tag is preceeded by "@", it is a recommendation, otherwise it is a fact
+     *
      * @param value  the String representing the Rule
      */
+
     public Rule(String value) {
         String [] tokens = value.split(" ");
         ArrayList<Fact> inputFactList = new ArrayList<Fact>();

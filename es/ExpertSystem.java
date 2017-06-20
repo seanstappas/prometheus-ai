@@ -16,7 +16,7 @@ import java.util.Set;
 public class ExpertSystem implements PrometheusLayer {
     private Set<Rule> readyRules;
     private Set<Rule> activeRules;
-    private HashMap<String, Set<Fact>> facts;
+    private Set<Fact> facts;
     private Set<Recommendation> recommendations;
 
     /**
@@ -24,7 +24,7 @@ public class ExpertSystem implements PrometheusLayer {
      */
     public ExpertSystem() {
         readyRules = new HashSet<>();
-        facts = new HashMap<>();
+        facts = new HashSet<>();
         recommendations = new HashSet<>();
         activeRules = new HashSet<>();
     }
@@ -86,16 +86,7 @@ public class ExpertSystem implements PrometheusLayer {
      * @return      <code>true</code> if the ES did not already contain the specified Fact
      */
     public boolean addFact(Fact fact) {
-        String key = fact.toVariable();
-        if (facts.get(key)!= null) {
-            return facts.get(key).add(fact);
-        }
-        else {
-            Set newSet = new HashSet();
-            newSet.add(fact);
-            facts.put(key, newSet);
-            return true;
-        }
+        return facts.add(fact);
     }
 
     /**
@@ -150,14 +141,8 @@ public class ExpertSystem implements PrometheusLayer {
      *
      * @return  the Facts of the ES
      */
-    public Set<Fact> getFacts() {
-        Set<Fact> factsSet = new HashSet<>();
-        for (String k: facts.keySet()) {
-            for (Fact v : facts.get(k)) {
-                factsSet.add(v);
-            }
-        }
-        return factsSet;
+    public Set<Fact> getFacts() { // For testing purposes
+        return facts;
     }
 
     /**
@@ -207,7 +192,6 @@ public class ExpertSystem implements PrometheusLayer {
         return activatedRecommendations;
     }
 
-
     /**
      * Makes the ES think for a single cycle.
      *
@@ -219,16 +203,9 @@ public class ExpertSystem implements PrometheusLayer {
         for (Rule rule : readyRules) {
             boolean shouldActivate = true;
             for (Fact fact : rule.inputFacts) {
-                if (!facts.containsKey(fact.toVariable())) {
+                if (!facts.contains(fact)) {
                     shouldActivate = false;
                     break;
-                }
-                else {
-                    Set factSet = facts.get(fact.toVariable());
-                    if (!fact.matches(factSet)) {
-                        shouldActivate = false;
-                        break;
-                    }
                 }
             }
             if (shouldActivate)
@@ -238,7 +215,7 @@ public class ExpertSystem implements PrometheusLayer {
             readyRules.remove(rule);
             activeRules.add(rule);
             for (Tag tag : rule.outputTags) {
-                if (!facts.keySet().contains(tag.toString()) && !recommendations.contains(tag.toString())) {
+                if (!facts.contains(tag) && !recommendations.contains(tag)) {
                     activatedTags.add(tag);
                     addTag(tag);
                 }
