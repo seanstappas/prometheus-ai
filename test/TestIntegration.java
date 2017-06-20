@@ -101,7 +101,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         System.out.println("testES");
         es.reset();
         Fact[] testFacts = {
-                new Fact("A"),
+                new Fact("A5"),
                 new Fact("B")
         };
         Recommendation recX = new Recommendation("X");
