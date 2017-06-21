@@ -35,11 +35,11 @@ public class Argument {
      */
 
     public Argument(String string) {
-        String[] tokens = string.split("[=><]");
+        String[] tokens = string.split("[=><!]");
         if (tokens.length > 1) {
             this.name = tokens[0];
         } else {
-            this.name = null;
+            this.name = "";
         }
     }
 
@@ -51,17 +51,30 @@ public class Argument {
      */
 
     boolean matches(Argument that) {
-        if (this.symbol.equals(argTypes.STRING)) {
-            return !that.symbol.equals(argTypes.STRING) && ((StringArgument) this).matches((StringArgument) that);
-        } else if (this.symbol.equals(argTypes.MATCHONE) || this.symbol.equals(argTypes.VAR)) {
-            return that.matches((VariableArgument) this);
-        } else if (that.symbol.equals(argTypes.MATCHONE) || that.symbol.equals(argTypes.VAR)) {
-            return this.matches((VariableArgument) that);
-        } else if (!this.symbol.equals(argTypes.MATCHALL) && !that.symbol.equals(argTypes.MATCHALL)) {
-            return ((NumericArgument) this).matches((NumericArgument) that);
+        switch (this.symbol) {
+            case STRING:
+                if (that.symbol.equals(argTypes.STRING)) {
+                    return ((StringArgument) this).matches((StringArgument) that);
+                }
+                return (that.symbol.equals(argTypes.MATCHONE));
+            case EQ:
+            case GT:
+            case LT:
+            case INT:
+                if (that.symbol.equals(argTypes.INT) ||
+                        that.symbol.equals(argTypes.EQ) ||
+                        that.symbol.equals(argTypes.LT) ||
+                        that.symbol.equals(argTypes.GT)) {
+                    return ((NumericArgument) this).matches((NumericArgument) that);
+                }
+                return (that.symbol.equals(argTypes.MATCHONE));
+            case MATCHONE:
+                return true;
+            default:
+                return false;
         }
-        return false;
     }
+
 
     @Override
     public String toString() {
@@ -112,7 +125,7 @@ class NumericArgument extends Argument {
             case GT:
                 switch (that.symbol) {
                     case EQ:
-                        return this.value > that.value;
+                        return that.value > this.value;
                     case GT:
                         return false;
                     case LT:
@@ -121,7 +134,7 @@ class NumericArgument extends Argument {
             case LT:
                 switch (that.symbol) {
                     case EQ:
-                        return this.value < that.value;
+                        return that.value < this.value;
                     case GT:
                         return false;
                     case LT:
@@ -172,6 +185,7 @@ class NumericArgument extends Argument {
                 return super.toString();
         }
     }
+
 }
 
 /**
@@ -233,7 +247,8 @@ class StringArgument extends Argument {
 }
 
 /**
- * Subclass for arguments that have name values
+ * Subclass for arguments that have variable values
+ * TODO: Redo VAR TYPE
  */
 
 class VariableArgument extends Argument {
@@ -266,11 +281,6 @@ class VariableArgument extends Argument {
                 return super.toString();
         }
     }
-
-    boolean matches(VariableArgument that) {
-        return true;
-    }
-
 }
 
 

@@ -47,23 +47,23 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     public Set<Tag> setupKNNandThink() {
         knn.resetEmpty();
         Tag[] initialActiveTags = new Tag[]{
-                new Fact("A")
+                new Fact("A()")
         };
         for (Tag t : initialActiveTags) {
             knn.addFiredTag(t);
         }
-        Tag inTag4 = new Fact("D");
-        Tag[] outputTagsA = {new Fact("B"), new Fact("C"), new Fact("D")};
-        Tag[] outputTagsB = {new Fact("E"), new Fact("F"), new Fact("G")};
-        Fact[] outputTagsE = {new Fact("H"), new Fact("I"), new Fact("J")};
+        Tag inTag4 = new Fact("D()");
+        Tag[] outputTagsA = {new Fact("B()"), new Fact("C()"), new Fact("D()")};
+        Tag[] outputTagsB = {new Fact("E()"), new Fact("F()"), new Fact("G()")};
+        Fact[] outputTagsE = {new Fact("H()"), new Fact("I()"), new Fact("J()")};
         Tag outputTag4 = new Rule(
                 outputTagsE,
                 new Tag[]{new Recommendation("Z")}
         );
         KnowledgeNode[] knowledgeNodes = new KnowledgeNode[]{
-                new KnowledgeNode(new Fact("A"), outputTagsA),
-                new KnowledgeNode(new Fact("B"), outputTagsB),
-                new KnowledgeNode(new Fact("E"), outputTagsE),
+                new KnowledgeNode(new Fact("A()"), outputTagsA),
+                new KnowledgeNode(new Fact("B()"), outputTagsB),
+                new KnowledgeNode(new Fact("E()"), outputTagsE),
                 new KnowledgeNode(inTag4, new Tag[]{outputTag4})
         };
         for (KnowledgeNode node : knowledgeNodes) {
@@ -93,30 +93,62 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     }
 
     /**
-     * Tests the Expert System's high-level functionality.
+     * Tests the Expert System's matches method.
      */
+    @Test
+    public void testMatches() {
+        System.out.println();
+        System.out.println("testMatches");
+        es.reset();
+
+
+        Fact fact1 = new Fact("A()");
+        Fact fact2 = new Fact("B()");
+        Fact fact3 = new Fact("A(height=low)");
+        Fact fact31 = new Fact("A(height!=tall)");
+
+        Fact fact4 = new Fact("A(?)");
+
+        Fact fact5 = new Fact("A(height=10,weight>10)");
+        Fact fact6 = new Fact("A(height=10,weight=12)");
+        Fact fact7 = new Fact("A(height=10,*)");
+        Fact fact8 = new Fact("A(height=7,*)");
+        Fact fact9 = new Fact("B(large,distance!=far,?,object=human)");
+        Fact fact10 = new Fact("B(large,distance=near,hello,object=human)");
+        Fact fact11 = new Fact("D(window,material=glass,thickness!>2)");
+        Fact fact12 = new Fact("D(window,*)");
+        Fact fact121 = new Fact("D(window,?)");
+        Fact fact13 = new Fact("D(window,door)");
+        Fact fact14 = new Fact("F(temperature=40,hot,humidity=high)");
+        Fact fact15 = new Fact("F(*)");
+
+        Assert.assertTrue(fact3.matches(fact31));
+
+    }
+
+
     @Test
     public void testES() {
         System.out.println();
         System.out.println("testES");
         es.reset();
         Fact[] testFacts = {
-                new Fact("A5"),
-                new Fact("B")
+                new Fact("A(height=10,length>12,!fast)"),
+                new Fact("B()")
         };
         Recommendation recX = new Recommendation("X");
         Recommendation recY = new Recommendation("Y");
         Recommendation recZ = new Recommendation("Z");
         Recommendation[] testRecommendations = {recX, recY};
-        Fact[] outputTags1 = {new Fact("D")};
-        Fact[] outputTags2 = {new Fact("E")};
-        Fact[] outputTags3 = {new Fact("F")};
-        Fact[] outputTags4 = {new Fact("H")};
-        Rule unactivatedRule = new Rule(new Fact[]{new Fact("G"), new Fact("A")}, outputTags4);
-        Rule rule1 = new Rule(new Fact[]{new Fact("A"), new Fact("B")}, outputTags1);
-        Rule rule2 = new Rule(new Fact[]{new Fact("D"), new Fact("B")}, outputTags2);
-        Rule rule3 = new Rule(new Fact[]{new Fact("D"), new Fact("E")}, outputTags3);
-        Rule rule4 = new Rule(new Fact[]{new Fact("E"), new Fact("F")}, new Tag[]{recZ});
+        Fact[] outputTags1 = {new Fact("D(window,colour=white)")};
+        Fact[] outputTags2 = {new Fact("E(?)")};
+        Fact[] outputTags3 = {new Fact("F(temperature=40,hot,humidity!=medium)")};
+        Fact[] outputTags4 = {new Fact("H()")};
+        Rule unactivatedRule = new Rule(new Fact[]{new Fact("G()"), new Fact("A(*)")}, outputTags4);
+        Rule rule1 = new Rule(new Fact[]{new Fact("A(height=10,length=15,slow)"), new Fact("B()")}, outputTags1);
+        Rule rule2 = new Rule(new Fact[]{new Fact("D(window,*)"), new Fact("B()")}, outputTags2);
+        Rule rule3 = new Rule(new Fact[]{new Fact("D(window,?)"), new Fact("E(height!=tall)")}, outputTags3);
+        Rule rule4 = new Rule(new Fact[]{new Fact("E(height=low)"), new Fact("F(temperature=40,hot,humidity=high)")}, new Tag[]{recZ});
         Rule[] testRules = {
                 rule1,
                 rule2,
@@ -253,7 +285,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertEquals(recommendations, expectedRecommendations);
         System.out.println("[ES] Final recommendations: " + recommendations);
 
-        Fact[] outputTagsE = {new Fact("H"), new Fact("I"), new Fact("J")};
+        Fact[] outputTagsE = {new Fact("H()"), new Fact("I()"), new Fact("J()")};
         Tag outputTag4 = new Rule(
                 outputTagsE,
                 new Tag[]{new Recommendation("Z")}

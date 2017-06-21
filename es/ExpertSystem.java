@@ -6,7 +6,6 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -145,6 +144,15 @@ public class ExpertSystem implements PrometheusLayer {
         return facts;
     }
 
+    public boolean factsContains(Fact fact) {
+        for (Fact f : facts) {
+            if (f.matches(fact)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
      * possible. Stops once the system reaches natural quiescence.
@@ -203,7 +211,7 @@ public class ExpertSystem implements PrometheusLayer {
         for (Rule rule : readyRules) {
             boolean shouldActivate = true;
             for (Fact fact : rule.inputFacts) {
-                if (!facts.contains(fact)) {
+                if (!factsContains(fact)) {
                     shouldActivate = false;
                     break;
                 }
@@ -215,7 +223,10 @@ public class ExpertSystem implements PrometheusLayer {
             readyRules.remove(rule);
             activeRules.add(rule);
             for (Tag tag : rule.outputTags) {
-                if (!facts.contains(tag) && !recommendations.contains(tag)) {
+                if (tag.type.equals(Tag.TagType.FACT) && !factsContains((Fact) tag)) {
+                    activatedTags.add(tag);
+                    addTag(tag);
+                } else if (tag.type.equals(Tag.TagType.RECOMMENDATION) && !recommendations.contains(tag)) {
                     activatedTags.add(tag);
                     addTag(tag);
                 }

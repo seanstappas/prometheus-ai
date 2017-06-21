@@ -1,7 +1,7 @@
 package tags;
 
-import java.util.LinkedHashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 /**
  * Represents a fact in the Expert System. Facts are calculus predicates that represent something that is seen as
@@ -37,10 +37,13 @@ public class Fact extends Tag {
      * @return list of string arguments
      */
 
-
-    //check what happens for nullary
     private LinkedHashSet<Argument> argumentParser(String str) {
-        String args = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
+        String args = str;
+        try {
+            args = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
+        } catch (StringIndexOutOfBoundsException e) {
+            System.err.println("Fact string must contain parenthesis: " + e.getMessage());
+        }
         String[] argTokens = args.split(",");
         LinkedHashSet<Argument> argSet = new LinkedHashSet<>();
         for (String argToken : argTokens) {
@@ -73,7 +76,7 @@ public class Fact extends Tag {
         } else {
             if (tokens[0].matches("-?\\d+(\\.\\d+)?")) {
                 return new NumericArgument(string, tokens);
-            } else if (tokens[0].equals("[?*]") || tokens[0].charAt(0) == '&') {
+            } else if (tokens[0].matches("[?*]") || tokens[0].charAt(0) == '&') {
                 return new VariableArgument(string, tokens);
             } else {
                 return new StringArgument(string, tokens);
@@ -101,13 +104,6 @@ public class Fact extends Tag {
         if (!this.predicateName.equals(that.predicateName)) {
             return false;
         }
-        if (this.arguments.containsAll(that.arguments)) {
-            return true;
-        }
-        if (this.arguments.size() != that.arguments.size()
-                && (!this.arguments.contains(new Argument("*")) || !this.arguments.contains(new Argument("*")))) {
-            return false;
-        }
         if (this.arguments.size() >= that.arguments.size()) {
             return this.matchesHelper(that);
         } else {
@@ -118,7 +114,7 @@ public class Fact extends Tag {
     private Boolean matchesHelper(Fact that) {
         Iterator iterOne = this.arguments.iterator();
         Iterator iterTwo = that.arguments.iterator();
-        while (iterOne.hasNext()) {
+        while (iterTwo.hasNext()) {
             Argument arg1 = (Argument) iterOne.next();
             Argument arg2 = (Argument) iterTwo.next();
             if (arg1.symbol.equals(Argument.argTypes.MATCHALL) || arg2.symbol.equals(Argument.argTypes.MATCHALL)) {
@@ -128,6 +124,12 @@ public class Fact extends Tag {
                 return false;
             }
         }
+        if (iterOne.hasNext()) {
+            Argument arg = (Argument) iterOne.next();
+            return (arg.symbol.equals(Argument.argTypes.MATCHALL));
+        }
         return true;
     }
+
+
 }
