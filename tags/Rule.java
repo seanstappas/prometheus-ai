@@ -9,7 +9,15 @@ import java.util.Arrays;
  */
 public class Rule extends Tag {
     public Fact[] inputFacts;
-    public Tag[] outputTags;
+    public Fact[] outputTags;
+
+    public Fact[] getInputFacts() {
+        return inputFacts;
+    }
+
+    public Fact[] getOutputTags() {
+        return outputTags;
+    }
 
     /**
      * Creates a Rule.
@@ -17,11 +25,14 @@ public class Rule extends Tag {
      * @param inputFacts condition facts of the rule
      * @param outputTag  outputTags tag of the rule
      */
-    public Rule(Fact[] inputFacts, Tag[] outputTag) {
+    public Rule(Fact[] inputFacts, Fact[] outputTag) {
         this.inputFacts = inputFacts;
         this.outputTags = outputTag;
         this.type = TagType.RULE;
         this.value = this.toString();
+    }
+
+    public Rule() {
     }
 
 
@@ -36,12 +47,12 @@ public class Rule extends Tag {
         int m = inputFacts.length;
         int n = outputTags.length;
         this.inputFacts = new Fact[m];
-        this.outputTags = new Tag[n];
+        this.outputTags = new Fact[n];
         for (int i = 0; i < m; i++) {
             this.inputFacts[i] = new Fact(inputFacts[i]);
         }
         for (int i = 0; i < n; i++) {
-            this.outputTags[i] = Tag.createTagFromString(outputTags[i], type);
+            this.outputTags[i] = (Fact) Tag.createTagFromString(outputTags[i], type);
         }
         this.type = TagType.RULE;
         this.value = this.toString();
@@ -64,7 +75,7 @@ public class Rule extends Tag {
     public Rule(String value) {
         String[] tokens = value.split(" ");
         ArrayList<Fact> inputFactList = new ArrayList<Fact>();
-        ArrayList<Tag> outputTagList = new ArrayList<Tag>();
+        ArrayList<Fact> outputTagList = new ArrayList<Fact>();
         String delim = "->";
         Boolean isOutputTag = false;
         for (String token : tokens) {
@@ -83,7 +94,7 @@ public class Rule extends Tag {
             }
         }
         Fact[] inputFacts = inputFactList.toArray(new Fact[inputFactList.size()]);
-        Tag[] outputTag = outputTagList.toArray(new Tag[outputTagList.size()]);
+        Fact[] outputTag = outputTagList.toArray(new Fact[outputTagList.size()]);
 
         this.inputFacts = inputFacts;
         this.outputTags = outputTag;

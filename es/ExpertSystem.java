@@ -1,12 +1,10 @@
 package es;
 
 import interfaces.PrometheusLayer;
-import tags.Fact;
-import tags.Recommendation;
-import tags.Rule;
-import tags.Tag;
+import tags.*;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -88,6 +86,10 @@ public class ExpertSystem implements PrometheusLayer {
         return facts.add(fact);
     }
 
+    public boolean removeFact(Fact fact) {
+        return facts.remove(fact);
+    }
+
     /**
      * Adds a Rule to the ES.
      *
@@ -144,13 +146,16 @@ public class ExpertSystem implements PrometheusLayer {
         return facts;
     }
 
-    public boolean factsContains(Fact fact) {
+    public VariableReturn factsContains(Fact inputFact) {
+        VariableReturn result = new VariableReturn();
         for (Fact f : facts) {
-            if (f.matches(fact)) {
-                return true;
+            result = f.matches(inputFact);
+            if (result.doesMatch) {
+                return result;
             }
         }
-        return false;
+        result.doesMatch = false;
+        return result;
     }
 
     /**
@@ -211,19 +216,34 @@ public class ExpertSystem implements PrometheusLayer {
         for (Rule rule : readyRules) {
             boolean shouldActivate = true;
             for (Fact fact : rule.inputFacts) {
-                if (!factsContains(fact)) {
+                VariableReturn vr = factsContains(fact);
+                if (!vr.doesMatch) {
                     shouldActivate = false;
                     break;
                 }
+                if (vr.argumentToMatch != null) {
+                    for (Fact replaceableFact : rule.outputTags) {
+                        for (Argument argumentToReplace : replaceableFact.getArguments()) {
+                            if (vr.argumentToMatch.getName().equals(argumentToReplace.getName())) {
+                                LinkedHashSet<Argument> newArguments = replaceableFact.getArguments();
+                                newArguments.remove(argumentToReplace);
+                                newArguments.add(vr.argumentThatReplaces);
+                                replaceableFact.setArguments(newArguments);
+                            }
+                        }
+                    }
+                }
             }
-            if (shouldActivate)
+            if (shouldActivate) {
                 pendingActivatedRules.add(rule);
+            }
         }
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
             activeRules.add(rule);
             for (Tag tag : rule.outputTags) {
-                if (tag.type.equals(Tag.TagType.FACT) && !factsContains((Fact) tag)) {
+                VariableReturn vr = factsContains((Fact) tag);
+                if (tag.type.equals(Tag.TagType.FACT) && !vr.doesMatch) {
                     activatedTags.add(tag);
                     addTag(tag);
                 } else if (tag.type.equals(Tag.TagType.RECOMMENDATION) && !recommendations.contains(tag)) {

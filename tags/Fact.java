@@ -92,43 +92,77 @@ public class Fact extends Tag {
         return arguments;
     }
 
+    public void setArguments(LinkedHashSet<Argument> arguments) {
+        this.arguments = arguments;
+    }
+
     /**
      * Compares two facts to see if they are compatible
      *
-     * @param that fact being compared
+     * @param inputFact fact being compared
      * @return true if facts are 'matched' (notice not necessarily equal)
      */
 
-    public Boolean matches(Fact that) {
+    public VariableReturn matches(Fact inputFact) {
 
-        if (!this.predicateName.equals(that.predicateName)) {
-            return false;
+        VariableReturn result = new VariableReturn();
+        if (!this.predicateName.equals(inputFact.predicateName)) {
+            result.doesMatch = false;
+            return result;
         }
-        if (this.arguments.size() >= that.arguments.size()) {
-            return this.matchesHelper(that);
+        Iterator iterFact = this.arguments.iterator();
+        Iterator iterInputFact = inputFact.arguments.iterator();
+
+        if (this.arguments.size() >= inputFact.arguments.size()) {
+            while (iterInputFact.hasNext()) {
+                Argument argFact = (Argument) iterFact.next();
+                Argument argInputFact = (Argument) iterInputFact.next();
+                if (argFact.symbol.equals(Argument.argTypes.MATCHALL) || argInputFact.symbol.equals(Argument.argTypes.MATCHALL)) {
+                    result.doesMatch = true;
+                    return result;
+                }
+                result = argFact.matches(argInputFact);
+                if (!result.doesMatch) {
+                    return result;
+                }
+            }
+            if (iterFact.hasNext()) {
+                Argument argFact = (Argument) iterFact.next();
+                result.doesMatch = (argFact.symbol.equals(Argument.argTypes.MATCHALL));
+                return result;
+            }
+            result.doesMatch = true;
+            return result;
         } else {
-            return that.matchesHelper(this);
+            while (iterFact.hasNext()) {
+                Argument argFact = (Argument) iterFact.next();
+                Argument argInputFact = (Argument) iterInputFact.next();
+                if (argFact.symbol.equals(Argument.argTypes.MATCHALL) || argInputFact.symbol.equals(Argument.argTypes.MATCHALL)) {
+                    result.doesMatch = true;
+                    return result;
+                }
+                result = argFact.matches(argInputFact);
+                if (!result.doesMatch) {
+                    return result;
+                }
+            }
+            if (iterInputFact.hasNext()) {
+                Argument argFact = (Argument) iterInputFact.next();
+                result.doesMatch = (argFact.symbol.equals(Argument.argTypes.MATCHALL));
+                return result;
+            }
+            result.doesMatch = true;
+            return result;
         }
     }
 
-    private Boolean matchesHelper(Fact that) {
-        Iterator iterOne = this.arguments.iterator();
-        Iterator iterTwo = that.arguments.iterator();
-        while (iterTwo.hasNext()) {
-            Argument arg1 = (Argument) iterOne.next();
-            Argument arg2 = (Argument) iterTwo.next();
-            if (arg1.symbol.equals(Argument.argTypes.MATCHALL) || arg2.symbol.equals(Argument.argTypes.MATCHALL)) {
+    public static boolean factContainsVariableArgument(Fact fact) {
+        for (Argument argument : fact.arguments) {
+            if (argument.symbol.equals(Argument.argTypes.VAR)) {
                 return true;
             }
-            if (!arg1.matches(arg2)) {
-                return false;
-            }
         }
-        if (iterOne.hasNext()) {
-            Argument arg = (Argument) iterOne.next();
-            return (arg.symbol.equals(Argument.argTypes.MATCHALL));
-        }
-        return true;
+        return false;
     }
 
 

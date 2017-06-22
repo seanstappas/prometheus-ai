@@ -22,7 +22,15 @@ public class Argument {
         STRING, EQ, GT, LT, MATCHONE, VAR, MATCHALL, INT
     }
 
-    Argument() {
+    public Argument() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public argTypes getSymbol() {
+        return symbol;
     }
 
     /**
@@ -46,32 +54,53 @@ public class Argument {
     /**
      * Compares two arguments, calling appropriate overloaded method
      *
-     * @param that
+     * @param inputFact
      * @return true if two arguments match
      */
 
-    boolean matches(Argument that) {
+    VariableReturn matches(Argument inputFact) {
+        VariableReturn variableReturn = new VariableReturn(false, null, null);
         switch (this.symbol) {
             case STRING:
-                if (that.symbol.equals(argTypes.STRING)) {
-                    return ((StringArgument) this).matches((StringArgument) that);
+                if (inputFact.symbol.equals(argTypes.STRING)) {
+                    variableReturn.doesMatch = ((StringArgument) this).matches((StringArgument) inputFact);
+                    return variableReturn;
                 }
-                return (that.symbol.equals(argTypes.MATCHONE));
+                if (inputFact.symbol.equals(argTypes.VAR)) {
+                    variableReturn.doesMatch = true;
+                    variableReturn.argumentThatReplaces = this;
+                    variableReturn.argumentToMatch = inputFact;
+                    return variableReturn;
+                }
+
+                variableReturn.doesMatch = (inputFact.symbol.equals(argTypes.MATCHONE));
+                return variableReturn;
             case EQ:
             case GT:
             case LT:
             case INT:
-                if (that.symbol.equals(argTypes.INT) ||
-                        that.symbol.equals(argTypes.EQ) ||
-                        that.symbol.equals(argTypes.LT) ||
-                        that.symbol.equals(argTypes.GT)) {
-                    return ((NumericArgument) this).matches((NumericArgument) that);
+                if (inputFact.symbol.equals(argTypes.INT) ||
+                        inputFact.symbol.equals(argTypes.EQ) ||
+                        inputFact.symbol.equals(argTypes.LT) ||
+                        inputFact.symbol.equals(argTypes.GT)) {
+                    variableReturn.doesMatch = ((NumericArgument) this).matches((NumericArgument) inputFact);
+                    return variableReturn;
                 }
-                return (that.symbol.equals(argTypes.MATCHONE));
+                if (inputFact.symbol.equals(argTypes.VAR)) {
+                    variableReturn.doesMatch = true;
+                    variableReturn.argumentToMatch = inputFact;
+                    variableReturn.argumentThatReplaces = this;
+                    return variableReturn;
+                }
+                variableReturn.doesMatch = (inputFact.symbol.equals(argTypes.MATCHONE));
+                return variableReturn;
             case MATCHONE:
-                return true;
+                variableReturn.doesMatch = !inputFact.symbol.equals(argTypes.VAR);
+                return variableReturn;
+            case VAR:
+                return variableReturn;
             default:
-                return false;
+                return variableReturn;
         }
     }
 
@@ -100,6 +129,9 @@ class NumericArgument extends Argument {
         return value;
     }
 
+    public void setValue(int value) {
+        this.value = value;
+    }
 
     boolean matches(NumericArgument that) {
         if (!this.name.equals(that.name)) {
@@ -263,7 +295,7 @@ class VariableArgument extends Argument {
         } else if (tokens[0].equals("?")) {
             this.symbol = argTypes.MATCHONE;
             this.name = "?";
-        } else if (tokens[1].charAt(0) == '&') {
+        } else if (tokens[0].charAt(0) == '&') {
             this.symbol = argTypes.VAR;
         }
     }
@@ -276,11 +308,10 @@ class VariableArgument extends Argument {
             case MATCHALL:
                 return "*";
             case VAR:
-                return name + " = &x";
+                return name + "";
             default:
                 return super.toString();
         }
     }
 }
-
 
