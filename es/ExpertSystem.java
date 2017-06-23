@@ -4,7 +4,7 @@ import interfaces.PrometheusLayer;
 import tags.*;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -222,16 +222,7 @@ public class ExpertSystem implements PrometheusLayer {
                     break;
                 }
                 if (vr.argumentToMatch != null) {
-                    for (Fact replaceableFact : rule.outputTags) {
-                        for (Argument argumentToReplace : replaceableFact.getArguments()) {
-                            if (vr.argumentToMatch.getName().equals(argumentToReplace.getName())) {
-                                LinkedHashSet<Argument> newArguments = replaceableFact.getArguments();
-                                newArguments.remove(argumentToReplace);
-                                newArguments.add(vr.argumentThatReplaces);
-                                replaceableFact.setArguments(newArguments);
-                            }
-                        }
-                    }
+                    rule = replaceFactInRule(rule, vr);
                 }
             }
             if (shouldActivate) {
@@ -253,5 +244,24 @@ public class ExpertSystem implements PrometheusLayer {
             }
         }
         return activatedTags;
+    }
+
+    private Rule replaceFactInRule(Rule rule, VariableReturn vr) {
+        int tagCounter = 0;
+        for (Fact replaceableFact : rule.outputTags) {
+            int argCounter = 0;
+            for (Argument argumentToReplace : replaceableFact.getArguments()) {
+                if (vr.argumentToMatch.getName().equals(argumentToReplace.getName())) {
+                    LinkedList<Argument> newArguments = replaceableFact.getArguments();
+                    newArguments.set(argCounter, vr.argumentThatReplaces);
+                    replaceableFact.setArguments(newArguments);
+                    rule.outputTags[tagCounter] = replaceableFact;
+                    return rule;
+                }
+                argCounter++;
+            }
+            tagCounter++;
+        }
+        return rule;
     }
 }

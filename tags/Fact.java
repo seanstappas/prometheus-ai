@@ -1,7 +1,7 @@
 package tags;
 
 import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 /**
  * Represents a fact in the Expert System. Facts are calculus predicates that represent something that is seen as
@@ -13,7 +13,7 @@ import java.util.LinkedHashSet;
 public class Fact extends Tag {
 
     private String predicateName;
-    private LinkedHashSet<Argument> arguments;
+    private LinkedList<Argument> arguments;
 
     public Fact() {
         this.type = TagType.FACT;
@@ -32,20 +32,21 @@ public class Fact extends Tag {
      * Parses a raw string into a list of string tokens that represent each argument
      * <p>
      * Facts have zero, or more arguments [e.g. "P()", "P(ARG1)", "P(ARG1,ARG2,..., ARGN")]
+     * NB: There should be no space characters between the arguments in a string
      *
      * @param str string input
      * @return list of string arguments
      */
 
-    private LinkedHashSet<Argument> argumentParser(String str) {
-        String args = str;
+    private LinkedList<Argument> argumentParser(String str) {
+        String args = str.replaceAll("\\s+", "");
         try {
             args = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
         } catch (StringIndexOutOfBoundsException e) {
             System.err.println("Fact string must contain parenthesis: " + e.getMessage());
         }
         String[] argTokens = args.split(",");
-        LinkedHashSet<Argument> argSet = new LinkedHashSet<>();
+        LinkedList<Argument> argSet = new LinkedList<>();
         for (String argToken : argTokens) {
             if (argToken.length() > 0) {
                 Argument argument = makeArgument(argToken);
@@ -88,11 +89,11 @@ public class Fact extends Tag {
         return predicateName;
     }
 
-    public LinkedHashSet<Argument> getArguments() {
+    public LinkedList<Argument> getArguments() {
         return arguments;
     }
 
-    public void setArguments(LinkedHashSet<Argument> arguments) {
+    public void setArguments(LinkedList<Argument> arguments) {
         this.arguments = arguments;
     }
 
