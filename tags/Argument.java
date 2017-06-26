@@ -58,49 +58,36 @@ public class Argument {
      * @return true if two arguments match
      */
 
-    VariableReturn matches(Argument inputFact) {
-        VariableReturn variableReturn = new VariableReturn(false, null, null);
+    boolean matches(Argument inputFact) {
         switch (this.symbol) {
             case STRING:
-                if (inputFact.symbol.equals(argTypes.STRING)) {
-                    variableReturn.doesMatch = ((StringArgument) this).matches((StringArgument) inputFact);
-                    return variableReturn;
-                }
                 if (inputFact.symbol.equals(argTypes.VAR)) {
-                    variableReturn.doesMatch = true;
-                    variableReturn.argumentThatReplaces = this;
-                    variableReturn.argumentToMatch = inputFact;
-                    return variableReturn;
+                    return true;
                 }
-
-                variableReturn.doesMatch = (inputFact.symbol.equals(argTypes.MATCHONE));
-                return variableReturn;
+                if (inputFact.symbol.equals(argTypes.STRING) || inputFact.symbol.equals(argTypes.VAR)) {
+                    return ((StringArgument) this).matches((StringArgument) inputFact);
+                }
+                return (inputFact.symbol.equals(argTypes.MATCHONE));
             case EQ:
             case GT:
             case LT:
             case INT:
+                if (inputFact.symbol.equals(argTypes.VAR)) {
+                    return true;
+                }
                 if (inputFact.symbol.equals(argTypes.INT) ||
                         inputFact.symbol.equals(argTypes.EQ) ||
                         inputFact.symbol.equals(argTypes.LT) ||
                         inputFact.symbol.equals(argTypes.GT)) {
-                    variableReturn.doesMatch = ((NumericArgument) this).matches((NumericArgument) inputFact);
-                    return variableReturn;
+                    return ((NumericArgument) this).matches((NumericArgument) inputFact);
                 }
-                if (inputFact.symbol.equals(argTypes.VAR)) {
-                    variableReturn.doesMatch = true;
-                    variableReturn.argumentToMatch = inputFact;
-                    variableReturn.argumentThatReplaces = this;
-                    return variableReturn;
-                }
-                variableReturn.doesMatch = (inputFact.symbol.equals(argTypes.MATCHONE));
-                return variableReturn;
+                return (inputFact.symbol.equals(argTypes.MATCHONE));
             case MATCHONE:
-                variableReturn.doesMatch = !inputFact.symbol.equals(argTypes.VAR);
-                return variableReturn;
+                return !inputFact.symbol.equals(argTypes.VAR);
             case VAR:
-                return variableReturn;
+                return false;
             default:
-                return variableReturn;
+                return false;
         }
     }
 
@@ -297,6 +284,7 @@ class VariableArgument extends Argument {
             this.name = "?";
         } else if (tokens[0].charAt(0) == '&') {
             this.symbol = argTypes.VAR;
+            this.name = tokens[0];
         }
     }
 

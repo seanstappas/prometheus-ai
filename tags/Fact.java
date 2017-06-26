@@ -104,6 +104,8 @@ public class Fact extends Tag {
      * @return true if facts are 'matched' (notice not necessarily equal)
      */
 
+    //NEEDS TO RETURN LIST OF REPLACEMENTS // I.E. NOT A SINGLE ONE
+
     public VariableReturn matches(Fact inputFact) {
 
         VariableReturn result = new VariableReturn();
@@ -122,7 +124,11 @@ public class Fact extends Tag {
                     result.doesMatch = true;
                     return result;
                 }
-                result = argFact.matches(argInputFact);
+                if (argInputFact.symbol.equals(Argument.argTypes.VAR)) {
+                    result.doesMatch = true;
+                    result.pairs.put(argInputFact.getName(), argFact);
+                }
+                result.doesMatch = argFact.matches(argInputFact);
                 if (!result.doesMatch) {
                     return result;
                 }
@@ -142,7 +148,11 @@ public class Fact extends Tag {
                     result.doesMatch = true;
                     return result;
                 }
-                result = argFact.matches(argInputFact);
+                if (argInputFact.symbol.equals(Argument.argTypes.VAR)) {
+                    result.doesMatch = true;
+                    result.pairs.put(argInputFact.getName(), argFact);
+                }
+                result.doesMatch = argFact.matches(argInputFact);
                 if (!result.doesMatch) {
                     return result;
                 }
@@ -156,15 +166,5 @@ public class Fact extends Tag {
             return result;
         }
     }
-
-    public static boolean factContainsVariableArgument(Fact fact) {
-        for (Argument argument : fact.arguments) {
-            if (argument.symbol.equals(Argument.argTypes.VAR)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
 }

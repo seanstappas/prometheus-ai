@@ -11,6 +11,7 @@ public class Rule extends Tag {
     public Fact[] inputFacts;
     public Fact[] outputTags;
 
+
     public Fact[] getInputFacts() {
         return inputFacts;
     }

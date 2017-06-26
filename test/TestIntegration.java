@@ -58,7 +58,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Fact[] outputTagsE = {new Fact("H()"), new Fact("I()"), new Fact("J()")};
         Tag outputTag4 = new Rule(
                 outputTagsE,
-                new Fact[]{new Recommendation("Z")}
+                new Fact[]{new Recommendation("Z()")}
         );
         KnowledgeNode[] knowledgeNodes = new KnowledgeNode[]{
                 new KnowledgeNode(new Fact("A()"), outputTagsA),
@@ -121,6 +121,8 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Fact fact13 = new Fact("D(window,door)");
         Fact fact14 = new Fact("F(temperature=40,hot,humidity=high)");
         Fact fact15 = new Fact("F(*)");
+        Fact fact16 = new Fact("A(10,12,14)");
+        Fact fact17 = new Fact("A(&x,12,&y)");
 
         /*
         Assert.assertTrue(fact3.matches(fact31)[0]);
@@ -134,9 +136,8 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertTrue(fact9.matches(fact10)[0]);
         //Assert.assertTrue(fact13.matches(fact121)[0]);
         //Assert.assertTrue(fact14.matches(fact15)[0]);
-
-
 */
+        Assert.assertTrue(fact16.matches(fact17).doesMatch);
     }
 
 
@@ -156,16 +157,18 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Fact[] outputTags1 = {new Fact("D(10)")};
         Fact[] outputTags2 = {new Fact("E(&x,height=5)")};
         Fact[] outputTags3 = {new Fact("F(temperature=40,hot,humidity!=medium)")};
-        Fact[] outputTags4 = {new Fact("H()")};
+        Fact[] outputTags4 = {new Fact("H(&x,hot,&y,big)")};
         Rule unactivatedRule = new Rule(new Fact[]{new Fact("G()"), new Fact("A(*)")}, outputTags4);
         Rule rule1 = new Rule(new Fact[]{new Fact("A(height=10,length=15,slow)"), new Fact("B(10)")}, outputTags1);
         Rule rule2 = new Rule(new Fact[]{new Fact("D(&x)"), new Fact("B(10)")}, outputTags2);
         Rule rule3 = new Rule(new Fact[]{new Fact("D(10)"), new Fact("E(10,?)")}, outputTags3);
-        Rule rule4 = new Rule(new Fact[]{new Fact("E(10,*)"), new Fact("F(temperature=40,hot,humidity=high)")}, new Fact[]{recZ});
+        Rule rule4 = new Rule(new Fact[]{new Fact("F(&x,hot,&y)"), new Fact("E(10,?)")}, outputTags4);
+        Rule rule5 = new Rule(new Fact[]{new Fact("H(*)"), new Fact("F(temperature=40,hot,humidity=large)")}, new Fact[]{recZ});
         Rule[] testRules = {
                 rule1,
                 rule2,
                 rule3,
+                rule5,
                 unactivatedRule,
                 rule4
         };
@@ -210,6 +213,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         expectedFacts.addAll(Arrays.asList(outputTags1));
         expectedFacts.addAll(Arrays.asList(outputTags2));
         expectedFacts.addAll(Arrays.asList(outputTags3));
+        expectedFacts.addAll(Arrays.asList(outputTags4));
         Assert.assertEquals(facts, expectedFacts);
         System.out.println("[ES] Final facts: " + facts);
 
@@ -233,6 +237,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         expectedActiveRules.add(rule2);
         expectedActiveRules.add(rule3);
         expectedActiveRules.add(rule4);
+        expectedActiveRules.add(rule5);
         Assert.assertEquals(activeRules, expectedActiveRules);
         System.out.println("[ES] Final active rules: " + activeRules);
     }
@@ -281,7 +286,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
 
         Set<Tag> activatedRecommendations = es.think();
         Set<Tag> expectedActivatedRecommendations = new HashSet<>();
-        Recommendation recZ = new Recommendation("Z");
+        Recommendation recZ = new Recommendation("Z()");
         expectedActivatedRecommendations.add(recZ);
         Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendations);
         System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
@@ -301,7 +306,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Fact[] outputTagsE = {new Fact("H()"), new Fact("I()"), new Fact("J()")};
         Tag outputTag4 = new Rule(
                 outputTagsE,
-                new Fact[]{new Recommendation("Z")}
+                new Fact[]{new Recommendation("Z()")}
         );
 
         Set<Rule> readyRules = es.getReadyRules();

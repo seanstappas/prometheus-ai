@@ -3,6 +3,7 @@ package es;
 import interfaces.PrometheusLayer;
 import tags.*;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -15,6 +16,8 @@ public class ExpertSystem implements PrometheusLayer {
     private Set<Rule> activeRules;
     private Set<Fact> facts;
     private Set<Recommendation> recommendations;
+    public HashMap<String, Argument> pendingReplacementPairs;
+
 
     /**
      * Creates an Expert System (ES).
@@ -24,6 +27,7 @@ public class ExpertSystem implements PrometheusLayer {
         facts = new HashSet<>();
         recommendations = new HashSet<>();
         activeRules = new HashSet<>();
+        pendingReplacementPairs = new HashMap<>();
     }
 
     /**
@@ -47,8 +51,8 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds a Tag to the ES. Will cast the tag to either a Rule, a Fact, or a Recommendation.
      *
-     * @param tag  the Tag to be added
-     * @return     <code>true</code> if the Tag is successfully added
+     * @param tag the Tag to be added
+     * @return <code>true</code> if the Tag is successfully added
      */
     public boolean addTag(Tag tag) {
         switch (tag.type) {
@@ -65,8 +69,8 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds multiple Tags to the ES.
      *
-     * @param tags  the Tags to be added
-     * @return      <code>true</code> if all the Tags are added successfully
+     * @param tags the Tags to be added
+     * @return <code>true</code> if all the Tags are added successfully
      */
     public boolean addTags(Set<Tag> tags) {
         boolean allAdded = true;
@@ -79,8 +83,8 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds a Fact to the ES.
      *
-     * @param fact  the Fact to be added
-     * @return      <code>true</code> if the ES did not already contain the specified Fact
+     * @param fact the Fact to be added
+     * @return <code>true</code> if the ES did not already contain the specified Fact
      */
     public boolean addFact(Fact fact) {
         return facts.add(fact);
@@ -93,8 +97,8 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds a Rule to the ES.
      *
-     * @param rule  the Rule to be added
-     * @return      <code>true</code> if the ES did not already contain the specified Rule
+     * @param rule the Rule to be added
+     * @return <code>true</code> if the ES did not already contain the specified Rule
      */
     public boolean addRule(Rule rule) {
         return readyRules.add(rule);
@@ -103,8 +107,8 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Adds a Recommendation to the ES.
      *
-     * @param rec  the Recommendation to be added
-     * @return      <code>true</code> if the ES did not already contain the specified Recommendation
+     * @param rec the Recommendation to be added
+     * @return <code>true</code> if the ES did not already contain the specified Recommendation
      */
     public boolean addRecommendation(Recommendation rec) {
         return recommendations.add(rec);
@@ -113,7 +117,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Gets all the Recommendations of the ES.
      *
-     * @return  the Recommendations of the ES
+     * @return the Recommendations of the ES
      */
     public Set<Recommendation> getRecommendations() {
         return recommendations;
@@ -122,7 +126,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Gets the ready Rules of the ES.
      *
-     * @return  the ready Rules of the ES
+     * @return the ready Rules of the ES
      */
     public Set<Rule> getReadyRules() { // For testing purposes
         return readyRules;
@@ -131,7 +135,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Gets the active Rules of the ES.
      *
-     * @return  the active Rules of the ES
+     * @return the active Rules of the ES
      */
     public Set<Rule> getActiveRules() { // For testing purposes
         return activeRules;
@@ -140,29 +144,32 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Gets the Facts of the ES.
      *
-     * @return  the Facts of the ES
+     * @return the Facts of the ES
      */
     public Set<Fact> getFacts() { // For testing purposes
         return facts;
     }
 
-    public VariableReturn factsContains(Fact inputFact) {
-        VariableReturn result = new VariableReturn();
+    public boolean factsContains(Fact inputFact) {
+        boolean result = false;
         for (Fact f : facts) {
-            result = f.matches(inputFact);
-            if (result.doesMatch) {
-                return result;
+            VariableReturn matchesResult = f.matches(inputFact);
+            if (matchesResult.doesMatch) {
+                if (matchesResult.pairs.size() > 0) {
+                    pendingReplacementPairs.putAll(matchesResult.pairs);
+                }
+                result = true;
             }
         }
-        result.doesMatch = false;
         return result;
     }
+
 
     /**
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
      * possible. Stops once the system reaches natural quiescence.
      *
-     * @return  the activated Recommendations as a result of thinking
+     * @return the activated Recommendations as a result of thinking
      */
     public Set<Tag> think() {
         Set<Tag> allActivatedTags = new HashSet<>();
@@ -186,8 +193,8 @@ public class ExpertSystem implements PrometheusLayer {
      * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
      * quiescence.
      *
-     * @param numberOfCycles  the number of cycles to think for
-     * @return                the activated Recommendations as a result of thinking
+     * @param numberOfCycles the number of cycles to think for
+     * @return the activated Recommendations as a result of thinking
      */
     public Set<Tag> think(int numberOfCycles) {
         Set<Tag> allActivatedTags = new HashSet<>();
@@ -208,7 +215,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Makes the ES think for a single cycle.
      *
-     * @return  the activated Tags as a result of thinking
+     * @return the activated Tags as a result of thinking
      */
     private Set<Tag> thinkCycle() {
         Set<Tag> activatedTags = new HashSet<>();
@@ -216,13 +223,9 @@ public class ExpertSystem implements PrometheusLayer {
         for (Rule rule : readyRules) {
             boolean shouldActivate = true;
             for (Fact fact : rule.inputFacts) {
-                VariableReturn vr = factsContains(fact);
-                if (!vr.doesMatch) {
+                if (!factsContains(fact)) {
                     shouldActivate = false;
                     break;
-                }
-                if (vr.argumentToMatch != null) {
-                    rule = replaceFactInRule(rule, vr);
                 }
             }
             if (shouldActivate) {
@@ -233,8 +236,8 @@ public class ExpertSystem implements PrometheusLayer {
             readyRules.remove(rule);
             activeRules.add(rule);
             for (Tag tag : rule.outputTags) {
-                VariableReturn vr = factsContains((Fact) tag);
-                if (tag.type.equals(Tag.TagType.FACT) && !vr.doesMatch) {
+                replaceVariableArguments((Fact) tag);
+                if (tag.type.equals(Tag.TagType.FACT) && !factsContains((Fact) tag)) {
                     activatedTags.add(tag);
                     addTag(tag);
                 } else if (tag.type.equals(Tag.TagType.RECOMMENDATION) && !recommendations.contains(tag)) {
@@ -246,22 +249,18 @@ public class ExpertSystem implements PrometheusLayer {
         return activatedTags;
     }
 
-    private Rule replaceFactInRule(Rule rule, VariableReturn vr) {
-        int tagCounter = 0;
-        for (Fact replaceableFact : rule.outputTags) {
-            int argCounter = 0;
-            for (Argument argumentToReplace : replaceableFact.getArguments()) {
-                if (vr.argumentToMatch.getName().equals(argumentToReplace.getName())) {
-                    LinkedList<Argument> newArguments = replaceableFact.getArguments();
-                    newArguments.set(argCounter, vr.argumentThatReplaces);
-                    replaceableFact.setArguments(newArguments);
-                    rule.outputTags[tagCounter] = replaceableFact;
-                    return rule;
-                }
-                argCounter++;
+    //TODO: Variable matching when argument contains math symbol
+    private void replaceVariableArguments(Fact tag) {
+        int argumentIndex = 0;
+        for (Argument argument : tag.getArguments()) {
+            if (!pendingReplacementPairs.isEmpty() &&
+                    pendingReplacementPairs.containsKey(argument.getName())) {
+                LinkedList<Argument> newArguments = tag.getArguments();
+                newArguments.set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
+                tag.setArguments(newArguments); //can be set all at once (NI)
             }
-            tagCounter++;
+            argumentIndex++;
         }
-        return rule;
     }
 }
+
