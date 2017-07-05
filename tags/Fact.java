@@ -28,6 +28,11 @@ public class Fact extends Tag {
 
     }
 
+    @Override
+    public String toString() {
+        return predicateName + "(" + arguments + ")";
+    }
+
     /**
      * Parses a raw string into a list of string tokens that represent each argument
      * <p>
