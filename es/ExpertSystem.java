@@ -164,7 +164,6 @@ public class ExpertSystem implements PrometheusLayer {
         return result;
     }
 
-
     /**
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
      * possible. Stops once the system reaches natural quiescence.
@@ -174,6 +173,7 @@ public class ExpertSystem implements PrometheusLayer {
     public Set<Tag> think() {
         Set<Tag> allActivatedTags = new HashSet<>();
         Set<Tag> activatedTags;
+        Set<Fact> inputFactSet = getFacts();
         do {
             activatedTags = thinkCycle();
             allActivatedTags.addAll(activatedTags);
@@ -183,7 +183,15 @@ public class ExpertSystem implements PrometheusLayer {
             if (tag.isRecommendation())
                 activatedRecommendations.add(tag);
         }
+        generateProvenRule(allActivatedTags, inputFactSet);
         return activatedRecommendations;
+    }
+
+    private void generateProvenRule(Set<Tag> allActivatedTags, Set<Fact> inputFactSet) {
+        Fact[] inputFacts = inputFactSet.toArray(new Fact[inputFactSet.size()]);
+        Tag[] outputTags = allActivatedTags.toArray(new Tag[allActivatedTags.size()]);
+        Rule provenRule = new Rule(inputFacts, (Fact[]) outputTags);
+        addRule(provenRule);
     }
 
     /**
@@ -262,5 +270,46 @@ public class ExpertSystem implements PrometheusLayer {
             argumentIndex++;
         }
     }
-}
 
+    private Rule logicReasoner(Rule inputRule, Rule outputRule) {
+        for (Fact inputFact : inputRule.getOutputTags()) {
+            boolean fullMatch = false;
+            for (Fact outputFact : outputRule.getInputFacts()) {
+                if (outputFact.matches(inputFact).doesMatch) {
+                    fullMatch = true;
+                    break;
+                }
+            }
+            if (!fullMatch) {
+                return new Rule();
+            }
+        }
+        return new Rule(inputRule.inputFacts, outputRule.outputTags);
+    }
+
+    public HashSet<Rule> pairwiseComp(int numberOfCycles) {
+        HashSet<Rule> mergedRules = new HashSet<>();
+        HashSet<Rule> inputRules = new HashSet<>(this.readyRules);
+        while (numberOfCycles > 0) {
+            for (Rule ruleOne : inputRules) {
+                for (Rule ruleTwo : inputRules) {
+                    Rule mergedRule = logicReasoner(ruleOne, ruleTwo);
+                    if (!mergedRule.equals(new Rule())) {
+                        mergedRules.add(mergedRule);
+                    }
+                }
+            }
+            numberOfCycles--;
+            inputRules = mergedRules;
+        }
+        return mergedRules;
+    }
+
+    public void rest() {
+        HashSet<Rule> newRules = pairwiseComp(1);
+        for (Rule newRule : newRules) {
+            addRule(newRule);
+        }
+    }
+
+}
