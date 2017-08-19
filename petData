@@ -1,0 +1,6 @@
+husky(Ranger,male,length>58,weight=26); 100; dog(wow, carnivore); 70
+rogdoll(Katty,female,length<55,weight>24); 100; cat(meow, carnivore); 65
+dog(wow, carnivore); 100; animal(multicellular,vertebrate,invertebrate); 90; pet(dog>100,cat>80); 80
+cat(meow, carnivore); 100; animal(multicellular,vertebrate,invertebrate); 75; pet(dog>100,cat>80); 70
+animal(multicellular,vertebrate,invertebrate); 100
+pet(dog>100,cat>80); 100
