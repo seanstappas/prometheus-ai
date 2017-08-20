@@ -9,7 +9,7 @@ import java.util.Set;
 
 import tags.*;
 
-public class knnTest {
+public class KNN_Testing {
 	public static void main(String[] args){	
 		ArrayList<KnowledgeNode> animal = new ArrayList<>();
 		KnowledgeNodeNetwork relation = new KnowledgeNodeNetwork();
