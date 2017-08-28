@@ -1,6 +1,7 @@
 package knn;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import tags.*;
 
@@ -10,16 +11,19 @@ public class KnowledgeNode {
 	Fact fact;
 	Rule rule;
 	Recommendation recommendation;
-	HashMap<Tag, Integer> outputs;	// Integer is the value of confidence 
-	int activation = 0;			    // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
-    int threshold; 		 	// limit: When activation > threshold : fires output tags (outputTags array). These tags can be lists of rules or facts.
-    double age = System.currentTimeMillis() / 1000L; 			// Age timestamp. Set to current UNIX time when node is newly formed.
-    int strength = 1;			// Which strength approach to take?
+	HashMap<Tag, Double> outputs;										// Integer is the value of confidence 
+	double activation = 0;			    									// int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
+	double threshold; 		 												// limit: When activation > threshold : fires output tags (outputTags array). These tags can be lists of rules or facts.
+	double objectTruth = 0;
+    HashMap<Tag, Double> listOfRelatedTruth;
+    double age = System.currentTimeMillis() / 1000L; 					// Age timestamp. Set to current UNIX time when node is newly formed.
+    int strength = 1;													// Which strength approach to take?
     double maxAge = 60;
     boolean isActivated = false;
-    int[] accuracy = {0, 2, 5, 11, 27, 50, 73, 88, 95, 98, 100};	//sigmoid function activation value
+    boolean isFired = false;
+    double[] accuracy = {0, 2, 5, 11, 27, 50, 73, 88, 95, 98, 100};		//sigmoid function activation value
     
-    public KnowledgeNode(Tag inputName, HashMap<Tag, Integer> outputTags, int threshold) {
+    public KnowledgeNode(Tag inputName, HashMap<Tag, Double> outputTags, int threshold) {
         if(inputName.type.equals(Tag.TagType.FACT)){
         	this.type = inputType.FACT;
         	this.fact = (Fact) inputName;
@@ -34,6 +38,7 @@ public class KnowledgeNode {
         }
         this.outputs = outputTags;
         this.threshold = threshold;
+        this.listOfRelatedTruth = new HashMap<>();
     }
     
     /**
@@ -46,7 +51,7 @@ public class KnowledgeNode {
      * @param type        the type of the Knowledge Node (linear or sigmoid activation)
      * @param maxAge      threshold age for the node to be discarded
      */
-    public KnowledgeNode(Tag inputName, HashMap<Tag, Integer> outputTags, int threshold, int strength, double maxAge) {
+    public KnowledgeNode(Tag inputName, HashMap<Tag, Double> outputTags, int threshold, int strength, double maxAge) {
     	if(inputName.type.equals(Tag.TagType.FACT)){
         	this.type = inputType.FACT;
         	this.fact = (Fact) inputName;
@@ -65,17 +70,20 @@ public class KnowledgeNode {
         this.threshold = threshold;
         this.strength = strength;
         this.maxAge = maxAge;
+        this.listOfRelatedTruth = new HashMap<>();
     }
     
     /**
-     * Creates a Knowledge Node from Strings. Assumes all Tags are of the provided TagType.
+     * Creates a Knowledge Node from Strings.
      *
      * @param inputTag    the input Tag of the Knowledge Node
      * @param outputTags  the output Tag of the Knowledge Node
      * @param tagType     the type of all Tags (input and output)
      */
     public KnowledgeNode(String[] inputInfo) {
-        this.outputs = new HashMap<Tag, Integer>();
+    	this.listOfRelatedTruth = new HashMap<>();
+        this.outputs = new HashMap<Tag, Double>();
+        
         if(inputInfo[0].charAt(0) == '@'){
         	this.type = inputType.RECOMMENDATION;
         	this.recommendation = new Recommendation(inputInfo[0]);
@@ -93,21 +101,53 @@ public class KnowledgeNode {
         for(int i=2; i<inputInfo.length; i+=2){
         	if(inputInfo[i].charAt(0) == '@'){
         		Recommendation rcmd = new Recommendation(inputInfo[i]);
-        		this.outputs.put(rcmd, Integer.parseInt(inputInfo[i+1]));
+        		this.outputs.put(rcmd, Double.parseDouble(inputInfo[i+1]));
         	}
         	else if(inputInfo[i].contains("->")){
         		Rule r = new Rule(inputInfo[i]);
-        		this.outputs.put(r,Integer.parseInt(inputInfo[i+1]));
+        		this.outputs.put(r, Double.parseDouble(inputInfo[i+1]));
         	}
         	else if(inputInfo[i].matches(".*\\(.*\\).*")){
         		Fact f = new Fact(inputInfo[i]);
-        		this.outputs.put(f, Integer.parseInt(inputInfo[i+1]));
+        		this.outputs.put(f, Double.parseDouble(inputInfo[i+1]));
         	}
         }
     }
-
+    
+    /**
+     * Check what type of Tag this knowledge node has
+     * 
+     * @return the corresponding tag of the KN
+     */
+    public Tag typeChecker(){
+    	if(this.type.equals(KnowledgeNode.inputType.FACT)){
+			Tag t = this.fact;
+			return t;
+		}
+		else if(this.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
+			Tag t = this.recommendation;
+			return t;
+		}
+		else{
+			Tag t = this.rule;
+			return t;
+		}     	
+    }
+    
+    /**
+     * update object confidence value
+     */
+    public void updateObjectConfidence(){
+    	double sum=0;
+    	for(Tag t : this.listOfRelatedTruth.keySet()){
+    		sum = sum + this.listOfRelatedTruth.get(t);
+    	}
+    	this.objectTruth = sum / this.listOfRelatedTruth.size();
+    }
+    
     /**
      * Ages the current Knowledge Node.
+     * 
      * @return the age (time elapsed since initialisation/last update)
      */
     public double updateAge() {
@@ -134,7 +174,7 @@ public class KnowledgeNode {
         
         for(Tag t : this.outputs.keySet()){
         	result += t.toString();
-        	result = result + " with confidence=" + this.outputs.get(t) + "; ";
+        	result = result + " with membershipTruth=" + this.outputs.get(t) + "; ";
         }
         
         return result;
@@ -148,7 +188,7 @@ public class KnowledgeNode {
     	this.activation = this.activation + this.accuracy[value];
     }
 
-    public int getActivation() {
+    public double getActivation() {
         return activation;
     }
 

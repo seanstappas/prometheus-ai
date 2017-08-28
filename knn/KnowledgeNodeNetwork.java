@@ -1,6 +1,7 @@
 package knn;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,18 +10,16 @@ import tags.*;
 
 public class KnowledgeNodeNetwork {
 	private HashMap<Tag, KnowledgeNode> mapKN;
-    private HashSet<Tag> activeTags;
-    private HashSet<Tag> treeRoots;
-    private HashSet<Link> links;
+	private HashMap<Tag, Double> inputTags;
+    private HashMap<Tag, Double> activeTags;
     
     /**
      * constructor for testing only
      */
     public KnowledgeNodeNetwork(){
     	mapKN = new HashMap<>();
-        activeTags = new HashSet<>();
-        treeRoots = new HashSet<>();
-        links = new HashSet<>();
+        activeTags = new HashMap<>();
+        inputTags = new HashMap<>();
     }
     
     /**
@@ -30,9 +29,8 @@ public class KnowledgeNodeNetwork {
      */
     public KnowledgeNodeNetwork(String dbFilename) {
         mapKN = new HashMap<>();
-        activeTags = new HashSet<>();
-        treeRoots = new HashSet<>();
-        links = new HashSet<>();
+        activeTags = new HashMap<>();
+        inputTags = new HashMap<>();
     }
 
     /**
@@ -100,8 +98,17 @@ public class KnowledgeNodeNetwork {
      * @param tag: the fired Tag to be added
      * @return true if the Tag is added successfully
      */
-    public boolean addFiredTag(Tag tag) {
-    	return activeTags.add(tag);
+    public void addFiredTag(Tag tag, double objectTruth) {
+    	this.activeTags.put(tag, objectTruth);
+    }
+    
+    /**
+     * Get access of input Tags
+     * 
+     * @return	the access of the input Tags found from the KNN using output from the neural network
+     */
+    public HashMap<Tag, Double> getInputTags(){
+    	return this.inputTags;
     }
     
     /**
@@ -109,15 +116,67 @@ public class KnowledgeNodeNetwork {
      * 
      * @return the Access of active Tags
      */
-    public HashSet<Tag> getActiveTags() {
+    public HashMap<Tag, Double> getActiveTags() {
         return this.activeTags;
     }    
     
-    public void lambdaSearch(String item){
-    	ArrayList<Tag> bestPath = new ArrayList<>();
+    public void lambdaSearch(ArrayList<Tuple> NNoutputs, String item){
+    	HashMap<Tag, Double> bestPath = new HashMap<>();
     	double bestConfidence = 0;
     	
-    	for(Tag t : this.activeTags){
+    	for(Tuple tp : NNoutputs){
+    		boolean found = false;
+    		for(KnowledgeNode kn : this.mapKN.values()){
+    			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
+    				if(kn.fact.getPredicateName().equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
+    					this.inputTags.put(kn.fact, kn.objectTruth);
+    					this.activeTags.put(kn.fact, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
+    				if(kn.recommendation.equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
+    					this.inputTags.put(kn.recommendation, kn.objectTruth);
+    					this.activeTags.put(kn.recommendation, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
+    				if(kn.rule.equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
+    					this.inputTags.put(kn.rule, kn.objectTruth);
+    					this.activeTags.put(kn.rule, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    		}
+    		if(found == false){
+    			if(tp.s.charAt(0) == '@'){
+    				Recommendation rc = new Recommendation(tp.s);
+    				this.inputTags.put(rc, 0.0);
+    			}
+    			else if(tp.s.contains("->")){
+    				Rule r = new Rule(tp.s);
+    				this.inputTags.put(r, 0.0);
+    			}
+    			else if(tp.s.matches(".*\\(.*\\).*")){
+    				Fact f = new Fact(tp.s);
+    				this.inputTags.put(f, 0.0);
+    			}
+    			else{
+    				String str = tp.s + "()";
+    				Fact f = new Fact(str);
+    				this.inputTags.put(f, 0.0);
+    			}
+    		}
+    	}
+    	
+    	for(Tag t : this.activeTags.keySet()){
     		HashSet<Tag> aboveTags = new HashSet<>();
     		aboveTags.add(t);
     		boolean added;
@@ -126,18 +185,9 @@ public class KnowledgeNodeNetwork {
     			for(KnowledgeNode kn : this.mapKN.values()){
     				for(Tag tg : kn.outputs.keySet()){
     					if(aboveTags.contains(tg)){
-    						if(kn.type.equals(KnowledgeNode.inputType.FACT) && aboveTags.contains(kn.fact) == false){
-    							aboveTags.add(kn.fact);
-    							added = true;
-    							break;
-    						}
-    						else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION) && aboveTags.contains(kn.recommendation) == false){
-    							aboveTags.add(kn.recommendation);
-    							added = true;
-    							break;
-    						}
-    						else if(kn.type.equals(KnowledgeNode.inputType.RULE) && aboveTags.contains(kn.rule) == false){
-    							aboveTags.add(kn.rule);
+    						Tag knType = kn.typeChecker();
+    						if(aboveTags.contains(knType) == false){
+    							aboveTags.add(knType);
     							added = true;
     							break;
     						}
@@ -146,72 +196,73 @@ public class KnowledgeNodeNetwork {
     			}
     		}while(added == true);   		
     		
+    		ArrayList<Tag> goodParents = new ArrayList<>();
+    		ArrayList<Tag> notGoodParents = new ArrayList<>();   		
     		for(Tag parent : aboveTags){
+    			boolean isGoodParent = false;
     			ArrayList<Tag> belowTags = new ArrayList<>();
     			depthFirstSearch(parent, belowTags);
     			for(Tag tg : belowTags){
     				if(tg.value.equals(item)){
-    					ArrayList<Tag> onePath = new ArrayList<>();
-    					ArrayList<Tag> parentToChild = pathFinder(parent, t);
-    					ArrayList<Tag> parentToItem = pathFinder(parent, tg);
-    					onePath.addAll(parentToChild);
-    					for(int i=0; i<parentToItem.size(); i++){
-    						if(onePath.contains(parentToItem.get(i)) == false){
-    							onePath.add(parentToItem.get(i));
-    						}
-    					}
-    					double currentConfidence = 0;
-    					if(parentToChild.size() == 1){
-    						currentConfidence = totalConfidence(parentToItem) / (parentToItem.size()-1);
-    					}
-    					else if(parentToItem.size() == 1){
-    						currentConfidence = totalConfidence(parentToChild) / (parentToChild.size()-1);
-    					}
-    					else if(parentToItem.contains(t)){
-    						currentConfidence = totalConfidence(parentToItem) / (parentToItem.size()-1);
-    					}
-    					else{
-    						int length = 0;
-    						ArrayList<Tag> PtoIsubList = new ArrayList<>();
-    						if(parentToChild.size() > parentToItem.size()){
-    							length = parentToItem.size();
-    						}
-    						else{
-    							length = parentToChild.size();
-    						}
-    						
-    						for(int i=1; i<length; i++){
-    							if(parentToChild.get(i).equals(parentToItem.get(i)) == false){
-    								for(int j=i-1; j<parentToItem.size(); j++){
-    									PtoIsubList.add(parentToItem.get(j));
-    								}
-    								break;
-    							}
-    						}
-    						
-    						double confidence1 = totalConfidence(parentToChild);
-    						double confidence2 = totalConfidence(PtoIsubList);
-    						currentConfidence = (confidence1 + confidence2) / (onePath.size()-1);
-    					}
-    					//System.out.print(onePath.toString() + " "); //erase later
-    					//System.out.println(currentConfidence); //erase later
-    					if(currentConfidence > bestConfidence){
-    						bestPath = onePath;
-    						bestConfidence = currentConfidence;
-    					}
+    					isGoodParent = true;
+    					goodParents.add(parent);
+    					break;
     				}
     			}
-    			
+    			if(isGoodParent == false){
+    				notGoodParents.add(parent);
+    			}
+    		}
+    		
+    		for(Tag parent : goodParents){
+    			ArrayList<Tag> belowTags = new ArrayList<>();
+    			depthFirstSearch(parent, belowTags);
+    			for(Tag tg : belowTags){
+    				if(tg.value.equals(item)){
+    					for(Tag tag : bestPath.keySet()){
+    						if(tag.equals(t) == false){
+    							this.mapKN.get(tag).objectTruth = 0;
+    						}
+    					}
+    					ArrayList<Tag> parentToChild = pathFinder(parent, t);
+    					ArrayList<Tag> parentToItem = pathFinder(parent, tg);
+    					int numOfSame = 0;
+    					for(Tag ptC : parentToChild){
+    						if(ptC.equals(t) == false){
+    							for(Tag p : aboveTags){
+    								if(ptC.equals(p) && notGoodParents.contains(p) == false){
+    									numOfSame++;
+    									if(numOfSame > 1){
+    			    						break;
+    			    					}
+    								}
+    							}
+    						}
+    					}   					
+						if(numOfSame > 1){
+    						break;
+    					}
+    					
+    					Collections.reverse(parentToChild);
+    					backwardConfidence(parentToChild);
+    					forwardConfidence(parentToItem);
+    					if(this.mapKN.get(tg).objectTruth > bestConfidence){
+    						bestPath.clear();
+    						for(Tag tag : parentToChild){
+    							bestPath.put(tag, this.mapKN.get(tag).objectTruth);
+    						}
+    						for(Tag tag : parentToItem){
+    							bestPath.put(tag, this.mapKN.get(tag).objectTruth);
+    						}
+    						bestConfidence = this.mapKN.get(tg).objectTruth;
+    					}   					
+    				}
+    			}
     		}
     	}
-    	
-    	for(int i=0; i<bestPath.size(); i++){
-    		this.activeTags.add(bestPath.get(i));
-    	}
-    	
-    }
-    
-    
+
+    	this.activeTags.putAll(bestPath);
+    } 
     
     /**
      * Calculate the total confidence of a given path
@@ -219,15 +270,48 @@ public class KnowledgeNodeNetwork {
      * @param path: the path needed to calculate the total confidence
      * @return the total confidence of that path
      */
-    public double totalConfidence(ArrayList<Tag> path){
-    	double totalConfidence = 0;
-    	if(path.size() <= 1){
-    		return totalConfidence;
+    public double forwardConfidence(ArrayList<Tag> path){
+    	double totalConfidence = 100;
+    	if(path.size() == 1){
+    		return this.mapKN.get(path.get(0)).objectTruth;
     	}
     	
+    	ArrayList<Double> listOfObjectTruth = new ArrayList<>();
     	for(int i=0; i<path.size()-1; i++){
-    		totalConfidence = totalConfidence + this.mapKN.get(path.get(i)).outputs.get(path.get(i+1));
+    		Tag current = path.get(i);
+    		Tag next = path.get(i+1);
+    		listOfObjectTruth.add(this.mapKN.get(current).objectTruth);
+    		this.mapKN.get(next).objectTruth = this.mapKN.get(current).objectTruth * this.mapKN.get(current).outputs.get(next)/100;
     	}
+    	listOfObjectTruth.add(this.mapKN.get(path.get(path.size()-1)).objectTruth);
+    	
+    	for(int i=0; i<listOfObjectTruth.size(); i++){
+    		totalConfidence = (totalConfidence * listOfObjectTruth.get(i)) /100;
+    	}
+    	
+    	return totalConfidence;
+    }
+    
+    public double backwardConfidence(ArrayList<Tag> path){
+    	double totalConfidence = 100;
+    	if(path.size() == 1){
+    		return this.mapKN.get(path.get(0)).objectTruth;
+    	}
+    	
+    	ArrayList<Double> listOfObjectTruth = new ArrayList<>();
+    	for(int i=0; i<path.size()-1; i++){
+    		Tag current = path.get(i);
+    		Tag next = path.get(i+1);
+    		listOfObjectTruth.add(this.mapKN.get(current).objectTruth);
+    		this.mapKN.get(next).listOfRelatedTruth.put(current, (this.mapKN.get(current).objectTruth * this.mapKN.get(next).outputs.get(current) /100) );
+    		this.mapKN.get(next).updateObjectConfidence();
+    	}
+    	listOfObjectTruth.add(this.mapKN.get(path.get(path.size()-1)).objectTruth);
+    	
+    	for(int i=0; i<listOfObjectTruth.size(); i++){
+    		totalConfidence = (totalConfidence * listOfObjectTruth.get(i)) /100;
+    	}
+    	
     	return totalConfidence;
     }
     
@@ -249,15 +333,13 @@ public class KnowledgeNodeNetwork {
     		for(Tag t : this.mapKN.get(start).outputs.keySet()){
     			ArrayList<Tag> template = pathFinder(t, end);
     			if(template.get(template.size()-1).equals(end)){
-    				for(int i=0; i<template.size(); i++){
-    					currentPath.add(template.get(i));
-    				}
+    				currentPath.addAll(template);
+    				break;
     			}
     		}
     	}
     	return currentPath;
     }
-    
     
     /**
      * Depth first search (DFS) on a specific tag
@@ -282,24 +364,79 @@ public class KnowledgeNodeNetwork {
      * @param confidenceLeve: only tags that have at least certain confidence value count as a matching
      * @param ply: number of cycle the AI wanted to search
      */
-    public void backwardSearch(double score, int confidenceLevel, int ply){  	
+    public void backwardSearch(ArrayList<Tuple> NNoutputs, double score, int ply){
+    	for(Tuple tp : NNoutputs){
+    		boolean found = false;
+    		for(KnowledgeNode kn : this.mapKN.values()){
+    			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
+    				if(kn.fact.getPredicateName().equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
+    					this.inputTags.put(kn.fact, kn.objectTruth);
+    					this.activeTags.put(kn.fact, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
+    				if(kn.recommendation.equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
+    					this.inputTags.put(kn.recommendation, kn.objectTruth);
+    					this.activeTags.put(kn.recommendation, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
+    				if(kn.rule.equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
+    					this.inputTags.put(kn.rule, kn.objectTruth);
+    					this.activeTags.put(kn.rule, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    		}
+    		if(found == false){
+    			if(tp.s.charAt(0) == '@'){
+    				Recommendation rc = new Recommendation(tp.s);
+    				this.inputTags.put(rc, 0.0);
+    			}
+    			else if(tp.s.contains("->")){
+    				Rule r = new Rule(tp.s);
+    				this.inputTags.put(r, 0.0);
+    			}
+    			else if(tp.s.matches(".*\\(.*\\).*")){
+    				Fact f = new Fact(tp.s);
+    				this.inputTags.put(f, 0.0);
+    			}
+    			else{
+    				String str = tp.s + "()";
+    				Fact f = new Fact(str);
+    				this.inputTags.put(f, 0.0);
+    			}
+    		}
+    	}
+    	
     	for(int i=0; i<ply; i++){
+    		ArrayList<Tag> previousActiveList = new ArrayList<>();
+    		for(Tag t : this.activeTags.keySet()){
+    			previousActiveList.add(t);
+    		}
+    		
     		for(KnowledgeNode kn : this.mapKN.values()){
     			int matching = 0;
     			for(Tag t : kn.outputs.keySet()){
-    				if(activeTags.contains(t) && kn.outputs.get(t) >= confidenceLevel){
+    				if(previousActiveList.contains(t)){
     					matching++;
+    					double backwardConfidence = ( kn.outputs.get(t)*this.mapKN.get(t).objectTruth )/100;
+    					kn.listOfRelatedTruth.put(t, backwardConfidence);
     				}
     			}
     			if( (double)matching/kn.outputs.size() >= score ){
-    				if(kn.type.equals(KnowledgeNode.inputType.FACT) && this.activeTags.contains(kn.fact) == false){
-    					this.activeTags.add(kn.fact);
-    				}
-    				else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION) && this.activeTags.contains(kn.recommendation) == false){
-    					this.activeTags.add(kn.recommendation);
-    				}
-    				else if(kn.type.equals(KnowledgeNode.inputType.RULE) && this.activeTags.contains(kn.rule) == false){
-    					this.activeTags.add(kn.recommendation);
+    				Tag knType = kn.typeChecker();
+    				kn.updateObjectConfidence();
+    				if(this.activeTags.containsKey(knType) == false){    					
+    					this.activeTags.put(knType, kn.objectTruth);
     				}
     			}
     		}
@@ -314,30 +451,80 @@ public class KnowledgeNodeNetwork {
      * @param confidenceLeve: only tags that have at least certain confidence (between 1 to 100) value count as a matching
      * If the number of matching between active Tags and the outputs of a kn, then the Tag of that kn is added to the active list
      */
-    public void backwardSearch(double score, int confidenceLevel){
-    	HashSet<Tag> pendingFacts = new HashSet<>();   	
+    public void backwardSearch(ArrayList<Tuple> NNoutputs, double score){
+    	for(Tuple tp : NNoutputs){
+    		boolean found = false;
+    		for(KnowledgeNode kn : this.mapKN.values()){
+    			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
+    				if(kn.fact.getPredicateName().equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
+    					this.inputTags.put(kn.fact, kn.objectTruth);
+    					this.activeTags.put(kn.fact, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
+    				if(kn.recommendation.equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
+    					this.inputTags.put(kn.recommendation, kn.objectTruth);
+    					this.activeTags.put(kn.recommendation, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
+    				if(kn.rule.equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
+    					this.inputTags.put(kn.rule, kn.objectTruth);
+    					this.activeTags.put(kn.rule, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    		}
+    		if(found == false){
+    			if(tp.s.charAt(0) == '@'){
+    				Recommendation rc = new Recommendation(tp.s);
+    				this.inputTags.put(rc, 0.0);
+    			}
+    			else if(tp.s.contains("->")){
+    				Rule r = new Rule(tp.s);
+    				this.inputTags.put(r, 0.0);
+    			}
+    			else if(tp.s.matches(".*\\(.*\\).*")){
+    				Fact f = new Fact(tp.s);
+    				this.inputTags.put(f, 0.0);
+    			}
+    			else{
+    				String str = tp.s + "()";
+    				Fact f = new Fact(str);
+    				this.inputTags.put(f, 0.0);
+    			}
+    		}
+    	}
+    	
+    	HashMap<Tag, Double> pendingFacts = new HashMap<>();
     	do{
     		pendingFacts.clear();
     		for(KnowledgeNode kn : this.mapKN.values()){
     			int matching = 0;
     			for(Tag t : kn.outputs.keySet()){
-    				if(this.activeTags.contains(t) && kn.outputs.get(t) >= confidenceLevel){
+    				if(this.activeTags.containsKey(t)){
     					matching++;
+    					double backwardConfidence = (kn.outputs.get(t) * this.mapKN.get(t).objectTruth) /100;
+    					kn.listOfRelatedTruth.put(t, backwardConfidence);
     				}
     			}
     			if( (double)matching/kn.outputs.size() >= score ){
-    				if(kn.type.equals(KnowledgeNode.inputType.FACT) && this.activeTags.contains(kn.fact) == false){
-    					pendingFacts.add(kn.fact);
-    				}
-    				else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION) && this.activeTags.contains(kn.recommendation) == false){
-    					pendingFacts.add(kn.recommendation);
-    				}
-    				else if(kn.type.equals(KnowledgeNode.inputType.RULE) && this.activeTags.contains(kn.rule) == false){
-    					pendingFacts.add(kn.recommendation);
-    				}
+    				Tag knType = kn.typeChecker();
+    				kn.updateObjectConfidence();
+    				if(this.activeTags.containsKey(knType) == false){
+    					pendingFacts.put(knType, kn.objectTruth);
+    				}    				
     			}
     		}
-    		this.activeTags.addAll(pendingFacts);
+    		this.activeTags.putAll(pendingFacts);;
     	}while(pendingFacts.isEmpty() == false);
     }
     
@@ -354,18 +541,21 @@ public class KnowledgeNodeNetwork {
     			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
     				if(kn.fact.getPredicateName().equals(tp.s)){
     					excite(kn, tp.value);
+    					this.inputTags.put(kn.fact, kn.objectTruth);
     					found = true;
     				}
     			}
     			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
     				if(kn.recommendation.equals(tp.s)){
     					excite(kn, tp.value);
+    					this.inputTags.put(kn.recommendation, kn.objectTruth);
     					found = true;
     				}
     			}
     			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
     				if(kn.rule.equals(tp.s)){
     					excite(kn, tp.value);
+    					this.inputTags.put(kn.rule, kn.objectTruth);
     					found = true;
     				}
     			}
@@ -373,31 +563,35 @@ public class KnowledgeNodeNetwork {
     		if(found == false){
     			if(tp.s.charAt(0) == '@'){
     				Recommendation rc = new Recommendation(tp.s);
-    				this.activeTags.add(rc);
+    				this.inputTags.put(rc, 0.0);
     			}
     			else if(tp.s.contains("->")){
     				Rule r = new Rule(tp.s);
-    				this.activeTags.add(r);
+    				this.inputTags.put(r, 0.0);
     			}
     			else if(tp.s.matches(".*\\(.*\\).*")){
     				Fact f = new Fact(tp.s);
-    				this.activeTags.add(f);
+    				this.inputTags.put(f, 0.0);
     			}
     			else{
     				String str = tp.s + "()";
     				Fact f = new Fact(str);
-    				this.activeTags.add(f);
+    				this.inputTags.put(f, 0.0);
     			}
     		}
     	}
-    	
+
     	if(ply > 0 && this.activeTags.isEmpty() == false){
     		for(int i=0; i<ply; i++){
-    			Tag[] activeList = this.activeTags.toArray(new Tag[0]);
-    			for(int j=0; j<activeList.length; j++){
-    				if(this.mapKN.containsKey(activeList[j])){
-    					if(this.mapKN.get(activeList[j]).isActivated != true && this.mapKN.get(activeList[j]).activation >= this.mapKN.get(activeList[j]).threshold){
-    						excite(this.mapKN.get(activeList[j]), 0);
+    			ArrayList<Tag> activeList = new ArrayList<>();      			
+       			for(Tag t : this.activeTags.keySet()){
+       				activeList.add(t);
+       			}
+       			
+    			for(Tag t : activeList){
+    				if(this.mapKN.containsKey(t)){
+    					if(this.mapKN.get(t).isFired != true && this.mapKN.get(t).activation >= this.mapKN.get(t).threshold){
+    						excite(this.mapKN.get(t), 0);
     					}
     				}
     			}
@@ -410,7 +604,7 @@ public class KnowledgeNodeNetwork {
      * forwardSearch with unlimited time
      * 
      * @param NNoutputs: a HashMap mimic the output from the neural network, a list of tuple of form (String, value)
-     * If a string match a kn in the knowledge node network, that kn will be excite 
+     * If a string match a knowledge node in the knowledge node network, that knowledge node will be excite 
      */  
     public void forwardSearch(ArrayList<Tuple> NNoutputs){
     	for(Tuple tp : NNoutputs){
@@ -419,18 +613,21 @@ public class KnowledgeNodeNetwork {
     			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
     				if(kn.fact.getPredicateName().equals(tp.s)){
     					excite(kn, tp.value);
+    					this.inputTags.put(kn.fact, kn.objectTruth);
     					found = true;
     				}
     			}
     			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
     				if(kn.recommendation.equals(tp.s)){
     					excite(kn, tp.value);
+    					this.inputTags.put(kn.recommendation, kn.objectTruth);
     					found = true;
     				}
     			}
     			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
     				if(kn.rule.equals(tp.s)){
     					excite(kn, tp.value);
+    					this.inputTags.put(kn.rule, kn.objectTruth);
     					found = true;
     				}
     			}
@@ -438,20 +635,20 @@ public class KnowledgeNodeNetwork {
     		if(found == false){
     			if(tp.s.charAt(0) == '@'){
     				Recommendation rc = new Recommendation(tp.s);
-    				this.activeTags.add(rc);
+    				this.inputTags.put(rc, 0.0);
     			}
     			else if(tp.s.contains("->")){
     				Rule r = new Rule(tp.s);
-    				this.activeTags.add(r);
+    				this.inputTags.put(r, 0.0);
     			}
     			else if(tp.s.matches(".*\\(.*\\).*")){
     				Fact f = new Fact(tp.s);
-    				this.activeTags.add(f);
+    				this.inputTags.put(f, 0.0);
     			}
     			else{
     				String str = tp.s + "()";
     				Fact f = new Fact(str);
-    				this.activeTags.add(f);
+    				this.inputTags.put(f, 0.0);
     			}
     		}
     	}
@@ -459,18 +656,23 @@ public class KnowledgeNodeNetwork {
     	boolean allActived;
    		do{
    			allActived = true;
-   			Tag[] activeList = this.activeTags.toArray(new Tag[0]);
-   			for(int i=0; i<activeList.length; i++){
-   				if(this.mapKN.containsKey(activeList[i])){
-   					if(this.mapKN.get(activeList[i]).isActivated != true && this.mapKN.get(activeList[i]).activation >= this.mapKN.get(activeList[i]).threshold){
-   						excite(this.mapKN.get(activeList[i]), 0);
+   			ArrayList<Tag> activeList = new ArrayList<>();
+   			
+   			for(Tag t : this.activeTags.keySet()){
+   				activeList.add(t);
+   			}
+   			
+   			for(Tag t : activeList){
+   				if(this.mapKN.containsKey(t)){
+   					if(this.mapKN.get(t).isFired != true && this.mapKN.get(t).activation >= this.mapKN.get(t).threshold){
+   						excite(this.mapKN.get(t), 0);
    						allActived = false;
    					}
    				}
     		}		
     	}while(allActived == false);
-    }
-    
+    }    
+ 
     
     /**
      * Excites a Knowledge Node. 
@@ -482,20 +684,20 @@ public class KnowledgeNodeNetwork {
     public void excite(KnowledgeNode kn, int value) {
     	kn.increaseActivation(value);
     	if(kn.activation * kn.strength >= kn.threshold){
-    		if(kn.type.equals(KnowledgeNode.inputType.FACT)){
-    			this.activeTags.add(kn.fact);
+    		Tag ownTag = kn.typeChecker();
+    		if(value != 0){
+    			kn.listOfRelatedTruth.put(ownTag, kn.accuracy[value]);
+    			kn.updateObjectConfidence();
+    			this.activeTags.put(ownTag, kn.objectTruth);
     		}
-    		else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
-    			this.activeTags.add(kn.recommendation);
+    		kn.isActivated = true;   		
+    		fire(kn);
+    		kn.isFired = true;
+    		for(Tag t : kn.outputs.keySet()){
+    			updateConfidence(this.mapKN.get(t));
     		}
-    		else{
-    			this.activeTags.add(kn.rule);
-    		}
-    		kn.isActivated = true;
-    		this.activeTags.addAll(fire(kn));
     	}
-    }
-    
+    }    
     
     /**
      * Fires a Knowledge Node.
@@ -503,47 +705,35 @@ public class KnowledgeNodeNetwork {
      * @param kn: Knowledge Node to fire
      * @return a Set of Tags found from the output list of kn that have activation >= threshold
      */
-    public HashSet<Tag> fire(KnowledgeNode kn) {
-        HashSet<Tag> pendingTags = new HashSet<>();
+    public void fire(KnowledgeNode kn) {
         for (Tag t : kn.outputs.keySet()) {
-        	KnowledgeNode currentKN = mapKN.get(t);
+        	KnowledgeNode currentKN = this.mapKN.get(t);
         	currentKN.activation+=100;
         	if(currentKN.activation >= currentKN.threshold){
-        		pendingTags.add(t);
+        		Tag parentTag = kn.typeChecker();        			
+        		currentKN.listOfRelatedTruth.put( parentTag, (kn.objectTruth*kn.outputs.get(t))/100 );        		
+        		currentKN.updateObjectConfidence();
+        		currentKN.isActivated = true;
+        		this.activeTags.put(t, currentKN.objectTruth);
         	}
         }
-        return pendingTags;
     }
     
     /**
-     * Build a relation tree using Tags from the activeTags list
-     * This method help the programmer to understand what is going on from the result of each searching
+     * 
+     * @param kn
      */
-    public void buildTree(){
-    	ArrayList<Tag> toRemove = new ArrayList<>();
-    	for(Tag c : this.activeTags){
-    		for(Tag p : this.activeTags){
-    			if(this.mapKN.containsKey(c) && this.mapKN.containsKey(p)){
-    				if(this.mapKN.get(p).outputs.containsKey(c)){
-    					Link lk = new Link(p, this.mapKN.get(p).outputs.get(c), c);
-    					this.links.add(lk);
-    				}
-    			}
+    public void updateConfidence(KnowledgeNode kn){
+    	for(Tag t : kn.outputs.keySet()) {
+    		KnowledgeNode currentKN = this.mapKN.get(t);
+    		if(currentKN.isActivated == true){
+    			Tag parentTag = kn.typeChecker();        			
+        		currentKN.listOfRelatedTruth.put( parentTag, (kn.objectTruth*kn.outputs.get(t))/100 );       		
+        		currentKN.updateObjectConfidence();
+        		this.activeTags.put(t, currentKN.objectTruth);
+        		updateConfidence(currentKN);
     		}
-    	}
-    	this.treeRoots.addAll(this.activeTags);
-    	for(Tag c : this.treeRoots){
-    		for(Tag p : this.treeRoots){
-    			if(this.mapKN.containsKey(c) && this.mapKN.containsKey(p)){
-    				if(this.mapKN.get(p).outputs.containsKey(c)){
-    					toRemove.add(c);
-    				}
-    			}
-    		}
-    	}
-    	for(int i=0; i<toRemove.size(); i++){
-    		this.treeRoots.remove(toRemove.get(i));
     	}
     }
-    
+
 }
