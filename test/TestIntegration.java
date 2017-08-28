@@ -4,6 +4,7 @@ import es.ExpertSystem;
 import knn.KnowledgeNode;
 import knn.KnowledgeNodeNetwork;
 import knn.Tuple;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -11,6 +12,8 @@ import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
+
+import static org.testng.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -36,7 +39,6 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     /**
      * Tests the Knowledge Node Network's high-level functionality.
      */
-
     public void testKNN() {
         System.out.println();
         System.out.println("***testKNN***");
@@ -44,6 +46,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         forwardSearchWithPlyTest();
         backwardSearchTest();
         backwardSearchWithPlyTest();
+        //lambdaSearchTest();
     }
 
     /**
@@ -52,143 +55,175 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     public void setupKNN() {
         knn.resetEmpty();
         ArrayList<KnowledgeNode> animal = new ArrayList<>();
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("C:/Users/Alex/Desktop/petData.txt")); //change the local directory for the test file to run
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] info = line.split(";\\s+");
-                KnowledgeNode kn = new KnowledgeNode(info);
-                animal.add(kn);
-            }
-            br.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        //System.out.println("[KNN] Knowledge nodes in the KNN: ");
-        for (int i = 0; i < animal.size(); i++) {
-            knn.addKN(animal.get(i));
-            //System.out.println(animal.get(i).toString());
-        }
-        //System.out.println("");
+		
+		try{
+			BufferedReader br = new BufferedReader(new FileReader("./animalData")); //change the local directory for the test file to run
+			String line;
+			while( (line = br.readLine()) != null){
+				String[] info = line.split(";\\s+");
+				KnowledgeNode kn = new KnowledgeNode(info);
+				animal.add(kn);
+			}
+			br.close();
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
+		
+		//System.out.println("[KNN] Knowledge nodes in the KNN: ");
+		for(int i=0; i<animal.size(); i++){
+			knn.addKN(animal.get(i));
+			//System.out.println(animal.get(i).toString());
+		}		
+		//System.out.println("");
     }
-
+    
     /**
-     * Test the forward Search of the Knowledge Node networ
-     *
-     * @return
+     * Test the forward Search of the Knowledge Node network
+     * 
+     * @return 
      */
-    public Set<Tag> forwardSearchTest() {
-        System.out.println("***Forward Search Test***");
-        setupKNN();
-        ArrayList<Tuple> inputs = new ArrayList<>();
-        Tuple data1 = new Tuple("husky", 10);
-        inputs.add(data1);
-        Tuple data2 = new Tuple("rogdoll", 10);
-        inputs.add(data2);
+    public Set<Tag> forwardSearchTest(){
+    	System.out.println("***Forward Search Test***");
+    	setupKNN();
+		ArrayList<Tuple> inputs = new ArrayList<>();
+		Tuple data1 = new Tuple("dog", 10); inputs.add(data1);
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
 
         Set<Tag> activatedTags = knn.getActiveTags();
         System.out.println("[KNN] Activated tags: " + activatedTags);
-
+        
         knn.forwardSearch(inputs);
         Set<Tag> activeTags = knn.getActiveTags();
         Set<Tag> expectedActiveTags = new HashSet<>();
-        expectedActiveTags.add(new Fact("husky(Ranger,male,length>58,weight=26)"));
-        expectedActiveTags.add(new Fact("rogdoll(Katty,female,length<55,weight>24)"));
-        expectedActiveTags.add(new Fact("dog(wow, carnivore)"));
-        expectedActiveTags.add(new Fact("cat(meow, carnivore)"));
-        expectedActiveTags.add(new Fact("animal(multicellular,vertebrate,invertebrate)"));
-        expectedActiveTags.add(new Fact("pet(dog>100,cat>80)"));
+        expectedActiveTags.add(new Fact("dog(wolflike, length>50, weight>20)"));
+        expectedActiveTags.add(new Fact("bark(sound, loud)"));
+        expectedActiveTags.add(new Fact("teeth(grind, food)"));
+        expectedActiveTags.add(new Fact("fur(strands, insulator)"));
+        expectedActiveTags.add(new Fact("fast(speed, dynamic)"));
+        expectedActiveTags.add(new Fact("mammal(vertebrate, land)"));
+        expectedActiveTags.add(new Fact("fish(vertebrate, water)"));
+        expectedActiveTags.add(new Fact("calm(safe>5)"));
+        expectedActiveTags.add(new Fact("confused(blur, prey)"));
+        expectedActiveTags.add(new Fact("straightforward(smart, precise)"));
+        expectedActiveTags.add(new Fact("food(easy, nutritious)"));
+        expectedActiveTags.add(new Fact("pet(scary, attractive)"));
+        expectedActiveTags.add(new Fact("transport(easy, speed>10)"));
+        expectedActiveTags.add(new Fact("zoo(easy, attractive)"));
+        expectedActiveTags.add(new Fact("loyal(easy, calm)"));
+        expectedActiveTags.add(new Fact("enemy(scary, dangerous)"));
+        expectedActiveTags.add(new Recommendation("@isSafe(easy, calm)"));
+        expectedActiveTags.add(new Recommendation("@isPet(easy, calm, bark)"));
+        expectedActiveTags.add(new Recommendation("@avoid(scary, dangerous)"));
+        
+        System.out.println("[KNN] Active tags after searching: " + activeTags);
+        
         Assert.assertEquals(activeTags, expectedActiveTags);
-        System.out.println("[KNN] Active tags: " + activeTags);
         System.out.println("");
 
         return activeTags;
     }
-
-    public Set<Tag> forwardSearchWithPlyTest() {
-        System.out.println("***Forward Search with Ply Test***");
-        setupKNN();
-        ArrayList<Tuple> inputs = new ArrayList<>();
-        Tuple data1 = new Tuple("husky", 10);
-        inputs.add(data1);
-        Tuple data2 = new Tuple("rogdoll", 10);
-        inputs.add(data2);
+    
+    public Set<Tag> forwardSearchWithPlyTest(){
+    	System.out.println("***Forward Search with Ply Test***");
+    	setupKNN();
+		ArrayList<Tuple> inputs = new ArrayList<>();
+		Tuple data1 = new Tuple("horse", 10); inputs.add(data1);
+		Tuple data2 = new Tuple("chicken", 10); inputs.add(data2);
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
-
+        
         Set<Tag> activatedTags = knn.getActiveTags();
         System.out.println("[KNN] Activated tags: " + activatedTags);
-
+        
         knn.forwardSearch(inputs, 0);
         Set<Tag> activeTags = knn.getActiveTags();
         Set<Tag> expectedActiveTags = new HashSet<>();
-        expectedActiveTags.add(new Fact("husky(Ranger,male,length>58,weight=26)"));
-        expectedActiveTags.add(new Fact("rogdoll(Katty,female,length<55,weight>24)"));
-        expectedActiveTags.add(new Fact("dog(wow, carnivore)"));
-        expectedActiveTags.add(new Fact("cat(meow, carnivore)"));
+        expectedActiveTags.add(new Fact("horse(fast, length>100, height>100, weight>50, speed=40)"));
+        expectedActiveTags.add(new Fact("chicken(eggs, length<50, weight<10)"));
+        expectedActiveTags.add(new Fact("feathers(floating, insulator, flight)"));
+        expectedActiveTags.add(new Fact("teeth(grind, food)"));
+        
         Assert.assertEquals(activeTags, expectedActiveTags);
-        System.out.println("[KNN] Active tags: " + activeTags);
+        System.out.println("[KNN] Active tags after searching: " + activeTags);
         System.out.println("");
 
         return activeTags;
     }
-
-    public Set<Tag> backwardSearchTest() {
-        System.out.println("***Backward Search Test***");
-        setupKNN();
-        knn.addFiredTag(new Fact("pet(dog>100,cat>80)"));
-        knn.addFiredTag(new Fact("animal(multicellular,vertebrate,invertebrate)"));
-
-        Set<Tag> activatedTags = knn.getActiveTags();
-        System.out.println("[KNN] Activated tags: " + activatedTags);
-
-        knn.backwardSearch(1, 80);
-        Set<Tag> activeTags = knn.getActiveTags();
-        Set<Tag> expectedActiveTags = new HashSet<>();
-        expectedActiveTags.add(new Fact("pet(dog>100,cat>80)"));
-        expectedActiveTags.add(new Fact("animal(multicellular,vertebrate,invertebrate)"));
-        expectedActiveTags.add(new Fact("dog(wow, carnivore)"));
-        expectedActiveTags.add(new Fact("husky(Ranger,male,length>58,weight=26)"));
-        Assert.assertEquals(activeTags, expectedActiveTags);
-
-        System.out.println("[KNN] Active tags: " + activeTags);
-        System.out.println("");
-
-        return activeTags;
+    
+    public Set<Tag> backwardSearchTest(){
+    	System.out.println("***Backward Search Test***");
+    	setupKNN();
+    	knn.addFiredTag(new Fact("mammal(vertebrate, land)"));
+		knn.addFiredTag(new Fact("teeth(grind, food)"));
+		
+		Set<Tag> activatedTags = knn.getActiveTags();
+		System.out.println("[KNN] Activated tags: " + activatedTags);
+		
+		knn.backwardSearch(0.75, 50);
+		Set<Tag> activeTags = knn.getActiveTags();
+		Set<Tag> expectedActiveTags = new HashSet<>();
+		expectedActiveTags.add(new Fact("mammal(vertebrate, land)"));
+		expectedActiveTags.add(new Fact("teeth(grind, food)"));
+		expectedActiveTags.add(new Fact("fur(strands, insulator)"));
+		expectedActiveTags.add(new Fact("sheep(wool, length>100, height>100, weight>50)"));
+		expectedActiveTags.add(new Fact("cat(feline, length>50, weight>20)"));
+		expectedActiveTags.add(new Fact("horse(fast, length>100, height>100, weight>50, speed=40)"));
+		System.out.println("[KNN] Active tags after searching: " + activeTags);
+		
+		Assert.assertEquals(activeTags, expectedActiveTags);				
+		System.out.println("");
+		
+		return activeTags;
     }
-
-    public Set<Tag> backwardSearchWithPlyTest() {
-        System.out.println("***Backward Search with Ply Test***");
-        setupKNN();
-        knn.addFiredTag(new Fact("pet(dog>100,cat>80)"));
-        knn.addFiredTag(new Fact("animal(multicellular,vertebrate,invertebrate)"));
-
-        Set<Tag> activatedTags = knn.getActiveTags();
-        System.out.println("[KNN] Activated tags: " + activatedTags);
-
-        knn.backwardSearch(1, 80, 1);
-        Set<Tag> activeTags = knn.getActiveTags();
-        Set<Tag> expectedActiveTags = new HashSet<>();
-        expectedActiveTags.add(new Fact("pet(dog>100,cat>80)"));
-        expectedActiveTags.add(new Fact("animal(multicellular,vertebrate,invertebrate)"));
-        //expectedActiveTags.add(new Fact("cat(meow, carnivore)"));
-        expectedActiveTags.add(new Fact("dog(wow, carnivore)"));
-        //expectedActiveTags.add(new Fact("husky(Ranger,male,length>58,weight=26)"));
-        //expectedActiveTags.add(new Fact("rogdoll(Katty,female,length<55,weight>24)"));
-        Assert.assertEquals(activeTags, expectedActiveTags);
-
-        System.out.println("[KNN] Active tags: " + activeTags);
-        System.out.println("");
-
-        return activeTags;
+    
+    public Set<Tag> backwardSearchWithPlyTest(){
+    	System.out.println("***Backward Search with Ply Test***");
+    	setupKNN();
+    	knn.addFiredTag(new Fact("pet(scary, attractive)"));
+		knn.addFiredTag(new Fact("transport(easy, speed>10)"));
+		
+		Set<Tag> activatedTags = knn.getActiveTags();
+		System.out.println("[KNN] Activated tags: " + activatedTags);
+		
+		knn.backwardSearch(0.5, 40, 2);
+		Set<Tag> activeTags = knn.getActiveTags();
+		//expectedActiveTags.add(new Fact("rogdoll(Katty,female,length<55,weight>24)"));
+		Assert.assertTrue(activeTags.size()>=3);
+		
+		System.out.println("[KNN] Active tags after searching: " + activeTags);
+		System.out.println("");
+		
+		return activeTags;
     }
-
+//    
+//    public Set<Tag> lambdaSearchTest(){
+//    	System.out.println("***Lambda Search Test***");
+//    	setupKNN();
+//    	
+//    	knn.addFiredTag(new Fact("animal(multicellular,vertebrate,invertebrate)"));
+//    	Set<Tag> activatedTags = knn.getActiveTags();
+//		System.out.println("[KNN] Activated tags: " + activatedTags);
+//		System.out.println("[KNN] Lambda search item is pet(dog>100,cat>80)");
+//		
+//		knn.lambdaSearch("pet(dog>100,cat>80)");
+//		Set<Tag> activeTags = knn.getActiveTags();
+//		
+//		Set<Tag> expectedActiveTags = new HashSet<>();
+//		expectedActiveTags.add(new Fact("husky(Ranger,male,length>58,weight=26)"));
+//		expectedActiveTags.add(new Fact("dog(wow, carnivore)"));
+//		expectedActiveTags.add(new Fact("animal(multicellular,vertebrate,invertebrate)"));
+//		expectedActiveTags.add(new Fact("pet(dog>100,cat>80)"));
+//		Assert.assertEquals(activeTags, expectedActiveTags);
+//		
+//		System.out.println("[KNN] Active tags after searching: " + activeTags);
+//		System.out.println("");
+//		
+//		return activeTags;
+//    }
+    
     /**
      * Tests the Expert System's matches method.
      */
-
     public void testMatches() {
         System.out.println();
         System.out.println("testMatches");
@@ -233,7 +268,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertTrue(fact16.matches(fact17).doesMatch);
     }
 
-    @Test
+
     public void testESRest() {
         System.out.println();
         System.out.println("testESRest");
@@ -263,7 +298,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules: " + initialRules);
 
-        HashSet<Rule> newRuleSet = es.pairwiseComp(1);
+        HashSet<Rule> newRuleSet = es.ruleMerger(1);
         HashSet<Rule> expectedNewRuleList = new HashSet<>();
         expectedNewRuleList.addAll(Arrays.asList(expectedNewRules));
 

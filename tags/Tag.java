@@ -8,6 +8,7 @@ public abstract class Tag {
      * The value of the Tag.
      */
     public String value;
+
     /**
      * The type of the Tag (FACT, RULE, or RECOMMENDATION).
      */
@@ -44,10 +45,10 @@ public abstract class Tag {
         switch (type) {
             case RECOMMENDATION:
                 return new Recommendation(value);
-            case RULE:
-                return new Rule(value);
             case FACT:
                 return new Fact(value);
+            case RULE:
+                return new Rule().makeRules(value).get(0); //check
         }
         return null;
     }

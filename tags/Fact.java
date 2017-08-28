@@ -14,23 +14,37 @@ public class Fact extends Tag {
 
     private String predicateName;
     private LinkedList<Argument> arguments;
+    private double confidenceValue;
 
     public Fact() {
         this.type = TagType.FACT;
     }
 
     public Fact(String value) {
+        this(value, 1.0);
+    }
+
+    public Fact(String value, double confidenceValue) {
 
         this.value = value;
         this.type = TagType.FACT;
         this.predicateName = value.split("\\(")[0];
         this.arguments = argumentParser(value);
+        this.confidenceValue = confidenceValue;
 
     }
 
     @Override
     public String toString() {
-        return predicateName + "(" + arguments + ")";
+        return "[" + predicateName + '(' + arguments + ") " + confidenceValue*100 +"% ]";
+    }
+
+    public double getConfidenceValue() {
+        return confidenceValue;
+    }
+
+    public void setConfidenceValue(double confidenceValue) {
+        this.confidenceValue = confidenceValue;
     }
 
     /**
@@ -46,7 +60,7 @@ public class Fact extends Tag {
     private LinkedList<Argument> argumentParser(String str) {
         String args = str.replaceAll("\\s+", "");
         try {
-            args = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
+            args = args.substring(args.indexOf("(") + 1, args.indexOf(")"));
         } catch (StringIndexOutOfBoundsException e) {
             System.err.println("Fact string must contain parenthesis: " + e.getMessage());
         }
@@ -104,12 +118,12 @@ public class Fact extends Tag {
 
     /**
      * Compares two facts to see if they are compatible
+     * If matching occurs on a variable argument, return object includes a tuple (see VariableReturn class)
+     *
      *
      * @param inputFact fact being compared
      * @return true if facts are 'matched' (notice not necessarily equal)
      */
-
-    //NEEDS TO RETURN LIST OF REPLACEMENTS // I.E. NOT A SINGLE ONE
 
     public VariableReturn matches(Fact inputFact) {
 

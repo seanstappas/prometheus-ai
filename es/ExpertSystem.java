@@ -3,10 +3,7 @@ package es;
 import interfaces.PrometheusLayer;
 import tags.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Expert System (ES)
@@ -150,6 +147,11 @@ public class ExpertSystem implements PrometheusLayer {
         return facts;
     }
 
+    /**
+     * Checks if a particular fact matches with any other fact in the ES
+     * @param inputFact
+     * @return true if (at least) two facts match
+     */
     public boolean factsContains(Fact inputFact) {
         boolean result = false;
         for (Fact f : facts) {
@@ -166,7 +168,7 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
-     * possible. Stops once the system reaches natural quiescence.
+     * possible. Stops once the system reaches natural quiescence and generates a new rule.
      *
      * @return the activated Recommendations as a result of thinking
      */
@@ -183,14 +185,20 @@ public class ExpertSystem implements PrometheusLayer {
             if (tag.isRecommendation())
                 activatedRecommendations.add(tag);
         }
-        generateProvenRule(allActivatedTags, inputFactSet);
+        generateProvenRule(inputFactSet, allActivatedTags);
         return activatedRecommendations;
     }
 
-    private void generateProvenRule(Set<Tag> allActivatedTags, Set<Fact> inputFactSet) {
+
+    /**
+     * Generates a rule from the facts present in the ES at the beginning of think() and the tags activated before quiescence
+     * @param inputFactSet facts in ES
+     * @param allActivatedTags activated tags
+     */
+    private void generateProvenRule(Set<Fact> inputFactSet, Set<Tag> allActivatedTags) {
         Fact[] inputFacts = inputFactSet.toArray(new Fact[inputFactSet.size()]);
-        Tag[] outputTags = allActivatedTags.toArray(new Tag[allActivatedTags.size()]);
-        Rule provenRule = new Rule(inputFacts, (Fact[]) outputTags);
+        Fact[] outputTags = allActivatedTags.toArray(new Fact[allActivatedTags.size()]);
+        Rule provenRule = new Rule(inputFacts, outputTags);
         addRule(provenRule);
     }
 
@@ -257,7 +265,10 @@ public class ExpertSystem implements PrometheusLayer {
         return activatedTags;
     }
 
-    //TODO: Variable matching when argument contains math symbol
+    /**
+     * Replaces variable argument(s) within a tag with a String or Numeric Argument
+     * @param tag the tag with arguments to replace
+     */
     private void replaceVariableArguments(Fact tag) {
         int argumentIndex = 0;
         for (Argument argument : tag.getArguments()) {
@@ -265,12 +276,19 @@ public class ExpertSystem implements PrometheusLayer {
                     pendingReplacementPairs.containsKey(argument.getName())) {
                 LinkedList<Argument> newArguments = tag.getArguments();
                 newArguments.set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
-                tag.setArguments(newArguments); //can be set all at once (NI)
+                tag.setArguments(newArguments);
             }
             argumentIndex++;
         }
     }
 
+    /**
+     * Checks if two rules can be merged into a new rule
+     * i.e. rule 1 = A -> B, rule 2 = B -> C, rule 3 = A -> C
+     * @param inputRule rule 1
+     * @param outputRule rule 2
+     * @return a merged rule (rule 3)
+     */
     private Rule logicReasoner(Rule inputRule, Rule outputRule) {
         for (Fact inputFact : inputRule.getOutputTags()) {
             boolean fullMatch = false;
@@ -287,7 +305,12 @@ public class ExpertSystem implements PrometheusLayer {
         return new Rule(inputRule.inputFacts, outputRule.outputTags);
     }
 
-    public HashSet<Rule> pairwiseComp(int numberOfCycles) {
+    /**
+     * Iterates over rule set, checks if new merged rules are valid, and repeatedly generates new merged rules from current set of new rules
+     * @param numberOfCycles how many cycles over the ruleset
+     * @return merged rules
+     */
+    public HashSet<Rule> ruleMerger(int numberOfCycles) {
         HashSet<Rule> mergedRules = new HashSet<>();
         HashSet<Rule> inputRules = new HashSet<>(this.readyRules);
         while (numberOfCycles > 0) {
@@ -305,11 +328,58 @@ public class ExpertSystem implements PrometheusLayer {
         return mergedRules;
     }
 
+    /**
+     * Process that occurs when ES is not thinking
+     */
     public void rest() {
-        HashSet<Rule> newRules = pairwiseComp(1);
+        HashSet<Rule> newRules = ruleMerger(1);
         for (Rule newRule : newRules) {
             addRule(newRule);
         }
+    }
+
+
+    public boolean teach(String sentence) {
+        String[] tokens = sentence.split("\\s");
+        ArrayList<String> tokenList = new ArrayList<>();
+        for (String token : tokens) {
+            tokenList.add(token.toLowerCase());
+        }
+
+        int inputIndex = -1;
+        String [] inputTokens = {"if", "when", "while", "first"};
+        for (String inputToken : inputTokens) {
+            if (tokenList.contains(inputToken)) {
+                inputIndex = tokenList.indexOf(inputToken);
+                break;
+            }
+        }
+
+        int outputIndex = -1;
+        String [] outputTokens = {"then", "next", "do"};
+        for (String outputToken : outputTokens) {
+            if (tokenList.contains(outputToken)) {
+                outputIndex = tokenList.indexOf(outputToken);
+                break;
+            }
+        }
+
+        if (inputIndex < outputIndex) {
+            String[] inputFacts = tokenList.subList(inputIndex+1, outputIndex).toArray(new String[0]);
+            String[] outputTags = tokenList.subList(outputIndex + 1, tokenList.size()).toArray(new String[0]);
+            Rule newRule = new Rule(inputFacts, outputTags, Tag.TagType.RULE);
+            return addRule(newRule);
+
+        }
+
+        else if (inputIndex > outputIndex) {
+            String[] inputFacts = tokenList.subList(inputIndex+1, tokenList.size()).toArray(new String[0]);
+            String[] outputTags = tokenList.subList(outputIndex + 1, inputIndex).toArray(new String[0]);
+            Rule newRule = new Rule(inputFacts, outputTags, Tag.TagType.RULE);
+            return addRule(newRule);
+        }
+
+        return false;
     }
 
 }
