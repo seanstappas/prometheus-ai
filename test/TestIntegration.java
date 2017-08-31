@@ -34,7 +34,6 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     public void setup() {
         knn = new KnowledgeNodeNetwork();
         es = new ExpertSystem();
-
     }
 
     /**
@@ -97,25 +96,27 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         HashMap<Tag, Double> activeTags = knn.getActiveTags();
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("calm(safe>5)"), 55.0);
-        expectedActiveTags.put(new Fact("confused(blur, prey)"), 55.0);
-        expectedActiveTags.put(new Fact("loyal(easy, calm)"), 24.2);
-        expectedActiveTags.put(new Fact("straightforward(smart, precise)"), 50.0);
-        expectedActiveTags.put(new Fact("fur(strands, insulator)"), 100.0);
-        expectedActiveTags.put(new Fact("zoo(easy, attractive)"), 45.0);
-        expectedActiveTags.put(new Fact("dog(wolflike, length>50, weight>20)"), 100.0);
-        expectedActiveTags.put(new Fact("transport(easy, speed>10)"), 22.0);
-        expectedActiveTags.put(new Fact("bark(sound, loud)"), 100.0);
-        expectedActiveTags.put(new Fact("pet(scary, attractive)"), 44.0);
-        expectedActiveTags.put(new Fact("enemy(scary, dangerous)"), 40.5);
-        expectedActiveTags.put(new Fact("cat(feline, length>50, weight>20)"), 100.0);
-        expectedActiveTags.put(new Recommendation("@isSafe(easy, calm)"), 24.2);
-        expectedActiveTags.put(new Fact("teeth(grind, food)"), 100.0);
-        expectedActiveTags.put(new Fact("fish(vertebrate, water)"), 50.0);
-        expectedActiveTags.put(new Recommendation("@isPet(easy, calm, bark)"), 42.0);
-        expectedActiveTags.put(new Fact("food(easy, nutritious)"), 22.0);
-        expectedActiveTags.put(new Fact("mammal(vertebrate, land)"), 68.75);
-        expectedActiveTags.put(new Fact("fast(speed, dynamic)"), 50.0);
-        expectedActiveTags.put(new Recommendation("@avoid(scary, dangerous)"), 40.5);
+        expectedActiveTags.put(new Fact("dog(wolflike,length>50,weight>20)"), 100.0);
+        expectedActiveTags.put(new Fact("zoo(easy,attractive)"), 45.0);
+        expectedActiveTags.put(new Fact("bark(sound,loud)"), 100.0);
+        expectedActiveTags.put(new Fact("straightforward(smart,precise)"), 50.0);
+        expectedActiveTags.put(new Fact("enemy(scary,dangerous)"), 40.5);
+        expectedActiveTags.put(new Fact("loyal(easy,calm)"), 24.2);
+        expectedActiveTags.put(new Fact("teeth(grind,food)"), 100.0);
+        expectedActiveTags.put(new Rule("bark(sound,loud) pet(scary,attractive) -> @isPet(easy,calm,bark)"), 72.0);
+        expectedActiveTags.put(new Fact("fast(speed,dynamic)"), 50.0);
+        expectedActiveTags.put(new Rule("cat(feline,length>50,weight>20) dog(wolflike,length>50,weight>20) -> @fight(dangerous)"), 100.0);
+        expectedActiveTags.put(new Fact("transport(easy,speed>10)"), 22.0);
+        expectedActiveTags.put(new Fact("fur(strands,insulator)"), 100.0);
+        expectedActiveTags.put(new Fact("mammal(vertebrate,land)"), 68.75);
+        expectedActiveTags.put(new Fact("food(easy,nutritious)"), 22.0);
+        expectedActiveTags.put(new Fact("cat(feline,length>50,weight>20)"), 100.0);
+        expectedActiveTags.put(new Fact("fish(vertebrate,water)"), 50.0);
+        expectedActiveTags.put(new Fact("pet(scary,attractive)"), 44.0);
+        expectedActiveTags.put(new Fact("confused(blur,prey)"), 55.0);
+        expectedActiveTags.put(new Rule("massive(big,heavy) teeth(grind,food) -> @scary(scary,dangerous)"), 100.0);
+        expectedActiveTags.put(new Rule("enemy(scary,dangerous) -> @avoid(scary,dangerous)"), 40.5);
+        expectedActiveTags.put(new Rule("coward(scared,safe) loyal(easy,calm) -> @isSafe(easy,calm)"), 24.2);
         
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
@@ -131,18 +132,24 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     	System.out.println("***Forward Search with Ply Test***");
     	setupKNN();
 		ArrayList<Tuple> inputs = new ArrayList<>();
-		Tuple data1 = new Tuple("tuna", 10); inputs.add(data1);
-		Tuple data2 = new Tuple("shark", 10); inputs.add(data2);                
+		Tuple data1 = new Tuple("dog", 10); inputs.add(data1);
+		Tuple data2 = new Tuple("cat", 10); inputs.add(data2);                
         
-        knn.forwardSearch(inputs, 0);
+        knn.forwardSearch(inputs, 1);
         HashMap<Tag, Double> inputTags = knn.getInputTags();
         HashMap<Tag, Double> activeTags = knn.getActiveTags();
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
-        expectedActiveTags.put(new Fact("teeth(grind, food)"), 100.0);
-        expectedActiveTags.put(new Fact("tuna(flock, length<200)"), 100.0);
-        expectedActiveTags.put(new Fact("swarm(together)"), 80.0);
-        expectedActiveTags.put(new Fact("shark(predator, length>50, speed>10)"), 100.0);
-        expectedActiveTags.put(new Fact("massive(big, heavy)"), 50.0);
+        expectedActiveTags.put(new Fact("fast(speed,dynamic)"), 50.0);
+        expectedActiveTags.put(new Rule("cat(feline,length>50,weight>20) dog(wolflike,length>50,weight>20) -> @fight(dangerous)"), 100.0);
+        expectedActiveTags.put(new Fact("fur(strands,insulator)"), 100.0);
+        expectedActiveTags.put(new Fact("mammal(vertebrate,land)"), 68.75);
+        expectedActiveTags.put(new Fact("dog(wolflike,length>50,weight>20)"), 100.0);
+        expectedActiveTags.put(new Fact("cat(feline,length>50,weight>20)"), 100.0);
+        expectedActiveTags.put(new Fact("bark(sound,loud)"), 100.0);
+        expectedActiveTags.put(new Fact("fish(vertebrate,water)"), 50.0);
+        expectedActiveTags.put(new Fact("teeth(grind,food)"), 100.0);
+        expectedActiveTags.put(new Rule("massive(big,heavy) teeth(grind,food) -> @scary(scary,dangerous)"), 100.0);
+        expectedActiveTags.put(new Rule("bark(sound,loud) pet(scary,attractive) -> @isPet(easy,calm,bark)"), 100.0);
         
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
@@ -166,20 +173,16 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         HashMap<Tag, Double> activeTags = knn.getActiveTags();
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("calm(safe>5)"), 100.0);
-        expectedActiveTags.put(new Fact("coward(scared, safe)"), 100.0);
-        expectedActiveTags.put(new Fact("sheep(wool, length>100, height>100, weight>50)"), 80.0);
-        expectedActiveTags.put(new Fact("fur(strands, insulator)"), 80.0);
-        expectedActiveTags.put(new Fact("chicken(eggs, length<50, weight<10)"), 30.0);
-        expectedActiveTags.put(new Fact("shark(predator, length>50, speed>10)"), 40.0);
-        expectedActiveTags.put(new Fact("dog(wolflike, length>50, weight>20)"), 55.0);
-        expectedActiveTags.put(new Fact("bark(sound, loud)"), 80.0);
-        expectedActiveTags.put(new Fact("cat(feline, length>50, weight>20)"), 60.0);
-        expectedActiveTags.put(new Fact("feathers(floating, insulator, flight)"), 30.0);
-        expectedActiveTags.put(new Fact("teeth(grind, food)"), 40.0);
-        expectedActiveTags.put(new Fact("horse(fast, length>100, height>100, weight>50, speed=40)"), 40.0);
-        expectedActiveTags.put(new Fact("mammal(vertebrate, land)"), 80.0);
-        expectedActiveTags.put(new Fact("fast(speed, dynamic)"), 40.0);
-        expectedActiveTags.put(new Fact("bird(vertebrate, air)"), 30.0);
+        expectedActiveTags.put(new Fact("fast(speed,dynamic)"), 40.0);
+        expectedActiveTags.put(new Fact("fur(strands,insulator)"), 80.0);
+        expectedActiveTags.put(new Fact("mammal(vertebrate,land)"), 80.0);
+        expectedActiveTags.put(new Fact("coward(scared,safe)"), 100.0);
+        expectedActiveTags.put(new Fact("bird(vertebrate,air)"), 30.0);
+        expectedActiveTags.put(new Fact("feathers(floating,insulator,flight)"), 30.0);
+        expectedActiveTags.put(new Fact("dog(wolflike,length>50,weight>20)"), 60.0);
+        expectedActiveTags.put(new Fact("bark(sound,loud)"), 80.0);
+        expectedActiveTags.put(new Fact("chicken(eggs,length<50,weight<10)"), 30.0);
+        expectedActiveTags.put(new Fact("sheep(wool,length>100,height>100,weight>50)"), 80.0);
 		
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
@@ -203,14 +206,13 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         HashMap<Tag, Double> activeTags = knn.getActiveTags();
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();        
         expectedActiveTags.put(new Fact("calm(safe>5)"), 100.0);
-        expectedActiveTags.put(new Fact("bark(sound, loud)"), 80.0);
-        expectedActiveTags.put(new Fact("coward(scared, safe)"), 100.0);
-        expectedActiveTags.put(new Fact("feathers(floating, insulator, flight)"), 30.0);
-        expectedActiveTags.put(new Fact("teeth(grind, food)"), 40.0);
-        expectedActiveTags.put(new Fact("mammal(vertebrate, land)"), 80.0);
-        expectedActiveTags.put(new Fact("fur(strands, insulator)"), 80.0);
-        expectedActiveTags.put(new Fact("fast(speed, dynamic)"), 40.0);
-        expectedActiveTags.put(new Fact("bird(vertebrate, air)"), 30.0);
+        expectedActiveTags.put(new Fact("fast(speed,dynamic)"), 40.0);
+        expectedActiveTags.put(new Fact("fur(strands,insulator)"), 80.0);
+        expectedActiveTags.put(new Fact("mammal(vertebrate,land)"), 80.0);
+        expectedActiveTags.put(new Fact("coward(scared,safe)"), 100.0);
+        expectedActiveTags.put(new Fact("bird(vertebrate,air)"), 30.0);
+        expectedActiveTags.put(new Fact("feathers(floating,insulator,flight)"), 30.0);
+        expectedActiveTags.put(new Fact("bark(sound,loud)"), 80.0);
         
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
@@ -228,20 +230,25 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     	setupKNN();
 		ArrayList<Tuple> inputs = new ArrayList<>();
 		Tuple data1 = new Tuple("mammal", 10); inputs.add(data1);
-		String item = "@avoid(scary, dangerous)";
+		String item = "fish(vertebrate,water)";
 		
 		knn.lambdaSearch(inputs, item);
 		HashMap<Tag, Double> inputTags = knn.getInputTags();
         HashMap<Tag, Double> activeTags = knn.getActiveTags();
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
+        expectedActiveTags.put(new Fact("fur(strands,insulator)"), 100.0);
+        expectedActiveTags.put(new Fact("mammal(vertebrate,land)"), 100.0);
+        expectedActiveTags.put(new Fact("cat(feline,length>50,weight>20)"), 100.0);
+        expectedActiveTags.put(new Fact("fish(vertebrate,water)"), 70.0);
+        expectedActiveTags.put(new Fact("teeth(grind,food)"), 100.0);
         
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] String trying to find out a link with: " + item);
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after lambda searching: " + activeTags);
         
-        Assert.assertTrue(activeTags.containsKey(new Recommendation("@avoid(scary, dangerous)")));
-        Assert.assertTrue(activeTags.get(new Recommendation("@avoid(scary, dangerous)")) == 56.7);
+        Assert.assertTrue(activeTags.containsKey(new Fact(item)));
+        Assert.assertEquals(activeTags, expectedActiveTags);
         System.out.println("");
 		
 		return activeTags;
@@ -396,84 +403,57 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertEquals(activeRules, expectedActiveRules);
         System.out.println("[ES] Final active rules: " + activeRules);
     }
-//
-//    /**
-//     * Tests the ES and KNN together.
-//     */
-//    @Test
-//    public void testKNNandES() {
-//        System.out.println();
-//        System.out.println("testKNNandES");
-//        Set<Tag> activatedTags = setupKNNandThink();
-//        es.reset();
-//        es.addTags(activatedTags);
-//
-//        Set<Fact> expectedInitialFacts = new HashSet<>();
-//        Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
-//        Set<Rule> expectedInitialRules = new HashSet<>();
-//
-//        for (Tag t : activatedTags) {
-//            switch (t.type) {
-//                case FACT:
-//                    expectedInitialFacts.add((Fact) t);
-//                    break;
-//                case RULE:
-//                    expectedInitialRules.add((Rule) t);
-//                    break;
-//                case RECOMMENDATION:
-//                    expectedInitialRecommendations.add((Recommendation) t);
-//                    break;
-//            }
-//        }
-//        System.out.println("[ES] Initial activated tags (from KNN): " + activatedTags);
-//
-//        Set<Fact> initialFacts = es.getFacts();
-//        Assert.assertEquals(initialFacts, expectedInitialFacts);
-//        System.out.println("[ES] Initial facts: " + initialFacts);
-//
-//        Set<Recommendation> initialRecommendations = es.getRecommendations();
-//        Assert.assertEquals(initialRecommendations, expectedInitialRecommendations);
-//        System.out.println("[ES] Initial recommendations: " + initialRecommendations);
-//
-//        Set<Rule> initialRules = es.getReadyRules();
-//        Assert.assertEquals(initialRules, expectedInitialRules);
-//        System.out.println("[ES] Initial rules: " + initialRules);
-//
-//        Set<Tag> activatedRecommendations = es.think();
-//        Set<Tag> expectedActivatedRecommendations = new HashSet<>();
-//        Recommendation recZ = new Recommendation("Z()");
-//        expectedActivatedRecommendations.add(recZ);
-//        Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendations);
-//        System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
-//
-//        Set<Fact> facts = es.getFacts();
-//        Set<Fact> expectedFacts = new HashSet<>();
-//        expectedFacts.addAll(expectedInitialFacts);
-//        Assert.assertEquals(facts, expectedFacts);
-//        System.out.println("[ES] Final facts: " + facts);
-//
-//        Set<Recommendation> recommendations = es.getRecommendations();
-//        Set<Recommendation> expectedRecommendations = new HashSet<>();
-//        expectedRecommendations.add(recZ);
-//        Assert.assertEquals(recommendations, expectedRecommendations);
-//        System.out.println("[ES] Final recommendations: " + recommendations);
-//
-//        Fact[] outputTagsE = {new Fact("H()"), new Fact("I()"), new Fact("J()")};
-//        Tag outputTag4 = new Rule(
-//                outputTagsE,
-//                new Fact[]{new Recommendation("Z()")}
-//        );
-//
-//        Set<Rule> readyRules = es.getReadyRules();
-//        Set<Rule> expectedReadyRules = new HashSet<>();
-//        Assert.assertEquals(readyRules, expectedReadyRules);
-//        System.out.println("[ES] Final ready rules: " + readyRules);
-//
-//        Set<Rule> activeRules = es.getActiveRules();
-//        Set<Tag> expectedActiveRules = new HashSet<>();
-//        expectedActiveRules.add(outputTag4);
-//        Assert.assertEquals(activeRules, expectedActiveRules);
-//        System.out.println("[ES] Final active rules: " + activeRules);
-//    }
+
+    /**
+     * Tests the ES and KNN together.
+     */
+    @Test
+    public void testKNNandES() {
+        System.out.println();
+        System.out.println("testKNNandES");
+        setupKNN();
+        ArrayList<Tuple> inputs = new ArrayList<>();
+		Tuple data1 = new Tuple("dog", 10); inputs.add(data1);
+		Tuple data2 = new Tuple("cat", 10); inputs.add(data2);                        
+        knn.forwardSearch(inputs);
+        HashMap<Tag, Double> activatedTags = knn.getActiveTags();
+        es.reset();
+        es.addTags(activatedTags.keySet());
+
+        Set<Fact> expectedInitialFacts = new HashSet<>();
+        Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
+        Set<Rule> expectedInitialRules = new HashSet<>();
+
+        for (Tag t : activatedTags.keySet()) {
+            switch (t.type) {
+                case FACT:
+                    expectedInitialFacts.add((Fact) t);
+                    break;
+                case RULE:
+                    expectedInitialRules.add((Rule) t);
+                    break;
+                case RECOMMENDATION:
+                    expectedInitialRecommendations.add((Recommendation) t);
+                    break;
+            }
+        }
+        System.out.println("[ES] Initial activated tags (from KNN): " + activatedTags);
+
+        Set<Fact> initialFacts = es.getFacts();
+        Assert.assertEquals(initialFacts, expectedInitialFacts);
+        System.out.println("[ES] Initial facts: " + initialFacts);
+
+        Set<Rule> initialRules = es.getReadyRules();
+        Assert.assertEquals(initialRules, expectedInitialRules);
+        System.out.println("[ES] Initial rules: " + initialRules);
+        
+        Set<Tag> activatedRecommendations = es.think();
+        System.out.println(activatedRecommendations.toString());
+        
+        Set<Tag> expectedActivatedRecommendation = new HashSet<>();
+        expectedActivatedRecommendation.add(new Recommendation("@avoid(scary,dangerous)"));
+        expectedActivatedRecommendation.add(new Recommendation("@isPet(easy,calm,bark)"));
+        Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendation);
+    }
 
 }

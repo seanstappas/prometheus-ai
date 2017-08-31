@@ -84,10 +84,10 @@ public class KNN_Testing {
 		
 		//testing forward searching with and without ply input		
 //		ArrayList<Tuple> inputs = new ArrayList<>();
-//		Tuple data1 = new Tuple("tuna", 10); inputs.add(data1);
-//		Tuple data2 = new Tuple("shark", 10); inputs.add(data2);		
+//		Tuple data1 = new Tuple("dog", 10); inputs.add(data1);
+//		Tuple data2 = new Tuple("cat", 10); inputs.add(data2);		
 //		
-//		relation.forwardSearch(inputs, 0);
+//		relation.forwardSearch(inputs, 1);
 //		System.out.println("Input for forward search: " + relation.getInputTags().toString());
 //		System.out.println(relation.getActiveTags().toString());	
 		
@@ -103,7 +103,7 @@ public class KNN_Testing {
 		//testing lambda searching				
 		ArrayList<Tuple> inputs = new ArrayList<>();
 		Tuple data1 = new Tuple("mammal", 10); inputs.add(data1);
-		relation.lambdaSearch(inputs, "@avoid(scary, dangerous)");
+		relation.lambdaSearch(inputs, "fish(vertebrate,water)");
 		System.out.println("Input for lambda search: " + relation.getInputTags().toString());
 		System.out.println(relation.getActiveTags().toString());
 		
