@@ -4,6 +4,7 @@ import es.ExpertSystem;
 import knn.KnowledgeNode;
 import knn.KnowledgeNodeNetwork;
 import knn.Tuple;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -12,9 +13,15 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
+import static org.testng.Assert.assertEquals;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Running es.ExpertSystem and knn.KnowledgeNodeNetwork
@@ -49,9 +56,9 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     public void setupKNN() {
         knn.resetEmpty();
         ArrayList<KnowledgeNode> animal = new ArrayList<>();
-
+		
 		try{
-			BufferedReader br = new BufferedReader(new FileReader("animalData")); //change the local directory for the test file to run
+			BufferedReader br = new BufferedReader(new FileReader("./animalData")); //change the local directory for the test file to run
 			String line;
 			while( (line = br.readLine()) != null){
 				String[] info = line.split(";\\s+");

@@ -64,6 +64,7 @@ public class KnowledgeNodeNetwork {
     public void clearKN() {
         mapKN.clear();
         activeTags.clear();
+        inputTags.clear();
     }
 
     /**
