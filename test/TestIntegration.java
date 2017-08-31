@@ -441,14 +441,14 @@ public class TestIntegration { // TODO: test with Google's GSON libary
 
         Set<Fact> initialFacts = es.getFacts();
         Assert.assertEquals(initialFacts, expectedInitialFacts);
-        System.out.println("[ES] Initial facts: " + initialFacts);
+        System.out.println("[ES] Initial facts (for ES): " + initialFacts);
 
         Set<Rule> initialRules = es.getReadyRules();
         Assert.assertEquals(initialRules, expectedInitialRules);
-        System.out.println("[ES] Initial rules: " + initialRules);
+        System.out.println("[ES] Initial rules (for ES): " + initialRules);
         
         Set<Tag> activatedRecommendations = es.think();
-        System.out.println(activatedRecommendations.toString());
+        System.out.println("[ES] Active recommendation (for Meta): " + activatedRecommendations.toString());
         
         Set<Tag> expectedActivatedRecommendation = new HashSet<>();
         expectedActivatedRecommendation.add(new Recommendation("@avoid(scary,dangerous)"));
