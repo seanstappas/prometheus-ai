@@ -14,23 +14,26 @@ public class Fact extends Tag {
 
     private String predicateName;
     private LinkedList<Argument> arguments;
-    private double confidenceValue;
 
     public Fact() {
         this.type = TagType.FACT;
     }
 
     public Fact(String value) {
+
         this(value, 1.0);
     }
 
     public Fact(String value, double confidenceValue) {
 
+        String[] tokens = value.split("[(),]");
+
         this.value = value;
         this.type = TagType.FACT;
-        this.predicateName = value.split("\\(")[0];
-        this.arguments = argumentParser(value);
+        this.predicateName = tokens[0];
+        this.arguments = argStringParser(tokens);
         this.confidenceValue = confidenceValue;
+
 
     }
 
@@ -53,24 +56,15 @@ public class Fact extends Tag {
      * Facts have zero, or more arguments [e.g. "P()", "P(ARG1)", "P(ARG1,ARG2,..., ARGN")]
      * NB: There should be no space characters between the arguments in a string
      *
-     * @param str string input
+     * @param tokens string input
      * @return list of string arguments
      */
 
-    private LinkedList<Argument> argumentParser(String str) {
-        String args = str.replaceAll("\\s+", "");
-        try {
-            args = args.substring(args.indexOf("(") + 1, args.indexOf(")"));
-        } catch (StringIndexOutOfBoundsException e) {
-            System.err.println("Fact string must contain parenthesis: " + e.getMessage());
-        }
-        String[] argTokens = args.split(",");
+    private LinkedList<Argument> argStringParser(String[] tokens) {
         LinkedList<Argument> argSet = new LinkedList<>();
-        for (String argToken : argTokens) {
-            if (argToken.length() > 0) {
-                Argument argument = makeArgument(argToken);
+        for (int i = 1; i < tokens.length; i++) {
+            Argument argument = makeArgument(tokens[i]);
                 argSet.add(argument);
-            }
         }
         return argSet;
     }
@@ -78,29 +72,20 @@ public class Fact extends Tag {
     /**
      * Calls the appropriate Argument constructor on a string token
      *
-     * @param string String token
+     * @param argString String token
      * @return A single argument
      */
 
-    private static Argument makeArgument(String string) {
-        String[] tokens = string.split("[=><]");
+    private static Argument makeArgument(String argString) {
+        String[] argTokens = argString.split("[=><!]");
+        int lastElem = argTokens.length - 1;
 
-        if (tokens.length > 1) {
-            if (tokens[1].matches("-?\\d+(\\.\\d+)?")) {
-                return new NumericArgument(string, tokens);
-            } else if (tokens[0].equals("[?*]") || tokens[1].charAt(0) == '&') {
-                return new VariableArgument(string, tokens);
+        if (argTokens[lastElem].matches("-?\\d+(\\.\\d+)?")) {
+            return new NumericArgument(argString, argTokens);
+        } else if (argTokens[lastElem].matches("[?*]") || argTokens[lastElem].charAt(0) == '&') {
+            return new VariableArgument(argString, argTokens);
             } else {
-                return new StringArgument(string, tokens);
-            }
-        } else {
-            if (tokens[0].matches("-?\\d+(\\.\\d+)?")) {
-                return new NumericArgument(string, tokens);
-            } else if (tokens[0].matches("[?*]") || tokens[0].charAt(0) == '&') {
-                return new VariableArgument(string, tokens);
-            } else {
-                return new StringArgument(string, tokens);
-            }
+            return new StringArgument(argString, argTokens);
         }
     }
 
@@ -159,6 +144,7 @@ public class Fact extends Tag {
             }
             result.doesMatch = true;
             return result;
+
         } else {
             while (iterFact.hasNext()) {
                 Argument argFact = (Argument) iterFact.next();

@@ -17,6 +17,6 @@ public class Recommendation extends Fact {
 
     @Override
     public String toString() {
-        return "@" + super.toString();
+        return super.toString();
     }
 }

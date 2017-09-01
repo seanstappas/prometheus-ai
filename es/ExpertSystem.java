@@ -168,9 +168,10 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
-     * possible. Stops once the system reaches natural quiescence and generates a new rule.
+     * possible. Stops once the system reaches natural quiescence and generates rule.
      *
      * @return the activated Recommendations as a result of thinking
+     *
      */
     public Set<Tag> think() {
         Set<Tag> allActivatedTags = new HashSet<>();
@@ -186,6 +187,33 @@ public class ExpertSystem implements PrometheusLayer {
                 activatedRecommendations.add(tag);
         }
         generateProvenRule(inputFactSet, allActivatedTags);
+        return activatedRecommendations;
+    }
+
+
+    /**
+     * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
+     * possible. Stops once the system reaches natural quiescence.
+     *
+     * @param shouldGenerateRule if true generates the new rule proven by a think cycle
+     * @return the activated Recommendations as a result of thinking
+     */
+    public Set<Tag> think(boolean shouldGenerateRule) {
+        Set<Tag> allActivatedTags = new HashSet<>();
+        Set<Tag> activatedTags;
+        Set<Fact> inputFactSet = getFacts();
+        do {
+            activatedTags = thinkCycle();
+            allActivatedTags.addAll(activatedTags);
+        } while (!activatedTags.isEmpty());
+        Set<Tag> activatedRecommendations = new HashSet<>();
+        for (Tag tag : allActivatedTags) {
+            if (tag.isRecommendation())
+                activatedRecommendations.add(tag);
+        }
+        if (shouldGenerateRule) {
+            generateProvenRule(inputFactSet, allActivatedTags);
+        }
         return activatedRecommendations;
     }
 
@@ -210,12 +238,15 @@ public class ExpertSystem implements PrometheusLayer {
      * quiescence.
      *
      * @param numberOfCycles the number of cycles to think for
+     * @param shouldGenerateRule if true generates the new rule proven by a think cycle
      * @return the activated Recommendations as a result of thinking
      */
-    public Set<Tag> think(int numberOfCycles) {
+    public Set<Tag> think(int numberOfCycles, boolean shouldGenerateRule) {
         Set<Tag> allActivatedTags = new HashSet<>();
+        Set<Tag> activatedTags;
+        Set<Fact> inputFactSet = getFacts();
         for (int i = 0; i < numberOfCycles; i++) {
-            Set<Tag> activatedTags = thinkCycle();
+            activatedTags = thinkCycle();
             if (activatedTags.isEmpty())
                 break;
             allActivatedTags.addAll(activatedTags);
@@ -224,6 +255,9 @@ public class ExpertSystem implements PrometheusLayer {
         for (Tag tag : allActivatedTags) {
             if (tag.isRecommendation())
                 activatedRecommendations.add(tag);
+        }
+        if (shouldGenerateRule) {
+            generateProvenRule(inputFactSet, allActivatedTags);
         }
         return activatedRecommendations;
     }
@@ -330,6 +364,7 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Process that occurs when ES is not thinking
+     * Currently calls addRule to merge rules
      */
     public void rest() {
         HashSet<Rule> newRules = ruleMerger(1);
@@ -338,6 +373,14 @@ public class ExpertSystem implements PrometheusLayer {
         }
     }
 
+    /**
+     * Generates rules from a natural language sentence
+     * NB: Sentences must contain one token from {"if", "when", "while", "first"}, and one token from {"then", "next", "do"},
+     *  to denote input tags and output tags respectively
+     *  e.g. "If Human(near) Then Move(steps=10)"
+     * @param sentence that contains input and output delimiters
+     * @return true if new rule added
+     */
 
     public boolean teach(String sentence) {
         String[] tokens = sentence.split("\\s");

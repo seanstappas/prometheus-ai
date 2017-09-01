@@ -8,6 +8,7 @@ public abstract class Tag {
      * The value of the Tag.
      */
     public String value;
+    double confidenceValue;
 
     /**
      * The type of the Tag (FACT, RULE, or RECOMMENDATION).
@@ -78,6 +79,10 @@ public abstract class Tag {
      */
     public boolean isRule() {
         return type == TagType.RULE;
+    }
+
+    public void setConfidenceValue(double confidenceValue) {
+        this.confidenceValue = confidenceValue;
     }
 
     @Override

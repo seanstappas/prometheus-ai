@@ -39,11 +39,9 @@ public class Argument {
      * Attempts to split an argument string (e.g. height=10) on the mathematical symbol (in this case 10),
      * assigns name to first token, if there are multiple tokens
      *
-     * @param string
      */
 
-    public Argument(String string) {
-        String[] tokens = string.split("[=><!]");
+    public Argument(String[] tokens) {
         if (tokens.length > 1) {
             this.name = tokens[0];
         } else {
@@ -166,7 +164,7 @@ class NumericArgument extends Argument {
 
     NumericArgument(String string, String[] tokens) {
 
-        super(string);
+        super(tokens);
         this.isNeg = (string.contains("!"));
 
         if (string.contains("=")) {
@@ -240,7 +238,7 @@ class StringArgument extends Argument {
 
     StringArgument(String string, String[] tokens) {
 
-        super(string);
+        super(tokens);
 
         isNeg = (string.contains("!"));
         value = tokens[tokens.length - 1];
@@ -274,7 +272,7 @@ class VariableArgument extends Argument {
 
     VariableArgument(String string, String[] tokens) {
 
-        super(string);
+        super(tokens);
 
         if (tokens[0].equals("*")) {
             this.symbol = argTypes.MATCHALL;

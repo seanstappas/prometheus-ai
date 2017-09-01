@@ -2,7 +2,6 @@ package tags;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Represents a rule in the expert system. Rules are many-to-many structures with Facts as inputs and Facts and
@@ -11,8 +10,6 @@ import java.util.Collections;
 public class Rule extends Tag {
     public Fact[] inputFacts;
     public Fact[] outputTags;
-    private double confidenceValue;
-
 
     public Fact[] getInputFacts() {
         return inputFacts;
@@ -29,6 +26,10 @@ public class Rule extends Tag {
     public void setConfidenceValue(double confidenceValue) {
         this.confidenceValue = confidenceValue;
     }
+
+    /**
+     * Confidence value of output tags set to the product of the confidence value of input tags
+     */
 
     public void setOutputTagsConfidenceValue() {
         double value = 1.0;
@@ -110,34 +111,36 @@ public class Rule extends Tag {
      * @param value rule as string
      * @return list of rules
      */
-    public ArrayList<Rule> makeRules(String value) {
+
+    public static ArrayList<Rule> makeRules(String value) {
         ArrayList<String> tokens = new ArrayList<>(Arrays.asList(value.split(" ")));
         int outputTagIndex = tokens.indexOf("->");
 
-        ArrayList<Fact> outputTagList = new ArrayList<Fact>();
-        for (String outputTag: tokens.subList(outputTagIndex+1, tokens.size())) {
-            if (!outputTag.contains("@")) {
-                Fact fact = new Fact(outputTag);
-                outputTagList.add(fact);
-            }
-            else {
-                Recommendation rec = new Recommendation(outputTag);
-                outputTagList.add(rec);
+        Fact[] outputTags = new Fact[tokens.size() - outputTagIndex - 1];
+
+        for (int i = outputTagIndex + 1; i < tokens.size(); i++) {
+            for (int j = 0; j < outputTags.length; j++) {
+                if (!tokens.get(i).contains("@")) {
+                    Fact fact = new Fact(tokens.get(i));
+                    outputTags[j] = fact;
+                } else {
+                    Recommendation rec = new Recommendation(tokens.get(i));
+                    outputTags[j] = rec;
+                }
             }
         }
 
         ArrayList<Rule> ruleList = new ArrayList<>();
         ArrayList<Fact> inputFactList = new ArrayList<>();
 
-        for (int i = 0; i < outputTagIndex-1; i++) { //check indexing
-            if (!tokens.get(i).equals("OR")) {
+        for (int i = 0; i < outputTagIndex + 1; i++) {
+            if (!tokens.get(i).equals("OR") & !tokens.get(i).equals("->")) {
                 Fact fact = new Fact(tokens.get(i));
                 inputFactList.add(fact);
             }
             else {
                 Fact[] inputFacts = inputFactList.toArray(new Fact[inputFactList.size()]);
-                Fact[] outputTag = outputTagList.toArray(new Fact[outputTagList.size()]);
-                Rule rule = new Rule(inputFacts, outputTag);
+                Rule rule = new Rule(inputFacts, outputTags);
                 ruleList.add(rule);
 
                 inputFactList.clear();
@@ -146,13 +149,39 @@ public class Rule extends Tag {
         return ruleList;
     }
 
-    public void completeConfidenceValue() {
-        double ruleCV = this.getConfidenceValue();
-        for (Fact fact: this.getInputFacts()) {
-            if (fact.getConfidenceValue() == 1.0) {
 
+    /**
+     * Create a single rule from a string
+     *
+     * @param string
+     * @deprecated use makeRule instead
+     */
+
+    public Rule(String string) {
+        ArrayList<String> tokens = new ArrayList<>(Arrays.asList(string.split(" ")));
+        int outputTagIndex = tokens.indexOf("->");
+
+        ArrayList<Fact> outputTagList = new ArrayList<Fact>();
+        for (String outputTag : tokens.subList(outputTagIndex + 1, tokens.size())) {
+            if (!outputTag.contains("@")) {
+                Fact fact = new Fact(outputTag);
+                outputTagList.add(fact);
+            } else {
+                Recommendation rec = new Recommendation(outputTag);
+                outputTagList.add(rec);
             }
         }
+
+        Fact[] inputFacts = new Fact[outputTagIndex];
+        for (int i = 0; i < inputFacts.length; i++) {
+            Fact fact = new Fact(tokens.get(i));
+            inputFacts[i] = fact;
+        }
+
+        Fact[] outputTag = outputTagList.toArray(new Fact[outputTagList.size()]);
+        this.inputFacts = inputFacts;
+        this.outputTags = outputTag;
+
     }
 
 

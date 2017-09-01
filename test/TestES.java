@@ -73,7 +73,7 @@ public class TestES {
 
     @Test
     public void testThinkNumCycles() throws Exception {
-        es.think(0);
+        es.think(0, true);
     }
 
 }

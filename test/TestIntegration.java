@@ -4,7 +4,6 @@ import es.ExpertSystem;
 import knn.KnowledgeNode;
 import knn.KnowledgeNodeNetwork;
 import knn.Tuple;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -13,15 +12,9 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
-import static org.testng.Assert.assertEquals;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Running es.ExpertSystem and knn.KnowledgeNodeNetwork
@@ -40,7 +33,6 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     /**
      * Tests the Knowledge Node Network's high-level functionality.
      */
-    @Test
     public void testKNN() {
         System.out.println();
         System.out.println("***testKNN***");
@@ -246,55 +238,6 @@ public class TestIntegration { // TODO: test with Google's GSON libary
 		
 		return activeTags;
     }
-    
-    /**
-     * Tests the Expert System's matches method.
-     */
-    @Test
-    public void testMatches() {
-        System.out.println();
-        System.out.println("testMatches");
-        es.reset();
-
-
-        Fact fact1 = new Fact("A()");
-        Fact fact2 = new Fact("B()");
-        Fact fact3 = new Fact("A(height=low)");
-        Fact fact31 = new Fact("A(height!=tall)");
-
-        Fact fact4 = new Fact("A(?)");
-
-        Fact fact5 = new Fact("A(height=10,weight>10)");
-        Fact fact6 = new Fact("A(height=10,weight=12)");
-        Fact fact7 = new Fact("A(height=10,*)");
-        Fact fact8 = new Fact("A(height=7,*)");
-        Fact fact9 = new Fact("B(large,distance!=far,?,object=human)");
-        Fact fact10 = new Fact("B(large,distance=near,hello,object=human)");
-        Fact fact11 = new Fact("D(window,material=glass,thickness!>2)");
-        Fact fact12 = new Fact("D(window,*)");
-        Fact fact121 = new Fact("D(window,?)");
-        Fact fact13 = new Fact("D(window,door)");
-        Fact fact14 = new Fact("F(temperature=40,hot,humidity=high)");
-        Fact fact15 = new Fact("F(*)");
-        Fact fact16 = new Fact("A(10,12,14)");
-        Fact fact17 = new Fact("A(&x,12,&y)");
-
-        /*
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact5.matches(fact6)[0]);
-        Assert.assertTrue(fact9.matches(fact10)[0]);
-        //Assert.assertTrue(fact13.matches(fact121)[0]);
-        //Assert.assertTrue(fact14.matches(fact15)[0]);
- 		*/
-        Assert.assertTrue(fact16.matches(fact17).doesMatch);
-    }
-
 
     @Test
     public void testES() {
@@ -313,6 +256,8 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Fact[] outputTags2 = {new Fact("E(&x,height=5)")};
         Fact[] outputTags3 = {new Fact("F(temperature=40,hot,humidity!=medium)")};
         Fact[] outputTags4 = {new Fact("H(&x,hot,&y,big)")};
+        ArrayList<Rule> ruleOr = Rule.makeRules("P1(ARG1,ARG2) P2(ARG3) OR P3(ARG4,ARG5) P4(ARG6,ARG7) OR P4(arg1,arg2,arg3) -> @P3(ARG4,ARG5,ARG6)");
+        Rule ruleone = new Rule("P(A,B,C) P(D) -> P3(9,1,1)");
         Rule unactivatedRule = new Rule(new Fact[]{new Fact("G()"), new Fact("A(*)")}, outputTags4);
         Rule rule1 = new Rule(new Fact[]{new Fact("A(height=10,length=15,slow)"), new Fact("B(10)")}, outputTags1);
         Rule rule2 = new Rule(new Fact[]{new Fact("D(&x)"), new Fact("B(10)")}, outputTags2);
@@ -356,7 +301,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules: " + initialRules);
 
-        Set<Tag> activatedRecommendations = es.think();
+        Set<Tag> activatedRecommendations = es.think(false);
         Set<Tag> expectedActivatedRecommendations = new HashSet<>();
         expectedActivatedRecommendations.add(recZ);
         Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendations);
@@ -380,6 +325,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertEquals(recommendations, expectedRecommendations);
         System.out.println("[ES] Final recommendations: " + recommendations);
 
+
         Set<Rule> readyRules = es.getReadyRules();
         Set<Rule> expectedReadyRules = new HashSet<>();
         expectedReadyRules.add(unactivatedRule);
@@ -396,84 +342,93 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertEquals(activeRules, expectedActiveRules);
         System.out.println("[ES] Final active rules: " + activeRules);
     }
-//
-//    /**
-//     * Tests the ES and KNN together.
-//     */
-//    @Test
-//    public void testKNNandES() {
-//        System.out.println();
-//        System.out.println("testKNNandES");
-//        Set<Tag> activatedTags = setupKNNandThink();
-//        es.reset();
-//        es.addTags(activatedTags);
-//
-//        Set<Fact> expectedInitialFacts = new HashSet<>();
-//        Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
-//        Set<Rule> expectedInitialRules = new HashSet<>();
-//
-//        for (Tag t : activatedTags) {
-//            switch (t.type) {
-//                case FACT:
-//                    expectedInitialFacts.add((Fact) t);
-//                    break;
-//                case RULE:
-//                    expectedInitialRules.add((Rule) t);
-//                    break;
-//                case RECOMMENDATION:
-//                    expectedInitialRecommendations.add((Recommendation) t);
-//                    break;
-//            }
-//        }
-//        System.out.println("[ES] Initial activated tags (from KNN): " + activatedTags);
-//
-//        Set<Fact> initialFacts = es.getFacts();
-//        Assert.assertEquals(initialFacts, expectedInitialFacts);
-//        System.out.println("[ES] Initial facts: " + initialFacts);
-//
-//        Set<Recommendation> initialRecommendations = es.getRecommendations();
-//        Assert.assertEquals(initialRecommendations, expectedInitialRecommendations);
-//        System.out.println("[ES] Initial recommendations: " + initialRecommendations);
-//
-//        Set<Rule> initialRules = es.getReadyRules();
-//        Assert.assertEquals(initialRules, expectedInitialRules);
-//        System.out.println("[ES] Initial rules: " + initialRules);
-//
-//        Set<Tag> activatedRecommendations = es.think();
-//        Set<Tag> expectedActivatedRecommendations = new HashSet<>();
-//        Recommendation recZ = new Recommendation("Z()");
-//        expectedActivatedRecommendations.add(recZ);
-//        Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendations);
-//        System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
-//
-//        Set<Fact> facts = es.getFacts();
-//        Set<Fact> expectedFacts = new HashSet<>();
-//        expectedFacts.addAll(expectedInitialFacts);
-//        Assert.assertEquals(facts, expectedFacts);
-//        System.out.println("[ES] Final facts: " + facts);
-//
-//        Set<Recommendation> recommendations = es.getRecommendations();
-//        Set<Recommendation> expectedRecommendations = new HashSet<>();
-//        expectedRecommendations.add(recZ);
-//        Assert.assertEquals(recommendations, expectedRecommendations);
-//        System.out.println("[ES] Final recommendations: " + recommendations);
-//
-//        Fact[] outputTagsE = {new Fact("H()"), new Fact("I()"), new Fact("J()")};
-//        Tag outputTag4 = new Rule(
-//                outputTagsE,
-//                new Fact[]{new Recommendation("Z()")}
-//        );
-//
-//        Set<Rule> readyRules = es.getReadyRules();
-//        Set<Rule> expectedReadyRules = new HashSet<>();
-//        Assert.assertEquals(readyRules, expectedReadyRules);
-//        System.out.println("[ES] Final ready rules: " + readyRules);
-//
-//        Set<Rule> activeRules = es.getActiveRules();
-//        Set<Tag> expectedActiveRules = new HashSet<>();
-//        expectedActiveRules.add(outputTag4);
-//        Assert.assertEquals(activeRules, expectedActiveRules);
-//        System.out.println("[ES] Final active rules: " + activeRules);
-//    }
+
+    /**
+     * Tests the ES and KNN together.
+     */
+    public void testKNNandES() {
+        System.out.println();
+        System.out.println("testKNNandES");
+        knn.resetEmpty();
+        forwardSearchTest();
+
+        Set<Tag> activatedTags = new HashSet<>();
+        for (Map.Entry<Tag, Double> entry : knn.getActiveTags().entrySet()) {
+            Tag tag = entry.getKey();
+            double confidenceValue = entry.getValue() / 100;
+            tag.setConfidenceValue(confidenceValue);
+            activatedTags.add(tag);
+        }
+
+        es.reset();
+        es.addTags(activatedTags);
+
+        Set<Fact> expectedInitialFacts = new HashSet<>();
+        Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
+        Set<Rule> expectedInitialRules = new HashSet<>();
+
+        for (Tag t : activatedTags) {
+            switch (t.type) {
+                case FACT:
+                    expectedInitialFacts.add((Fact) t);
+                    break;
+                case RULE:
+                    expectedInitialRules.add((Rule) t);
+                    break;
+                case RECOMMENDATION:
+                    expectedInitialRecommendations.add((Recommendation) t);
+                    break;
+            }
+        }
+        System.out.println("[ES] Initial activated tags (from KNN): " + activatedTags);
+
+        Set<Fact> initialFacts = es.getFacts();
+        Assert.assertEquals(initialFacts, expectedInitialFacts);
+        System.out.println("[ES] Initial facts: " + initialFacts);
+
+        Set<Recommendation> initialRecommendations = es.getRecommendations();
+        Assert.assertEquals(initialRecommendations, expectedInitialRecommendations);
+        System.out.println("[ES] Initial recommendations: " + initialRecommendations);
+
+        Set<Rule> initialRules = es.getReadyRules();
+        Assert.assertEquals(initialRules, expectedInitialRules);
+        System.out.println("[ES] Initial rules: " + initialRules);
+
+        Set<Tag> activatedRecommendations = es.think();
+        Set<Tag> expectedActivatedRecommendations = new HashSet<>();
+        Recommendation recZ = new Recommendation("Z()");
+        expectedActivatedRecommendations.add(recZ);
+        Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendations);
+        System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
+
+        Set<Fact> facts = es.getFacts();
+        Set<Fact> expectedFacts = new HashSet<>();
+        expectedFacts.addAll(expectedInitialFacts);
+        Assert.assertEquals(facts, expectedFacts);
+        System.out.println("[ES] Final facts: " + facts);
+
+        Set<Recommendation> recommendations = es.getRecommendations();
+        Set<Recommendation> expectedRecommendations = new HashSet<>();
+        expectedRecommendations.add(recZ);
+        Assert.assertEquals(recommendations, expectedRecommendations);
+        System.out.println("[ES] Final recommendations: " + recommendations);
+
+        Fact[] outputTagsE = {new Fact("H()"), new Fact("I()"), new Fact("J()")};
+        Tag outputTag4 = new Rule(
+                outputTagsE,
+                new Fact[]{new Recommendation("Z()")}
+        );
+
+        Set<Rule> readyRules = es.getReadyRules();
+        Set<Rule> expectedReadyRules = new HashSet<>();
+        Assert.assertEquals(readyRules, expectedReadyRules);
+        System.out.println("[ES] Final ready rules: " + readyRules);
+
+        Set<Rule> activeRules = es.getActiveRules();
+        Set<Tag> expectedActiveRules = new HashSet<>();
+        expectedActiveRules.add(outputTag4);
+        Assert.assertEquals(activeRules, expectedActiveRules);
+        System.out.println("[ES] Final active rules: " + activeRules);
+    }
 
 }
