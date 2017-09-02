@@ -225,22 +225,32 @@ public class KnowledgeNodeNetwork {
     							this.mapKN.get(tag).objectTruth = 0;
     						}
     					}
-    					ArrayList<Tag> parentToChild = pathFinder(parent, t);
-    					ArrayList<Tag> parentToItem = pathFinder(parent, tg);
-    					int numOfSame = 0;
-    					for(Tag ptC : parentToChild){
-    						if(ptC.equals(t) == false){
-    							for(Tag p : aboveTags){
-    								if(ptC.equals(p) && notGoodParents.contains(p) == false){
-    									numOfSame++;
-    									if(numOfSame > 1){
-    			    						break;
-    			    					}
+    					ArrayList<Tag> bads = new ArrayList<>();    					
+    					ArrayList<Tag> parentToItem = pathFinder(parent, tg, bads);
+    					ArrayList<Tag> parentToChild;
+    					ArrayList<Tag> previousParentToChild;
+    					int numOfSame;    					
+    					
+    					do{
+    						parentToChild = pathFinder(parent, t, bads);
+    						numOfSame = 0;
+    						for(Tag ptC : parentToChild){
+    							if(ptC.equals(t) == false  && ptC.equals(parent) == false){
+    								for(Tag p : aboveTags){
+    									if(ptC.equals(p) && notGoodParents.contains(p) == false){
+    										numOfSame++;
+    										bads.add(ptC);
+    										if(numOfSame > 0){
+    											break;
+    										}
+    									}
     								}
     							}
     						}
-    					}   					
-						if(numOfSame > 1){
+    						previousParentToChild = pathFinder(parent, t, bads);
+    					}while(numOfSame > 0 && parentToChild.equals(previousParentToChild) == false);
+    					
+						if(numOfSame > 0){
     						break;
     					}
     					
@@ -323,17 +333,17 @@ public class KnowledgeNodeNetwork {
      * @param end: the given tag to finish the path
      * @return an arraylist that stores all the tags of the found path. The first slot of the list is the starting tag and the last slot is the ending tag
      */
-    public ArrayList<Tag> pathFinder(Tag start, Tag end){
+    public ArrayList<Tag> pathFinder(Tag start, Tag end, ArrayList<Tag> badComponents){
     	ArrayList<Tag> currentPath = new ArrayList<>();
     	currentPath.add(start);
-    	if(this.mapKN.get(start).outputs.containsKey(end)){
+    	if(this.mapKN.get(start).outputs.containsKey(end) && badComponents.contains(start) == false){
     		currentPath.add(end);
     		return currentPath;
     	}
     	else{
     		for(Tag t : this.mapKN.get(start).outputs.keySet()){
-    			ArrayList<Tag> template = pathFinder(t, end);
-    			if(template.get(template.size()-1).equals(end)){
+    			ArrayList<Tag> template = pathFinder(t, end, badComponents);
+    			if(template.get(template.size()-1).equals(end) && badComponents.contains(start) == false){
     				currentPath.addAll(template);
     				break;
     			}

@@ -107,5 +107,11 @@ public class KNN_Testing {
 		System.out.println("Input for lambda search: " + relation.getInputTags().toString());
 		System.out.println(relation.getActiveTags().toString());
 		
+		//path
+//		ArrayList<Tag> bads = new ArrayList<>();
+//		bads.add(new Fact("fur(strands,insulator)"));
+//		ArrayList<Tag> path = new ArrayList<>();
+//		path = relation.pathFinder(new Fact("cat(feline,length>50,weight>20)"), new Fact("mammal(vertebrate,land)"), bads);
+//		System.out.println(path.toString());
 	}
 }
