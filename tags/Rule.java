@@ -1,7 +1,6 @@
 package tags;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Represents a rule in the expert system. Rules are many-to-many structures with Facts as inputs and Facts and
@@ -112,8 +111,8 @@ public class Rule extends Tag {
      * @return list of rules
      */
 
-    public static ArrayList<Rule> makeRules(String value) {
-        ArrayList<String> tokens = new ArrayList<>(Arrays.asList(value.split(" ")));
+    public static List<Rule> makeRules(String value) {
+        List<String> tokens = new ArrayList<>(Arrays.asList(value.split(" ")));
         int outputTagIndex = tokens.indexOf("->");
 
         Fact[] outputTags = new Fact[tokens.size() - outputTagIndex - 1];
@@ -130,8 +129,8 @@ public class Rule extends Tag {
             }
         }
 
-        ArrayList<Rule> ruleList = new ArrayList<>();
-        ArrayList<Fact> inputFactList = new ArrayList<>();
+        List<Rule> ruleList = new ArrayList<>();
+        List<Fact> inputFactList = new ArrayList<>();
 
         for (int i = 0; i < outputTagIndex + 1; i++) {
             if (!tokens.get(i).equals("OR") & !tokens.get(i).equals("->")) {
@@ -158,10 +157,10 @@ public class Rule extends Tag {
      */
 
     public Rule(String string) {
-        ArrayList<String> tokens = new ArrayList<>(Arrays.asList(string.split(" ")));
+        List<String> tokens = new ArrayList<>(Arrays.asList(string.split(" ")));
         int outputTagIndex = tokens.indexOf("->");
 
-        ArrayList<Fact> outputTagList = new ArrayList<Fact>();
+        List<Fact> outputTagList = new ArrayList<>();
         for (String outputTag : tokens.subList(outputTagIndex + 1, tokens.size())) {
             if (!outputTag.contains("@")) {
                 Fact fact = new Fact(outputTag);
@@ -193,20 +192,18 @@ public class Rule extends Tag {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Rule rule = (Rule) o;
-        return Arrays.equals(inputFacts, rule.inputFacts) && Arrays.equals(outputTags, rule.outputTags);
+        return Arrays.asList(inputFacts).containsAll(Arrays.asList(rule.inputFacts)) // Used so order doesn't matter. TODO: use Sets for input and output tags
+                && Arrays.asList(outputTags).containsAll(Arrays.asList(rule.outputTags));
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + Arrays.hashCode(inputFacts);
-        result = 31 * result + Arrays.hashCode(outputTags);
-        return result;
+        return super.hashCode(); // Used so order doesn't matter. TODO: use Sets for input and output tags
     }
 
     @Override
     public String toString() {
         return "{ " + Arrays.toString(inputFacts) + "=>" + Arrays.toString(outputTags) + confidenceValue*100 +"% }";
-        }
-
     }
+
+}

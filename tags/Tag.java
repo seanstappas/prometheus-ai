@@ -49,7 +49,7 @@ public abstract class Tag {
             case FACT:
                 return new Fact(value);
             case RULE:
-                return new Rule().makeRules(value).get(0); //check
+                return Rule.makeRules(value).get(0); //check
         }
         return null;
     }

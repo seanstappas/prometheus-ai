@@ -16,9 +16,9 @@ package tags;
 public class Argument {
 
     String name;
-    argTypes symbol;
+    ArgTypes symbol;
 
-    public enum argTypes {
+    public enum ArgTypes {
         STRING, EQ, GT, LT, MATCHONE, VAR, MATCHALL, INT
     }
 
@@ -29,7 +29,7 @@ public class Argument {
         return name;
     }
 
-    public argTypes getSymbol() {
+    public ArgTypes getSymbol() {
         return symbol;
     }
 
@@ -59,29 +59,29 @@ public class Argument {
     boolean matches(Argument inputFact) {
         switch (this.symbol) {
             case STRING:
-                if (inputFact.symbol.equals(argTypes.VAR)) {
+                if (inputFact.symbol.equals(ArgTypes.VAR)) {
                     return true;
                 }
-                if (inputFact.symbol.equals(argTypes.STRING) || inputFact.symbol.equals(argTypes.VAR)) {
+                if (inputFact.symbol.equals(ArgTypes.STRING) || inputFact.symbol.equals(ArgTypes.VAR)) {
                     return ((StringArgument) this).matches((StringArgument) inputFact);
                 }
-                return (inputFact.symbol.equals(argTypes.MATCHONE));
+                return (inputFact.symbol.equals(ArgTypes.MATCHONE));
             case EQ:
             case GT:
             case LT:
             case INT:
-                if (inputFact.symbol.equals(argTypes.VAR)) {
+                if (inputFact.symbol.equals(ArgTypes.VAR)) {
                     return true;
                 }
-                if (inputFact.symbol.equals(argTypes.INT) ||
-                        inputFact.symbol.equals(argTypes.EQ) ||
-                        inputFact.symbol.equals(argTypes.LT) ||
-                        inputFact.symbol.equals(argTypes.GT)) {
+                if (inputFact.symbol.equals(ArgTypes.INT) ||
+                        inputFact.symbol.equals(ArgTypes.EQ) ||
+                        inputFact.symbol.equals(ArgTypes.LT) ||
+                        inputFact.symbol.equals(ArgTypes.GT)) {
                     return ((NumericArgument) this).matches((NumericArgument) inputFact);
                 }
-                return (inputFact.symbol.equals(argTypes.MATCHONE));
+                return (inputFact.symbol.equals(ArgTypes.MATCHONE));
             case MATCHONE:
-                return !inputFact.symbol.equals(argTypes.VAR);
+                return !inputFact.symbol.equals(ArgTypes.VAR);
             case VAR:
                 return false;
             default:
@@ -186,13 +186,13 @@ class NumericArgument extends Argument {
         this.isNeg = (string.contains("!"));
 
         if (string.contains("=")) {
-            this.symbol = Argument.argTypes.EQ;
+            this.symbol = ArgTypes.EQ;
         } else if (string.contains(">")) {
-            this.symbol = Argument.argTypes.GT;
+            this.symbol = ArgTypes.GT;
         } else if (string.contains("<")) {
-            this.symbol = Argument.argTypes.LT;
+            this.symbol = ArgTypes.LT;
         } else {
-            this.symbol = Argument.argTypes.INT;
+            this.symbol = ArgTypes.INT;
         }
 
         this.value = Integer.parseInt(tokens[tokens.length - 1]);
@@ -279,7 +279,7 @@ class StringArgument extends Argument {
 
         isNeg = (string.contains("!"));
         value = tokens[tokens.length - 1];
-        symbol = argTypes.STRING;
+        symbol = ArgTypes.STRING;
     }
 
     @Override
@@ -327,13 +327,13 @@ class VariableArgument extends Argument {
         super(tokens);
 
         if (tokens[0].equals("*")) {
-            this.symbol = argTypes.MATCHALL;
+            this.symbol = ArgTypes.MATCHALL;
             this.name = "*";
         } else if (tokens[0].equals("?")) {
-            this.symbol = argTypes.MATCHONE;
+            this.symbol = ArgTypes.MATCHONE;
             this.name = "?";
         } else if (tokens[0].charAt(0) == '&') {
-            this.symbol = argTypes.VAR;
+            this.symbol = ArgTypes.VAR;
             this.name = tokens[0];
         }
     }

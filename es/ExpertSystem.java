@@ -13,7 +13,7 @@ public class ExpertSystem implements PrometheusLayer {
     private Set<Rule> activeRules;
     private Set<Fact> facts;
     private Set<Recommendation> recommendations;
-    public HashMap<String, Argument> pendingReplacementPairs;
+    private Map<String, Argument> pendingReplacementPairs;
 
 
     /**
@@ -288,13 +288,8 @@ public class ExpertSystem implements PrometheusLayer {
             activeRules.add(rule);
             for (Tag tag : rule.outputTags) {
                 replaceVariableArguments((Fact) tag);
-                if (tag.type.equals(Tag.TagType.FACT) && !factsContains((Fact) tag)) {
-                    activatedTags.add(tag);
-                    addTag(tag);
-                } else if (tag.type.equals(Tag.TagType.RECOMMENDATION) && !recommendations.contains(tag)) {
-                    activatedTags.add(tag);
-                    addTag(tag);
-                }
+                activatedTags.add(tag);
+                addTag(tag);
             }
         }
         return activatedTags;
@@ -306,15 +301,29 @@ public class ExpertSystem implements PrometheusLayer {
      */
     private void replaceVariableArguments(Fact tag) {
         int argumentIndex = 0;
+
+        Set<Integer> toRemove = new HashSet<>();
+        Set<Argument> toAdd = new HashSet<>();
+
+        System.out.println("BEFORE: " + tag.getArguments());
+
         for (Argument argument : tag.getArguments()) {
-            if (!pendingReplacementPairs.isEmpty() &&
-                    pendingReplacementPairs.containsKey(argument.getName())) {
-                LinkedList<Argument> newArguments = tag.getArguments();
-                newArguments.set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
-                tag.setArguments(newArguments);
+            if (pendingReplacementPairs.containsKey(argument.getName())) {
+//                toRemove.add(argumentIndex);
+//                toAdd.add(pendingReplacementPairs.get(argument.getName()));
+                tag.getArguments().set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
             }
             argumentIndex++;
         }
+
+//        for (int arg : toRemove) {
+//            tag.getArguments().remove(arg);
+//        }
+//        for (Argument arg : toAdd) {
+//            tag.getArguments().add(arg);
+//        }
+
+        System.out.println("AFTER: " + tag.getArguments());
     }
 
     /**
@@ -345,9 +354,10 @@ public class ExpertSystem implements PrometheusLayer {
      * @param numberOfCycles how many cycles over the ruleset
      * @return merged rules
      */
-    HashSet<Rule> ruleMerger(int numberOfCycles) {
-        HashSet<Rule> mergedRules = new HashSet<>();
-        HashSet<Rule> inputRules = new HashSet<>(this.readyRules);
+    Set<Rule> ruleMerger(int numberOfCycles) {
+        Set<Rule> mergedRules = new HashSet<>();
+        Set<Rule> inputRules = new HashSet<>();
+        inputRules.addAll(readyRules);
         while (numberOfCycles > 0) {
             for (Rule ruleOne : inputRules) {
                 for (Rule ruleTwo : inputRules) {
@@ -370,7 +380,7 @@ public class ExpertSystem implements PrometheusLayer {
      * @param numberOfCycles how many cycles over the ruleset
      */
     public void rest(int numberOfCycles) {
-        HashSet<Rule> newRules = ruleMerger(1);
+        Set<Rule> newRules = ruleMerger(1);
         for (Rule newRule : newRules) {
             addRule(newRule);
         }
@@ -387,7 +397,7 @@ public class ExpertSystem implements PrometheusLayer {
 
     public boolean teach(String sentence) {
         String[] tokens = sentence.split("\\s");
-        ArrayList<String> tokenList = new ArrayList<>();
+        List<String> tokenList = new ArrayList<>();
         for (String token : tokens) {
             tokenList.add(token.toLowerCase());
         }

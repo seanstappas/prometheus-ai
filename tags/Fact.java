@@ -1,7 +1,8 @@
 package tags;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Represents a fact in the Expert System. Facts are calculus predicates that represent something that is seen as
@@ -13,7 +14,7 @@ import java.util.LinkedList;
 public class Fact extends Tag {
 
     private String predicateName;
-    private LinkedList<Argument> arguments;
+    private List<Argument> arguments;
 
     public Fact() {
         this.type = TagType.FACT;
@@ -21,7 +22,7 @@ public class Fact extends Tag {
 
     public Fact(String value) {
 
-        this(value, 1.0);
+        this(value,1.0);
     }
 
     @Override
@@ -33,14 +34,16 @@ public class Fact extends Tag {
         Fact fact = (Fact) o;
 
         if (!predicateName.equals(fact.predicateName)) return false;
-        return arguments.equals(fact.arguments);
+        return arguments.containsAll(fact.arguments);  // Used so order doesn't matter. TODO: use Sets for input and output tags
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + predicateName.hashCode();
-        result = 31 * result + arguments.hashCode();
+        for (Argument arg : arguments) {
+            result += arg.hashCode();
+        }
         return result;
     }
 
@@ -80,8 +83,8 @@ public class Fact extends Tag {
      * @return list of string arguments
      */
 
-    private LinkedList<Argument> argStringParser(String[] tokens) {
-        LinkedList<Argument> argSet = new LinkedList<>();
+    private List<Argument> argStringParser(String[] tokens) {
+        List<Argument> argSet = new ArrayList<>();
         for (int i = 1; i < tokens.length; i++) {
             Argument argument = makeArgument(tokens[i]);
                 argSet.add(argument);
@@ -113,11 +116,11 @@ public class Fact extends Tag {
         return predicateName;
     }
 
-    public LinkedList<Argument> getArguments() {
+    public List<Argument> getArguments() {
         return arguments;
     }
 
-    public void setArguments(LinkedList<Argument> arguments) {
+    public void setArguments(List<Argument> arguments) {
         this.arguments = arguments;
     }
 
@@ -144,11 +147,11 @@ public class Fact extends Tag {
             while (iterInputFact.hasNext()) {
                 Argument argFact = (Argument) iterFact.next();
                 Argument argInputFact = (Argument) iterInputFact.next();
-                if (argFact.symbol.equals(Argument.argTypes.MATCHALL) || argInputFact.symbol.equals(Argument.argTypes.MATCHALL)) {
+                if (argFact.symbol.equals(Argument.ArgTypes.MATCHALL) || argInputFact.symbol.equals(Argument.ArgTypes.MATCHALL)) {
                     result.doesMatch = true;
                     return result;
                 }
-                if (argInputFact.symbol.equals(Argument.argTypes.VAR)) {
+                if (argInputFact.symbol.equals(Argument.ArgTypes.VAR)) {
                     result.doesMatch = true;
                     result.pairs.put(argInputFact.getName(), argFact);
                 }
@@ -159,7 +162,7 @@ public class Fact extends Tag {
             }
             if (iterFact.hasNext()) {
                 Argument argFact = (Argument) iterFact.next();
-                result.doesMatch = (argFact.symbol.equals(Argument.argTypes.MATCHALL));
+                result.doesMatch = (argFact.symbol.equals(Argument.ArgTypes.MATCHALL));
                 return result;
             }
             result.doesMatch = true;
@@ -169,11 +172,11 @@ public class Fact extends Tag {
             while (iterFact.hasNext()) {
                 Argument argFact = (Argument) iterFact.next();
                 Argument argInputFact = (Argument) iterInputFact.next();
-                if (argFact.symbol.equals(Argument.argTypes.MATCHALL) || argInputFact.symbol.equals(Argument.argTypes.MATCHALL)) {
+                if (argFact.symbol.equals(Argument.ArgTypes.MATCHALL) || argInputFact.symbol.equals(Argument.ArgTypes.MATCHALL)) {
                     result.doesMatch = true;
                     return result;
                 }
-                if (argInputFact.symbol.equals(Argument.argTypes.VAR)) {
+                if (argInputFact.symbol.equals(Argument.ArgTypes.VAR)) {
                     result.doesMatch = true;
                     result.pairs.put(argInputFact.getName(), argFact);
                 }
@@ -184,7 +187,7 @@ public class Fact extends Tag {
             }
             if (iterInputFact.hasNext()) {
                 Argument argFact = (Argument) iterInputFact.next();
-                result.doesMatch = (argFact.symbol.equals(Argument.argTypes.MATCHALL));
+                result.doesMatch = (argFact.symbol.equals(Argument.ArgTypes.MATCHALL));
                 return result;
             }
             result.doesMatch = true;
