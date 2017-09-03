@@ -7,14 +7,14 @@ import java.util.*;
  * Recommendations as outputs. They only activate when all the input Tags are active.
  */
 public class Rule extends Tag {
-    public Fact[] inputFacts;
-    public Fact[] outputTags;
+    private Set<Fact> inputFacts;
+    private Set<Fact> outputTags;
 
-    public Fact[] getInputFacts() {
+    public Set<Fact> getInputFacts() {
         return inputFacts;
     }
 
-    public Fact[] getOutputTags() {
+    public Set<Fact> getOutputTags() {
         return outputTags;
     }
 
@@ -47,18 +47,21 @@ public class Rule extends Tag {
      * @param outputTag  outputTags tag of the rule
      */
     public Rule(Fact[] inputFacts, Fact[] outputTag) {
+        this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputTag)), 1.0);
+    }
+
+    public Rule(Set<Fact> inputFacts, Set<Fact> outputTag) {
         this(inputFacts, outputTag, 1.0);
     }
 
-    public Rule(Fact[] inputFacts, Fact[] outputTag, double confidenceValue) {
-        this.inputFacts = inputFacts;
-        this.outputTags = outputTag;
+    public Rule(Set<Fact> inputFacts, Set<Fact> outputTags, double confidenceValue) {
+        this.inputFacts = new HashSet<>(inputFacts);
+        this.outputTags = new HashSet<>(outputTags);
         this.type = TagType.RULE;
         this.value = this.toString();
         this.confidenceValue = confidenceValue;
 
         setOutputTagsConfidenceValue();
-
     }
 
     public Rule() {
@@ -73,15 +76,13 @@ public class Rule extends Tag {
      * @param type       the Type of output Tags
      */
     public Rule(String[] inputFacts, String[] outputTags, TagType type, double confidenceValue) {
-        int m = inputFacts.length;
-        int n = outputTags.length;
-        this.inputFacts = new Fact[m];
-        this.outputTags = new Fact[n];
-        for (int i = 0; i < m; i++) {
-            this.inputFacts[i] = new Fact(inputFacts[i]);
+        this.inputFacts = new HashSet<>();
+        this.outputTags = new HashSet<>();
+        for (String inputFact : inputFacts) {
+            this.inputFacts.add(new Fact(inputFact));
         }
-        for (int i = 0; i < n; i++) {
-            this.outputTags[i] = (Fact) Tag.createTagFromString(outputTags[i], type);
+        for (String outputTag : outputTags) {
+            this.outputTags.add((Fact) Tag.createTagFromString(outputTag, type));
         }
         this.type = TagType.RULE;
         this.value = this.toString();
@@ -178,32 +179,36 @@ public class Rule extends Tag {
         }
 
         Fact[] outputTag = outputTagList.toArray(new Fact[outputTagList.size()]);
-        this.inputFacts = inputFacts;
-        this.outputTags = outputTag;
+        this.inputFacts = new HashSet<>(Arrays.asList(inputFacts));
+        this.outputTags = new HashSet<>(Arrays.asList(outputTag));
         this.type = TagType.RULE;
         this.value = this.toString();
 
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
+
         Rule rule = (Rule) o;
-        return Arrays.asList(inputFacts).containsAll(Arrays.asList(rule.inputFacts)) // Used so order doesn't matter. TODO: use Sets for input and output tags
-                && Arrays.asList(outputTags).containsAll(Arrays.asList(rule.outputTags));
+
+        if (inputFacts != null ? !inputFacts.equals(rule.inputFacts) : rule.inputFacts != null) return false;
+        return outputTags != null ? outputTags.equals(rule.outputTags) : rule.outputTags == null;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode(); // Used so order doesn't matter. TODO: use Sets for input and output tags
+        int result = super.hashCode();
+        result = 31 * result + (inputFacts != null ? inputFacts.hashCode() : 0);
+        result = 31 * result + (outputTags != null ? outputTags.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
-        return "{ " + Arrays.toString(inputFacts) + "=>" + Arrays.toString(outputTags) + confidenceValue*100 +"% }";
+        return "{ " + inputFacts + "=>" + outputTags + confidenceValue*100 +"% }";
     }
 
 }

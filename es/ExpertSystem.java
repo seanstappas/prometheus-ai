@@ -225,9 +225,11 @@ public class ExpertSystem implements PrometheusLayer {
      * @param allActivatedTags activated tags
      */
     private void generateProvenRule(Set<Fact> inputFactSet, Set<Tag> allActivatedTags) {
-        Fact[] inputFacts = inputFactSet.toArray(new Fact[inputFactSet.size()]);
-        Fact[] outputTags = allActivatedTags.toArray(new Fact[allActivatedTags.size()]);
-        Rule provenRule = new Rule(inputFacts, outputTags);
+        Set<Fact> castedOutputTags = new HashSet<>(); // TODO: Why are we converting here? Shouldn't the Rule only allow output Tags, not Facts?
+        for (Tag t : allActivatedTags) {
+            castedOutputTags.add((Fact) t);
+        }
+        Rule provenRule = new Rule(inputFactSet, castedOutputTags);
         addRule(provenRule);
     }
 
@@ -273,7 +275,7 @@ public class ExpertSystem implements PrometheusLayer {
         Set<Rule> pendingActivatedRules = new HashSet<>();
         for (Rule rule : readyRules) {
             boolean shouldActivate = true;
-            for (Fact fact : rule.inputFacts) {
+            for (Fact fact : rule.getInputFacts()) {
                 if (!factsContains(fact)) {
                     shouldActivate = false;
                     break;
@@ -286,7 +288,7 @@ public class ExpertSystem implements PrometheusLayer {
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
             activeRules.add(rule);
-            for (Tag tag : rule.outputTags) {
+            for (Tag tag : rule.getOutputTags()) {
                 replaceVariableArguments((Fact) tag);
                 activatedTags.add(tag);
                 addTag(tag);
@@ -302,28 +304,12 @@ public class ExpertSystem implements PrometheusLayer {
     private void replaceVariableArguments(Fact tag) {
         int argumentIndex = 0;
 
-        Set<Integer> toRemove = new HashSet<>();
-        Set<Argument> toAdd = new HashSet<>();
-
-        System.out.println("BEFORE: " + tag.getArguments());
-
         for (Argument argument : tag.getArguments()) {
             if (pendingReplacementPairs.containsKey(argument.getName())) {
-//                toRemove.add(argumentIndex);
-//                toAdd.add(pendingReplacementPairs.get(argument.getName()));
                 tag.getArguments().set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
             }
             argumentIndex++;
         }
-
-//        for (int arg : toRemove) {
-//            tag.getArguments().remove(arg);
-//        }
-//        for (Argument arg : toAdd) {
-//            tag.getArguments().add(arg);
-//        }
-
-        System.out.println("AFTER: " + tag.getArguments());
     }
 
     /**
@@ -346,7 +332,7 @@ public class ExpertSystem implements PrometheusLayer {
                 return new Rule();
             }
         }
-        return new Rule(inputRule.inputFacts, outputRule.outputTags);
+        return new Rule(inputRule.getInputFacts(), outputRule.getOutputTags());
     }
 
     /**

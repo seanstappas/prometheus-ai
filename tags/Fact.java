@@ -33,17 +33,16 @@ public class Fact extends Tag {
 
         Fact fact = (Fact) o;
 
-        if (!predicateName.equals(fact.predicateName)) return false;
-        return arguments.containsAll(fact.arguments);  // Used so order doesn't matter. TODO: use Sets for input and output tags
+        if (predicateName != null ? !predicateName.equals(fact.predicateName) : fact.predicateName != null)
+            return false;
+        return arguments != null ? arguments.equals(fact.arguments) : fact.arguments == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + predicateName.hashCode();
-        for (Argument arg : arguments) {
-            result += arg.hashCode();
-        }
+        result = 31 * result + (predicateName != null ? predicateName.hashCode() : 0);
+        result = 31 * result + (arguments != null ? arguments.hashCode() : 0);
         return result;
     }
 

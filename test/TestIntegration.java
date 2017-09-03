@@ -244,12 +244,12 @@ public class TestIntegration { // TODO: test with Google's GSON libary
             }
             br.close();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
         //System.out.println("[KNN] Knowledge nodes in the KNN: ");
-        for (int i = 0; i < animal.size(); i++) {
-            knn.addKN(animal.get(i));
+        for (KnowledgeNode anAnimal : animal) {
+            knn.addKN(anAnimal);
             //System.out.println(animal.get(i).toString());
         }
         //System.out.println("");
@@ -343,7 +343,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Set<Rule> readyRules = es.getReadyRules();
         Set<Rule> expectedReadyRules = new HashSet<>();
         expectedReadyRules.add(unactivatedRule);
-        Assert.assertEquals(readyRules, expectedReadyRules); //TODO: FIND OUT WHY IT FAILS????
+        Assert.assertEquals(expectedReadyRules, readyRules); //TODO: FIND OUT WHY IT FAILS????
         System.out.println("[ES] Final ready rules: " + readyRules);
 
         Set<Rule> activeRules = es.getActiveRules();
@@ -353,7 +353,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         expectedActiveRules.add(rule3);
         expectedActiveRules.add(rule4);
         expectedActiveRules.add(rule5);
-        Assert.assertEquals(activeRules, expectedActiveRules);
+        Assert.assertEquals(expectedActiveRules, activeRules);
         System.out.println("[ES] Final active rules: " + activeRules);
     }
 
@@ -458,7 +458,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Set<Rule> expectedReadyRules = new HashSet<>();
         expectedReadyRules.add(unactivatedRule);
         expectedReadyRules.add(provenRule);
-        Assert.assertEquals(readyRules, expectedReadyRules); //TODO: FIND OUT WHY IT FAILS????
+        Assert.assertEquals(expectedReadyRules, readyRules); //TODO: FIND OUT WHY IT FAILS????
         System.out.println("[ES] Final ready rules: " + readyRules);
 
         Set<Rule> activeRules = es.getActiveRules();
@@ -468,7 +468,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         expectedActiveRules.add(rule3);
         expectedActiveRules.add(rule4);
         expectedActiveRules.add(rule5);
-        Assert.assertEquals(activeRules, expectedActiveRules);
+        Assert.assertEquals(expectedActiveRules, activeRules);
         System.out.println("[ES] Final active rules: " + activeRules);
 
 /*
@@ -531,7 +531,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         System.out.println("[ES] Initial rules (for ES): " + initialRules);
 
         Set<Tag> activatedRecommendations = es.think();
-        System.out.println("[ES] Active recommendation (for Meta): " + activatedRecommendations.toString());
+        System.out.println("[ES] Active recommendation (for Meta): " + activatedRecommendations);
 
         Set<Tag> expectedActivatedRecommendation = new HashSet<>();
         expectedActivatedRecommendation.add(new Recommendation("@avoid(scary,dangerous)"));
