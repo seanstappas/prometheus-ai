@@ -24,6 +24,26 @@ public class Fact extends Tag {
         this(value, 1.0);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Fact fact = (Fact) o;
+
+        if (!predicateName.equals(fact.predicateName)) return false;
+        return arguments.equals(fact.arguments);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + predicateName.hashCode();
+        result = 31 * result + arguments.hashCode();
+        return result;
+    }
+
     public Fact(String value, double confidenceValue) {
 
         String[] tokens = value.split("[(),]");
@@ -84,7 +104,7 @@ public class Fact extends Tag {
             return new NumericArgument(argString, argTokens);
         } else if (argTokens[lastElem].matches("[?*]") || argTokens[lastElem].charAt(0) == '&') {
             return new VariableArgument(argString, argTokens);
-            } else {
+        } else {
             return new StringArgument(argString, argTokens);
         }
     }

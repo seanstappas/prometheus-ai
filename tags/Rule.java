@@ -182,6 +182,7 @@ public class Rule extends Tag {
         this.inputFacts = inputFacts;
         this.outputTags = outputTag;
         this.type = TagType.RULE;
+        this.value = this.toString();
 
     }
 

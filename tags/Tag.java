@@ -88,15 +88,21 @@ public abstract class Tag {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof Tag)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+
         Tag tag = (Tag) o;
-        return (value != null ? value.equals(tag.value) : tag.value == null) && type == tag.type;
+
+        if (Double.compare(tag.confidenceValue, confidenceValue) != 0) return false;
+        return type == tag.type;
     }
 
     @Override
     public int hashCode() {
-        int result = value != null ? value.hashCode() : 0;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(confidenceValue);
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + type.hashCode();
         return result;
     }
 

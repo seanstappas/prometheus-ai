@@ -94,6 +94,24 @@ public class Argument {
     public String toString() {
         return "" + name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Argument argument = (Argument) o;
+
+        if (!name.equals(argument.name)) return false;
+        return symbol == argument.symbol;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + symbol.hashCode();
+        return result;
+    }
 }
 
 /**
@@ -203,6 +221,25 @@ class NumericArgument extends Argument {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        NumericArgument that = (NumericArgument) o;
+
+        if (isNeg != that.isNeg) return false;
+        return value == that.value;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (isNeg ? 1 : 0);
+        result = 31 * result + value;
+        return result;
+    }
 }
 
 /**
@@ -243,29 +280,44 @@ class StringArgument extends Argument {
         isNeg = (string.contains("!"));
         value = tokens[tokens.length - 1];
         symbol = argTypes.STRING;
-
     }
 
     @Override
     public String toString() {
-        switch (symbol) {
-            case STRING:
-                return "" + value;
-            case EQ:
-                if (!isNeg()) {
-                    return name + " =" + value;
-                } else {
-                    return name + " !=" + value;
-                }
-            default:
-                return super.toString();
+        if (this.name.equals("")) {
+            return "" + value;
+        } else {
+            if (!isNeg()) {
+                return name + " = " + value;
+            } else {
+                return name + " != " + value;
+            }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        StringArgument that = (StringArgument) o;
+
+        if (isNeg != that.isNeg) return false;
+        return value.equals(that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (isNeg ? 1 : 0);
+        result = 31 * result + value.hashCode();
+        return result;
     }
 }
 
 /**
  * Subclass for arguments that have variable values
- * TODO: Redo VAR TYPE
  */
 
 class VariableArgument extends Argument {
@@ -299,5 +351,7 @@ class VariableArgument extends Argument {
                 return super.toString();
         }
     }
+
+
 }
 

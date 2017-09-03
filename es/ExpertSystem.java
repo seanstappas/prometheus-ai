@@ -177,6 +177,7 @@ public class ExpertSystem implements PrometheusLayer {
         Set<Tag> allActivatedTags = new HashSet<>();
         Set<Tag> activatedTags;
         Set<Fact> inputFactSet = getFacts();
+        Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
         do {
             activatedTags = thinkCycle();
             allActivatedTags.addAll(activatedTags);
@@ -186,7 +187,7 @@ public class ExpertSystem implements PrometheusLayer {
             if (tag.isRecommendation())
                 activatedRecommendations.add(tag);
         }
-        generateProvenRule(inputFactSet, allActivatedTags);
+        generateProvenRule(inputFactSetClone, allActivatedTags);
         return activatedRecommendations;
     }
 
@@ -344,7 +345,7 @@ public class ExpertSystem implements PrometheusLayer {
      * @param numberOfCycles how many cycles over the ruleset
      * @return merged rules
      */
-    public HashSet<Rule> ruleMerger(int numberOfCycles) {
+    HashSet<Rule> ruleMerger(int numberOfCycles) {
         HashSet<Rule> mergedRules = new HashSet<>();
         HashSet<Rule> inputRules = new HashSet<>(this.readyRules);
         while (numberOfCycles > 0) {
@@ -365,8 +366,10 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Process that occurs when ES is not thinking
      * Currently calls addRule to merge rules
+     *
+     * @param numberOfCycles how many cycles over the ruleset
      */
-    public void rest() {
+    public void rest(int numberOfCycles) {
         HashSet<Rule> newRules = ruleMerger(1);
         for (Rule newRule : newRules) {
             addRule(newRule);
