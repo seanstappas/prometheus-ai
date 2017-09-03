@@ -181,6 +181,7 @@ public class Rule extends Tag {
         Fact[] outputTag = outputTagList.toArray(new Fact[outputTagList.size()]);
         this.inputFacts = inputFacts;
         this.outputTags = outputTag;
+        this.type = TagType.RULE;
 
     }
 

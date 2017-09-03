@@ -4,7 +4,6 @@ import es.ExpertSystem;
 import knn.KnowledgeNode;
 import knn.KnowledgeNodeNetwork;
 import knn.Tuple;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -13,15 +12,9 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
-import static org.testng.Assert.assertEquals;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Running es.ExpertSystem and knn.KnowledgeNodeNetwork
@@ -223,17 +216,18 @@ public class TestIntegration { // TODO: test with Google's GSON libary
 		
 		return activeTags;
     }
-    
-    public HashMap<Tag, Double> lambdaSearchTest(){
-    	System.out.println("***Lambda Search Test***");
-    	
-    	setupKNN();
-		ArrayList<Tuple> inputs = new ArrayList<>();
-		Tuple data1 = new Tuple("mammal", 10); inputs.add(data1);
-		String item = "fish(vertebrate,water)";
-		
-		knn.lambdaSearch(inputs, item);
-		HashMap<Tag, Double> inputTags = knn.getInputTags();
+
+    public HashMap<Tag, Double> lambdaSearchTest() {
+        System.out.println("***Lambda Search Test***");
+
+        setupKNN();
+        ArrayList<Tuple> inputs = new ArrayList<>();
+        Tuple data1 = new Tuple("mammal", 10);
+        inputs.add(data1);
+        String item = "fish(vertebrate,water)";
+
+        knn.lambdaSearch(inputs, item);
+        HashMap<Tag, Double> inputTags = knn.getInputTags();
         HashMap<Tag, Double> activeTags = knn.getActiveTags();
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("fur(strands,insulator)"), 100.0);
@@ -241,67 +235,18 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         expectedActiveTags.put(new Fact("cat(feline,length>50,weight>20)"), 100.0);
         expectedActiveTags.put(new Fact("fish(vertebrate,water)"), 70.0);
         expectedActiveTags.put(new Fact("teeth(grind,food)"), 100.0);
-        
+
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] String trying to find out a link with: " + item);
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after lambda searching: " + activeTags);
-        
+
         Assert.assertTrue(activeTags.containsKey(new Fact(item)));
         Assert.assertEquals(activeTags, expectedActiveTags);
         System.out.println("");
-		
-		return activeTags;
+
+        return activeTags;
     }
-    
-    /**
-     * Tests the Expert System's matches method.
-     */
-    @Test
-    public void testMatches() {
-        System.out.println();
-        System.out.println("testMatches");
-        es.reset();
-
-
-        Fact fact1 = new Fact("A()");
-        Fact fact2 = new Fact("B()");
-        Fact fact3 = new Fact("A(height=low)");
-        Fact fact31 = new Fact("A(height!=tall)");
-
-        Fact fact4 = new Fact("A(?)");
-
-        Fact fact5 = new Fact("A(height=10,weight>10)");
-        Fact fact6 = new Fact("A(height=10,weight=12)");
-        Fact fact7 = new Fact("A(height=10,*)");
-        Fact fact8 = new Fact("A(height=7,*)");
-        Fact fact9 = new Fact("B(large,distance!=far,?,object=human)");
-        Fact fact10 = new Fact("B(large,distance=near,hello,object=human)");
-        Fact fact11 = new Fact("D(window,material=glass,thickness!>2)");
-        Fact fact12 = new Fact("D(window,*)");
-        Fact fact121 = new Fact("D(window,?)");
-        Fact fact13 = new Fact("D(window,door)");
-        Fact fact14 = new Fact("F(temperature=40,hot,humidity=high)");
-        Fact fact15 = new Fact("F(*)");
-        Fact fact16 = new Fact("A(10,12,14)");
-        Fact fact17 = new Fact("A(&x,12,&y)");
-
-        /*
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact3.matches(fact31)[0]);
-        Assert.assertTrue(fact5.matches(fact6)[0]);
-        Assert.assertTrue(fact9.matches(fact10)[0]);
-        //Assert.assertTrue(fact13.matches(fact121)[0]);
-        //Assert.assertTrue(fact14.matches(fact15)[0]);
- 		*/
-        Assert.assertTrue(fact16.matches(fact17).doesMatch);
-    }
-
 
     @Test
     public void testES() {
