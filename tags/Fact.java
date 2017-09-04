@@ -21,7 +21,6 @@ public class Fact extends Tag implements IPredicate {
     }
 
     public Fact(String value) {
-
         this(value,1.0);
     }
 
@@ -59,16 +58,6 @@ public class Fact extends Tag implements IPredicate {
     @Override
     public String toString() {
         return "[" + predicateName + '(' + arguments + ") " + confidenceValue*100 +"% ]";
-    }
-
-    @Override
-    public double getConfidenceValue() {
-        return confidenceValue;
-    }
-
-    @Override
-    public void setConfidenceValue(double confidenceValue) {
-        this.confidenceValue = confidenceValue;
     }
 
     /**
@@ -120,11 +109,6 @@ public class Fact extends Tag implements IPredicate {
         return arguments;
     }
 
-    @Override
-    public void setArguments(List<Argument> arguments) {
-        this.arguments = arguments;
-    }
-
     /**
      * Compares two facts to see if they are compatible
      * If matching occurs on a variable argument, return object includes a tuple (see VariableReturn class)
@@ -134,7 +118,6 @@ public class Fact extends Tag implements IPredicate {
      * @return true if facts are 'matched' (notice not necessarily equal)
      */
 
-    @Override
     public VariableReturn matches(Fact inputFact) {
 
         VariableReturn result = new VariableReturn();

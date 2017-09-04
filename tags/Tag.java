@@ -17,6 +17,15 @@ public abstract class Tag {
         RECOMMENDATION
     }
 
+    public double getConfidenceValue() {
+        return confidenceValue;
+    }
+
+    public void setConfidenceValue(double confidenceValue) {
+        this.confidenceValue = confidenceValue;
+    }
+
+
     public TagType getType() {
         return type;
     }
@@ -38,10 +47,6 @@ public abstract class Tag {
                 return new Rule(value);
         }
         return null;
-    }
-
-    public void setConfidenceValue(double confidenceValue) {
-        this.confidenceValue = confidenceValue;
     }
 
     @Override

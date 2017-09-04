@@ -12,17 +12,12 @@ public interface IPredicate {
     @Override
     String toString();
 
-    double getConfidenceValue();
+    String getPredicateName();
 
     void setConfidenceValue(double confidenceValue);
-
-    String getPredicateName();
 
     List<Argument> getArguments();
 
     Tag.TagType getType();
 
-    void setArguments(List<Argument> arguments);
-
-    VariableReturn matches(Fact inputFact);
 }
