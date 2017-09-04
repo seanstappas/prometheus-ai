@@ -378,10 +378,9 @@ public class ExpertSystem implements PrometheusLayer {
      *  to denote input tags and output tags respectively
      *  e.g. "If Human(near) Then Move(steps=10)"
      * @param sentence that contains input and output delimiters
-     * @return true if new rule added
      */
 
-    public boolean teach(String sentence) {
+    public void teach(String sentence) {
         String[] tokens = sentence.split("\\s");
         List<String> tokenList = new ArrayList<>();
         for (String token : tokens) {
@@ -410,7 +409,7 @@ public class ExpertSystem implements PrometheusLayer {
             String[] inputFacts = tokenList.subList(inputIndex+1, outputIndex).toArray(new String[0]);
             String[] outputTags = tokenList.subList(outputIndex + 1, tokenList.size()).toArray(new String[0]);
             Rule newRule = new Rule(inputFacts, outputTags, Tag.TagType.RULE);
-            return addRule(newRule);
+            addRule(newRule);
 
         }
 
@@ -418,10 +417,8 @@ public class ExpertSystem implements PrometheusLayer {
             String[] inputFacts = tokenList.subList(inputIndex+1, tokenList.size()).toArray(new String[0]);
             String[] outputTags = tokenList.subList(outputIndex + 1, inputIndex).toArray(new String[0]);
             Rule newRule = new Rule(inputFacts, outputTags, Tag.TagType.RULE);
-            return addRule(newRule);
+            addRule(newRule);
         }
-
-        return false;
     }
 
 }

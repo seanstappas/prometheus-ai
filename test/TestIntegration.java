@@ -259,26 +259,26 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     @Test
     public void testES() {
         System.out.println();
-        System.out.println("testES");
+        System.out.println("testES with Confidence Values");
         es.reset();
         Fact[] testFacts = {
-                new Fact("Aardvark(brown,strange,speed=slow"),
-                new Fact("Bat(black,speed=10)")
+                new Fact("Aardvark(brown,strange,speed=slow", 0.9),
+                new Fact("Bat(black,speed=10)", 0.6)
         };
-        Recommendation recX = new Recommendation("Run(north,quickly,speed!=slow)");
-        Recommendation recY = new Recommendation("Hide(safelocation,manner=stealth)");
-        Recommendation recZ = new Recommendation("Fight(aggressive)");
+        Recommendation recX = new Recommendation("Run(north,quickly,speed!=slow)", 0.2);
+        Recommendation recY = new Recommendation("Hide(safelocation,manner=stealth)", 0.8);
+        Recommendation recZ = new Recommendation("Fight(aggressive)", 0.8);
         Recommendation[] testRecommendations = {recX, recY};
-        Fact[] outputTags1 = {new Fact("Dog(friendly,breed=pug,age<2)")};
-        Fact[] outputTags2 = {new Fact("Elephant(&x,size=big,intelligent)")};
-        Fact[] outputTags3 = {new Fact("Frog(colour=green,slimy,sound=ribbit)")};
-        Fact[] outputTags4 = {new Fact("Hog(&x,size=huge,&y,big)")};
-        Rule unactivatedRule = new Rule(new Fact[]{new Fact("Goose(loud,nationality=canadian,wingspan=4)"), new Fact("Aardvark(brown,?,speed=slow)")}, outputTags4);
-        Rule rule1 = new Rule(new Fact[]{new Fact("Aardvark(brown,strange,?)"), new Fact("Bat(black,speed>9)")}, outputTags1);
-        Rule rule2 = new Rule(new Fact[]{new Fact("Dog(&x,breed=pug,age=1)"), new Fact("Bat(*)")}, outputTags2);
-        Rule rule3 = new Rule(new Fact[]{new Fact("Dog(friendly,breed=pug,age=1)"), new Fact("Elephant(friendly,size=big,intelligent)")}, outputTags3);
-        Rule rule4 = new Rule(new Fact[]{new Fact("Frog(&x,slimy,&y)"), new Fact("Elephant(*)")}, outputTags4);
-        Rule rule5 = new Rule(new Fact[]{new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")}, new Fact[]{recZ});
+        Fact[] outputTags1 = {new Fact("Dog(friendly,breed=pug,age<2)", 0.3)};
+        Fact[] outputTags2 = {new Fact("Elephant(&x,size=big,intelligent)", 0.1)};
+        Fact[] outputTags3 = {new Fact("Frog(colour=green,slimy,sound=ribbit)", 0.8)};
+        Fact[] outputTags4 = {new Fact("Hog(&x,size=huge,&y,big)", 0.5)};
+        Rule unactivatedRule = new Rule(new Fact[]{new Fact("Goose(loud,nationality=canadian,wingspan=4)", 0.5), new Fact("Aardvark(brown,?,speed=slow)", 0.8)}, outputTags4);
+        Rule rule1 = new Rule(new Fact[]{new Fact("Aardvark(brown,strange,?)", 0.2), new Fact("Bat(black,speed>9)", 0.7)}, outputTags1);
+        Rule rule2 = new Rule(new Fact[]{new Fact("Dog(&x,breed=pug,age=1)", 0.7), new Fact("Bat(*)", 1.0)}, outputTags2);
+        Rule rule3 = new Rule(new Fact[]{new Fact("Dog(friendly,breed=pug,age=1)", 0.9), new Fact("Elephant(friendly,size=big,intelligent)", 0.8)}, outputTags3);
+        Rule rule4 = new Rule(new Fact[]{new Fact("Frog(&x,slimy,&y)", 0.6), new Fact("Elephant(*)", 0.7)}, outputTags4);
+        Rule rule5 = new Rule(new Fact[]{new Fact("Hog(*)", 0.2), new Fact("Frog(?,slimy,sound=ribbit)", 0.9)}, new Fact[]{recZ});
         Rule[] testRules = {
                 rule1,
                 rule2,
@@ -343,7 +343,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Set<Rule> readyRules = es.getReadyRules();
         Set<Rule> expectedReadyRules = new HashSet<>();
         expectedReadyRules.add(unactivatedRule);
-        Assert.assertEquals(expectedReadyRules, readyRules); //TODO: FIND OUT WHY IT FAILS????
+        Assert.assertEquals(expectedReadyRules, readyRules);
         System.out.println("[ES] Final ready rules: " + readyRules);
 
         Set<Rule> activeRules = es.getActiveRules();
@@ -458,7 +458,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Set<Rule> expectedReadyRules = new HashSet<>();
         expectedReadyRules.add(unactivatedRule);
         expectedReadyRules.add(provenRule);
-        Assert.assertEquals(expectedReadyRules, readyRules); //TODO: FIND OUT WHY IT FAILS????
+        Assert.assertEquals(expectedReadyRules, readyRules);
         System.out.println("[ES] Final ready rules: " + readyRules);
 
         Set<Rule> activeRules = es.getActiveRules();
@@ -471,18 +471,59 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Assert.assertEquals(expectedActiveRules, activeRules);
         System.out.println("[ES] Final active rules: " + activeRules);
 
-/*
+        System.out.println();
         System.out.println("***Rest Cycle***");
 
         es.rest(1);
         es.getReadyRules().removeAll(readyRules);
         Set<Rule> restRules = es.getReadyRules();
-        Set<Rule> expectedRestRules = null;
-
+        Set<Rule> expectedRestRules = new HashSet<>();
+        expectedRestRules.add(new Rule(
+                new Fact[]{
+                        new Fact("Goose(loud,nationality=canadian,wingspan=4)"),
+                        new Fact("Aardvark(brown,?,speed=slow)")},
+                new Fact[]{
+                        new Fact("Hog(colour=green,size=huge,sound=ribbit,big)")})
+        );
 
         Assert.assertEquals(restRules, expectedRestRules);
         System.out.println("[ES] Final rest rules: " + restRules);
-*/
+    }
+
+    /**
+     * Tests the teach functionality (basic) of the ES.
+     */
+
+
+    public void testESTeach() {
+        System.out.println();
+        System.out.println("testESTeach");
+        es.reset();
+
+        String[] sampleSentences = {
+                "If human(near) then @move(10)",
+                "Do @retreat(quickly,carefully) when attacked()",
+        };
+
+        for (String sentences : sampleSentences) {
+            es.teach(sentences);
+        }
+        Set<Rule> taughtSentences = es.getReadyRules();
+        Set<Rule> expectedTaughtSentences = new HashSet<>();
+
+        Rule rule1 = new Rule(
+                new Fact[]{new Fact("human(near")},
+                new Fact[]{new Recommendation("move(10)")});
+        Rule rule2 = new Rule(
+                new Fact[]{new Fact("attacked()")},
+                new Fact[]{new Recommendation("retreat(quickly,carefully)")});
+
+        expectedTaughtSentences.add(rule1);
+        expectedTaughtSentences.add(rule2);
+        Assert.assertEquals(taughtSentences, expectedTaughtSentences);
+
+        System.out.println("[ES] Final taught rules" + taughtSentences);
+
     }
 
     /**

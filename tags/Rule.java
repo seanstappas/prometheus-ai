@@ -82,7 +82,7 @@ public class Rule extends Tag {
             this.inputFacts.add(new Fact(inputFact));
         }
         for (String outputTag : outputTags) {
-            this.outputTags.add((Fact) Tag.createTagFromString(outputTag, type));
+            this.outputTags.add((Fact) Tag.createTagFromString(outputTag, type)); //TODO: FIX
         }
         this.type = TagType.RULE;
         this.value = this.toString();
@@ -154,7 +154,6 @@ public class Rule extends Tag {
      * Create a single rule from a string
      *
      * @param string
-     * @deprecated use makeRule instead
      */
 
     public Rule(String string) {

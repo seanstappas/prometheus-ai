@@ -13,6 +13,13 @@ public class Recommendation extends Fact {
     public Recommendation(String value) {
         super(value);
         this.type = TagType.RECOMMENDATION;
+        this.confidenceValue = 1.0;
+    }
+
+    public Recommendation(String value, double confidenceValue) {
+        super(value);
+        this.type = TagType.RECOMMENDATION;
+        this.confidenceValue = confidenceValue;
     }
 
     @Override
