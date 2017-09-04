@@ -8,14 +8,14 @@ import java.util.*;
  */
 public class Rule extends Tag {
     private Set<Fact> inputFacts;
-    private Set<Fact> outputTags;
+    private Set<IPredicate> outputPredicates;
 
     public Set<Fact> getInputFacts() {
         return inputFacts;
     }
 
-    public Set<Fact> getOutputTags() {
-        return outputTags;
+    public Set<IPredicate> getOutputPredicates() {
+        return outputPredicates;
     }
 
     public double getConfidenceValue() {
@@ -30,13 +30,13 @@ public class Rule extends Tag {
      * Confidence value of output tags set to the product of the confidence value of input tags
      */
 
-    public void setOutputTagsConfidenceValue() {
+    public void setoutputFactsConfidenceValue() {
         double value = 1.0;
-        for (Fact fact: this.inputFacts) {
+        for (Fact fact : this.inputFacts) {
             value = value * fact.getConfidenceValue();
         }
-        for (Fact fact: this.outputTags) {
-            fact.setConfidenceValue(value);
+        for (IPredicate outputPredicate : this.outputPredicates) {
+            outputPredicate.setConfidenceValue(value);
         }
     }
 
@@ -44,51 +44,60 @@ public class Rule extends Tag {
      * Creates a Rule.
      *
      * @param inputFacts condition facts of the rule
-     * @param outputTag  outputTags tag of the rule
+     * @param outputIPredicate  outputFacts tag of the rule
      */
-    public Rule(Fact[] inputFacts, Fact[] outputTag) {
-        this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputTag)), 1.0);
+    public Rule(Fact[] inputFacts, IPredicate[] outputIPredicate) {
+        this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputIPredicate)), 1.0);
     }
 
-    public Rule(Set<Fact> inputFacts, Set<Fact> outputTag) {
-        this(inputFacts, outputTag, 1.0);
+    public Rule(Set<Fact> inputFacts, Set<IPredicate> outputPredicate) {
+        this(inputFacts, outputPredicate, 1.0);
     }
 
-    public Rule(Set<Fact> inputFacts, Set<Fact> outputTags, double confidenceValue) {
+    public Rule(Set<Fact> inputFacts, Set<IPredicate> outputIPredicates, double confidenceValue) {
         this.inputFacts = new HashSet<>(inputFacts);
-        this.outputTags = new HashSet<>(outputTags);
+        this.outputPredicates = new HashSet<>(outputIPredicates);
         this.type = TagType.RULE;
         this.confidenceValue = confidenceValue;
 
-        setOutputTagsConfidenceValue();
+        setoutputFactsConfidenceValue();
     }
 
     public Rule() {
+        this.inputFacts = new HashSet<>();
+        this.outputPredicates = new HashSet<>();
+        this.type = TagType.RULE;
+        this.confidenceValue = 1.0;
     }
-
 
     /**
      * Creates a Rule from Strings, assuming all Tags (input and output) are of the provided TagType.
      *
      * @param inputFacts the input Facts, in String form
-     * @param outputTags the output Tags, in String form
+     * @param outputFacts the output Tags, in String form
      * @param type       the Type of output Tags
      */
-    public Rule(String[] inputFacts, String[] outputTags, TagType type, double confidenceValue) {
+    public Rule(String[] inputFacts, String[] outputFacts, TagType type, double confidenceValue) {
         this.inputFacts = new HashSet<>();
-        this.outputTags = new HashSet<>();
+        this.outputPredicates = new HashSet<>();
         for (String inputFact : inputFacts) {
             this.inputFacts.add(new Fact(inputFact));
         }
-        for (String outputTag : outputTags) {
-            this.outputTags.add((Fact) Tag.createTagFromString(outputTag, type)); //TODO: FIX
+        for (String outputPredicate : outputFacts) {
+            if (!outputPredicate.contains("@")) {
+                Fact p = new Fact(outputPredicate);
+                this.outputPredicates.add(p);
+            } else {
+                Recommendation p = new Recommendation(outputPredicate);
+                this.outputPredicates.add(p);
+            }
         }
         this.type = TagType.RULE;
         this.confidenceValue = confidenceValue;
     }
 
-    public Rule(String[] inputFacts, String[] outputTags, TagType type) {
-        this(inputFacts, outputTags, type, 1.0);
+    public Rule(String[] inputFacts, String[] outputFacts, TagType type) {
+        this(inputFacts, outputFacts, type, 1.0);
     }
 
     /**
@@ -112,18 +121,18 @@ public class Rule extends Tag {
 
     public static List<Rule> makeRules(String value) {
         List<String> tokens = new ArrayList<>(Arrays.asList(value.split(" ")));
-        int outputTagIndex = tokens.indexOf("->");
+        int outputFactIndex = tokens.indexOf("->");
 
-        Fact[] outputTags = new Fact[tokens.size() - outputTagIndex - 1];
+        IPredicate[] outputIPredicates = new IPredicate[tokens.size() - outputFactIndex - 1];
 
-        for (int i = outputTagIndex + 1; i < tokens.size(); i++) {
-            for (int j = 0; j < outputTags.length; j++) {
+        for (int i = outputFactIndex + 1; i < tokens.size(); i++) {
+            for (int j = 0; j < outputIPredicates.length; j++) {
                 if (!tokens.get(i).contains("@")) {
-                    Fact fact = new Fact(tokens.get(i));
-                    outputTags[j] = fact;
+                    Fact IPredicate = new Fact(tokens.get(i));
+                    outputIPredicates[j] = IPredicate;
                 } else {
                     Recommendation rec = new Recommendation(tokens.get(i));
-                    outputTags[j] = rec;
+                    outputIPredicates[j] = rec;
                 }
             }
         }
@@ -131,14 +140,14 @@ public class Rule extends Tag {
         List<Rule> ruleList = new ArrayList<>();
         List<Fact> inputFactList = new ArrayList<>();
 
-        for (int i = 0; i < outputTagIndex + 1; i++) {
+        for (int i = 0; i < outputFactIndex + 1; i++) {
             if (!tokens.get(i).equals("OR") & !tokens.get(i).equals("->")) {
-                Fact fact = new Fact(tokens.get(i));
-                inputFactList.add(fact);
+                Fact IPredicate = new Fact(tokens.get(i));
+                inputFactList.add(IPredicate);
             }
             else {
                 Fact[] inputFacts = inputFactList.toArray(new Fact[inputFactList.size()]);
-                Rule rule = new Rule(inputFacts, outputTags);
+                Rule rule = new Rule(inputFacts, outputIPredicates);
                 ruleList.add(rule);
 
                 inputFactList.clear();
@@ -156,28 +165,28 @@ public class Rule extends Tag {
 
     public Rule(String string) {
         List<String> tokens = new ArrayList<>(Arrays.asList(string.split(" ")));
-        int outputTagIndex = tokens.indexOf("->");
+        int outputFactIndex = tokens.indexOf("->");
 
-        List<Fact> outputTagList = new ArrayList<>();
-        for (String outputTag : tokens.subList(outputTagIndex + 1, tokens.size())) {
-            if (!outputTag.contains("@")) {
-                Fact fact = new Fact(outputTag);
-                outputTagList.add(fact);
+        List<IPredicate> outputPredicateList = new ArrayList<>();
+        for (String outputFact : tokens.subList(outputFactIndex + 1, tokens.size())) {
+            if (!outputFact.contains("@")) {
+                Fact fact = new Fact(outputFact);
+                outputPredicateList.add(fact);
             } else {
-                Recommendation rec = new Recommendation(outputTag);
-                outputTagList.add(rec);
+                Recommendation rec = new Recommendation(outputFact);
+                outputPredicateList.add(rec);
             }
         }
 
-        Fact[] inputFacts = new Fact[outputTagIndex];
+        Fact[] inputFacts = new Fact[outputFactIndex];
         for (int i = 0; i < inputFacts.length; i++) {
             Fact fact = new Fact(tokens.get(i));
             inputFacts[i] = fact;
         }
 
-        Fact[] outputTag = outputTagList.toArray(new Fact[outputTagList.size()]);
+        IPredicate[] outputPredicate = outputPredicateList.toArray(new IPredicate[outputPredicateList.size()]);
         this.inputFacts = new HashSet<>(Arrays.asList(inputFacts));
-        this.outputTags = new HashSet<>(Arrays.asList(outputTag));
+        this.outputPredicates = new HashSet<>(Arrays.asList(outputPredicate));
         this.type = TagType.RULE;
     }
 
@@ -190,20 +199,20 @@ public class Rule extends Tag {
         Rule rule = (Rule) o;
 
         if (inputFacts != null ? !inputFacts.equals(rule.inputFacts) : rule.inputFacts != null) return false;
-        return outputTags != null ? outputTags.equals(rule.outputTags) : rule.outputTags == null;
+        return outputPredicates != null ? outputPredicates.equals(rule.outputPredicates) : rule.outputPredicates == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (inputFacts != null ? inputFacts.hashCode() : 0);
-        result = 31 * result + (outputTags != null ? outputTags.hashCode() : 0);
+        result = 31 * result + (outputPredicates != null ? outputPredicates.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "{ " + inputFacts + "=>" + outputTags + confidenceValue*100 +"% }";
+        return "{ " + inputFacts + "=>" + outputPredicates + confidenceValue * 100 + "% }";
     }
 
 }

@@ -17,6 +17,10 @@ public abstract class Tag {
         RECOMMENDATION
     }
 
+    public TagType getType() {
+        return type;
+    }
+
     /**
      * Creates a Tag from a String.
      *

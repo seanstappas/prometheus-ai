@@ -11,7 +11,7 @@ import java.util.List;
  * Facts are composed of a predicate name and a set of arguments: P(ARG1, ARG2, ...)
  */
 
-public class Fact extends Tag {
+public class Fact extends Tag implements IPredicate {
 
     private String predicateName;
     private List<Argument> arguments;
@@ -61,10 +61,12 @@ public class Fact extends Tag {
         return "[" + predicateName + '(' + arguments + ") " + confidenceValue*100 +"% ]";
     }
 
+    @Override
     public double getConfidenceValue() {
         return confidenceValue;
     }
 
+    @Override
     public void setConfidenceValue(double confidenceValue) {
         this.confidenceValue = confidenceValue;
     }
@@ -108,14 +110,17 @@ public class Fact extends Tag {
         }
     }
 
+    @Override
     public String getPredicateName() {
         return predicateName;
     }
 
+    @Override
     public List<Argument> getArguments() {
         return arguments;
     }
 
+    @Override
     public void setArguments(List<Argument> arguments) {
         this.arguments = arguments;
     }
@@ -129,6 +134,7 @@ public class Fact extends Tag {
      * @return true if facts are 'matched' (notice not necessarily equal)
      */
 
+    @Override
     public VariableReturn matches(Fact inputFact) {
 
         VariableReturn result = new VariableReturn();
@@ -136,59 +142,44 @@ public class Fact extends Tag {
             result.doesMatch = false;
             return result;
         }
+
+        if (inputFact.arguments.size() > this.arguments.size()) {
+            int difference = inputFact.arguments.size() - arguments.size();
+            for (int i = difference; i < inputFact.arguments.size(); i++) {
+                if (!inputFact.arguments.get(i).getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
+                    result.doesMatch = false;
+                    return result;
+                }
+            }
+        }
+
         Iterator iterFact = this.arguments.iterator();
         Iterator iterInputFact = inputFact.arguments.iterator();
 
-        if (this.arguments.size() >= inputFact.arguments.size()) {
-            while (iterInputFact.hasNext()) {
-                Argument argFact = (Argument) iterFact.next();
-                Argument argInputFact = (Argument) iterInputFact.next();
-                if (argFact.symbol.equals(Argument.ArgTypes.MATCHALL) || argInputFact.symbol.equals(Argument.ArgTypes.MATCHALL)) {
-                    result.doesMatch = true;
-                    return result;
-                }
-                if (argInputFact.symbol.equals(Argument.ArgTypes.VAR)) {
-                    result.doesMatch = true;
-                    result.pairs.put(argInputFact.getName(), argFact);
-                }
-                result.doesMatch = argFact.matches(argInputFact);
-                if (!result.doesMatch) {
-                    return result;
-                }
-            }
-            if (iterFact.hasNext()) {
-                Argument argFact = (Argument) iterFact.next();
-                result.doesMatch = (argFact.symbol.equals(Argument.ArgTypes.MATCHALL));
+        while (iterInputFact.hasNext()) {
+            Argument argFact = (Argument) iterFact.next();
+            Argument argInputFact = (Argument) iterInputFact.next();
+            if (argFact.symbol.equals(Argument.ArgTypes.MATCHALL) || argInputFact.symbol.equals(Argument.ArgTypes.MATCHALL)) { //param
+                result.doesMatch = true;
                 return result;
             }
-            result.doesMatch = true;
-            return result;
-
-        } else {
-            while (iterFact.hasNext()) {
-                Argument argFact = (Argument) iterFact.next();
-                Argument argInputFact = (Argument) iterInputFact.next();
-                if (argFact.symbol.equals(Argument.ArgTypes.MATCHALL) || argInputFact.symbol.equals(Argument.ArgTypes.MATCHALL)) {
-                    result.doesMatch = true;
-                    return result;
-                }
-                if (argInputFact.symbol.equals(Argument.ArgTypes.VAR)) {
-                    result.doesMatch = true;
-                    result.pairs.put(argInputFact.getName(), argFact);
-                }
-                result.doesMatch = argFact.matches(argInputFact);
-                if (!result.doesMatch) {
-                    return result;
-                }
+            if (argInputFact.symbol.equals(Argument.ArgTypes.VAR)) {
+                result.doesMatch = true;
+                result.pairs.put(argInputFact.getName(), argFact);
             }
-            if (iterInputFact.hasNext()) {
-                Argument argFact = (Argument) iterInputFact.next();
-                result.doesMatch = (argFact.symbol.equals(Argument.ArgTypes.MATCHALL));
+            result.doesMatch = argFact.matches(argInputFact);
+            if (!result.doesMatch) {
                 return result;
             }
-            result.doesMatch = true;
+        }
+        if (iterFact.hasNext()) {
+            Argument argFact = (Argument) iterFact.next();
+            result.doesMatch = (argFact.symbol.equals(Argument.ArgTypes.MATCHALL));
             return result;
         }
+        result.doesMatch = true;
+        return result;
+
     }
 
 }
