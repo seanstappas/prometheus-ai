@@ -21,9 +21,4 @@ public class Recommendation extends Fact {
         this.type = TagType.RECOMMENDATION;
         this.confidenceValue = confidenceValue;
     }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }

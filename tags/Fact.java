@@ -50,13 +50,10 @@ public class Fact extends Tag {
 
         String[] tokens = value.split("[(),]");
 
-        this.value = value;
         this.type = TagType.FACT;
         this.predicateName = tokens[0];
         this.arguments = argStringParser(tokens);
         this.confidenceValue = confidenceValue;
-
-
     }
 
     @Override

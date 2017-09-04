@@ -14,6 +14,6 @@ public class Link {
 	}
 	
 	public String toString(){
-		return "(" + this.parent.value + ", " + this.confidence + ", " + this.child.value + ")";
+		return "(" + this.parent + ", " + this.confidence + ", " + this.child + ")";
 	}
 }

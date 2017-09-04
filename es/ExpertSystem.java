@@ -184,7 +184,7 @@ public class ExpertSystem implements PrometheusLayer {
         } while (!activatedTags.isEmpty());
         Set<Tag> activatedRecommendations = new HashSet<>();
         for (Tag tag : allActivatedTags) {
-            if (tag.isRecommendation())
+            if (tag instanceof Recommendation)
                 activatedRecommendations.add(tag);
         }
         generateProvenRule(inputFactSetClone, allActivatedTags);
@@ -209,7 +209,7 @@ public class ExpertSystem implements PrometheusLayer {
         } while (!activatedTags.isEmpty());
         Set<Tag> activatedRecommendations = new HashSet<>();
         for (Tag tag : allActivatedTags) {
-            if (tag.isRecommendation())
+            if (tag instanceof Recommendation)
                 activatedRecommendations.add(tag);
         }
         if (shouldGenerateRule) {
@@ -256,7 +256,7 @@ public class ExpertSystem implements PrometheusLayer {
         }
         Set<Tag> activatedRecommendations = new HashSet<>();
         for (Tag tag : allActivatedTags) {
-            if (tag.isRecommendation())
+            if (tag instanceof Recommendation)
                 activatedRecommendations.add(tag);
         }
         if (shouldGenerateRule) {

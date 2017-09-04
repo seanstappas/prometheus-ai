@@ -58,7 +58,6 @@ public class Rule extends Tag {
         this.inputFacts = new HashSet<>(inputFacts);
         this.outputTags = new HashSet<>(outputTags);
         this.type = TagType.RULE;
-        this.value = this.toString();
         this.confidenceValue = confidenceValue;
 
         setOutputTagsConfidenceValue();
@@ -85,7 +84,6 @@ public class Rule extends Tag {
             this.outputTags.add((Fact) Tag.createTagFromString(outputTag, type)); //TODO: FIX
         }
         this.type = TagType.RULE;
-        this.value = this.toString();
         this.confidenceValue = confidenceValue;
     }
 
@@ -181,8 +179,6 @@ public class Rule extends Tag {
         this.inputFacts = new HashSet<>(Arrays.asList(inputFacts));
         this.outputTags = new HashSet<>(Arrays.asList(outputTag));
         this.type = TagType.RULE;
-        this.value = this.toString();
-
     }
 
     @Override

@@ -121,7 +121,7 @@ public class KnowledgeNodeNetwork {
         return this.activeTags;
     }    
     
-    public void lambdaSearch(ArrayList<Tuple> NNoutputs, String item){
+    public void lambdaSearch(ArrayList<Tuple> NNoutputs, Tag item){
     	HashMap<Tag, Double> bestPath = new HashMap<>();
     	double bestConfidence = 0;
     	
@@ -204,7 +204,7 @@ public class KnowledgeNodeNetwork {
     			ArrayList<Tag> belowTags = new ArrayList<>();
     			depthFirstSearch(parent, belowTags);
     			for(Tag tg : belowTags){
-    				if(tg.value.equals(item)){
+    				if(tg.equals(item)){
     					isGoodParent = true;
     					goodParents.add(parent);
     					break;
@@ -219,7 +219,7 @@ public class KnowledgeNodeNetwork {
     			ArrayList<Tag> belowTags = new ArrayList<>();
     			depthFirstSearch(parent, belowTags);
     			for(Tag tg : belowTags){
-    				if(tg.value.equals(item)){
+    				if(tg.equals(item)){
     					for(Tag tag : bestPath.keySet()){
     						if(tag.equals(t) == false){
     							this.mapKN.get(tag).objectTruth = 0;

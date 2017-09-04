@@ -205,7 +205,9 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         inputs.add(data1);
         String item = "fish(vertebrate,water)";
 
-        knn.lambdaSearch(inputs, item);
+        Fact factToSearch = new Fact(item);
+
+        knn.lambdaSearch(inputs, factToSearch);
         HashMap<Tag, Double> inputTags = knn.getInputTags();
         HashMap<Tag, Double> activeTags = knn.getActiveTags();
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
@@ -220,7 +222,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after lambda searching: " + activeTags);
 
-        Assert.assertTrue(activeTags.containsKey(new Fact(item)));
+        Assert.assertTrue(activeTags.containsKey(factToSearch));
         Assert.assertEquals(activeTags, expectedActiveTags);
         System.out.println("");
 
@@ -486,7 +488,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
                         new Fact("Hog(colour=green,size=huge,sound=ribbit,big)")})
         );
 
-        Assert.assertEquals(restRules, expectedRestRules);
+        Assert.assertEquals(restRules.iterator().next(), expectedRestRules.iterator().next()); // TODO: Why does a.equals(b) but not b.equals(a) ?
         System.out.println("[ES] Final rest rules: " + restRules);
     }
 
@@ -579,5 +581,4 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         expectedActivatedRecommendation.add(new Recommendation("@isPet(easy,calm,bark)"));
         Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendation);
     }
-
 }

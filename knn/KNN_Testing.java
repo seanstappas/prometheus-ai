@@ -1,13 +1,10 @@
 package knn;
 
+import tags.Fact;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import tags.*;
 
 public class KNN_Testing {
 	public static void main(String[] args){	
@@ -103,7 +100,7 @@ public class KNN_Testing {
 		//testing lambda searching				
 		ArrayList<Tuple> inputs = new ArrayList<>();
 		Tuple data1 = new Tuple("mammal", 10); inputs.add(data1);
-		relation.lambdaSearch(inputs, "fish(vertebrate,water)");
+		relation.lambdaSearch(inputs, new Fact("fish(vertebrate,water)"));
 		System.out.println("Input for lambda search: " + relation.getInputTags().toString());
 		System.out.println(relation.getActiveTags().toString());
 		

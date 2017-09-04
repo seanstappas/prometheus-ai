@@ -4,10 +4,6 @@ package tags;
  * Tag to be used throughout the Prometheus system.
  */
 public abstract class Tag {
-    /**
-     * The value of the Tag.
-     */
-    public String value;
     double confidenceValue;
 
     /**
@@ -19,20 +15,6 @@ public abstract class Tag {
         FACT,
         RULE,
         RECOMMENDATION
-    }
-
-    Tag() {
-    }
-
-    /**
-     * Creates a Tag.
-     *
-     * @param value the value of the Tag
-     * @param type  the Type of the Tag
-     */
-    protected Tag(String value, TagType type) {
-        this.value = value;
-        this.type = type;
     }
 
     /**
@@ -52,33 +34,6 @@ public abstract class Tag {
                 return Rule.makeRules(value).get(0); //check
         }
         return null;
-    }
-
-    /**
-     * Checks if the Tag is a Recommendation.
-     *
-     * @return <code>true</code> if the Tag is a Recommendation.
-     */
-    public boolean isRecommendation() {
-        return type == TagType.RECOMMENDATION;
-    }
-
-    /**
-     * Checks if the Tag is a Fact.
-     *
-     * @return <code>true</code> if the Tag is a Fact
-     */
-    public boolean isFact() {
-        return type == TagType.FACT;
-    }
-
-    /**
-     * Checks if the Tag is a Rule.
-     *
-     * @return <code>true</code> if the Tag is a Rule
-     */
-    public boolean isRule() {
-        return type == TagType.RULE;
     }
 
     public void setConfidenceValue(double confidenceValue) {
@@ -104,10 +59,5 @@ public abstract class Tag {
         result = (int) (temp ^ (temp >>> 32));
         result = 31 * result + type.hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return value;
     }
 }
