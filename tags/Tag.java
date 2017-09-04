@@ -35,7 +35,7 @@ public abstract class Tag {
             case FACT:
                 return new Fact(value);
             case RULE:
-                return Rule.makeRules(value).get(0); //check
+                return new Rule(value);
         }
         return null;
     }

@@ -126,15 +126,13 @@ public class Rule extends Tag {
         IPredicate[] outputIPredicates = new IPredicate[tokens.size() - outputFactIndex - 1];
 
         for (int i = outputFactIndex + 1; i < tokens.size(); i++) {
-            for (int j = 0; j < outputIPredicates.length; j++) {
                 if (!tokens.get(i).contains("@")) {
-                    Fact IPredicate = new Fact(tokens.get(i));
-                    outputIPredicates[j] = IPredicate;
+                    Fact fact = new Fact(tokens.get(i));
+                    outputIPredicates[i - outputFactIndex - 1] = fact;
                 } else {
                     Recommendation rec = new Recommendation(tokens.get(i));
-                    outputIPredicates[j] = rec;
+                    outputIPredicates[i - outputFactIndex - 1] = rec;
                 }
-            }
         }
 
         List<Rule> ruleList = new ArrayList<>();

@@ -489,7 +489,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     }
 
     /**
-     * Tests the teach functionality (basic) of the ES.
+     * Tests the teach functionality (basic) & Rule generation with OR of the ES.
      */
 
     @Test
@@ -506,6 +506,12 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         for (String sentences : sampleSentences) {
             es.teach(sentences);
         }
+
+        List<Rule> multipleRules =
+                Rule.makeRules("eyes(multiple) wings(2) OR legs(8) diet(carnivorous) -> insect() @investigate()");
+        for (Rule rule : multipleRules) {
+            es.addRule(rule);
+        }
         Set<Rule> taughtSentences = es.getReadyRules();
         Set<Rule> expectedTaughtSentences = new HashSet<>();
 
@@ -515,13 +521,21 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Rule rule2 = new Rule(
                 new Fact[]{new Fact("attacked()")},
                 new IPredicate[]{new Recommendation("@retreat(quickly,carefully)")});
+        Rule rule3 = new Rule(
+                new Fact[]{new Fact("eyes(multiple)"), new Fact("wings(2)")},
+                new IPredicate[]{new Fact("insect()"), new Recommendation("@investigate()")});
+        Rule rule4 = new Rule(
+                new Fact[]{new Fact("legs(8)"), new Fact("diet(carnivorous)")},
+                new IPredicate[]{new Fact("insect()"), new Recommendation("@investigate()")});
 
-        expectedTaughtSentences.add(rule2);
         expectedTaughtSentences.add(rule1);
+        expectedTaughtSentences.add(rule2);
+        expectedTaughtSentences.add(rule3);
+        expectedTaughtSentences.add(rule4);
+
         Assert.assertEquals(taughtSentences, expectedTaughtSentences);
 
         System.out.println("[ES] Final taught rules" + taughtSentences);
-
     }
 
     /**
