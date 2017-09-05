@@ -51,7 +51,7 @@ public class ExpertSystem implements PrometheusLayer {
      * @param tag the Tag to be added
      * @return <code>true</code> if the Tag is successfully added
      */
-    public boolean addTag(Tag tag) {
+    private boolean addTag(Tag tag) {
         switch (tag.type) {
             case RULE:
                 return addRule((Rule) tag);
@@ -63,14 +63,20 @@ public class ExpertSystem implements PrometheusLayer {
         return false;
     }
 
-    public boolean addPredicate(IPredicate predicate) {
+    /**
+     * Add a Predicate to the ES. Will cast the tag to either a Rule, a Fact.
+     *
+     * @param predicate the Predicate to be added
+     */
+
+    private void addPredicate(IPredicate predicate) {
         switch (predicate.getType()) {
             case FACT:
-                return addFact((Fact) predicate);
+                addFact((Fact) predicate);
+                return;
             case RECOMMENDATION:
-                return addRecommendation((Recommendation) predicate);
+                addRecommendation((Recommendation) predicate);
         }
-        return false;
     }
 
     /**
@@ -79,12 +85,10 @@ public class ExpertSystem implements PrometheusLayer {
      * @param tags the Tags to be added
      * @return <code>true</code> if all the Tags are added successfully
      */
-    public boolean addTags(Set<Tag> tags) {
-        boolean allAdded = true;
+    public void addTags(Set<Tag> tags) {
         for (Tag t : tags) {
-            if (!addTag(t)) allAdded = false;
+            addTag(t);
         }
-        return allAdded;
     }
 
     /**
@@ -96,6 +100,12 @@ public class ExpertSystem implements PrometheusLayer {
     public boolean addFact(Fact fact) {
         return facts.add(fact);
     }
+
+    /**
+     * Removes a fact from the ES.
+     * @param fact the Fact to be removed
+     * @return <code>true</code> if the ES did not remove the specified Fact
+     */
 
     public boolean removeFact(Fact fact) {
         return facts.remove(fact);
@@ -159,10 +169,12 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Checks if a particular fact matches with any other fact in the ES
-     * @param inputFact
+     * If inputFact contains a variable argument, matching pair placed in pendingReplacementPairs
+     *
+     * @param inputFact fact contained in a Rule
      * @return true if (at least) two facts match
      */
-    public boolean factsContains(Fact inputFact) {
+    private boolean factsContains(Fact inputFact) {
         boolean result = false;
         for (Fact f : facts) {
             VariableReturn matchesResult = f.matches(inputFact);
@@ -178,8 +190,9 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Generates a rule from the facts present in the ES at the beginning of think() and the tags activated before quiescence
-     * @param inputFactSet facts in ES
-     * @param allActivatedPredicates activated predicates
+     * Adds generate rule to ES
+     * @param inputFactSet Set of Facts in ES
+     * @param allActivatedPredicates Set of activated Predicates
      */
     private void generateProvenRule(Set<Fact> inputFactSet, Set<IPredicate> allActivatedPredicates) {
         Set<IPredicate> outputPredicates = new HashSet<>();
@@ -189,16 +202,16 @@ public class ExpertSystem implements PrometheusLayer {
     }
 
     /**
-     * Replaces variable argument(s) within a tag with a String or Numeric Argument
+     * Replaces variable argument(s) within a Predicate with a String or Numeric Argument
      *
-     * @param tag the tag with arguments to replace
+     * @param predicate the Predicate that has arguments to replace
      */
-    private void replaceVariableArguments(IPredicate tag) {
+    private void replaceVariableArguments(IPredicate predicate) {
         int argumentIndex = 0;
 
-        for (Argument argument : tag.getArguments()) {
+        for (Argument argument : predicate.getArguments()) {
             if (pendingReplacementPairs.containsKey(argument.getName())) {
-                tag.getArguments().set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
+                predicate.getArguments().set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
             }
             argumentIndex++;
         }
@@ -206,14 +219,10 @@ public class ExpertSystem implements PrometheusLayer {
 
 
     /**
-     * Makes the ES think for a fixed number of cycles. The number of cycles represents how much effort is being put
-     * into thinking. Each cycle is a run-through of all the ready Rules, activating Rules if possible. Note that a Rule
-     * that is activated in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
-     * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
-     * quiescence.
-     *
-     * @return the activated Recommendations as a result of thinking
+     * {@code shouldGenerateRule} defaults to false
+     * @see #think(boolean)
      */
+
     public Set<Tag> think() {
         Set<IPredicate> allActivatedTags = new HashSet<>();
         Set<IPredicate> activatedTags;
@@ -230,14 +239,13 @@ public class ExpertSystem implements PrometheusLayer {
     }
 
     /**
-     * Makes the ES think for a fixed number of cycles. The number of cycles represents how much effort is being put
-     * into thinking. Each cycle is a run-through of all the ready Rules, activating Rules if possible. Note that a Rule
-     * that is activated in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
-     * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
-     * quiescence.
+     * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
+     * possible. Stops once the system reaches natural quiescence and generates a new rule.
      *
+     * @param shouldGenerateRule if true generates the new rule proven by a think cycle
      * @return the activated Recommendations as a result of thinking
      */
+
     public Set<Tag> think(boolean shouldGenerateRule) {
         Set<IPredicate> allActivatedTags = new HashSet<>();
         Set<IPredicate> activatedTags;
@@ -263,7 +271,7 @@ public class ExpertSystem implements PrometheusLayer {
      * into thinking. Each cycle is a run-through of all the ready Rules, activating Rules if possible. Note that a Rule
      * that is activated in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
      * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
-     * quiescence.
+     * quiescence. Generates a new rule.
      *
      * @param numberOfCycles the number of cycles to think for
      * @param shouldGenerateRule if true generates the new rule proven by a think cycle
@@ -293,8 +301,9 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Makes the ES think for a single cycle.
+     * Output predicates of activated rules are replaced if they contain variable arguments e.g. &x
      *
-     * @return the activated Tags as a result of thinking
+     * @return the activated Predicates as a result of thinking
      */
     private Set<IPredicate> thinkCycle() {
         Set<IPredicate> activatedPredicates = new HashSet<>();
@@ -325,8 +334,7 @@ public class ExpertSystem implements PrometheusLayer {
 
 
     /**
-     * Checks if two rules can be merged into a new rule
-     * i.e. rule 1 = A -> B, rule 2 = B -> C, rule 3 = A -> C
+     * Checks if two rules can be merged into a new rule & merges if possible
      * @param inputRule rule 1
      * @param outputRule rule 2
      * @return a merged rule (rule 3)
@@ -348,11 +356,12 @@ public class ExpertSystem implements PrometheusLayer {
     }
 
     /**
-     * Iterates over rule set, checks if new merged rules are valid, and repeatedly generates new merged rules from current set of new rules
-     * @param numberOfCycles how many cycles over the ruleset
+     * Iterates over rule set, checks if new merged rules are valid, and repeatedly generates new merged rules from current set of new rules.
+     * i.e. rule 1 = A -> B, rule 2 = B -> C, rule 3 = A -> C
+     * @param numberOfCycles how many cycles over the rule-set to attempt to merge
      * @return merged rules
      */
-    Set<Rule> ruleMerger(int numberOfCycles) {
+    private Set<Rule> ruleMerger(int numberOfCycles) {
         Set<Rule> mergedRules = new HashSet<>();
         Set<Rule> inputRules = new HashSet<>();
         inputRules.addAll(readyRules);
@@ -378,7 +387,7 @@ public class ExpertSystem implements PrometheusLayer {
      * @param numberOfCycles how many cycles over the ruleset
      */
     public void rest(int numberOfCycles) {
-        Set<Rule> newRules = ruleMerger(1);
+        Set<Rule> newRules = ruleMerger(numberOfCycles);
         for (Rule newRule : newRules) {
             addRule(newRule);
         }
@@ -389,6 +398,7 @@ public class ExpertSystem implements PrometheusLayer {
      * NB: Sentences must contain one token from {"if", "when", "while", "first"}, and one token from {"then", "next", "do"},
      *  to denote input tags and output tags respectively
      *  e.g. "If Human(near) Then Move(steps=10)"
+     *
      * @param sentence that contains input and output delimiters
      */
 
@@ -420,7 +430,7 @@ public class ExpertSystem implements PrometheusLayer {
         if (inputIndex < outputIndex) {
             String[] inputFacts = tokenList.subList(inputIndex+1, outputIndex).toArray(new String[0]);
             String[] outputFacts = tokenList.subList(outputIndex + 1, tokenList.size()).toArray(new String[0]);
-            Rule newRule = new Rule(inputFacts, outputFacts, Tag.TagType.RULE);
+            Rule newRule = new Rule(inputFacts, outputFacts);
             addRule(newRule);
 
         }
@@ -428,7 +438,7 @@ public class ExpertSystem implements PrometheusLayer {
         else if (inputIndex > outputIndex) {
             String[] inputFacts = tokenList.subList(inputIndex+1, tokenList.size()).toArray(new String[0]);
             String[] outputFacts = tokenList.subList(outputIndex + 1, inputIndex).toArray(new String[0]);
-            Rule newRule = new Rule(inputFacts, outputFacts, Tag.TagType.RULE);
+            Rule newRule = new Rule(inputFacts, outputFacts);
             addRule(newRule);
         }
     }

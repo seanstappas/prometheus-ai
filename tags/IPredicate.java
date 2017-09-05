@@ -2,6 +2,10 @@ package tags;
 
 import java.util.List;
 
+/**
+ * Interface for Predicates (Implemented by Fact & Recommendation)
+ */
+
 public interface IPredicate {
     @Override
     boolean equals(Object o);

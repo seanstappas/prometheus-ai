@@ -16,14 +16,6 @@ public class Fact extends Tag implements IPredicate {
     private String predicateName;
     private List<Argument> arguments;
 
-    public Fact() {
-        this.type = TagType.FACT;
-    }
-
-    public Fact(String value) {
-        this(value,1.0);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,6 +37,15 @@ public class Fact extends Tag implements IPredicate {
         return result;
     }
 
+    /**
+     * Constructs a Fact object from a string
+     * NB: There should be no space characters between the arguments in a string i.e. "P(ARG1,ARG2,ARG3...)"
+     * Arguments are delimited by commas within parenthesis.
+     *
+     * @param value           String input
+     * @param confidenceValue double in range [0,1] i.e. 0.n representing n0% confidence
+     */
+
     public Fact(String value, double confidenceValue) {
 
         String[] tokens = value.split("[(),]");
@@ -55,6 +56,22 @@ public class Fact extends Tag implements IPredicate {
         this.confidenceValue = confidenceValue;
     }
 
+    /**
+     * {@code confidenceValue} defaults to 1.0
+     *
+     * @see #Fact(String, double)
+     */
+
+    public Fact(String value) {
+        this(value, 1.0);
+    }
+
+    /**
+     * Prints predicate name, arguments & confidence value of Fact
+     * e.g. "[P(ARG1, ARG2) 100%]"
+     * @return string value of Fact
+     */
+
     @Override
     public String toString() {
         return "[" + predicateName + '(' + arguments + ") " + confidenceValue*100 +"% ]";
@@ -63,8 +80,6 @@ public class Fact extends Tag implements IPredicate {
     /**
      * Parses a raw string into a list of string tokens that represent each argument
      * <p>
-     * Facts have zero, or more arguments [e.g. "P()", "P(ARG1)", "P(ARG1,ARG2,..., ARGN")]
-     * NB: There should be no space characters between the arguments in a string
      *
      * @param tokens string input
      * @return list of string arguments
@@ -81,7 +96,7 @@ public class Fact extends Tag implements IPredicate {
 
     /**
      * Calls the appropriate Argument constructor on a string token
-     *
+     * If argument is numeric -> NumericArgument; If contains [?*&] -> VariableArgument; Else -> StringArgument
      * @param argString String token
      * @return A single argument
      */
@@ -111,10 +126,9 @@ public class Fact extends Tag implements IPredicate {
 
     /**
      * Compares two facts to see if they are compatible
-     * If matching occurs on a variable argument, return object includes a tuple (see VariableReturn class)
+     * If matching occurs on a variable argument, return object includes a list of tuple[s] (see VariableReturn class)
      *
-     *
-     * @param inputFact fact being compared
+     * @param inputFact fact contained in a Rule
      * @return true if facts are 'matched' (notice not necessarily equal)
      */
 
@@ -127,8 +141,7 @@ public class Fact extends Tag implements IPredicate {
         }
 
         if (inputFact.arguments.size() > this.arguments.size()) {
-            int difference = inputFact.arguments.size() - arguments.size();
-            for (int i = difference; i < inputFact.arguments.size(); i++) {
+            for (int i = this.arguments.size(); i < inputFact.arguments.size(); i++) {
                 if (!inputFact.arguments.get(i).getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
                     result.doesMatch = false;
                     return result;
@@ -139,10 +152,10 @@ public class Fact extends Tag implements IPredicate {
         Iterator iterFact = this.arguments.iterator();
         Iterator iterInputFact = inputFact.arguments.iterator();
 
-        while (iterInputFact.hasNext()) {
+        while (iterFact.hasNext()) {
             Argument argFact = (Argument) iterFact.next();
             Argument argInputFact = (Argument) iterInputFact.next();
-            if (argFact.symbol.equals(Argument.ArgTypes.MATCHALL) || argInputFact.symbol.equals(Argument.ArgTypes.MATCHALL)) { //param
+            if (argFact.symbol.equals(Argument.ArgTypes.MATCHALL) || argInputFact.symbol.equals(Argument.ArgTypes.MATCHALL)) {
                 result.doesMatch = true;
                 return result;
             }
@@ -155,8 +168,8 @@ public class Fact extends Tag implements IPredicate {
                 return result;
             }
         }
-        if (iterFact.hasNext()) {
-            Argument argFact = (Argument) iterFact.next();
+        if (iterInputFact.hasNext()) {
+            Argument argFact = (Argument) iterInputFact.next();
             result.doesMatch = (argFact.symbol.equals(Argument.ArgTypes.MATCHALL));
             return result;
         }
@@ -164,5 +177,4 @@ public class Fact extends Tag implements IPredicate {
         return result;
 
     }
-
 }

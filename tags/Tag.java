@@ -1,7 +1,8 @@
 package tags;
 
 /**
- * Tag to be used throughout the Prometheus system.
+ * Tag to be used throughout the Prometheus system. Possess a confidence value.
+ *
  */
 public abstract class Tag {
     double confidenceValue;
@@ -17,7 +18,7 @@ public abstract class Tag {
         RECOMMENDATION
     }
 
-    public double getConfidenceValue() {
+    double getConfidenceValue() {
         return confidenceValue;
     }
 
@@ -25,28 +26,8 @@ public abstract class Tag {
         this.confidenceValue = confidenceValue;
     }
 
-
     public TagType getType() {
         return type;
-    }
-
-    /**
-     * Creates a Tag from a String.
-     *
-     * @param value the String value of the Tag
-     * @param type  the Type of the Tag
-     * @return the created Tag
-     */
-    public static Tag createTagFromString(String value, TagType type) {
-        switch (type) {
-            case RECOMMENDATION:
-                return new Recommendation(value);
-            case FACT:
-                return new Fact(value);
-            case RULE:
-                return new Rule(value);
-        }
-        return null;
     }
 
     @Override

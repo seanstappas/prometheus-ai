@@ -3,8 +3,8 @@ package tags;
 import java.util.*;
 
 /**
- * Represents a rule in the expert system. Rules are many-to-many structures with Facts as inputs and Facts and
- * Recommendations as outputs. They only activate when all the input Tags are active.
+ * Represents a rule in the expert system. Rules are many-to-many structures with Facts as inputs and Predicates (Facts and
+ * Recommendations) as outputs. They only activate when all the input Facts are active.
  */
 public class Rule extends Tag {
     private Set<Fact> inputFacts;
@@ -18,19 +18,11 @@ public class Rule extends Tag {
         return outputPredicates;
     }
 
-    public double getConfidenceValue() {
-        return confidenceValue;
-    }
-
-    public void setConfidenceValue(double confidenceValue) {
-        this.confidenceValue = confidenceValue;
-    }
-
     /**
-     * Confidence value of output tags set to the product of the confidence value of input tags
+     * Sets confidence value of output tags to the product of the confidence value of input tags.
      */
 
-    public void setoutputFactsConfidenceValue() {
+    private void setoutputFactsConfidenceValue() {
         double value = 1.0;
         for (Fact fact : this.inputFacts) {
             value = value * fact.getConfidenceValue();
@@ -41,27 +33,46 @@ public class Rule extends Tag {
     }
 
     /**
-     * Creates a Rule.
-     *
-     * @param inputFacts condition facts of the rule
-     * @param outputIPredicate  outputFacts tag of the rule
+     * {@code confidenceValue} defaults to 1.0
+     * @see #Rule(Set, Set, double)
      */
-    public Rule(Fact[] inputFacts, IPredicate[] outputIPredicate) {
-        this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputIPredicate)), 1.0);
+
+    public Rule(Fact[] inputFacts, IPredicate[] outputPredicate) {
+        this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputPredicate)), 1.0);
     }
+
+    /**
+     * {@code confidenceValue} defaults to 1.0
+     *
+     * @see #Rule(Set, Set, double)
+     */
 
     public Rule(Set<Fact> inputFacts, Set<IPredicate> outputPredicate) {
         this(inputFacts, outputPredicate, 1.0);
     }
 
-    public Rule(Set<Fact> inputFacts, Set<IPredicate> outputIPredicates, double confidenceValue) {
+    /**
+     * Creates a Rule from a set of input Facts and output Predicates.
+     * Confidence value of output tags set to the product of the confidence value of input tags.
+     *
+     * @param inputFacts       The condition facts of the rule.
+     * @param outputPredicates The output predicates of the rule.
+     * @param confidenceValue  The confidence value of the Rule.
+     */
+
+    private Rule(Set<Fact> inputFacts, Set<IPredicate> outputPredicates, double confidenceValue) {
         this.inputFacts = new HashSet<>(inputFacts);
-        this.outputPredicates = new HashSet<>(outputIPredicates);
+        this.outputPredicates = new HashSet<>(outputPredicates);
         this.type = TagType.RULE;
         this.confidenceValue = confidenceValue;
 
         setoutputFactsConfidenceValue();
     }
+
+    /**
+     * {@code confidenceValue} defaults to 1.0
+     * @see #Rule(Set, Set, double)
+     */
 
     public Rule() {
         this.inputFacts = new HashSet<>();
@@ -71,19 +82,18 @@ public class Rule extends Tag {
     }
 
     /**
-     * Creates a Rule from Strings, assuming all Tags (input and output) are of the provided TagType.
-     *
-     * @param inputFacts the input Facts, in String form
-     * @param outputFacts the output Tags, in String form
-     * @param type       the Type of output Tags
+     * Creates a Rule from string Arrays
+     * @param inputFacts The input Facts, in String form.
+     * @param outputPredicates The output Tags, in String form.
+     * @param confidenceValue The confidence value of the Rule.
      */
-    public Rule(String[] inputFacts, String[] outputFacts, TagType type, double confidenceValue) {
+    private Rule(String[] inputFacts, String[] outputPredicates, double confidenceValue) {
         this.inputFacts = new HashSet<>();
         this.outputPredicates = new HashSet<>();
         for (String inputFact : inputFacts) {
             this.inputFacts.add(new Fact(inputFact));
         }
-        for (String outputPredicate : outputFacts) {
+        for (String outputPredicate : outputPredicates) {
             if (!outputPredicate.contains("@")) {
                 Fact p = new Fact(outputPredicate);
                 this.outputPredicates.add(p);
@@ -96,8 +106,14 @@ public class Rule extends Tag {
         this.confidenceValue = confidenceValue;
     }
 
-    public Rule(String[] inputFacts, String[] outputFacts, TagType type) {
-        this(inputFacts, outputFacts, type, 1.0);
+    /**
+     * {@code confidenceValue} defaults to 1.0
+     *
+     * @see #Rule(String[], String[], double)
+     */
+
+    public Rule(String[] inputFacts, String[] outputFacts) {
+        this(inputFacts, outputFacts, 1.0);
     }
 
     /**
@@ -115,8 +131,8 @@ public class Rule extends Tag {
      *      in this case, two rules are returned "P1(ARG1,ARG2) P2(ARG3) -> @P3(ARG4,ARG5,ARG6)" and
      *          "P3(ARG4,ARG5) P4(ARG6,ARG7) -> @P3(ARG4,ARG5,ARG6)"
      *
-     * @param value rule as string
-     * @return list of rules
+     * @param value the Rule as string.
+     * @return List of Rules.
      */
 
     public static List<Rule> makeRules(String value) {
@@ -128,10 +144,10 @@ public class Rule extends Tag {
         for (int i = outputFactIndex + 1; i < tokens.size(); i++) {
                 if (!tokens.get(i).contains("@")) {
                     Fact fact = new Fact(tokens.get(i));
-                    outputIPredicates[i - outputFactIndex - 1] = fact;
+                    outputIPredicates[i - outputFactIndex-1] = fact;
                 } else {
                     Recommendation rec = new Recommendation(tokens.get(i));
-                    outputIPredicates[i - outputFactIndex - 1] = rec;
+                    outputIPredicates[i - outputFactIndex-1] = rec;
                 }
         }
 
@@ -157,8 +173,8 @@ public class Rule extends Tag {
 
     /**
      * Create a single rule from a string
-     *
-     * @param string
+     * @see #makeRules(String)
+     * @param string the Rule as a string.
      */
 
     public Rule(String string) {
@@ -186,6 +202,7 @@ public class Rule extends Tag {
         this.inputFacts = new HashSet<>(Arrays.asList(inputFacts));
         this.outputPredicates = new HashSet<>(Arrays.asList(outputPredicate));
         this.type = TagType.RULE;
+        this.confidenceValue = 1.0;
     }
 
     @Override
@@ -208,6 +225,12 @@ public class Rule extends Tag {
         return result;
     }
 
+
+    /**
+     * Prints Rule as inputFacts, outputPredicates, and confidenceValue
+     * i.e. "{[[P1() 100%] [P(2) 100%]] -> [@P4 100%] 100%}"
+     * @return Rule as string
+     */
     @Override
     public String toString() {
         return "{ " + inputFacts + "=>" + outputPredicates + confidenceValue * 100 + "% }";

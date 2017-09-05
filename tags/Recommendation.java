@@ -6,6 +6,8 @@ import java.util.List;
 /**
  * Represents a recommendation in the Expert System. Recommendations are for specific actions to be taken (walk, stop,
  * etc.).
+ *
+ * Recommendations are composed of a predicate name and a set of arguments: @P(ARG1, ARG2, ...)
  */
 public class Recommendation extends Tag implements IPredicate {
     /**
@@ -16,15 +18,6 @@ public class Recommendation extends Tag implements IPredicate {
 
     private String predicateName;
     private List<Argument> arguments;
-
-    public Recommendation() {
-        this.type = TagType.RECOMMENDATION;
-    }
-
-    public Recommendation(String value) {
-
-        this(value, 1.0);
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -47,6 +40,16 @@ public class Recommendation extends Tag implements IPredicate {
         return result;
     }
 
+    /**
+     * Constructs a Recommendation object from a string
+     * NB: There should be no space characters between the arguments in a string i.e. "@P(ARG1,ARG2,ARG3...)"
+     * Recommendation strings begin with "@" character.
+     * Arguments are delimited by commas within parenthesis.
+     *
+     * @param value           String input
+     * @param confidenceValue double in range [0,1] i.e. 0.n representing n0% confidence
+     */
+
     public Recommendation(String value, double confidenceValue) {
 
         String[] tokens = value.split("[(),]");
@@ -57,6 +60,22 @@ public class Recommendation extends Tag implements IPredicate {
         this.confidenceValue = confidenceValue;
     }
 
+    /**
+     * {@code confidenceValue} defaults to 1.0
+     *
+     * @see #Recommendation(String, double)
+     */
+
+    public Recommendation(String value) {
+        this(value, 1.0);
+    }
+
+    /**
+     * Prints predicate name, arguments & confidence value of recommendation
+     * e.g. "[@P(ARG1, ARG2) 100%]"
+     * @return string value of Recommendation
+     */
+
     @Override
     public String toString() {
         return "[@" + predicateName + '(' + arguments + ") " + confidenceValue * 100 + "% ]";
@@ -64,10 +83,6 @@ public class Recommendation extends Tag implements IPredicate {
 
     /**
      * Parses a raw string into a list of string tokens that represent each argument
-     * <p>
-     * Facts have zero, or more arguments [e.g. "P()", "P(ARG1)", "P(ARG1,ARG2,..., ARGN")]
-     * NB: There should be no space characters between the arguments in a string
-     *
      * @param tokens string input
      * @return list of string arguments
      */
@@ -83,6 +98,7 @@ public class Recommendation extends Tag implements IPredicate {
 
     /**
      * Calls the appropriate Argument constructor on a string token
+     * If argument is numeric -> NumericArgument; If contains [?*&] -> VariableArgument; Else -> StringArgument
      *
      * @param argString String token
      * @return A single argument

@@ -3,11 +3,6 @@ package knn;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import tags.*;
 
 public class knnTest {
 	public static void main(String[] args){	

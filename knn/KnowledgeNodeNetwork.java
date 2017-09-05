@@ -1,12 +1,14 @@
 package knn;
 
+import tags.Fact;
+import tags.Recommendation;
+import tags.Rule;
+import tags.Tag;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-
-import tags.*;
 
 public class KnowledgeNodeNetwork {
 	private HashMap<Tag, KnowledgeNode> mapKN;
@@ -535,9 +537,9 @@ public class KnowledgeNodeNetwork {
     				}    				
     			}
     		}
-    		this.activeTags.putAll(pendingFacts);;
-    	}while(pendingFacts.isEmpty() == false);
-    }
+			this.activeTags.putAll(pendingFacts);
+		} while (pendingFacts.isEmpty() == false);
+	}
     
     /**
      * Forward searching with ply as number of depth 

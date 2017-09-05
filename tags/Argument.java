@@ -1,16 +1,7 @@
 package tags;
 
 /**
- * Arguments are composed of a name and symbol (symbol types outlined below)
- * <p>
- * STRING: argument is made up of a string (e.g. tall)
- * EQ: argument is a name equal to an integer (e.g. height = 10)
- * GT: argument is a name greater than an integer (e.g. height > 10)
- * LT: argument is a name less that an integer (e.g. height < 10)
- * MATCHONE: argument matches on a corresponding argument in a fact with same predicate name (see BASH '?')
- * VAR: argument is a variable integer (e.g. height = &x)
- * MATCHALL: argument matches on >0 arguments in a fact with same predicate name (see BASH '*')
- * INT: argument is made up of an integer value (e.g. 10)
+ * Arguments are composed of a name and symbol
  */
 
 public class Argument {
@@ -18,11 +9,19 @@ public class Argument {
     String name;
     ArgTypes symbol;
 
+    /**
+     * STRING: argument is made up of a string (e.g. tall)
+     * EQ: argument is a name equal to an integer (e.g. height = 10)
+     * GT: argument is a name greater than an integer (e.g. height > 10)
+     * LT: argument is a name less that an integer (e.g. height < 10)
+     * MATCHONE: argument matches on a corresponding argument in a fact with same predicate name (see BASH '?')
+     * VAR: argument is a variable integer (e.g. height = &x)
+     * MATCHALL: argument matches on >0 arguments in a fact with same predicate name (see BASH '*')
+     * INT: argument is made up of an integer value (e.g. 10)
+     */
+
     public enum ArgTypes {
         STRING, EQ, GT, LT, MATCHONE, VAR, MATCHALL, INT
-    }
-
-    public Argument() {
     }
 
     public String getName() {
@@ -41,7 +40,7 @@ public class Argument {
      *
      */
 
-    public Argument(String[] tokens) {
+    Argument(String[] tokens) {
         if (tokens.length > 1) {
             this.name = tokens[0];
         } else {
@@ -52,7 +51,7 @@ public class Argument {
     /**
      * Compares two arguments, calling appropriate overloaded method
      *
-     * @param inputFact
+     * @param inputFact argument from rule-set
      * @return true if two arguments match
      */
 
@@ -116,6 +115,8 @@ public class Argument {
 
 /**
  * Subclass for arguments that have integer values
+ * If argument has a negative value, isNeg == true.
+ *  i.e. "ARG != 5" -> this.value==5; this.isNeg==true
  */
 
 class NumericArgument extends Argument {
@@ -123,18 +124,16 @@ class NumericArgument extends Argument {
     private boolean isNeg;
     private int value;
 
-
-    public boolean isNeg() {
-        return isNeg;
+    private boolean isNeg() {
+        return !isNeg;
     }
 
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
+    /**
+     * Compares two numeric arguments to see if they match
+     *
+     * @param that numericArgument to compare with this
+     * @return true if matching
+     */
 
     boolean matches(NumericArgument that) {
         if (!this.name.equals(that.name)) {
@@ -180,6 +179,14 @@ class NumericArgument extends Argument {
         }
     }
 
+    /**
+     * Constructor of numeric arguments
+     * Arguments must be a string that is purely numeric e.g. "5
+     *  or composed of a name delimited by ["<",">,"="]
+     * @param string argument as a string
+     * @param tokens argument as tokens, split on mathematic symbols
+     */
+
     NumericArgument(String string, String[] tokens) {
 
         super(tokens);
@@ -199,11 +206,20 @@ class NumericArgument extends Argument {
 
     }
 
+    /**
+     * Prints name (when appropriate), symbol and value
+     * @return the Argument as a String.
+     */
+
     @Override
     public String toString() {
         switch (symbol) {
             case INT:
-                return "" + value;
+                if (!isNeg()) {
+                    return "" + value;
+                } else {
+                    return "!=" + value;
+                }
             case EQ:
                 if (!isNeg()) {
                     return name + " = " + value;
@@ -244,6 +260,8 @@ class NumericArgument extends Argument {
 
 /**
  * Subclass for arguments that have string values
+ *  * If argument has a negative value, isNeg == true.
+ *  i.e. "ARG != big" -> this.value.equals("big"; this.isNeg==true
  */
 
 class StringArgument extends Argument {
@@ -251,13 +269,15 @@ class StringArgument extends Argument {
     private boolean isNeg;
     private String value;
 
-    public boolean isNeg() {
-        return isNeg;
+    private boolean isNeg() {
+        return !isNeg;
     }
 
-    public String getValue() {
-        return value;
-    }
+    /**
+     * Compares two string arguments to see if they match
+     * @param that stringArgument to compare with this
+     * @return true if matching
+     */
 
     boolean matches(StringArgument that) {
         if (!this.name.equals(that.name)) {
@@ -273,6 +293,13 @@ class StringArgument extends Argument {
         }
     }
 
+    /**
+     * Constructor of string Arguments
+     * Arguments must be a string made up of alpha characters, can contain ["=", "!"] characters
+     * @param string argument as a string
+     * @param tokens argument as tokens, split on mathematical symbols
+     */
+
     StringArgument(String string, String[] tokens) {
 
         super(tokens);
@@ -282,10 +309,19 @@ class StringArgument extends Argument {
         symbol = ArgTypes.STRING;
     }
 
+    /**
+     * Prints name (when appropriate), symbol and value
+     * @return the Argument as a String.
+     */
+
     @Override
     public String toString() {
         if (this.name.equals("")) {
-            return "" + value;
+            if (!isNeg()) {
+                return "" + value;
+            } else {
+                return "!=" + value;
+            }
         } else {
             if (!isNeg()) {
                 return name + " = " + value;
@@ -317,10 +353,17 @@ class StringArgument extends Argument {
 }
 
 /**
- * Subclass for arguments that have variable values
+ * Subclass for arguments that have variable values i.e. "?", "*" or "&x"
  */
 
 class VariableArgument extends Argument {
+
+    /**
+     * Constructor of variable Arguments
+     * Arguments must be a string made up of alpha characters, as well as one of ["*", "?", [&] characters
+     * @param string argument as a string
+     * @param tokens argument as tokens, split on mathematical symbols
+     */
 
     VariableArgument(String string, String[] tokens) {
 
@@ -338,6 +381,11 @@ class VariableArgument extends Argument {
         }
     }
 
+    /**
+     * Prints name (when appropriate), and type
+     * @return Variable argument as string.
+     */
+
     @Override
     public String toString() {
         switch (symbol) {
@@ -351,7 +399,5 @@ class VariableArgument extends Argument {
                 return super.toString();
         }
     }
-
-
 }
 

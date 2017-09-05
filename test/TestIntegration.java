@@ -43,7 +43,6 @@ public class TestIntegration { // TODO: test with Google's GSON libary
     /**
      * Test the forward Search of the Knowledge Node network
      *
-     * @return
      */
     public HashMap<Tag, Double> forwardSearchTest() {
         System.out.println("***Forward Search Test***");
@@ -261,7 +260,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         es.reset();
         Fact[] testFacts = {
                 new Fact("Aardvark(brown,strange,speed=slow", 0.9),
-                new Fact("Bat(black,speed=10)", 0.6)
+                new Fact("Bat(black,speed=10", 0.6)
         };
         Recommendation recX = new Recommendation("Run(north,quickly,speed!=slow)", 0.2);
         Recommendation recY = new Recommendation("Hide(safelocation,manner=stealth)", 0.8);
@@ -272,7 +271,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         Fact[] outputPredicates3 = {new Fact("Frog(colour=green,slimy,sound=ribbit)", 0.8)};
         Fact[] outputPredicates4 = {new Fact("Hog(&x,size=huge,&y,big)", 0.5)};
         Rule unactivatedRule = new Rule(new Fact[]{new Fact("Goose(loud,nationality=canadian,wingspan=4)", 0.5), new Fact("Aardvark(brown,?,speed=slow)", 0.8)}, testFacts);
-        Rule rule1 = new Rule(new Fact[]{new Fact("Aardvark(brown,strange,?)", 0.2), new Fact("Bat(black,speed>9)", 0.7)}, outputPredicates1);
+        Rule rule1 = new Rule(new Fact[]{new Fact("Aardvark(brown,strange,?)", 0.2), new Fact("Bat(black,speed>9,*)", 0.7)}, outputPredicates1);
         Rule rule2 = new Rule(new Fact[]{new Fact("Dog(&x,breed=pug,age=1)", 0.7), new Fact("Bat(*)", 1.0)}, outputPredicates2);
         Rule rule3 = new Rule(new Fact[]{new Fact("Dog(friendly,breed=pug,age=1)", 0.9), new Fact("Elephant(friendly,size=big,intelligent)", 0.8)}, outputPredicates3);
         Rule rule4 = new Rule(new Fact[]{new Fact("Frog(&x,slimy,&y)", 0.6), new Fact("Elephant(*)", 0.7)}, outputPredicates4);
@@ -343,6 +342,115 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         expectedReadyRules.add(unactivatedRule);
         Assert.assertEquals(expectedReadyRules, readyRules);
         System.out.println("[ES] Final ready rules: " + readyRules);
+
+        Set<Rule> activeRules = es.getActiveRules();
+        Set<Rule> expectedActiveRules = new HashSet<>();
+        expectedActiveRules.add(rule1);
+        expectedActiveRules.add(rule2);
+        expectedActiveRules.add(rule3);
+        expectedActiveRules.add(rule4);
+        expectedActiveRules.add(rule5);
+        Assert.assertEquals(expectedActiveRules, activeRules);
+        System.out.println("[ES] Final active rules: " + activeRules);
+    }
+
+    @Test
+    public void testESCycles() {
+        System.out.println();
+        System.out.println("testESCycles");
+        es.reset();
+        Fact[] testFacts = {
+                new Fact("Aardvark(brown,strange,speed=slow"),
+                new Fact("Bat(black,speed=10)")
+        };
+        Recommendation recX = new Recommendation("Run(north,quickly,speed!=slow)");
+        Recommendation recY = new Recommendation("Hide(safelocation,manner=stealth)");
+        Recommendation recZ = new Recommendation("Fight(aggressive)");
+        Recommendation[] testRecommendations = {recX, recY};
+        Fact[] outputPredicates1 = {new Fact("Dog(friendly,breed=pug,age<2)")};
+        Fact[] outputPredicates2 = {new Fact("Elephant(&x,size=big,intelligent)")};
+        Fact[] outputPredicates3 = {new Fact("Frog(colour=green,slimy,sound=ribbit)")};
+        Fact[] outputPredicates4 = {new Fact("Hog(&x,size=huge,&y,big)")};
+        Fact outputFact = new Fact("Iguana(!big)");
+        Rule unactivatedRule = new Rule(new Fact[]{new Fact("Goose(loud,nationality=canadian,wingspan=4)"), new Fact("Aardvark(brown,?,speed=slow)")}, outputPredicates4);
+        Rule rule1 = new Rule(new Fact[]{new Fact("Aardvark(brown,strange,?)"), new Fact("Bat(black,speed>9)")}, outputPredicates1);
+        Rule rule2 = new Rule(new Fact[]{new Fact("Dog(&x,breed=pug,age=1)"), new Fact("Bat(*)")}, outputPredicates2);
+        Rule rule3 = new Rule(new Fact[]{new Fact("Dog(friendly,breed=pug,age=1)"), new Fact("Elephant(friendly,size=big,intelligent)")}, outputPredicates3);
+        Rule rule4 = new Rule(new Fact[]{new Fact("Frog(&x,slimy,&y)"), new Fact("Elephant(*)")}, outputPredicates4);
+        Rule rule5 = new Rule(new Fact[]{new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")}, new IPredicate[]{recZ, outputFact});
+        Rule rule6 = new Rule(new Fact[]{new Fact("Hog(*)"), new Fact("Iguana(small)")}, new IPredicate[]{recY});
+        Rule[] testRules = {
+                rule1,
+                rule2,
+                rule3,
+                rule5,
+                unactivatedRule,
+                rule4,
+                rule6
+        };
+
+        for (Fact fact : testFacts) {
+            es.addFact(fact);
+        }
+        for (Rule rule : testRules) {
+            es.addRule(rule);
+        }
+        for (Recommendation recommendation : testRecommendations) {
+            es.addRecommendation(recommendation);
+        }
+
+        Set<Fact> initialFacts = es.getFacts();
+        Set<Fact> expectedInitialFacts = new HashSet<>();
+        expectedInitialFacts.addAll(Arrays.asList(testFacts));
+        Assert.assertEquals(initialFacts, expectedInitialFacts);
+        System.out.println("[ES] Initial facts: " + initialFacts);
+
+        Set<Recommendation> initialRecommendations = es.getRecommendations();
+        Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
+        expectedInitialRecommendations.addAll(Arrays.asList(testRecommendations));
+        Assert.assertEquals(initialRecommendations, expectedInitialRecommendations);
+        System.out.println("[ES] Initial recommendations: " + initialRecommendations);
+
+        Set<Rule> initialRules = es.getReadyRules();
+        Set<Rule> expectedInitialRules = new HashSet<>();
+        expectedInitialRules.addAll(Arrays.asList(testRules));
+        Assert.assertEquals(initialRules, expectedInitialRules);
+        System.out.println("[ES] Initial rules: " + initialRules);
+
+        Set<Tag> activatedRecommendations = es.think(5, false);
+        Set<Tag> expectedActivatedRecommendations = new HashSet<>();
+        expectedActivatedRecommendations.add(recZ);
+        Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendations);
+        System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
+
+        Set<Fact> facts = es.getFacts();
+        Set<Fact> expectedFacts = new HashSet<>();
+        expectedFacts.addAll(Arrays.asList(testFacts));
+        expectedFacts.addAll(Arrays.asList(outputPredicates1));
+        expectedFacts.addAll(Arrays.asList(outputPredicates2));
+        expectedFacts.addAll(Arrays.asList(outputPredicates3));
+        expectedFacts.addAll(Arrays.asList(outputPredicates4));
+        expectedFacts.add(outputFact);
+        Assert.assertEquals(facts, expectedFacts);
+        System.out.println("[ES] Final facts: " + facts);
+
+        Set<Recommendation> recommendations = es.getRecommendations();
+        Set<Recommendation> expectedRecommendations = new HashSet<>();
+        expectedRecommendations.add(recX);
+        expectedRecommendations.add(recY);
+        expectedRecommendations.add(recZ);
+        Assert.assertEquals(recommendations, expectedRecommendations);
+        System.out.println("[ES] Final recommendations: " + recommendations);
+
+
+        Set<Rule> readyRules = es.getReadyRules();
+
+        Set<Rule> expectedReadyRules = new HashSet<>();
+        expectedReadyRules.add(unactivatedRule);
+        expectedReadyRules.add(rule6);
+        Assert.assertEquals(expectedReadyRules, readyRules);
+        System.out.println("[ES] Final ready rules: " + readyRules);
+
 
         Set<Rule> activeRules = es.getActiveRules();
         Set<Rule> expectedActiveRules = new HashSet<>();
@@ -501,6 +609,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         String[] sampleSentences = {
                 "If human(near) then @move(10)",
                 "Do @retreat(quickly,carefully) when attacked()",
+                "When battery(low) distance(!close) do @lowpowermode() battery(conservation)"
         };
 
         for (String sentences : sampleSentences) {
@@ -528,10 +637,13 @@ public class TestIntegration { // TODO: test with Google's GSON libary
                 new Fact[]{new Fact("legs(8)"), new Fact("diet(carnivorous)")},
                 new IPredicate[]{new Fact("insect()"), new Recommendation("@investigate()")});
 
+        Rule rule5 = new Rule("battery(low) distance(!close) -> @lowpowermode() battery(conservation)");
+
         expectedTaughtSentences.add(rule1);
         expectedTaughtSentences.add(rule2);
         expectedTaughtSentences.add(rule3);
         expectedTaughtSentences.add(rule4);
+        expectedTaughtSentences.add(rule5);
 
         Assert.assertEquals(taughtSentences, expectedTaughtSentences);
 

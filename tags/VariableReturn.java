@@ -5,7 +5,8 @@ import java.util.HashMap;
 /**
  * Object returned by matches methods for facts in ES
  * If two facts match, doesMatch == true
- *  `pairs` specifies a variable argument that may be replaced; k: name of argument to replace, v: argument to replace it with
+ *  `pairs` specifies a variable argument that may be replaced:
+ *      k: name of argument to replace, v: argument to replace it with
  */
 
 public class VariableReturn {
