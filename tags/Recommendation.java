@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Represents a recommendation in the Expert System. Recommendations are for specific actions to be taken (walk, stop,
  * etc.).
- *
+ *<p>
  * Recommendations are composed of a predicate name and a set of arguments: @P(ARG1, ARG2, ...)
  */
 public class Recommendation extends Tag implements IPredicate {
@@ -42,6 +42,7 @@ public class Recommendation extends Tag implements IPredicate {
 
     /**
      * Constructs a Recommendation object from a string
+     * <p>
      * NB: There should be no space characters between the arguments in a string i.e. "@P(ARG1,ARG2,ARG3...)"
      * Recommendation strings begin with "@" character.
      * Arguments are delimited by commas within parenthesis.
@@ -71,7 +72,8 @@ public class Recommendation extends Tag implements IPredicate {
     }
 
     /**
-     * Prints predicate name, arguments & confidence value of recommendation
+     * Prints predicate name, arguments and confidence value of recommendation
+     * <p>
      * e.g. "[@P(ARG1, ARG2) 100%]"
      * @return string value of Recommendation
      */
@@ -98,6 +100,7 @@ public class Recommendation extends Tag implements IPredicate {
 
     /**
      * Calls the appropriate Argument constructor on a string token
+     * <p>
      * If argument is numeric -> NumericArgument; If contains [?*&] -> VariableArgument; Else -> StringArgument
      *
      * @param argString String token

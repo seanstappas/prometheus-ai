@@ -50,6 +50,7 @@ public class ExpertSystem implements PrometheusLayer {
      *
      * @param tag the Tag to be added
      * @return <code>true</code> if the Tag is successfully added
+     * @deprecated
      */
     private boolean addTag(Tag tag) {
         switch (tag.type) {
@@ -83,7 +84,7 @@ public class ExpertSystem implements PrometheusLayer {
      * Adds multiple Tags to the ES.
      *
      * @param tags the Tags to be added
-     * @return <code>true</code> if all the Tags are added successfully
+     * @deprecated
      */
     public void addTags(Set<Tag> tags) {
         for (Tag t : tags) {
@@ -190,7 +191,9 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Generates a rule from the facts present in the ES at the beginning of think() and the tags activated before quiescence
+     * <p>
      * Adds generate rule to ES
+     *
      * @param inputFactSet Set of Facts in ES
      * @param allActivatedPredicates Set of activated Predicates
      */
@@ -240,7 +243,9 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
-     * possible. Stops once the system reaches natural quiescence and generates a new rule.
+     * possible.
+     * <p>
+     * Stops once the system reaches natural quiescence and generates a new rule.
      *
      * @param shouldGenerateRule if true generates the new rule proven by a think cycle
      * @return the activated Recommendations as a result of thinking
@@ -301,6 +306,7 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Makes the ES think for a single cycle.
+     * <p>
      * Output predicates of activated rules are replaced if they contain variable arguments e.g. &x
      *
      * @return the activated Predicates as a result of thinking
@@ -357,6 +363,7 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Iterates over rule set, checks if new merged rules are valid, and repeatedly generates new merged rules from current set of new rules.
+     * <p>
      * i.e. rule 1 = A -> B, rule 2 = B -> C, rule 3 = A -> C
      * @param numberOfCycles how many cycles over the rule-set to attempt to merge
      * @return merged rules
@@ -381,7 +388,8 @@ public class ExpertSystem implements PrometheusLayer {
     }
 
     /**
-     * Process that occurs when ES is not thinking
+     * Process that occurs when ES is not thinking.
+     * <p>
      * Currently calls addRule to merge rules
      *
      * @param numberOfCycles how many cycles over the ruleset
@@ -395,8 +403,10 @@ public class ExpertSystem implements PrometheusLayer {
 
     /**
      * Generates rules from a natural language sentence
+     * <p>
      * NB: Sentences must contain one token from {"if", "when", "while", "first"}, and one token from {"then", "next", "do"},
      *  to denote input tags and output tags respectively
+     *  <p>
      *  e.g. "If Human(near) Then Move(steps=10)"
      *
      * @param sentence that contains input and output delimiters

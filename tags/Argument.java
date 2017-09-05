@@ -9,19 +9,39 @@ public class Argument {
     String name;
     ArgTypes symbol;
 
-    /**
-     * STRING: argument is made up of a string (e.g. tall)
-     * EQ: argument is a name equal to an integer (e.g. height = 10)
-     * GT: argument is a name greater than an integer (e.g. height > 10)
-     * LT: argument is a name less that an integer (e.g. height < 10)
-     * MATCHONE: argument matches on a corresponding argument in a fact with same predicate name (see BASH '?')
-     * VAR: argument is a variable integer (e.g. height = &x)
-     * MATCHALL: argument matches on >0 arguments in a fact with same predicate name (see BASH '*')
-     * INT: argument is made up of an integer value (e.g. 10)
-     */
-
     public enum ArgTypes {
-        STRING, EQ, GT, LT, MATCHONE, VAR, MATCHALL, INT
+        /**
+         * argument is made up of a string (e.g. tall)
+         */
+        STRING,
+        /**
+         * argument is a name equal to an integer (e.g. height = 10)
+         */
+        EQ,
+        /**
+         * argument is a name greater than an integer (e.g. height &gt; 10)
+         */
+        GT,
+        /**
+         * argument is a name less that an integer (e.g. height &lt; 10)
+         */
+        LT,
+        /**
+         * argument matches on a corresponding argument in a fact with same predicate name (see BASH '?')
+         */
+        MATCHONE,
+        /**
+         * argument is a variable integer (e.g. height = {@literal &x})
+         */
+        VAR,
+        /**
+         * argument matches on &gt; 0 arguments in a fact with same predicate name (see BASH '*')
+         */
+        MATCHALL,
+        /**
+         * argument is made up of an integer value (e.g. 10)
+         */
+        INT
     }
 
     public String getName() {
@@ -37,7 +57,7 @@ public class Argument {
      * <p>
      * Attempts to split an argument string (e.g. height=10) on the mathematical symbol (in this case 10),
      * assigns name to first token, if there are multiple tokens
-     *
+     * @param tokens argument string split on mathematical symbols
      */
 
     Argument(String[] tokens) {
@@ -115,8 +135,9 @@ public class Argument {
 
 /**
  * Subclass for arguments that have integer values
+ * <p>
  * If argument has a negative value, isNeg == true.
- *  i.e. "ARG != 5" -> this.value==5; this.isNeg==true
+ *  i.e. "ARG != 5" {@literal ->} this.value==5; this.isNeg==true
  */
 
 class NumericArgument extends Argument {
@@ -181,8 +202,10 @@ class NumericArgument extends Argument {
 
     /**
      * Constructor of numeric arguments
+     * <p>
      * Arguments must be a string that is purely numeric e.g. "5
-     *  or composed of a name delimited by ["<",">,"="]
+     *  or composed of a name delimited by {@literal ["<",">,"="]}
+     *
      * @param string argument as a string
      * @param tokens argument as tokens, split on mathematic symbols
      */
@@ -260,8 +283,9 @@ class NumericArgument extends Argument {
 
 /**
  * Subclass for arguments that have string values
- *  * If argument has a negative value, isNeg == true.
- *  i.e. "ARG != big" -> this.value.equals("big"; this.isNeg==true
+ * <p>
+ *  If argument has a negative value, isNeg == true.
+ *  i.e. "ARG != big" {@literal ->} this.value.equals("big"; this.isNeg==true
  */
 
 class StringArgument extends Argument {
@@ -295,6 +319,7 @@ class StringArgument extends Argument {
 
     /**
      * Constructor of string Arguments
+     * <p>
      * Arguments must be a string made up of alpha characters, can contain ["=", "!"] characters
      * @param string argument as a string
      * @param tokens argument as tokens, split on mathematical symbols
@@ -353,14 +378,17 @@ class StringArgument extends Argument {
 }
 
 /**
- * Subclass for arguments that have variable values i.e. "?", "*" or "&x"
+ * Subclass for arguments that have variable values
+ * <p>
+ * i.e. "?", "*" or {@literal "&x"}
  */
 
 class VariableArgument extends Argument {
 
     /**
      * Constructor of variable Arguments
-     * Arguments must be a string made up of alpha characters, as well as one of ["*", "?", [&] characters
+     * <p>
+     * Arguments must be a string made up of alpha characters, as well as one of ["*", "?", {@literal &}] characters
      * @param string argument as a string
      * @param tokens argument as tokens, split on mathematical symbols
      */

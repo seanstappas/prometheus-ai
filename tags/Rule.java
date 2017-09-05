@@ -3,8 +3,11 @@ package tags;
 import java.util.*;
 
 /**
- * Represents a rule in the expert system. Rules are many-to-many structures with Facts as inputs and Predicates (Facts and
- * Recommendations) as outputs. They only activate when all the input Facts are active.
+ * Represents a rule in the expert system.
+ * <p>
+ * Rules are many-to-many structures with Facts as inputs and Predicates (Facts and
+ * Recommendations) as outputs.
+ * They only activate when all the input Facts are active.
  */
 public class Rule extends Tag {
     private Set<Fact> inputFacts;
@@ -53,6 +56,7 @@ public class Rule extends Tag {
 
     /**
      * Creates a Rule from a set of input Facts and output Predicates.
+     * <p>
      * Confidence value of output tags set to the product of the confidence value of input tags.
      *
      * @param inputFacts       The condition facts of the rule.
@@ -121,15 +125,15 @@ public class Rule extends Tag {
      * <p>
      * Example of a rule string:
      * <p>
-     * "P1(ARG1,ARG2) P2(ARG3) -> @P3(ARG4,ARG5,ARG6)"
+     * "P1(ARG1,ARG2) P2(ARG3) {@literal ->} @P3(ARG4,ARG5,ARG6)"
      * <p>
      * NB: 1. Tags are separated by " " 2. arguments with a fact tag are separated by ","
-     * 3. all facts on the left of "->" are input facts, on the right are output tags
+     * 3. all facts on the left of {@literal "->"} are input facts, on the right are output tags
      * 4. if an output tag is preceeded by "@", it is a recommendation, otherwise it is a fact
-     *
-     * NB: rules may include OR: "P1(ARG1,ARG2) P2(ARG3) OR P3(ARG4,ARG5) P4(ARG6,ARG7) -> @P3(ARG4,ARG5,ARG6)"
-     *      in this case, two rules are returned "P1(ARG1,ARG2) P2(ARG3) -> @P3(ARG4,ARG5,ARG6)" and
-     *          "P3(ARG4,ARG5) P4(ARG6,ARG7) -> @P3(ARG4,ARG5,ARG6)"
+     *<p>
+     * NB: rules may include OR: "P1(ARG1,ARG2) P2(ARG3) OR P3(ARG4,ARG5) P4(ARG6,ARG7) {@literal ->} @P3(ARG4,ARG5,ARG6)"
+     *      in this case, two rules are returned "P1(ARG1,ARG2) P2(ARG3) {@literal ->} @P3(ARG4,ARG5,ARG6)" and
+     *          "P3(ARG4,ARG5) P4(ARG6,ARG7) {@literal ->} @P3(ARG4,ARG5,ARG6)"
      *
      * @param value the Rule as string.
      * @return List of Rules.
@@ -228,7 +232,8 @@ public class Rule extends Tag {
 
     /**
      * Prints Rule as inputFacts, outputPredicates, and confidenceValue
-     * i.e. "{[[P1() 100%] [P(2) 100%]] -> [@P4 100%] 100%}"
+     * <p>
+     * i.e. "{[[P1() 100%] [P2() 100%]] {@literal ->} [@P4 100%] 100%}"
      * @return Rule as string
      */
     @Override

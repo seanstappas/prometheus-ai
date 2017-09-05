@@ -39,7 +39,8 @@ public class Fact extends Tag implements IPredicate {
 
     /**
      * Constructs a Fact object from a string
-     * NB: There should be no space characters between the arguments in a string i.e. "P(ARG1,ARG2,ARG3...)"
+     * <p>
+     * NB: There should be no space characters between the arguments in a string i.e. "P(ARG1,ARG2,ARG3...)".
      * Arguments are delimited by commas within parenthesis.
      *
      * @param value           String input
@@ -67,7 +68,8 @@ public class Fact extends Tag implements IPredicate {
     }
 
     /**
-     * Prints predicate name, arguments & confidence value of Fact
+     * Prints predicate name, arguments and confidence value of Fact
+     * <p>
      * e.g. "[P(ARG1, ARG2) 100%]"
      * @return string value of Fact
      */
@@ -95,7 +97,8 @@ public class Fact extends Tag implements IPredicate {
     }
 
     /**
-     * Calls the appropriate Argument constructor on a string token
+     * Calls the appropriate Argument constructor on a string token.
+     * <p>
      * If argument is numeric -> NumericArgument; If contains [?*&] -> VariableArgument; Else -> StringArgument
      * @param argString String token
      * @return A single argument
@@ -125,8 +128,9 @@ public class Fact extends Tag implements IPredicate {
     }
 
     /**
-     * Compares two facts to see if they are compatible
-     * If matching occurs on a variable argument, return object includes a list of tuple[s] (see VariableReturn class)
+     * Compares two facts to see if they are compatible.
+     * <p>
+     * If matching occurs on a variable argument, return object includes a list of tuple[s].
      *
      * @param inputFact fact contained in a Rule
      * @return true if facts are 'matched' (notice not necessarily equal)

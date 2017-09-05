@@ -3,7 +3,7 @@ package tags;
 import java.util.List;
 
 /**
- * Interface for Predicates (Implemented by Fact & Recommendation)
+ * Interface for Predicates (Implemented by Fact and Recommendation)
  */
 
 public interface IPredicate {

@@ -1,8 +1,7 @@
 package tags;
 
 /**
- * Tag to be used throughout the Prometheus system. Possess a confidence value.
- *
+ * Tag to be used throughout the Prometheus system. Possesses a confidence value.
  */
 public abstract class Tag {
     double confidenceValue;
