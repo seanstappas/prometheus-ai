@@ -90,19 +90,19 @@ public class KNN_Testing {
 		
 		
 		//testing backward searching with and without ply input		
-//		ArrayList<Tuple> inputs = new ArrayList<>();
-//		Tuple data1 = new Tuple("calm", 10); inputs.add(data1);
-//		Tuple data2 = new Tuple("coward", 10); inputs.add(data2);
-//		relation.backwardSearch(inputs, 0.5, 2);
-//		System.out.println("Input for backward search: " + relation.getInputTags().toString());
-//		System.out.println(relation.getActiveTags().toString());		
+		ArrayList<Tuple> inputs = new ArrayList<>();
+		Tuple data1 = new Tuple("calm", 10); inputs.add(data1);
+		Tuple data2 = new Tuple("coward", 10); inputs.add(data2);
+		relation.backwardSearch(inputs, 0.5, 2);
+		System.out.println("Input for backward search: " + relation.getInputTags().toString());
+		System.out.println(relation.getActiveTags().toString());		
 		
 		//testing lambda searching				
-		ArrayList<Tuple> inputs = new ArrayList<>();
-		Tuple data1 = new Tuple("mammal", 10); inputs.add(data1);
-		relation.lambdaSearch(inputs, new Fact("fish(vertebrate,water)"));
-		System.out.println("Input for lambda search: " + relation.getInputTags().toString());
-		System.out.println(relation.getActiveTags().toString());
+//		ArrayList<Tuple> inputs = new ArrayList<>();
+//		Tuple data1 = new Tuple("mammal", 10); inputs.add(data1);
+//		relation.lambdaSearch(inputs, new Fact("fish(vertebrate,water)"));
+//		System.out.println("Input for lambda search: " + relation.getInputTags().toString());
+//		System.out.println(relation.getActiveTags().toString());
 		
 		//path
 //		ArrayList<Tag> bads = new ArrayList<>();
