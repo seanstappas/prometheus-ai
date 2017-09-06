@@ -190,7 +190,7 @@ public class ExpertSystem implements PrometheusLayer {
     }
 
     /**
-     * Generates a rule from the facts present in the ES at the beginning of think() and the tags activated before quiescence
+     * Generates a rule from the facts present in the ES at the beginning of think() and the predicates activated before quiescence
      * <p>
      * Adds generate rule to ES
      *
@@ -227,14 +227,14 @@ public class ExpertSystem implements PrometheusLayer {
      */
 
     public Set<Tag> think() {
-        Set<IPredicate> allActivatedTags = new HashSet<>();
-        Set<IPredicate> activatedTags;
+        Set<IPredicate> allactivatedPredicates = new HashSet<>();
+        Set<IPredicate> activatedPredicates;
         do {
-            activatedTags = thinkCycle();
-            allActivatedTags.addAll(activatedTags);
-        } while (!activatedTags.isEmpty());
+            activatedPredicates = thinkCycle();
+            allactivatedPredicates.addAll(activatedPredicates);
+        } while (!activatedPredicates.isEmpty());
         Set<Tag> activatedRecommendations = new HashSet<>();
-        for (IPredicate predicate : allActivatedTags) {
+        for (IPredicate predicate : allactivatedPredicates) {
             if (predicate instanceof Recommendation)
                 activatedRecommendations.add((Recommendation) predicate);
         }
@@ -252,21 +252,21 @@ public class ExpertSystem implements PrometheusLayer {
      */
 
     public Set<Tag> think(boolean shouldGenerateRule) {
-        Set<IPredicate> allActivatedTags = new HashSet<>();
-        Set<IPredicate> activatedTags;
+        Set<IPredicate> allactivatedPredicates = new HashSet<>();
+        Set<IPredicate> activatedPredicates;
         Set<Fact> inputFactSet = getFacts();
         Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
         do {
-            activatedTags = thinkCycle();
-            allActivatedTags.addAll(activatedTags);
-        } while (!activatedTags.isEmpty());
+            activatedPredicates = thinkCycle();
+            allactivatedPredicates.addAll(activatedPredicates);
+        } while (!activatedPredicates.isEmpty());
         Set<Tag> activatedRecommendations = new HashSet<>();
-        for (IPredicate predicate : allActivatedTags) {
+        for (IPredicate predicate : allactivatedPredicates) {
             if (predicate instanceof Recommendation)
                 activatedRecommendations.add((Recommendation) predicate);
         }
         if (shouldGenerateRule) {
-            generateProvenRule(inputFactSetClone, allActivatedTags);
+            generateProvenRule(inputFactSetClone, allactivatedPredicates);
         }
         return activatedRecommendations;
     }
@@ -283,23 +283,23 @@ public class ExpertSystem implements PrometheusLayer {
      * @return the activated Recommendations as a result of thinking
      */
     public Set<Tag> think(int numberOfCycles, boolean shouldGenerateRule) {
-        Set<IPredicate> allActivatedTags = new HashSet<>();
-        Set<IPredicate> activatedTags;
+        Set<IPredicate> allactivatedPredicates = new HashSet<>();
+        Set<IPredicate> activatedPredicates;
         Set<Fact> inputFactSet = getFacts();
         Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
         for (int i = 0; i < numberOfCycles; i++) {
-            activatedTags = thinkCycle();
-            if (activatedTags.isEmpty())
+            activatedPredicates = thinkCycle();
+            if (activatedPredicates.isEmpty())
                 break;
-            allActivatedTags.addAll(activatedTags);
+            allactivatedPredicates.addAll(activatedPredicates);
         }
         Set<Tag> activatedRecommendations = new HashSet<>();
-        for (IPredicate predicate : allActivatedTags) {
+        for (IPredicate predicate : allactivatedPredicates) {
             if (predicate instanceof Recommendation)
                 activatedRecommendations.add((Recommendation) predicate);
         }
         if (shouldGenerateRule) {
-            generateProvenRule(inputFactSetClone, allActivatedTags);
+            generateProvenRule(inputFactSetClone, allactivatedPredicates);
         }
         return activatedRecommendations;
     }
@@ -405,7 +405,7 @@ public class ExpertSystem implements PrometheusLayer {
      * Generates rules from a natural language sentence
      * <p>
      * NB: Sentences must contain one token from {"if", "when", "while", "first"}, and one token from {"then", "next", "do"},
-     *  to denote input tags and output tags respectively
+     *  to denote input facts and output predicates respectively
      *  <p>
      *  e.g. "If Human(near) Then Move(steps=10)"
      *

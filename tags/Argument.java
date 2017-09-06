@@ -146,7 +146,7 @@ class NumericArgument extends Argument {
     private int value;
 
     private boolean isNeg() {
-        return !isNeg;
+        return isNeg;
     }
 
     /**
@@ -241,7 +241,7 @@ class NumericArgument extends Argument {
                 if (!isNeg()) {
                     return "" + value;
                 } else {
-                    return "!=" + value;
+                    return "!" + value;
                 }
             case EQ:
                 if (!isNeg()) {
@@ -294,7 +294,7 @@ class StringArgument extends Argument {
     private String value;
 
     private boolean isNeg() {
-        return !isNeg;
+        return isNeg;
     }
 
     /**
@@ -345,7 +345,7 @@ class StringArgument extends Argument {
             if (!isNeg()) {
                 return "" + value;
             } else {
-                return "!=" + value;
+                return "!" + value;
             }
         } else {
             if (!isNeg()) {

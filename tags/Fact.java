@@ -104,7 +104,7 @@ public class Fact extends Tag implements IPredicate {
      * @return A single argument
      */
 
-    private static Argument makeArgument(String argString) {
+    static Argument makeArgument(String argString) {
         String[] argTokens = argString.split("[=><!]");
         int lastElem = argTokens.length - 1;
 

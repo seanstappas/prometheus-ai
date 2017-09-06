@@ -101,23 +101,14 @@ public class Recommendation extends Tag implements IPredicate {
     /**
      * Calls the appropriate Argument constructor on a string token
      * <p>
-     * If argument is numeric -> NumericArgument; If contains [?*&] -> VariableArgument; Else -> StringArgument
+     * @see Fact#makeArgument(String)
      *
      * @param argString String token
      * @return A single argument
      */
 
     private static Argument makeArgument(String argString) {
-        String[] argTokens = argString.split("[=><!]");
-        int lastElem = argTokens.length - 1;
-
-        if (argTokens[lastElem].matches("-?\\d+(\\.\\d+)?")) {
-            return new NumericArgument(argString, argTokens);
-        } else if (argTokens[lastElem].matches("[?*]") || argTokens[lastElem].charAt(0) == '&') {
-            return new VariableArgument(argString, argTokens);
-        } else {
-            return new StringArgument(argString, argTokens);
-        }
+        return Fact.makeArgument(argString);
     }
 
     public String getPredicateName() {
