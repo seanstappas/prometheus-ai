@@ -260,7 +260,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         es.reset();
         Fact[] testFacts = {
                 new Fact("Aardvark(brown,strange,speed=slow", 0.9),
-                new Fact("Bat(black,speed=10", 0.6)
+                new Fact("Bat(black,speed=10)", 0.6)
         };
         Recommendation recX = new Recommendation("Run(north,quickly,speed!=slow)", 0.2);
         Recommendation recY = new Recommendation("Hide(safelocation,manner=stealth)", 0.8);

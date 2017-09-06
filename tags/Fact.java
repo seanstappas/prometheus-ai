@@ -54,7 +54,7 @@ public class Fact extends Tag implements IPredicate {
         this.type = TagType.FACT;
         this.predicateName = tokens[0];
         this.arguments = argStringParser(tokens);
-        this.confidenceValue = confidenceValue;
+        this.setConfidenceValue(confidenceValue);
     }
 
     /**
@@ -76,7 +76,7 @@ public class Fact extends Tag implements IPredicate {
 
     @Override
     public String toString() {
-        return "[" + predicateName + '(' + arguments + ") " + confidenceValue*100 +"% ]";
+        return "[" + predicateName + '(' + arguments + ") " + getConfidenceValue() * 100 + "% ]";
     }
 
     /**
@@ -140,14 +140,14 @@ public class Fact extends Tag implements IPredicate {
 
         VariableReturn result = new VariableReturn();
         if (!this.predicateName.equals(inputFact.predicateName)) {
-            result.doesMatch = false;
+            result.setDoesMatch(false);
             return result;
         }
 
         if (inputFact.arguments.size() > this.arguments.size()) {
             for (int i = this.arguments.size(); i < inputFact.arguments.size(); i++) {
                 if (!inputFact.arguments.get(i).getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
-                    result.doesMatch = false;
+                    result.setDoesMatch(false);
                     return result;
                 }
             }
@@ -159,25 +159,25 @@ public class Fact extends Tag implements IPredicate {
         while (iterFact.hasNext()) {
             Argument argFact = (Argument) iterFact.next();
             Argument argInputFact = (Argument) iterInputFact.next();
-            if (argFact.symbol.equals(Argument.ArgTypes.MATCHALL) || argInputFact.symbol.equals(Argument.ArgTypes.MATCHALL)) {
-                result.doesMatch = true;
+            if (argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL) || argInputFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
+                result.setDoesMatch(true);
                 return result;
             }
-            if (argInputFact.symbol.equals(Argument.ArgTypes.VAR)) {
-                result.doesMatch = true;
-                result.pairs.put(argInputFact.getName(), argFact);
+            if (argInputFact.getSymbol().equals(Argument.ArgTypes.VAR)) {
+                result.setDoesMatch(true);
+                result.getPairs().put(argInputFact.getName(), argFact);
             }
-            result.doesMatch = argFact.matches(argInputFact);
-            if (!result.doesMatch) {
+            result.setDoesMatch(argFact.matches(argInputFact));
+            if (!result.isDoesMatch()) {
                 return result;
             }
         }
         if (iterInputFact.hasNext()) {
             Argument argFact = (Argument) iterInputFact.next();
-            result.doesMatch = (argFact.symbol.equals(Argument.ArgTypes.MATCHALL));
+            result.setDoesMatch((argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)));
             return result;
         }
-        result.doesMatch = true;
+        result.setDoesMatch(true);
         return result;
 
     }

@@ -179,9 +179,9 @@ public class ExpertSystem implements PrometheusLayer {
         boolean result = false;
         for (Fact f : facts) {
             VariableReturn matchesResult = f.matches(inputFact);
-            if (matchesResult.doesMatch) {
-                if (matchesResult.pairs.size() > 0) {
-                    pendingReplacementPairs.putAll(matchesResult.pairs);
+            if (matchesResult.isDoesMatch()) {
+                if (matchesResult.getPairs().size() > 0) {
+                    pendingReplacementPairs.putAll(matchesResult.getPairs());
                 }
                 result = true;
             }
@@ -349,7 +349,7 @@ public class ExpertSystem implements PrometheusLayer {
         for (Fact inputFact : inputRule.getInputFacts()) {
             boolean fullMatch = false;
             for (Fact outputIPredicate : outputRule.getInputFacts()) {
-                if (outputIPredicate.matches(inputFact).doesMatch) {
+                if (outputIPredicate.matches(inputFact).isDoesMatch()) {
                     fullMatch = true;
                     break;
                 }

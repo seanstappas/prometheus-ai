@@ -6,8 +6,16 @@ package tags;
 
 public class Argument {
 
-    String name;
-    ArgTypes symbol;
+    private String name;
+    private ArgTypes symbol;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSymbol(ArgTypes symbol) {
+        this.symbol = symbol;
+    }
 
     public enum ArgTypes {
         /**
@@ -157,7 +165,7 @@ class NumericArgument extends Argument {
      */
 
     boolean matches(NumericArgument that) {
-        if (!this.name.equals(that.name)) {
+        if (!this.getName().equals(that.getName())) {
             return false;
         }
         if (this.isNeg && that.isNeg) {
@@ -167,9 +175,9 @@ class NumericArgument extends Argument {
             return (this.value != that.value);
         }
 
-        switch (this.symbol) {
+        switch (this.getSymbol()) {
             case EQ:
-                switch (that.symbol) {
+                switch (that.getSymbol()) {
                     case EQ:
                         return this.value == that.value;
                     case GT:
@@ -178,7 +186,7 @@ class NumericArgument extends Argument {
                         return this.value < that.value;
                 }
             case GT:
-                switch (that.symbol) {
+                switch (that.getSymbol()) {
                     case EQ:
                         return that.value > this.value;
                     case GT:
@@ -187,7 +195,7 @@ class NumericArgument extends Argument {
                         return false;
                 }
             case LT:
-                switch (that.symbol) {
+                switch (that.getSymbol()) {
                     case EQ:
                         return that.value < this.value;
                     case GT:
@@ -216,13 +224,13 @@ class NumericArgument extends Argument {
         this.isNeg = (string.contains("!"));
 
         if (string.contains("=")) {
-            this.symbol = ArgTypes.EQ;
+            this.setSymbol(ArgTypes.EQ);
         } else if (string.contains(">")) {
-            this.symbol = ArgTypes.GT;
+            this.setSymbol(ArgTypes.GT);
         } else if (string.contains("<")) {
-            this.symbol = ArgTypes.LT;
+            this.setSymbol(ArgTypes.LT);
         } else {
-            this.symbol = ArgTypes.INT;
+            this.setSymbol(ArgTypes.INT);
         }
 
         this.value = Integer.parseInt(tokens[tokens.length - 1]);
@@ -236,7 +244,7 @@ class NumericArgument extends Argument {
 
     @Override
     public String toString() {
-        switch (symbol) {
+        switch (getSymbol()) {
             case INT:
                 if (!isNeg()) {
                     return "" + value;
@@ -245,16 +253,16 @@ class NumericArgument extends Argument {
                 }
             case EQ:
                 if (!isNeg()) {
-                    return name + " = " + value;
-                } else return name + " !=" + value;
+                    return getName() + " = " + value;
+                } else return getName() + " !=" + value;
             case LT:
                 if (!isNeg()) {
-                    return name + " < " + value;
-                } else return name + " !<" + value;
+                    return getName() + " < " + value;
+                } else return getName() + " !<" + value;
             case GT:
                 if (!isNeg()) {
-                    return name + " > " + value;
-                } else return name + " !>" + value;
+                    return getName() + " > " + value;
+                } else return getName() + " !>" + value;
             default:
                 return super.toString();
         }
@@ -278,6 +286,18 @@ class NumericArgument extends Argument {
         result = 31 * result + (isNeg ? 1 : 0);
         result = 31 * result + value;
         return result;
+    }
+
+    public void setNeg(boolean neg) {
+        isNeg = neg;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 }
 
@@ -304,7 +324,7 @@ class StringArgument extends Argument {
      */
 
     boolean matches(StringArgument that) {
-        if (!this.name.equals(that.name)) {
+        if (!this.getName().equals(that.getName())) {
             return false;
         }
         if (this.isNeg && that.isNeg) {
@@ -331,7 +351,7 @@ class StringArgument extends Argument {
 
         isNeg = (string.contains("!"));
         value = tokens[tokens.length - 1];
-        symbol = ArgTypes.STRING;
+        setSymbol(ArgTypes.STRING);
     }
 
     /**
@@ -341,7 +361,7 @@ class StringArgument extends Argument {
 
     @Override
     public String toString() {
-        if (this.name.equals("")) {
+        if (this.getName().equals("")) {
             if (!isNeg()) {
                 return "" + value;
             } else {
@@ -349,9 +369,9 @@ class StringArgument extends Argument {
             }
         } else {
             if (!isNeg()) {
-                return name + " = " + value;
+                return getName() + " = " + value;
             } else {
-                return name + " != " + value;
+                return getName() + " != " + value;
             }
         }
     }
@@ -374,6 +394,18 @@ class StringArgument extends Argument {
         result = 31 * result + (isNeg ? 1 : 0);
         result = 31 * result + value.hashCode();
         return result;
+    }
+
+    public void setNeg(boolean neg) {
+        isNeg = neg;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
 
@@ -398,14 +430,14 @@ class VariableArgument extends Argument {
         super(tokens);
 
         if (tokens[0].equals("*")) {
-            this.symbol = ArgTypes.MATCHALL;
-            this.name = "*";
+            this.setSymbol(ArgTypes.MATCHALL);
+            this.setName("*");
         } else if (tokens[0].equals("?")) {
-            this.symbol = ArgTypes.MATCHONE;
-            this.name = "?";
+            this.setSymbol(ArgTypes.MATCHONE);
+            this.setName("?");
         } else if (tokens[0].charAt(0) == '&') {
-            this.symbol = ArgTypes.VAR;
-            this.name = tokens[0];
+            this.setSymbol(ArgTypes.VAR);
+            this.setName(tokens[0]);
         }
     }
 
@@ -416,13 +448,13 @@ class VariableArgument extends Argument {
 
     @Override
     public String toString() {
-        switch (symbol) {
+        switch (getSymbol()) {
             case MATCHONE:
                 return "?";
             case MATCHALL:
                 return "*";
             case VAR:
-                return name + "";
+                return getName() + "";
             default:
                 return super.toString();
         }

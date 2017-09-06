@@ -58,7 +58,7 @@ public class Recommendation extends Tag implements IPredicate {
         this.type = TagType.RECOMMENDATION;
         this.predicateName = tokens[0].replace("@", "");
         this.arguments = argStringParser(tokens);
-        this.confidenceValue = confidenceValue;
+        this.setConfidenceValue(confidenceValue);
     }
 
     /**
@@ -80,7 +80,7 @@ public class Recommendation extends Tag implements IPredicate {
 
     @Override
     public String toString() {
-        return "[@" + predicateName + '(' + arguments + ") " + confidenceValue * 100 + "% ]";
+        return "[@" + predicateName + '(' + arguments + ") " + getConfidenceValue() * 100 + "% ]";
     }
 
     /**
