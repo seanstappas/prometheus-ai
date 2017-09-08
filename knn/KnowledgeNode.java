@@ -154,6 +154,10 @@ public class KnowledgeNode {
         return this.age;
     }
 
+    public void setObjectTruth(double value){
+        this.objectTruth = value;
+    }
+
     @Override
     public String toString() {
     	String result = "";
