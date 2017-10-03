@@ -46,11 +46,10 @@ public class KnowledgeNode {
     /**
      * Full constructor
      *
-     * @param inputTag    the input tag of the Knowledge Node
+     * @param inputName    the input tag of the Knowledge Node
      * @param outputFacts  the output Tag of the Knowledge Node
      * @param threshold   the threshold of activation
      * @param strength    the strength value to bias activation
-     * @param type        the type of the Knowledge Node (linear or sigmoid activation)
      * @param maxAge      threshold age for the node to be discarded
      */
     public KnowledgeNode(Tag inputName, HashMap<Tag, Double> outputFacts, int threshold, int strength, double maxAge) {
@@ -78,9 +77,7 @@ public class KnowledgeNode {
     /**
      * Creates a Knowledge Node from Strings.
      *
-     * @param inputTag    the input Tag of the Knowledge Node
-     * @param outputFacts  the output Tag of the Knowledge Node
-     * @param tagType     the type of all Tags (input and output)
+     * @param inputInfo    The info String to create the Knowledge Node
      */
     public KnowledgeNode(String[] inputInfo) {
     	this.listOfRelatedTruth = new HashMap<>();
@@ -157,6 +154,10 @@ public class KnowledgeNode {
         return this.age;
     }
 
+    public void setObjectTruth(double value){
+        this.objectTruth = value;
+    }
+
     @Override
     public String toString() {
     	String result = "";
@@ -170,9 +171,10 @@ public class KnowledgeNode {
         	result += " threshold is " + this.threshold;
         	return result;
         }
-        
-        result += this.fact.toString();
-        result = result + " threshold is " + this.threshold + " => ";
+        else{
+            result += this.fact.toString();
+            result = result + " threshold is " + this.threshold + " => ";
+        }
         
         for(Tag t : this.outputs.keySet()){
         	result += t.toString();

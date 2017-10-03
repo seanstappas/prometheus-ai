@@ -27,7 +27,7 @@ public class KnowledgeNodeNetwork {
     /**
      * Creates a new Knowledge Node Network (KNN) based on a database.
      *
-     * @param dbFilename: the filename of the database to be read from (probably CSV or JSON)
+     * @param dbFilename the filename of the database to be read from (probably CSV or JSON)
      */
     public KnowledgeNodeNetwork(String dbFilename) {
         mapKN = new HashMap<>();
@@ -38,7 +38,7 @@ public class KnowledgeNodeNetwork {
     /**
      * Resets the KNN to a state from a database.
      *
-     * @param dbFilename: the filename of the database to be read from
+     * @param dbFilename the filename of the database to be read from
      */
     public void reset(String dbFilename) {
 
@@ -48,13 +48,13 @@ public class KnowledgeNodeNetwork {
      * Resets the KNN by clearing all data structures.
      */
     public void resetEmpty() {
-        clearKN();
+    	clearKN();
     }
 
     /**
      * Saves the current state of the KNN to a database.
      *
-     * @param dbFilename: the filename of the database
+     * @param dbFilename the filename of the database
      */
     public void saveKNN(String dbFilename) {
 
@@ -72,7 +72,7 @@ public class KnowledgeNodeNetwork {
     /**
      * Adds a Knowledge Node to the KNN.
      *
-     * @param kn: the Knowledge Node to be added
+     * @param kn the Knowledge Node to be added
      */
     public void addKN(KnowledgeNode kn) {
         if(kn.type.equals(KnowledgeNode.inputType.FACT)){
@@ -89,17 +89,16 @@ public class KnowledgeNodeNetwork {
     /**
      * Deletes a Knowledge Node from the KNN.
      *
-     * @param tag: the input Tag of the Knowledge Node to be deleted
+     * @param tag the input Tag of the Knowledge Node to be deleted
      */
     public void delKN(Tag tag) {
-        mapKN.remove(tag);
+    	mapKN.remove(tag);
     }
 
     /**
      * Adds a fired Tag to the KNN.
      *
-     * @param tag: the fired Tag to be added
-     * @return true if the Tag is added successfully
+     * @param tag the fired Tag to be added
      */
     public void addFiredTag(Tag tag, double objectTruth) {
     	this.activeTags.put(tag, objectTruth);
@@ -117,67 +116,23 @@ public class KnowledgeNodeNetwork {
     /**
      * Get access of active Tags
      * 
-     * @return the Access of active Tags
+     * @return	the Access of active Tags
      */
     public HashMap<Tag, Double> getActiveTags() {
-        return this.activeTags;
+		return this.activeTags;
     }    
     
+    /**
+     * Lambda search, a search to find out the best relation between a know list of tags and a wanted item tag
+     * 
+     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param item the wanted item tag
+     */
     public void lambdaSearch(ArrayList<Tuple> NNoutputs, Tag item){
     	HashMap<Tag, Double> bestPath = new HashMap<>();
     	double bestConfidence = 0;
     	
-    	for(Tuple tp : NNoutputs){
-    		boolean found = false;
-    		for(KnowledgeNode kn : this.mapKN.values()){
-    			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
-    				if(kn.fact.getPredicateName().equals(tp.s)){
-    					kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
-    					kn.updateObjectConfidence();
-    					this.inputTags.put(kn.fact, kn.objectTruth);
-    					this.activeTags.put(kn.fact, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
-    				if(kn.recommendation.equals(tp.s)){
-    					kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
-    					kn.updateObjectConfidence();
-    					this.inputTags.put(kn.recommendation, kn.objectTruth);
-    					this.activeTags.put(kn.recommendation, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
-    				if(kn.rule.equals(tp.s)){
-    					kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
-    					kn.updateObjectConfidence();
-    					this.inputTags.put(kn.rule, kn.objectTruth);
-    					this.activeTags.put(kn.rule, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    		}
-    		if(found == false){
-    			if(tp.s.charAt(0) == '@'){
-    				Recommendation rc = new Recommendation(tp.s);
-    				this.inputTags.put(rc, 0.0);
-    			}
-    			else if(tp.s.contains("->")){
-    				Rule r = new Rule(tp.s);
-    				this.inputTags.put(r, 0.0);
-    			}
-    			else if(tp.s.matches(".*\\(.*\\).*")){
-    				Fact f = new Fact(tp.s);
-    				this.inputTags.put(f, 0.0);
-    			}
-    			else{
-    				String str = tp.s + "()";
-    				Fact f = new Fact(str);
-    				this.inputTags.put(f, 0.0);
-    			}
-    		}
-    	}
+    	getInputForBackwardSearch(NNoutputs);
     	
     	for(Tag t : this.activeTags.keySet()){
     		HashSet<Tag> aboveTags = new HashSet<>();
@@ -189,7 +144,7 @@ public class KnowledgeNodeNetwork {
     				for(Tag tg : kn.outputs.keySet()){
     					if(aboveTags.contains(tg)){
     						Tag knType = kn.typeChecker();
-    						if(aboveTags.contains(knType) == false){
+    						if(!aboveTags.contains(knType)){
     							aboveTags.add(knType);
     							added = true;
     							break;
@@ -197,7 +152,7 @@ public class KnowledgeNodeNetwork {
     					}
     				}
     			}
-    		}while(added == true);   		
+    		}while(added);
     		
     		ArrayList<Tag> goodParents = new ArrayList<>();
     		ArrayList<Tag> notGoodParents = new ArrayList<>();   		
@@ -212,7 +167,7 @@ public class KnowledgeNodeNetwork {
     					break;
     				}
     			}
-    			if(isGoodParent == false){
+    			if(!isGoodParent){
     				notGoodParents.add(parent);
     			}
     		}
@@ -223,7 +178,7 @@ public class KnowledgeNodeNetwork {
     			for(Tag tg : belowTags){
     				if(tg.equals(item)){
     					for(Tag tag : bestPath.keySet()){
-    						if(tag.equals(t) == false){
+    						if(!tag.equals(t)){
     							this.mapKN.get(tag).objectTruth = 0;
     						}
     					}
@@ -237,9 +192,9 @@ public class KnowledgeNodeNetwork {
     						parentToChild = pathFinder(parent, t, bads);
     						numOfSame = 0;
     						for(Tag ptC : parentToChild){
-    							if(ptC.equals(t) == false  && ptC.equals(parent) == false){
+    							if(!ptC.equals(t)  && !ptC.equals(parent)){
     								for(Tag p : aboveTags){
-    									if(ptC.equals(p) && notGoodParents.contains(p) == false){
+    									if(ptC.equals(p) && !notGoodParents.contains(p)){
     										numOfSame++;
     										bads.add(ptC);
     										if(numOfSame > 0){
@@ -250,7 +205,7 @@ public class KnowledgeNodeNetwork {
     							}
     						}
     						previousParentToChild = pathFinder(parent, t, bads);
-    					}while(numOfSame > 0 && parentToChild.equals(previousParentToChild) == false);
+    					}while(numOfSame > 0 && !parentToChild.equals(previousParentToChild));
     					
 						if(numOfSame > 0){
     						break;
@@ -278,74 +233,71 @@ public class KnowledgeNodeNetwork {
     } 
     
     /**
-     * Calculate the total confidence of a given path
+     * Calculate the confidence of each KN starting from its parental KN (one of the KN in its output list) in a path.
      * 
-     * @param path: the path needed to calculate the total confidence
-     * @return the total confidence of that path
+     * @param path a path of KN with descending order, parental to child KN
      */
-    public double forwardConfidence(ArrayList<Tag> path){
+    public void forwardConfidence(ArrayList<Tag> path){
     	double totalConfidence = 100;
-    	if(path.size() == 1){
-    		return this.mapKN.get(path.get(0)).objectTruth;
-    	}
-    	
-    	ArrayList<Double> listOfObjectTruth = new ArrayList<>();
-    	for(int i=0; i<path.size()-1; i++){
-    		Tag current = path.get(i);
-    		Tag next = path.get(i+1);
-    		listOfObjectTruth.add(this.mapKN.get(current).objectTruth);
-    		this.mapKN.get(next).objectTruth = this.mapKN.get(current).objectTruth * this.mapKN.get(current).outputs.get(next)/100;
-    	}
-    	listOfObjectTruth.add(this.mapKN.get(path.get(path.size()-1)).objectTruth);
-    	
-    	for(int i=0; i<listOfObjectTruth.size(); i++){
-    		totalConfidence = (totalConfidence * listOfObjectTruth.get(i)) /100;
-    	}
-    	
-    	return totalConfidence;
-    }
-    
-    public double backwardConfidence(ArrayList<Tag> path){
-    	double totalConfidence = 100;
-    	if(path.size() == 1){
-    		return this.mapKN.get(path.get(0)).objectTruth;
-    	}
-    	
-    	ArrayList<Double> listOfObjectTruth = new ArrayList<>();
-    	for(int i=0; i<path.size()-1; i++){
-    		Tag current = path.get(i);
-    		Tag next = path.get(i+1);
-    		listOfObjectTruth.add(this.mapKN.get(current).objectTruth);
-    		this.mapKN.get(next).listOfRelatedTruth.put(current, (this.mapKN.get(current).objectTruth * this.mapKN.get(next).outputs.get(current) /100) );
-    		this.mapKN.get(next).updateObjectConfidence();
-    	}
-    	listOfObjectTruth.add(this.mapKN.get(path.get(path.size()-1)).objectTruth);
-    	
-    	for(int i=0; i<listOfObjectTruth.size(); i++){
-    		totalConfidence = (totalConfidence * listOfObjectTruth.get(i)) /100;
-    	}
-    	
-    	return totalConfidence;
+    	if(path.size() != 1){
+    		ArrayList<Double> listOfObjectTruth = new ArrayList<>();
+        	for(int i=0; i<path.size()-1; i++){
+        		Tag current = path.get(i);
+        		Tag next = path.get(i+1);
+        		listOfObjectTruth.add(this.mapKN.get(current).objectTruth);
+        		this.mapKN.get(next).objectTruth = this.mapKN.get(current).objectTruth * this.mapKN.get(current).outputs.get(next)/100;
+        	}
+        	listOfObjectTruth.add(this.mapKN.get(path.get(path.size()-1)).objectTruth);
+        	
+        	for(int i=0; i<listOfObjectTruth.size(); i++){
+        		totalConfidence = (totalConfidence * listOfObjectTruth.get(i)) /100;
+        	}
+    	}    	    	
     }
     
     /**
-     * Find all the tags, a path, between two given tag
+     * Calculate the confidence of each KN starting from its child KN (one of the KN in its output list) in a path.
      * 
-     * @param start: the given tag to start the path
-     * @param end: the given tag to finish the path
-     * @return an arraylist that stores all the tags of the found path. The first slot of the list is the starting tag and the last slot is the ending tag
+     * @param path a path of KN with ascending order, child to parental KN
+     */
+    public void backwardConfidence(ArrayList<Tag> path){
+    	double totalConfidence = 100;
+    	if(path.size() != 1){
+    		ArrayList<Double> listOfObjectTruth = new ArrayList<>();
+        	for(int i=0; i<path.size()-1; i++){
+        		Tag current = path.get(i);
+        		Tag next = path.get(i+1);
+        		listOfObjectTruth.add(this.mapKN.get(current).objectTruth);
+        		this.mapKN.get(next).listOfRelatedTruth.put(current, (this.mapKN.get(current).objectTruth * this.mapKN.get(next).outputs.get(current) /100) );
+        		this.mapKN.get(next).updateObjectConfidence();
+        	}
+        	listOfObjectTruth.add(this.mapKN.get(path.get(path.size()-1)).objectTruth);
+        	
+        	for(int i=0; i<listOfObjectTruth.size(); i++){
+        		totalConfidence = (totalConfidence * listOfObjectTruth.get(i)) /100;
+        	}
+    	}
+    	
+    }
+    
+    /**
+     * Find a path between two given tag and all the tag involved in that path
+     * 
+     * @param start the given tag to start the path
+     * @param end the given tag to finish the path
+     * @return	an ArrayList that stores all the tags of the found path. The first slot of the list is the starting tag and the last slot is the ending tag
      */
     public ArrayList<Tag> pathFinder(Tag start, Tag end, ArrayList<Tag> badComponents){
     	ArrayList<Tag> currentPath = new ArrayList<>();
     	currentPath.add(start);
-    	if(this.mapKN.get(start).outputs.containsKey(end) && badComponents.contains(start) == false){
+    	if(this.mapKN.get(start).outputs.containsKey(end) && !badComponents.contains(start)){
     		currentPath.add(end);
     		return currentPath;
     	}
     	else{
     		for(Tag t : this.mapKN.get(start).outputs.keySet()){
     			ArrayList<Tag> template = pathFinder(t, end, badComponents);
-    			if(template.get(template.size()-1).equals(end) && badComponents.contains(start) == false){
+    			if(template.get(template.size()-1).equals(end) && !badComponents.contains(start)){
     				currentPath.addAll(template);
     				break;
     			}
@@ -357,13 +309,13 @@ public class KnowledgeNodeNetwork {
     /**
      * Depth first search (DFS) on a specific tag
      * 
-     * @param tag: the tag to start the DFS
-     * @param list: to store all the tag found during DFS
+     * @param tag the tag to start the DFS
+     * @param list to store all the tag found during DFS
      */   
     public void depthFirstSearch(Tag tag, ArrayList<Tag> list){
     	list.add(tag);
     	for(Tag t : this.mapKN.get(tag).outputs.keySet()){
-    		if(list.contains(t) == false){
+    		if(!list.contains(t)){
     			depthFirstSearch(t, list);
     		}
     	}
@@ -373,62 +325,12 @@ public class KnowledgeNodeNetwork {
     /**
      * Backward search with ply as input
      * 
-     * @param score: indication of accuracy 
-     * @param confidenceLeve: only tags that have at least certain confidence value count as a matching
-     * @param ply: number of cycle the AI wanted to search
+     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param score indication of accuracy
+     * @param ply number of cycle the AI wanted to search
      */
     public void backwardSearch(ArrayList<Tuple> NNoutputs, double score, int ply){
-    	for(Tuple tp : NNoutputs){
-    		boolean found = false;
-    		for(KnowledgeNode kn : this.mapKN.values()){
-    			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
-    				if(kn.fact.getPredicateName().equals(tp.s)){
-    					kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
-    					kn.updateObjectConfidence();
-    					this.inputTags.put(kn.fact, kn.objectTruth);
-    					this.activeTags.put(kn.fact, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
-    				if(kn.recommendation.equals(tp.s)){
-    					kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
-    					kn.updateObjectConfidence();
-    					this.inputTags.put(kn.recommendation, kn.objectTruth);
-    					this.activeTags.put(kn.recommendation, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
-    				if(kn.rule.equals(tp.s)){
-    					kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
-    					kn.updateObjectConfidence();
-    					this.inputTags.put(kn.rule, kn.objectTruth);
-    					this.activeTags.put(kn.rule, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    		}
-    		if(found == false){
-    			if(tp.s.charAt(0) == '@'){
-    				Recommendation rc = new Recommendation(tp.s);
-    				this.inputTags.put(rc, 0.0);
-    			}
-    			else if(tp.s.contains("->")){
-    				Rule r = new Rule(tp.s);
-    				this.inputTags.put(r, 0.0);
-    			}
-    			else if(tp.s.matches(".*\\(.*\\).*")){
-    				Fact f = new Fact(tp.s);
-    				this.inputTags.put(f, 0.0);
-    			}
-    			else{
-    				String str = tp.s + "()";
-    				Fact f = new Fact(str);
-    				this.inputTags.put(f, 0.0);
-    			}
-    		}
-    	}
+    	getInputForBackwardSearch(NNoutputs);
     	
     	for(int i=0; i<ply; i++){
     		ArrayList<Tag> previousActiveList = new ArrayList<>();
@@ -448,7 +350,7 @@ public class KnowledgeNodeNetwork {
     			if( (double)matching/kn.outputs.size() >= score ){
     				Tag knType = kn.typeChecker();
     				kn.updateObjectConfidence();
-    				if(this.activeTags.containsKey(knType) == false){    					
+    				if(!this.activeTags.containsKey(knType)){
     					this.activeTags.put(knType, kn.objectTruth);
     				}
     			}
@@ -460,62 +362,11 @@ public class KnowledgeNodeNetwork {
     /**
      * Backward searching with unlimited time
      * 
-     * @param score: an indication of accuracy and it is calculated by the AI
-     * @param confidenceLeve: only tags that have at least certain confidence (between 1 to 100) value count as a matching
-     * If the number of matching between active Tags and the outputs of a kn, then the Tag of that kn is added to the active list
+     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param score the minimum number of matching needed from the output list of a KN in order for that KN to become active.
      */
     public void backwardSearch(ArrayList<Tuple> NNoutputs, double score){
-    	for(Tuple tp : NNoutputs){
-    		boolean found = false;
-    		for(KnowledgeNode kn : this.mapKN.values()){
-    			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
-    				if(kn.fact.getPredicateName().equals(tp.s)){
-    					kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
-    					kn.updateObjectConfidence();
-    					this.inputTags.put(kn.fact, kn.objectTruth);
-    					this.activeTags.put(kn.fact, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
-    				if(kn.recommendation.equals(tp.s)){
-    					kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
-    					kn.updateObjectConfidence();
-    					this.inputTags.put(kn.recommendation, kn.objectTruth);
-    					this.activeTags.put(kn.recommendation, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
-    				if(kn.rule.equals(tp.s)){
-    					kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
-    					kn.updateObjectConfidence();
-    					this.inputTags.put(kn.rule, kn.objectTruth);
-    					this.activeTags.put(kn.rule, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    		}
-    		if(found == false){
-    			if(tp.s.charAt(0) == '@'){
-    				Recommendation rc = new Recommendation(tp.s);
-    				this.inputTags.put(rc, 0.0);
-    			}
-    			else if(tp.s.contains("->")){
-    				Rule r = new Rule(tp.s);
-    				this.inputTags.put(r, 0.0);
-    			}
-    			else if(tp.s.matches(".*\\(.*\\).*")){
-    				Fact f = new Fact(tp.s);
-    				this.inputTags.put(f, 0.0);
-    			}
-    			else{
-    				String str = tp.s + "()";
-    				Fact f = new Fact(str);
-    				this.inputTags.put(f, 0.0);
-    			}
-    		}
-    	}
+    	getInputForBackwardSearch(NNoutputs);
     	
     	HashMap<Tag, Double> pendingFacts = new HashMap<>();
     	do{
@@ -532,69 +383,69 @@ public class KnowledgeNodeNetwork {
     			if( (double)matching/kn.outputs.size() >= score ){
     				Tag knType = kn.typeChecker();
     				kn.updateObjectConfidence();
-    				if(this.activeTags.containsKey(knType) == false){
+    				if(!this.activeTags.containsKey(knType)){
     					pendingFacts.put(knType, kn.objectTruth);
     				}    				
     			}
     		}
 			this.activeTags.putAll(pendingFacts);
-		} while (pendingFacts.isEmpty() == false);
+		} while (!pendingFacts.isEmpty());
 	}
     
     /**
-     * Forward searching with ply as number of depth 
+     * Creating input Tags from string in the output of Neural Network (NN)
+     * This method is used only for backward or lambda search because no excitation is needed during the Tag creation
      * 
-     * @param NNoutputs: a HashMap mimic the output from the neural network, a list of tuple of form (String, value)
-     * @param ply: number of time of searching in the knowledge node network
-     */    
-    public void forwardSearch(ArrayList<Tuple> NNoutputs, int ply){
+     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     */
+    public void getInputForBackwardSearch(ArrayList<Tuple> NNoutputs){
     	for(Tuple tp : NNoutputs){
     		boolean found = false;
     		for(KnowledgeNode kn : this.mapKN.values()){
     			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
     				if(kn.fact.getPredicateName().equals(tp.s)){
-    					excite(kn, tp.value);
+    					kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
     					this.inputTags.put(kn.fact, kn.objectTruth);
+    					this.activeTags.put(kn.fact, kn.objectTruth);
     					found = true;
     				}
     			}
     			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
-    				if(kn.recommendation.equals(tp.s)){
-    					excite(kn, tp.value);
+    				if(kn.recommendation.getPredicateName().equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
     					this.inputTags.put(kn.recommendation, kn.objectTruth);
+    					this.activeTags.put(kn.recommendation, kn.objectTruth);
     					found = true;
     				}
     			}
     			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
-    				if(kn.rule.equals(tp.s)){
-    					excite(kn, tp.value);
+    				if(kn.rule.toString().equals(tp.s)){
+    					kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
+    					kn.updateObjectConfidence();
     					this.inputTags.put(kn.rule, kn.objectTruth);
+    					this.activeTags.put(kn.rule, kn.objectTruth);
     					found = true;
     				}
     			}
     		}
-    		if(found == false){
-    			if(tp.s.charAt(0) == '@'){
-    				Recommendation rc = new Recommendation(tp.s);
-    				this.inputTags.put(rc, 0.0);
-    			}
-    			else if(tp.s.contains("->")){
-    				Rule r = new Rule(tp.s);
-    				this.inputTags.put(r, 0.0);
-    			}
-    			else if(tp.s.matches(".*\\(.*\\).*")){
-    				Fact f = new Fact(tp.s);
-    				this.inputTags.put(f, 0.0);
-    			}
-    			else{
-    				String str = tp.s + "()";
-    				Fact f = new Fact(str);
-    				this.inputTags.put(f, 0.0);
-    			}
+    		if(!found){
+				createKNfromTuple(tp);
     		}
     	}
+    }
+    
+    /**
+     * Forward searching with ply as number of depth 
+     * 
+     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param ply number of time of searching in the knowledge node network
+     */    
+    public void forwardSearch(ArrayList<Tuple> NNoutputs, int ply){
+    	getInputForForwardSearch(NNoutputs);
 
-    	if(ply > 0 && this.activeTags.isEmpty() == false){
+    	if(ply > 0 && !this.activeTags.isEmpty()){
     		for(int i=0; i<ply; i++){
     			ArrayList<Tag> activeList = new ArrayList<>();      			
        			for(Tag t : this.activeTags.keySet()){
@@ -603,7 +454,7 @@ public class KnowledgeNodeNetwork {
        			
     			for(Tag t : activeList){
     				if(this.mapKN.containsKey(t)){
-    					if(this.mapKN.get(t).isFired != true && this.mapKN.get(t).activation >= this.mapKN.get(t).threshold){
+    					if(!this.mapKN.get(t).isFired && this.mapKN.get(t).activation >= this.mapKN.get(t).threshold){
     						excite(this.mapKN.get(t), 0);
     					}
     				}
@@ -611,60 +462,14 @@ public class KnowledgeNodeNetwork {
     		}
     	}
     }
-    
-    
+
     /**
      * forwardSearch with unlimited time
      * 
-     * @param NNoutputs: a HashMap mimic the output from the neural network, a list of tuple of form (String, value)
-     * If a string match a knowledge node in the knowledge node network, that knowledge node will be excite 
+     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */  
     public void forwardSearch(ArrayList<Tuple> NNoutputs){
-    	for(Tuple tp : NNoutputs){
-    		boolean found = false;
-    		for(KnowledgeNode kn : this.mapKN.values()){
-    			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
-    				if(kn.fact.getPredicateName().equals(tp.s)){
-    					excite(kn, tp.value);
-    					this.inputTags.put(kn.fact, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
-    				if(kn.recommendation.equals(tp.s)){
-    					excite(kn, tp.value);
-    					this.inputTags.put(kn.recommendation, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
-    				if(kn.rule.equals(tp.s)){
-    					excite(kn, tp.value);
-    					this.inputTags.put(kn.rule, kn.objectTruth);
-    					found = true;
-    				}
-    			}
-    		}
-    		if(found == false){
-    			if(tp.s.charAt(0) == '@'){
-    				Recommendation rc = new Recommendation(tp.s);
-    				this.inputTags.put(rc, 0.0);
-    			}
-    			else if(tp.s.contains("->")){
-    				Rule r = new Rule(tp.s);
-    				this.inputTags.put(r, 0.0);
-    			}
-    			else if(tp.s.matches(".*\\(.*\\).*")){
-    				Fact f = new Fact(tp.s);
-    				this.inputTags.put(f, 0.0);
-    			}
-    			else{
-    				String str = tp.s + "()";
-    				Fact f = new Fact(str);
-    				this.inputTags.put(f, 0.0);
-    			}
-    		}
-    	}
+    	getInputForForwardSearch(NNoutputs);
     	
     	boolean allActived;
    		do{
@@ -677,21 +482,83 @@ public class KnowledgeNodeNetwork {
    			
    			for(Tag t : activeList){
    				if(this.mapKN.containsKey(t)){
-   					if(this.mapKN.get(t).isFired != true && this.mapKN.get(t).activation >= this.mapKN.get(t).threshold){
+   					if(!this.mapKN.get(t).isFired && this.mapKN.get(t).activation >= this.mapKN.get(t).threshold){
    						excite(this.mapKN.get(t), 0);
    						allActived = false;
    					}
    				}
     		}		
-    	}while(allActived == false);
+    	}while(!allActived);
     }    
- 
+    
+    /**
+     * Creating input Tags from string in the output of Neural Network (NN)
+     * This method is used only for forward search because excitation may be active during the Tag creation
+     * 
+     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     */
+    public void getInputForForwardSearch(ArrayList<Tuple> NNoutputs){
+    	for(Tuple tp : NNoutputs){
+    		boolean found = false;
+    		for(KnowledgeNode kn : this.mapKN.values()){
+    			if(kn.type.equals(KnowledgeNode.inputType.FACT)){
+    				if(kn.fact.getPredicateName().equals(tp.s)){
+    					excite(kn, tp.value);
+    					this.inputTags.put(kn.fact, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    			else if(kn.type.equals(KnowledgeNode.inputType.RECOMMENDATION)){
+    				if(kn.recommendation.getPredicateName().equals(tp.s)){
+    					excite(kn, tp.value);
+    					this.inputTags.put(kn.recommendation, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    			else if(kn.type.equals(KnowledgeNode.inputType.RULE)){
+    				if(kn.rule.toString().equals(tp.s)){
+    					excite(kn, tp.value);
+    					this.inputTags.put(kn.rule, kn.objectTruth);
+    					found = true;
+    				}
+    			}
+    		}
+    		if(!found){
+				createKNfromTuple(tp);
+    		}
+    	}
+    }
+
+	/**
+	 * Create a KN from a Tuple in KNN
+	 *
+	 * @param tp tuple used to create the KN
+	 */
+	public void createKNfromTuple(Tuple tp){
+		if(tp.s.charAt(0) == '@'){
+			Recommendation rc = new Recommendation(tp.s);
+			this.inputTags.put(rc, 0.0);
+		}
+		else if(tp.s.contains("->")){
+			Rule r = new Rule(tp.s);
+			this.inputTags.put(r, 0.0);
+		}
+		else if(tp.s.matches(".*\\(.*\\).*")){
+			Fact f = new Fact(tp.s);
+			this.inputTags.put(f, 0.0);
+		}
+		else{
+			String str = tp.s + "()";
+			Fact f = new Fact(str);
+			this.inputTags.put(f, 0.0);
+		}
+	}
     
     /**
      * Excites a Knowledge Node. 
      *
-     * @param kn: the Knowledge Node to excite
-     * @param value: the accuracy from the neural network
+     * @param kn the Knowledge Node to excite
+     * @param value the accuracy from the neural network
      * If excitation leads to firing, this will add the fired kn to the activeTag.
      */    
     public void excite(KnowledgeNode kn, int value) {
@@ -715,8 +582,7 @@ public class KnowledgeNodeNetwork {
     /**
      * Fires a Knowledge Node.
      * 
-     * @param kn: Knowledge Node to fire
-     * @return a Set of Tags found from the output list of kn that have activation >= threshold
+     * @param kn Knowledge Node to fire
      */
     public void fire(KnowledgeNode kn) {
         for (Tag t : kn.outputs.keySet()) {
@@ -733,13 +599,14 @@ public class KnowledgeNodeNetwork {
     }
     
     /**
+     * Update the confidence of those active KN found in output list of a KN with its latest confidence value
      * 
-     * @param kn
+     * @param kn the kn that has a new confidence value
      */
     public void updateConfidence(KnowledgeNode kn){
     	for(Tag t : kn.outputs.keySet()) {
     		KnowledgeNode currentKN = this.mapKN.get(t);
-    		if(currentKN.isActivated == true){
+    		if(currentKN.isActivated){
     			Tag parentTag = kn.typeChecker();        			
         		currentKN.listOfRelatedTruth.put( parentTag, (kn.objectTruth*kn.outputs.get(t))/100 );       		
         		currentKN.updateObjectConfidence();
@@ -748,5 +615,4 @@ public class KnowledgeNodeNetwork {
     		}
     	}
     }
-
 }
