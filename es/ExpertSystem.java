@@ -326,6 +326,11 @@ public class ExpertSystem implements PrometheusLayer {
                 pendingActivatedRules.add(rule);
             }
         }
+        activateRules(activatedPredicates, pendingActivatedRules);
+        return activatedPredicates;
+    }
+
+    private void activateRules(Set<IPredicate> activatedPredicates, Set<Rule> pendingActivatedRules) {
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
             activeRules.add(rule);
@@ -335,30 +340,18 @@ public class ExpertSystem implements PrometheusLayer {
                 addPredicate(predicate);
             }
         }
-        return activatedPredicates;
     }
 
 
     /**
      * Checks if two rules can be merged into a new rule & merges if possible
-     * @param inputRule rule 1
-     * @param outputRule rule 2
+     * @param ruleOne rule 1
+     * @param ruleTwo rule 2
      * @return a merged rule (rule 3)
      */
-    private Rule logicReasoner(Rule inputRule, Rule outputRule) {
-        for (Fact inputFact : inputRule.getInputFacts()) {
-            boolean fullMatch = false;
-            for (Fact outputIPredicate : outputRule.getInputFacts()) {
-                if (outputIPredicate.matches(inputFact).isDoesMatch()) {
-                    fullMatch = true;
-                    break;
-                }
-            }
-            if (!fullMatch) {
-                return new Rule();
-            }
-        }
-        return new Rule(inputRule.getInputFacts(), outputRule.getOutputPredicates());
+    private Rule logicReasoner(Rule ruleOne, Rule ruleTwo) {
+
+        return new Rule(ruleOne.getInputFacts(), ruleTwo.getOutputPredicates());
     }
 
     /**
@@ -368,23 +361,32 @@ public class ExpertSystem implements PrometheusLayer {
      * @param numberOfCycles how many cycles over the rule-set to attempt to merge
      * @return merged rules
      */
-    private Set<Rule> ruleMerger(int numberOfCycles) {
+    private Set<Rule> mergeCycle(int numberOfCycles) {
         Set<Rule> mergedRules = new HashSet<>();
         Set<Rule> inputRules = new HashSet<>();
         inputRules.addAll(readyRules);
         while (numberOfCycles > 0) {
-            for (Rule ruleOne : inputRules) {
-                for (Rule ruleTwo : inputRules) {
-                    Rule mergedRule = logicReasoner(ruleOne, ruleTwo);
-                    if (!mergedRule.equals(new Rule())) {
-                        mergedRules.add(mergedRule);
-                    }
-                }
-            }
+            makeMergedRule(mergedRules, inputRules);
             numberOfCycles--;
             inputRules = mergedRules;
         }
         return mergedRules;
+    }
+
+    private void makeMergedRule(Set<Rule> mergedRules, Set<Rule> inputRules) {
+        for (Rule ruleOne : inputRules) {
+            for (Rule ruleTwo : inputRules) {
+                for (Fact inputFact : ruleOne.getInputFacts()) {
+                    for (Fact outputIPredicate : ruleTwo.getInputFacts()) {
+                        if (outputIPredicate.matches(inputFact).isDoesMatch()) {
+                            Rule mergedRule = new Rule(ruleOne.getInputFacts(), ruleTwo.getOutputPredicates());
+                            mergedRules.add(mergedRule);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -395,7 +397,7 @@ public class ExpertSystem implements PrometheusLayer {
      * @param numberOfCycles how many cycles over the ruleset
      */
     public void rest(int numberOfCycles) {
-        Set<Rule> newRules = ruleMerger(numberOfCycles);
+        Set<Rule> newRules = mergeCycle(numberOfCycles);
         for (Rule newRule : newRules) {
             addRule(newRule);
         }
@@ -419,6 +421,13 @@ public class ExpertSystem implements PrometheusLayer {
             tokenList.add(token.toLowerCase());
         }
 
+        int ruleIndices[] = findRuleIndices(tokenList);
+        Rule taughtRule = makeTaughtRule(tokenList, ruleIndices[0], ruleIndices[1]);
+
+        addRule(taughtRule);
+    }
+
+    private int[] findRuleIndices(List<String> tokenList) {
         int inputIndex = -1;
         String [] inputTokens = {"if", "when", "while", "first"};
         for (String inputToken : inputTokens) {
@@ -436,21 +445,21 @@ public class ExpertSystem implements PrometheusLayer {
                 break;
             }
         }
+        return new int[]{inputIndex, outputIndex};
+    }
 
+    private Rule makeTaughtRule(List<String> tokenList, int inputIndex, int outputIndex) {
+        Rule newRule = new Rule();
         if (inputIndex < outputIndex) {
             String[] inputFacts = tokenList.subList(inputIndex+1, outputIndex).toArray(new String[0]);
             String[] outputFacts = tokenList.subList(outputIndex + 1, tokenList.size()).toArray(new String[0]);
-            Rule newRule = new Rule(inputFacts, outputFacts);
-            addRule(newRule);
-
-        }
-
-        else if (inputIndex > outputIndex) {
+            newRule = new Rule(inputFacts, outputFacts);
+        } else if (inputIndex > outputIndex) {
             String[] inputFacts = tokenList.subList(inputIndex+1, tokenList.size()).toArray(new String[0]);
             String[] outputFacts = tokenList.subList(outputIndex + 1, inputIndex).toArray(new String[0]);
-            Rule newRule = new Rule(inputFacts, outputFacts);
-            addRule(newRule);
+            newRule = new Rule(inputFacts, outputFacts);
         }
+        return newRule;
     }
 
 }

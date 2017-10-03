@@ -99,7 +99,7 @@ public class Fact extends Tag implements IPredicate {
     /**
      * Calls the appropriate Argument constructor on a string token.
      * <p>
-     * If argument is numeric -> NumericArgument; If contains [?*&] -> VariableArgument; Else -> StringArgument
+     * If argument is numeric {@literal ->} NumericArgument; If contains {@literal [?*&]} {@literal ->} VariableArgument; Else {@literal ->}StringArgument
      * @param argString String token
      * @return A single argument
      */
@@ -139,29 +139,31 @@ public class Fact extends Tag implements IPredicate {
     public VariableReturn matches(Fact inputFact) {
 
         VariableReturn result = new VariableReturn();
+        if (matchPredicateName(inputFact, result)) return result;
+        if (matchArgumentsSize(inputFact, result)) return result;
+        if (matchArguments(result, inputFact.arguments)) return result;
+        result.setDoesMatch(true);
+        return result;
+    }
+
+    private boolean matchPredicateName(Fact inputFact, VariableReturn result) {
         if (!this.predicateName.equals(inputFact.predicateName)) {
             result.setDoesMatch(false);
-            return result;
+            return true;
         }
+        return false;
+    }
 
-        if (inputFact.arguments.size() > this.arguments.size()) {
-            for (int i = this.arguments.size(); i < inputFact.arguments.size(); i++) {
-                if (!inputFact.arguments.get(i).getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
-                    result.setDoesMatch(false);
-                    return result;
-                }
-            }
-        }
-
+    private boolean matchArguments(VariableReturn result, List<Argument> iterInputFactArguments) {
         Iterator iterFact = this.arguments.iterator();
-        Iterator iterInputFact = inputFact.arguments.iterator();
+        Iterator iterInputFact = iterInputFactArguments.iterator();
 
         while (iterFact.hasNext()) {
             Argument argFact = (Argument) iterFact.next();
             Argument argInputFact = (Argument) iterInputFact.next();
             if (argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL) || argInputFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
                 result.setDoesMatch(true);
-                return result;
+                return true;
             }
             if (argInputFact.getSymbol().equals(Argument.ArgTypes.VAR)) {
                 result.setDoesMatch(true);
@@ -169,16 +171,26 @@ public class Fact extends Tag implements IPredicate {
             }
             result.setDoesMatch(argFact.matches(argInputFact));
             if (!result.isDoesMatch()) {
-                return result;
+                return true;
             }
         }
         if (iterInputFact.hasNext()) {
             Argument argFact = (Argument) iterInputFact.next();
             result.setDoesMatch((argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)));
-            return result;
+            return true;
         }
-        result.setDoesMatch(true);
-        return result;
+        return false;
+    }
 
+    private boolean matchArgumentsSize(Fact inputFact, VariableReturn result) {
+        if (inputFact.arguments.size() > this.arguments.size()) {
+            for (int i = this.arguments.size(); i < inputFact.arguments.size(); i++) {
+                if (!inputFact.arguments.get(i).getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
+                    result.setDoesMatch(false);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
