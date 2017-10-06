@@ -139,20 +139,14 @@ public class KnowledgeNodeNetwork {
 
     		//Find parents of the starting point that either has a path to the item or not
     		ArrayList<Tag> tagHavePathToItem = new ArrayList<>();
-    		ArrayList<Tag> tagNotHavePathToItem = new ArrayList<>();   		
     		for(Tag parent : allParentsofStartPoint){
-    			boolean isGoodParent = false;
     			ArrayList<Tag> belowTags = new ArrayList<>();
     			depthFirstSearch(parent, belowTags);
     			for(Tag tg : belowTags){
     				if(tg.equals(item)){
-    					isGoodParent = true;
     					tagHavePathToItem.add(parent);
     					break;
     				}
-    			}
-    			if(!isGoodParent){
-    				tagNotHavePathToItem.add(parent);
     			}
     		}
     		
