@@ -134,77 +134,56 @@ public class KnowledgeNodeNetwork {
     	
     	getInputForBackwardSearch(NNoutputs);
     	
-    	for(Tag t : this.activeTags.keySet()){
-    		HashSet<Tag> aboveTags = new HashSet<>();
-    		aboveTags.add(t);
-    		boolean added;
-    		do{
-    			added = false;
-    			for(KnowledgeNode kn : this.mapKN.values()){
-    				for(Tag tg : kn.outputs.keySet()){
-    					if(aboveTags.contains(tg)){
-    						Tag knType = kn.typeChecker();
-    						if(!aboveTags.contains(knType)){
-    							aboveTags.add(knType);
-    							added = true;
-    							break;
-    						}
-    					}
-    				}
-    			}
-    		}while(added);
-    		
-    		ArrayList<Tag> goodParents = new ArrayList<>();
-    		ArrayList<Tag> notGoodParents = new ArrayList<>();   		
-    		for(Tag parent : aboveTags){
+    	for(Tag startPoint : this.activeTags.keySet()){
+    		HashSet<Tag> allParentsofStartPoint = findAllParentKNofGivenTag(startPoint);
+
+    		//Find parents of the starting point that either has a path to the item or not
+    		ArrayList<Tag> tagHavePathToItem = new ArrayList<>();
+    		ArrayList<Tag> tagNotHavePathToItem = new ArrayList<>();   		
+    		for(Tag parent : allParentsofStartPoint){
     			boolean isGoodParent = false;
     			ArrayList<Tag> belowTags = new ArrayList<>();
     			depthFirstSearch(parent, belowTags);
     			for(Tag tg : belowTags){
     				if(tg.equals(item)){
     					isGoodParent = true;
-    					goodParents.add(parent);
+    					tagHavePathToItem.add(parent);
     					break;
     				}
     			}
     			if(!isGoodParent){
-    				notGoodParents.add(parent);
+    				tagNotHavePathToItem.add(parent);
     			}
     		}
     		
-    		for(Tag parent : goodParents){
-    			ArrayList<Tag> belowTags = new ArrayList<>();
-    			depthFirstSearch(parent, belowTags);
-    			for(Tag tg : belowTags){
+    		for(Tag parentOfStartPoint : tagHavePathToItem){
+    			ArrayList<Tag> descendants = new ArrayList<>();
+    			depthFirstSearch(parentOfStartPoint, descendants);
+    			for(Tag tg : descendants){
     				if(tg.equals(item)){
-    					for(Tag tag : bestPath.keySet()){
-    						if(!tag.equals(t)){
-    							this.mapKN.get(tag).objectTruth = 0;
-    						}
-    					}
+    					reset_ObjectTruth_Of_Tags_In_A_Path(startPoint, bestPath); //ObjectTruth of Tag t should not be reset because it is the starting point to calculate a new path
     					ArrayList<Tag> bads = new ArrayList<>();    					
-    					ArrayList<Tag> parentToItem = pathFinder(parent, tg, bads);
+    					ArrayList<Tag> parentToItem = pathFinder(parentOfStartPoint, tg, bads);
     					ArrayList<Tag> parentToChild;
     					ArrayList<Tag> previousParentToChild;
     					int numOfSame;    					
-    					
+
+    					//To avoid making a path that contain a cycle
     					do{
-    						parentToChild = pathFinder(parent, t, bads);
+    						parentToChild = pathFinder(parentOfStartPoint, startPoint, bads);
     						numOfSame = 0;
     						for(Tag ptC : parentToChild){
-    							if(!ptC.equals(t)  && !ptC.equals(parent)){
-    								for(Tag p : aboveTags){
-    									if(ptC.equals(p) && !notGoodParents.contains(p)){
+    							if(!ptC.equals(startPoint)  && !ptC.equals(parentOfStartPoint)){
+    								for(Tag otherParentOfStartPoint : allParentsofStartPoint){
+    									if(ptC.equals(otherParentOfStartPoint) && parentToItem.contains(otherParentOfStartPoint)){
     										numOfSame++;
     										bads.add(ptC);
-    										if(numOfSame > 0){
-    											break;
-    										}
+											break;
     									}
     								}
     							}
     						}
-    						previousParentToChild = pathFinder(parent, t, bads);
+    						previousParentToChild = pathFinder(parentOfStartPoint, startPoint, bads);
     					}while(numOfSame > 0 && !parentToChild.equals(previousParentToChild));
     					
 						if(numOfSame > 0){
@@ -230,7 +209,37 @@ public class KnowledgeNodeNetwork {
     	}
 
     	this.activeTags.putAll(bestPath);
-    } 
+    }
+
+    public void reset_ObjectTruth_Of_Tags_In_A_Path(Tag start, HashMap<Tag, Double> path){
+		for(Tag tag : path.keySet()){
+			if(!tag.equals(start)){
+				this.mapKN.get(tag).objectTruth = 0;
+			}
+		}
+	}
+
+    public HashSet<Tag> findAllParentKNofGivenTag(Tag t){
+	   	HashSet<Tag> allParents = new HashSet<>();
+	   	allParents.add(t);
+		boolean added;
+		do{
+			added = false;
+			for(KnowledgeNode kn : this.mapKN.values()){
+				for(Tag tg : kn.outputs.keySet()){
+					if(allParents.contains(tg)){
+						Tag knType = kn.typeChecker();
+						if(!allParents.contains(knType)){
+							allParents.add(knType);
+							added = true;
+						}
+					}
+				}
+			}
+		}while(added);
+
+		return allParents;
+	}
     
     /**
      * Calculate the confidence of each KN starting from its parental KN (one of the KN in its output list) in a path.
