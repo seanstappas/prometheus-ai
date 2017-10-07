@@ -130,79 +130,52 @@ public class KnowledgeNodeNetwork {
      */
     public void lambdaSearch(ArrayList<Tuple> NNoutputs, Tag item){
     	HashMap<Tag, Double> bestPath = new HashMap<>();
-    	double bestConfidence = 0;
+    	double bestObjectTruth = 0;
 
     	//Convert information from the NN to tags
     	getInputForBackwardSearch(NNoutputs);
     	
     	for(Tag startPoint : this.activeTags.keySet()){
-    		HashSet<Tag> allParentsofStartPoint = findAllParentKNofGivenTag(startPoint);
-
-    		//Find parents of the starting point that either has a path to the item or not
-    		ArrayList<Tag> tagHavePathToItem = new ArrayList<>();
-    		for(Tag parent : allParentsofStartPoint){
-    			ArrayList<Tag> belowTags = new ArrayList<>();
-    			depthFirstSearch(parent, belowTags);
-    			for(Tag tg : belowTags){
-    				if(tg.equals(item)){
-    					tagHavePathToItem.add(parent);
-    					break;
-    				}
-    			}
-    		}
+			ArrayList<Tag> commonParents = findCommonParents(item, startPoint);
 
     		//For each parent of the startPoint, find if there is a non cycle path that connect both the startPoint and the Item tag
-    		for(Tag parentOfStartPoint : tagHavePathToItem){
+    		for(Tag parentOfStartPoint : commonParents){
     			ArrayList<Tag> descendants = new ArrayList<>();
     			depthFirstSearch(parentOfStartPoint, descendants);
     			for(Tag tg : descendants){
     				if(tg.equals(item)){
-    					reset_ObjectTruth_Of_Tags_In_A_Path(startPoint, bestPath); //ObjectTruth of Tag t should not be reset because it is the starting point to calculate a new path
+    					resetAllObjectTruth(startPoint, bestPath); //ObjectTruth of Tag t should not be reset because it is the starting point to calculate a new path
     					ArrayList<Tag> bads = new ArrayList<>();    					
-    					ArrayList<Tag> parentToItem = pathFinder(parentOfStartPoint, tg, bads);
-    					ArrayList<Tag> parentToChild;
-    					ArrayList<Tag> previousParentToChild;
+    					ArrayList<Tag> parentToItem = pathFinder(parentOfStartPoint, tg, bads); //path from the common parent the item
+    					ArrayList<Tag> prentToSartPoint; //path from the common parent to the startPoint
+    					ArrayList<Tag> previousprentToSartPoint;
     					int numOfSame;
 
-    					//find if there is any tag beside the startPoint and the parentOfStartPoint from the parentToChild is also belong to parentToItem
-						//if it does, then try to find another path for parentToChild until there is no more possible path.
+    					//find if there is any tag beside the startPoint and the parentOfStartPoint from the prentToSartPoint is also belong to parentToItem
+						//if it does, then try to find another path for prentToSartPoint until there is no more possible path.
     					do{
-    						parentToChild = pathFinder(parentOfStartPoint, startPoint, bads);
+    						prentToSartPoint = pathFinder(parentOfStartPoint, startPoint, bads);
     						numOfSame = 0;
-    						for (Tag tagInParentToChild : parentToChild){
-    							if (!tagInParentToChild.equals(startPoint) && !tagInParentToChild.equals(parentOfStartPoint)){
-    								if(parentToItem.contains(tagInParentToChild)){
-    									bads.add(tagInParentToChild);
+    						for (Tag tagInprentToSartPoint : prentToSartPoint){
+    							if (!tagInprentToSartPoint.equals(startPoint) && !tagInprentToSartPoint.equals(parentOfStartPoint)){
+    								if(parentToItem.contains(tagInprentToSartPoint)){
+    									bads.add(tagInprentToSartPoint);
     									numOfSame++;
     									break;
 									}
 								}
 							}
-    						previousParentToChild = pathFinder(parentOfStartPoint, startPoint, bads);
-    					}while(numOfSame > 0 && !parentToChild.equals(previousParentToChild));
+    						previousprentToSartPoint = pathFinder(parentOfStartPoint, startPoint, bads);
+    					}while(numOfSame > 0 && !prentToSartPoint.equals(previousprentToSartPoint));
 
-    					//If all the possible for parentToChild has a tag that is also belong to the path of parentToItem, then this parent is will create a path containing a cycle within, therefore we need to skip
+    					//If all the possible for prentToSartPoint has a tag that is also belong to the path of parentToItem, then this parent is will create a path containing a cycle within, therefore we need to skip
 						if(numOfSame > 0){
     						break;
     					}
 
-    					//Calculate the new objectTruth of the Item tag based on the path it just found and store it in the KNN
-    					Collections.reverse(parentToChild); //parentToChild become childToParent
-    					backwardConfidence(parentToChild);
-    					forwardConfidence(parentToItem);
-
-    					//If the calculated objectTruth of the Item tag is larger than the previous found maximum objectTruth of the Item tag, it updates the best path
-    					if(this.mapKN.get(tg).objectTruth > bestConfidence){
-    						bestPath.clear();
-    						for(Tag tag : parentToChild){
-    							bestPath.put(tag, this.mapKN.get(tag).objectTruth);
-    						}
-    						for(Tag tag : parentToItem){
-    							bestPath.put(tag, this.mapKN.get(tag).objectTruth);
-    						}
-    						bestConfidence = this.mapKN.get(tg).objectTruth;
-    					}   					
-    				}
+						objectTruthEstimate(parentToItem, prentToSartPoint);
+						bestObjectTruth = getbestObjectTruth(bestPath, bestObjectTruth, tg, parentToItem, prentToSartPoint);
+					}
     			}
     		}
     	}
@@ -212,43 +185,50 @@ public class KnowledgeNodeNetwork {
     }
 
 	/**
+	 * 
+	 * @param parentToItem path from common parent to the item
+	 * @param prentToSartPoint path from common to stratPoint
+	 */
+	private void objectTruthEstimate(ArrayList<Tag> parentToItem, ArrayList<Tag> prentToSartPoint) {
+		Collections.reverse(prentToSartPoint); //prentToSartPoint become start point to parent because the first KN that has an objectTruth is the startPoint and it is calculate from the Neural Network
+		backwardConfidence(prentToSartPoint);
+		forwardConfidence(parentToItem);
+	}
+
+	/**
 	 *
-	 * @param start the tag that start the path
+	 * @param bestPath previous found best path
+	 * @param bestObjectTruth previous best found best confidence
+	 * @param item the item tag wanted to search
+	 * @param parentToItem the
+	 * @param prentToSartPoint
+	 * @return the actual maximum objectTruth found
+	 */
+	private double getbestObjectTruth(HashMap<Tag, Double> bestPath, double bestObjectTruth, Tag item, ArrayList<Tag> parentToItem, ArrayList<Tag> prentToSartPoint) {
+		if(this.mapKN.get(item).objectTruth > bestObjectTruth){
+            bestPath.clear();
+            for(Tag tag : prentToSartPoint){
+                bestPath.put(tag, this.mapKN.get(tag).objectTruth);
+            }
+            for(Tag tag : parentToItem){
+                bestPath.put(tag, this.mapKN.get(tag).objectTruth);
+            }
+            bestObjectTruth = this.mapKN.get(item).objectTruth;
+        }
+		return bestObjectTruth;
+	}
+
+	/**
+	 *
+	 * @param start the tag that start the path which the objectTruth should not be reset
 	 * @param path path that contains tags needed to be reset their objectTruth value
 	 */
-	public void reset_ObjectTruth_Of_Tags_In_A_Path(Tag start, HashMap<Tag, Double> path){
+	private void resetAllObjectTruth(Tag start, HashMap<Tag, Double> path){
 		for(Tag tag : path.keySet()){
 			if(!tag.equals(start)){
 				this.mapKN.get(tag).objectTruth = 0;
 			}
 		}
-	}
-
-	/**
-	 *
-	 * @param t the wanted tag to find its parents
-	 * @return a HashSet of tags that has a path to the wanted tag t
-	 */
-    public HashSet<Tag> findAllParentKNofGivenTag(Tag t){
-	   	HashSet<Tag> allParents = new HashSet<>();
-	   	allParents.add(t);
-		boolean added;
-		do{
-			added = false;
-			for(KnowledgeNode kn : this.mapKN.values()){
-				for(Tag tg : kn.outputs.keySet()){
-					if(allParents.contains(tg)){
-						Tag knType = kn.typeChecker();
-						if(!allParents.contains(knType)){
-							allParents.add(knType);
-							added = true;
-						}
-					}
-				}
-			}
-		}while(added);
-
-		return allParents;
 	}
     
     /**
@@ -256,7 +236,7 @@ public class KnowledgeNodeNetwork {
      * 
      * @param path a path of KN with descending order, parental to child KN
      */
-    public void forwardConfidence(ArrayList<Tag> path){
+    private void forwardConfidence(ArrayList<Tag> path){
     	double totalConfidence = 100;
     	if(path.size() != 1){
     		ArrayList<Double> listOfObjectTruth = new ArrayList<>();
@@ -278,8 +258,9 @@ public class KnowledgeNodeNetwork {
      * Calculate the confidence of each KN starting from its child KN (one of the KN in its output list) in a path.
      * 
      * @param path a path of KN with ascending order, child to parental KN
+	 * Note the calculation does not follow a mathematic logic, and this need to be modify in the future
      */
-    public void backwardConfidence(ArrayList<Tag> path){
+    private void backwardConfidence(ArrayList<Tag> path){
     	double totalConfidence = 100;
     	if(path.size() != 1){
     		ArrayList<Double> listOfObjectTruth = new ArrayList<>();
@@ -306,8 +287,9 @@ public class KnowledgeNodeNetwork {
      * @param end the given tag to finish the path
 	 * @param badComponents tags that can have a down stream path to both the start and end point
      * @return	an ArrayList that stores all the tags of the found path. The first slot of the list is the starting tag and the last slot is the ending tag
+	 * Note this method can only go descendant order
      */
-    public ArrayList<Tag> pathFinder(Tag start, Tag end, ArrayList<Tag> badComponents){
+    private ArrayList<Tag> pathFinder(Tag start, Tag end, ArrayList<Tag> badComponents){
     	ArrayList<Tag> currentPath = new ArrayList<>();
     	currentPath.add(start);
     	if(this.mapKN.get(start).outputs.containsKey(end) && !badComponents.contains(start)){
@@ -325,6 +307,56 @@ public class KnowledgeNodeNetwork {
     	}
     	return currentPath;
     }
+
+	/**
+	 *
+	 * @param item the item tag wanted to search for
+	 * @param startPoint the starting tag to go
+	 * @return a list of common parent that has a path to both item and start point
+	 */
+	private ArrayList<Tag> findCommonParents(Tag item, Tag startPoint) {
+		HashSet<Tag> allParentsofStartPoint = findAllParentOfGivenTag(startPoint);
+
+		ArrayList<Tag> commonParents = new ArrayList<>();
+		for(Tag parent : allParentsofStartPoint){
+			ArrayList<Tag> belowTags = new ArrayList<>();
+			depthFirstSearch(parent, belowTags);
+			for(Tag tg : belowTags){
+				if(tg.equals(item)){
+					commonParents.add(parent);
+					break;
+				}
+			}
+		}
+		return commonParents;
+	}
+
+	/**
+	 *
+	 * @param t the wanted tag to find its parents
+	 * @return a HashSet of tags that has a path to the wanted tag t
+	 */
+	private HashSet<Tag> findAllParentOfGivenTag(Tag t){
+		HashSet<Tag> allParents = new HashSet<>();
+		allParents.add(t);
+		boolean added;
+		do{
+			added = false;
+			for(KnowledgeNode kn : this.mapKN.values()){
+				for(Tag tg : kn.outputs.keySet()){
+					if(allParents.contains(tg)){
+						Tag knType = kn.typeChecker();
+						if(!allParents.contains(knType)){
+							allParents.add(knType);
+							added = true;
+						}
+					}
+				}
+			}
+		}while(added);
+
+		return allParents;
+	}
     
     /**
      * Depth first search (DFS) on a specific tag
