@@ -17,7 +17,6 @@ public class Tuple {
 	
 	@Override
 	public String toString(){
-		String r = "(" + s + ", " + value + ")";
-		return r;
+		return "(" + s + ", " + value + ")";
 	}
 }

@@ -36,8 +36,7 @@ public abstract class Tag {
 
         Tag tag = (Tag) o;
 
-        if (Double.compare(tag.confidenceValue, confidenceValue) != 0) return false;
-        return type == tag.type;
+        return Double.compare(tag.confidenceValue, confidenceValue) == 0 && type == tag.type;
     }
 
     @Override

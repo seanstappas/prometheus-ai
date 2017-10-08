@@ -247,10 +247,10 @@ public class KnowledgeNodeNetwork {
         		this.mapKN.get(next).objectTruth = this.mapKN.get(current).objectTruth * this.mapKN.get(current).outputs.get(next)/100;
         	}
         	listOfObjectTruth.add(this.mapKN.get(path.get(path.size()-1)).objectTruth);
-        	
-        	for(int i=0; i<listOfObjectTruth.size(); i++){
-        		totalConfidence = (totalConfidence * listOfObjectTruth.get(i)) /100;
-        	}
+
+			for (Double objectTruth : listOfObjectTruth) {
+				totalConfidence = (totalConfidence * objectTruth) / 100;
+			}
     	}    	    	
     }
     
@@ -272,10 +272,10 @@ public class KnowledgeNodeNetwork {
         		this.mapKN.get(next).updateObjectConfidence();
         	}
         	listOfObjectTruth.add(this.mapKN.get(path.get(path.size()-1)).objectTruth);
-        	
-        	for(int i=0; i<listOfObjectTruth.size(); i++){
-        		totalConfidence = (totalConfidence * listOfObjectTruth.get(i)) /100;
-        	}
+
+			for (Double objectTruth : listOfObjectTruth) {
+				totalConfidence = (totalConfidence * objectTruth) / 100;
+			}
     	}
     	
     }
@@ -386,9 +386,7 @@ public class KnowledgeNodeNetwork {
     	
     	for(int i=0; i<ply; i++){
     		ArrayList<Tag> previousActiveList = new ArrayList<>();
-    		for(Tag t : this.activeTags.keySet()){
-    			previousActiveList.add(t);
-    		}
+			previousActiveList.addAll(this.activeTags.keySet());
     		
     		for(KnowledgeNode kn : this.mapKN.values()){
     			int matching = 0;
@@ -499,10 +497,8 @@ public class KnowledgeNodeNetwork {
 
     	if(ply > 0 && !this.activeTags.isEmpty()){
     		for(int i=0; i<ply; i++){
-    			ArrayList<Tag> activeList = new ArrayList<>();      			
-       			for(Tag t : this.activeTags.keySet()){
-       				activeList.add(t);
-       			}
+    			ArrayList<Tag> activeList = new ArrayList<>();
+				activeList.addAll(this.activeTags.keySet());
        			
     			for(Tag t : activeList){
     				if(this.mapKN.containsKey(t)){
@@ -527,10 +523,8 @@ public class KnowledgeNodeNetwork {
    		do{
    			allActived = true;
    			ArrayList<Tag> activeList = new ArrayList<>();
-   			
-   			for(Tag t : this.activeTags.keySet()){
-   				activeList.add(t);
-   			}
+
+			activeList.addAll(this.activeTags.keySet());
    			
    			for(Tag t : activeList){
    				if(this.mapKN.containsKey(t)){

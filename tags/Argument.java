@@ -129,8 +129,7 @@ public class Argument {
 
         Argument argument = (Argument) o;
 
-        if (!name.equals(argument.name)) return false;
-        return symbol == argument.symbol;
+        return name.equals(argument.name) && symbol == argument.symbol;
     }
 
     @Override
@@ -276,8 +275,7 @@ class NumericArgument extends Argument {
 
         NumericArgument that = (NumericArgument) o;
 
-        if (isNeg != that.isNeg) return false;
-        return value == that.value;
+        return isNeg == that.isNeg && value == that.value;
     }
 
     @Override
@@ -384,8 +382,7 @@ class StringArgument extends Argument {
 
         StringArgument that = (StringArgument) o;
 
-        if (isNeg != that.isNeg) return false;
-        return value.equals(that.value);
+        return isNeg == that.isNeg && value.equals(that.value);
     }
 
     @Override
