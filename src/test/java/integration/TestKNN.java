@@ -1,11 +1,11 @@
 package integration;
 
+import com.google.inject.Guice;
 import knn.api.KnowledgeNode;
-import knn.internal.KnowledgeNodeNetworkImpl;
+import knn.api.KnowledgeNodeNetwork;
 import knn.api.Tuple;
+import knn.guice.KnowledgeNodeNetworkModule;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import tags.Fact;
@@ -22,12 +22,12 @@ import java.util.HashMap;
  * Knowledge Node Network Unit Tests
  */
 public class TestKNN {
-    KnowledgeNodeNetworkImpl relation;
-    ArrayList<KnowledgeNode> animal = new ArrayList<>();
+    private KnowledgeNodeNetwork relation;
+    private ArrayList<KnowledgeNode> animal = new ArrayList<>();
 
     @BeforeTest
     public void setup() {
-        relation = new KnowledgeNodeNetworkImpl();
+        relation = Guice.createInjector(new KnowledgeNodeNetworkModule()).getInstance(KnowledgeNodeNetwork.class);
     }
 
     public void setupKNN(){
@@ -53,49 +53,10 @@ public class TestKNN {
         }
     }
 
-    @BeforeMethod
-    public void setUp() throws Exception {
-        relation = new KnowledgeNodeNetworkImpl("integration");
-    }
-
-    @AfterMethod
-    public void tearDown() throws Exception {
-    }
-
-    @Test
-    public void testReset() throws Exception {
-        relation.reset("test1");
-        Assert.assertTrue(relation.getActiveTags().isEmpty());
-    }
-
     @Test
     public void testResetEmpty() throws Exception {
         relation.resetEmpty();
         Assert.assertTrue(relation.getActiveTags().isEmpty());
-    }
-
-    @Test
-    public void testSaveKNN() throws Exception {
-    }
-
-    @Test
-    public void testClearKN() throws Exception {
-    }
-
-    @Test
-    public void testAddKN() throws Exception {
-    }
-
-    @Test
-    public void testDelKN() throws Exception {
-    }
-
-    @Test
-    public void testAddFiredTag() throws Exception {
-    }
-
-    @Test
-    public void testGetActiveTags() throws Exception {
     }
 
     @Test

@@ -1,6 +1,8 @@
 package integration;
 
-import es.internal.ExpertSystemImpl;
+import com.google.inject.Guice;
+import es.api.ExpertSystem;
+import es.guice.ExpertSystemModule;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -10,11 +12,11 @@ import org.testng.annotations.Test;
  * Expert System Unit Tests
  */
 public class TestES {
-    private ExpertSystemImpl es;
+    private ExpertSystem es;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        es = new ExpertSystemImpl();
+        es = Guice.createInjector(new ExpertSystemModule()).getInstance(ExpertSystem.class);
     }
 
     @AfterMethod

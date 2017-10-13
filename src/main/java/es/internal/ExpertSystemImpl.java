@@ -3,22 +3,23 @@ package es.internal;
 import es.api.ExpertSystem;
 import tags.*;
 
+import javax.inject.Inject;
 import java.util.*;
 
 /**
  * Expert System (ES)
  */
-public class ExpertSystemImpl implements ExpertSystem {
+class ExpertSystemImpl implements ExpertSystem {
     private Set<Rule> readyRules;
     private Set<Rule> activeRules;
     private Set<Fact> facts;
     private Set<Recommendation> recommendations;
     private Map<String, Argument> pendingReplacementPairs;
 
-
     /**
      * Creates an Expert System (ES).
      */
+    @Inject
     public ExpertSystemImpl() {
         readyRules = new HashSet<>();
         facts = new HashSet<>();
@@ -90,14 +91,14 @@ public class ExpertSystemImpl implements ExpertSystem {
 
     @Override
     public Set<Tag> think() {
-        Set<Predicate> allactivatedPredicates = new HashSet<>();
+        Set<Predicate> allActivatedPredicates = new HashSet<>();
         Set<Predicate> activatedPredicates;
         do {
             activatedPredicates = thinkCycle();
-            allactivatedPredicates.addAll(activatedPredicates);
+            allActivatedPredicates.addAll(activatedPredicates);
         } while (!activatedPredicates.isEmpty());
         Set<Tag> activatedRecommendations = new HashSet<>();
-        for (Predicate predicate : allactivatedPredicates) {
+        for (Predicate predicate : allActivatedPredicates) {
             if (predicate instanceof Recommendation)
                 activatedRecommendations.add((Recommendation) predicate);
         }
@@ -106,21 +107,21 @@ public class ExpertSystemImpl implements ExpertSystem {
 
     @Override
     public Set<Tag> think(boolean shouldGenerateRule) {
-        Set<Predicate> allactivatedPredicates = new HashSet<>();
+        Set<Predicate> allActivatedPredicates = new HashSet<>();
         Set<Predicate> activatedPredicates;
         Set<Fact> inputFactSet = getFacts();
         Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
         do {
             activatedPredicates = thinkCycle();
-            allactivatedPredicates.addAll(activatedPredicates);
+            allActivatedPredicates.addAll(activatedPredicates);
         } while (!activatedPredicates.isEmpty());
         Set<Tag> activatedRecommendations = new HashSet<>();
-        for (Predicate predicate : allactivatedPredicates) {
+        for (Predicate predicate : allActivatedPredicates) {
             if (predicate instanceof Recommendation)
                 activatedRecommendations.add((Recommendation) predicate);
         }
         if (shouldGenerateRule) {
-            generateProvenRule(inputFactSetClone, allactivatedPredicates);
+            generateProvenRule(inputFactSetClone, allActivatedPredicates);
         }
         return activatedRecommendations;
     }
@@ -295,7 +296,6 @@ public class ExpertSystemImpl implements ExpertSystem {
         }
     }
 
-
     /**
      * Checks if two rules can be merged into a new rule & merges if possible
      * @param ruleOne rule 1
@@ -366,11 +366,11 @@ public class ExpertSystemImpl implements ExpertSystem {
     private Rule makeTaughtRule(List<String> tokenList, int inputIndex, int outputIndex) {
         Rule newRule = new Rule();
         if (inputIndex < outputIndex) {
-            String[] inputFacts = tokenList.subList(inputIndex+1, outputIndex).toArray(new String[0]);
+            String[] inputFacts = tokenList.subList(inputIndex + 1, outputIndex).toArray(new String[0]);
             String[] outputFacts = tokenList.subList(outputIndex + 1, tokenList.size()).toArray(new String[0]);
             newRule = new Rule(inputFacts, outputFacts);
         } else if (inputIndex > outputIndex) {
-            String[] inputFacts = tokenList.subList(inputIndex+1, tokenList.size()).toArray(new String[0]);
+            String[] inputFacts = tokenList.subList(inputIndex + 1, tokenList.size()).toArray(new String[0]);
             String[] outputFacts = tokenList.subList(outputIndex + 1, inputIndex).toArray(new String[0]);
             newRule = new Rule(inputFacts, outputFacts);
         }

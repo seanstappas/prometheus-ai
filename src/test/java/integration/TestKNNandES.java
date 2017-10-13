@@ -1,9 +1,12 @@
 package integration;
 
-import es.internal.ExpertSystemImpl;
+import com.google.inject.Guice;
+import es.api.ExpertSystem;
+import es.guice.ExpertSystemModule;
 import knn.api.KnowledgeNode;
-import knn.internal.KnowledgeNodeNetworkImpl;
+import knn.api.KnowledgeNodeNetwork;
 import knn.api.Tuple;
+import knn.guice.KnowledgeNodeNetworkModule;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -17,13 +20,13 @@ import java.util.*;
  * Running es.internal.ExpertSystemImpl and knn.internal.KnowledgeNodeNetwork
  */
 public class TestKNNandES { // TODO: integration with Google's GSON libary
-    KnowledgeNodeNetworkImpl knn;
-    ExpertSystemImpl es;
+    private KnowledgeNodeNetwork knn;
+    private ExpertSystem es;
 
     @BeforeTest
     public void setup() {
-        knn = new KnowledgeNodeNetworkImpl();
-        es = new ExpertSystemImpl();
+        knn = Guice.createInjector(new KnowledgeNodeNetworkModule()).getInstance(KnowledgeNodeNetwork.class);
+        es = Guice.createInjector(new ExpertSystemModule()).getInstance(ExpertSystem.class);
     }
 
     /**

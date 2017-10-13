@@ -8,32 +8,20 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
+class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 	private HashMap<Tag, KnowledgeNode> mapKN;
 	private HashMap<Tag, Double> inputTags;
     private HashMap<Tag, Double> activeTags;
 
-    /**
-     * constructor for testing only
-     */
+    @Inject
     public KnowledgeNodeNetworkImpl(){
     	mapKN = new HashMap<>();
-        activeTags = new HashMap<>();
-        inputTags = new HashMap<>();
-    }
-
-    /**
-     * Creates a new Knowledge Node Network (KNN) based on a database.
-     *
-     * @param dbFilename the filename of the database to be read from (probably CSV or JSON)
-     */
-    public KnowledgeNodeNetworkImpl(String dbFilename) {
-        mapKN = new HashMap<>();
         activeTags = new HashMap<>();
         inputTags = new HashMap<>();
     }
@@ -407,13 +395,13 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 	 * @param bestObjectTruth previous best found best confidence
 	 * @param item the item tag wanted to search
 	 * @param parentToItem the
-	 * @param prentToSartPoint
+	 * @param parentToStartPoint
 	 * @return the actual maximum objectTruth found
 	 */
-	private double getbestObjectTruth(HashMap<Tag, Double> bestPath, double bestObjectTruth, Tag item, ArrayList<Tag> parentToItem, ArrayList<Tag> prentToSartPoint) {
+	private double getbestObjectTruth(HashMap<Tag, Double> bestPath, double bestObjectTruth, Tag item, ArrayList<Tag> parentToItem, ArrayList<Tag> parentToStartPoint) {
 		if(this.mapKN.get(item).objectTruth > bestObjectTruth){
             bestPath.clear();
-            for(Tag tag : prentToSartPoint){
+            for(Tag tag : parentToStartPoint){
                 bestPath.put(tag, this.mapKN.get(tag).objectTruth);
             }
             for(Tag tag : parentToItem){
