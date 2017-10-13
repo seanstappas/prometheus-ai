@@ -1,9 +1,9 @@
-package test;
+package integration;
 
-import es.ExpertSystem;
-import knn.KnowledgeNode;
-import knn.KnowledgeNodeNetwork;
-import knn.Tuple;
+import es.internal.ExpertSystemImpl;
+import knn.api.KnowledgeNode;
+import knn.internal.KnowledgeNodeNetworkImpl;
+import knn.api.Tuple;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -14,16 +14,16 @@ import java.io.FileReader;
 import java.util.*;
 
 /**
- * Running es.ExpertSystem and knn.KnowledgeNodeNetwork
+ * Running es.internal.ExpertSystemImpl and knn.internal.KnowledgeNodeNetwork
  */
-public class TestIntegration { // TODO: test with Google's GSON libary
-    KnowledgeNodeNetwork knn;
-    ExpertSystem es;
+public class TestKNNandES { // TODO: integration with Google's GSON libary
+    KnowledgeNodeNetworkImpl knn;
+    ExpertSystemImpl es;
 
     @BeforeTest
     public void setup() {
-        knn = new KnowledgeNodeNetwork();
-        es = new ExpertSystem();
+        knn = new KnowledgeNodeNetworkImpl();
+        es = new ExpertSystemImpl();
     }
 
     /**
@@ -219,7 +219,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         System.out.println("[KNN] Active tags after lambda searching: " + activeTags);
 
         Assert.assertTrue(activeTags.containsKey(factToSearch));
-        Assert.assertTrue(activeTags.get(factToSearch) == 70.0);  
+        Assert.assertTrue(activeTags.get(factToSearch) == 70.0);
         System.out.println("");
 
         return activeTags;
@@ -233,7 +233,7 @@ public class TestIntegration { // TODO: test with Google's GSON libary
         ArrayList<KnowledgeNode> animal = new ArrayList<>();
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader("./animalData")); //change the local directory for the test file to run
+            BufferedReader br = new BufferedReader(new FileReader("./animalData")); //change the local directory for the integration file to run
             String line;
             while ((line = br.readLine()) != null) {
                 String[] info = line.split(";\\s+");

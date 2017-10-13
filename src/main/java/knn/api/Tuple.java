@@ -1,6 +1,6 @@
-package knn;
+package knn.api;
 
-public class Tuple {
+public final class Tuple {
 	public String s;
 	public int value;
 	

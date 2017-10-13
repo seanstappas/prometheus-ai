@@ -1,6 +1,6 @@
-package es;
+package es.internal;
 
-import interfaces.PrometheusLayer;
+import es.api.ExpertSystem;
 import tags.*;
 
 import java.util.*;
@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Expert System (ES)
  */
-public class ExpertSystem implements PrometheusLayer {
+public class ExpertSystemImpl implements ExpertSystem {
     private Set<Rule> readyRules;
     private Set<Rule> activeRules;
     private Set<Fact> facts;
@@ -19,7 +19,7 @@ public class ExpertSystem implements PrometheusLayer {
     /**
      * Creates an Expert System (ES).
      */
-    public ExpertSystem() {
+    public ExpertSystemImpl() {
         readyRules = new HashSet<>();
         facts = new HashSet<>();
         recommendations = new HashSet<>();

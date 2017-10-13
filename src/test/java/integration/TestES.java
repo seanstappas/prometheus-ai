@@ -1,6 +1,6 @@
-package test;
+package integration;
 
-import es.ExpertSystem;
+import es.internal.ExpertSystemImpl;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -10,11 +10,11 @@ import org.testng.annotations.Test;
  * Expert System Unit Tests
  */
 public class TestES {
-    private ExpertSystem es;
+    private ExpertSystemImpl es;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        es = new ExpertSystem();
+        es = new ExpertSystemImpl();
     }
 
     @AfterMethod

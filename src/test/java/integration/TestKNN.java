@@ -1,8 +1,8 @@
-package test;
+package integration;
 
-import knn.KnowledgeNode;
-import knn.KnowledgeNodeNetwork;
-import knn.Tuple;
+import knn.api.KnowledgeNode;
+import knn.internal.KnowledgeNodeNetworkImpl;
+import knn.api.Tuple;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -22,18 +22,18 @@ import java.util.HashMap;
  * Knowledge Node Network Unit Tests
  */
 public class TestKNN {
-    KnowledgeNodeNetwork relation;
+    KnowledgeNodeNetworkImpl relation;
     ArrayList<KnowledgeNode> animal = new ArrayList<>();
 
     @BeforeTest
     public void setup() {
-        relation = new KnowledgeNodeNetwork();
+        relation = new KnowledgeNodeNetworkImpl();
     }
 
     public void setupKNN(){
         relation.resetEmpty();
         try{
-            BufferedReader br = new BufferedReader(new FileReader("./petData")); //change the directory for the test file to run
+            BufferedReader br = new BufferedReader(new FileReader("./petData")); //change the directory for the integration file to run
             String line;
             while( (line = br.readLine()) != null){
                 String[] info = line.split(";\\s+");
@@ -55,7 +55,7 @@ public class TestKNN {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        relation = new KnowledgeNodeNetwork("test");
+        relation = new KnowledgeNodeNetworkImpl("integration");
     }
 
     @AfterMethod
@@ -158,8 +158,8 @@ public class TestKNN {
         expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 90.0);
         expectedActiveTags.put(new Fact("dog(wow, carnivore)"), 100.0);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 80.0);
-        System.out.println("[excite test] Tags to excite 1st: dog(wow, carnivore) : 10");
-        System.out.println("[excite test] Active Tags: " + relation.getActiveTags().toString());
+        System.out.println("[excite integration] Tags to excite 1st: dog(wow, carnivore) : 10");
+        System.out.println("[excite integration] Active Tags: " + relation.getActiveTags().toString());
         Assert.assertEquals(relation.getActiveTags(), expectedActiveTags);
 
         for(KnowledgeNode kn : animal){
@@ -174,13 +174,13 @@ public class TestKNN {
                 }
             }
         }
-        System.out.println("[excite test] Tags to excite 2nd: husky(Ranger,male,length>58,weight=26) : 10, cat(meow, carnivore) : 10");
+        System.out.println("[excite integration] Tags to excite 2nd: husky(Ranger,male,length>58,weight=26) : 10, cat(meow, carnivore) : 10");
         expectedActiveTags.put(new Fact("cat(meow, carnivore)"), 100.0);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 69.0);
         expectedActiveTags.put(new Fact("husky(Ranger,male,length>58,weight=26)"), 100.0);
         expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 75.75);
         expectedActiveTags.put(new Fact("dog(wow, carnivore)"), 85.0);
-        System.out.println("[excite test] Active Tags: " + relation.getActiveTags().toString());
+        System.out.println("[excite integration] Active Tags: " + relation.getActiveTags().toString());
         Assert.assertEquals(relation.getActiveTags(), expectedActiveTags);
         System.out.println("");
     }
@@ -202,7 +202,7 @@ public class TestKNN {
         expectedInputTags.put(new Recommendation("@isAnimal(calm,bark)"), 0.0);
         expectedInputTags.put(new Rule("friend(nice,kind) -> @meet(community,people>2)"), 0.0);
         expectedInputTags.put(new Fact("chair()"), 0.0);
-        System.out.println("[CreateKNFromTuple test] Input Tags: " + relation.getInputTags().toString());
+        System.out.println("[CreateKNFromTuple integration] Input Tags: " + relation.getInputTags().toString());
         Assert.assertEquals(relation.getInputTags(), expectedInputTags);
         Assert.assertTrue(relation.getActiveTags().isEmpty());
         System.out.println("");
