@@ -3,9 +3,6 @@ package es.guice;
 import com.google.inject.AbstractModule;
 import es.internal.ExpertSystemInternalModule;
 
-/**
- * Created by Sean on 10/13/2017.
- */
 public class ExpertSystemModule extends AbstractModule {
     protected void configure() {
         install(new ExpertSystemInternalModule());

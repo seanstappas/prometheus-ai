@@ -3,9 +3,6 @@ package knn.internal;
 import com.google.inject.AbstractModule;
 import knn.api.KnowledgeNodeNetwork;
 
-/**
- * Created by Sean on 10/13/2017.
- */
 public class KnowledgeNodeNetworkInternalModule extends AbstractModule {
     protected void configure() {
         bind(KnowledgeNodeNetwork.class).to(KnowledgeNodeNetworkImpl.class);

@@ -3,9 +3,6 @@ package knn.guice;
 import com.google.inject.AbstractModule;
 import knn.internal.KnowledgeNodeNetworkInternalModule;
 
-/**
- * Created by Sean on 10/13/2017.
- */
 public class KnowledgeNodeNetworkModule extends AbstractModule {
     protected void configure() {
         install(new KnowledgeNodeNetworkInternalModule());
