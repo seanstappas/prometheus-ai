@@ -27,9 +27,7 @@ public class ExpertSystemImpl implements ExpertSystem {
         pendingReplacementPairs = new HashMap<>();
     }
 
-    /**
-     * Resets the ES by clearing all Rules, Recommendations, and Facts.
-     */
+    @Override
     public void reset() {
         activeRules.clear();
         readyRules.clear();
@@ -37,12 +35,139 @@ public class ExpertSystemImpl implements ExpertSystem {
         recommendations.clear();
     }
 
-    /**
-     * Deactivates all active Rules.
-     */
+    @Override
     public void deactivateRules() {
         readyRules.addAll(activeRules);
         activeRules.clear();
+    }
+
+    @Override
+    public void addTags(Set<Tag> tags) {
+        for (Tag t : tags) {
+            addTag(t);
+        }
+    }
+
+    @Override
+    public boolean addFact(Fact fact) {
+        return facts.add(fact);
+    }
+
+    @Override
+    public boolean removeFact(Fact fact) {
+        return facts.remove(fact);
+    }
+
+    @Override
+    public boolean addRule(Rule rule) {
+        return readyRules.add(rule);
+    }
+
+    @Override
+    public boolean addRecommendation(Recommendation rec) {
+        return recommendations.add(rec);
+    }
+
+    @Override
+    public Set<Recommendation> getRecommendations() {
+        return recommendations;
+    }
+
+    @Override
+    public Set<Rule> getReadyRules() { // For testing purposes
+        return readyRules;
+    }
+
+    @Override
+    public Set<Rule> getActiveRules() { // For testing purposes
+        return activeRules;
+    }
+
+    @Override
+    public Set<Fact> getFacts() { // For testing purposes
+        return facts;
+    }
+
+    @Override
+    public Set<Tag> think() {
+        Set<Predicate> allactivatedPredicates = new HashSet<>();
+        Set<Predicate> activatedPredicates;
+        do {
+            activatedPredicates = thinkCycle();
+            allactivatedPredicates.addAll(activatedPredicates);
+        } while (!activatedPredicates.isEmpty());
+        Set<Tag> activatedRecommendations = new HashSet<>();
+        for (Predicate predicate : allactivatedPredicates) {
+            if (predicate instanceof Recommendation)
+                activatedRecommendations.add((Recommendation) predicate);
+        }
+        return activatedRecommendations;
+    }
+
+    @Override
+    public Set<Tag> think(boolean shouldGenerateRule) {
+        Set<Predicate> allactivatedPredicates = new HashSet<>();
+        Set<Predicate> activatedPredicates;
+        Set<Fact> inputFactSet = getFacts();
+        Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
+        do {
+            activatedPredicates = thinkCycle();
+            allactivatedPredicates.addAll(activatedPredicates);
+        } while (!activatedPredicates.isEmpty());
+        Set<Tag> activatedRecommendations = new HashSet<>();
+        for (Predicate predicate : allactivatedPredicates) {
+            if (predicate instanceof Recommendation)
+                activatedRecommendations.add((Recommendation) predicate);
+        }
+        if (shouldGenerateRule) {
+            generateProvenRule(inputFactSetClone, allactivatedPredicates);
+        }
+        return activatedRecommendations;
+    }
+
+    @Override
+    public Set<Tag> think(int numberOfCycles, boolean shouldGenerateRule) {
+        Set<Predicate> allactivatedPredicates = new HashSet<>();
+        Set<Predicate> activatedPredicates;
+        Set<Fact> inputFactSet = getFacts();
+        Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
+        for (int i = 0; i < numberOfCycles; i++) {
+            activatedPredicates = thinkCycle();
+            if (activatedPredicates.isEmpty())
+                break;
+            allactivatedPredicates.addAll(activatedPredicates);
+        }
+        Set<Tag> activatedRecommendations = new HashSet<>();
+        for (Predicate predicate : allactivatedPredicates) {
+            if (predicate instanceof Recommendation)
+                activatedRecommendations.add((Recommendation) predicate);
+        }
+        if (shouldGenerateRule) {
+            generateProvenRule(inputFactSetClone, allactivatedPredicates);
+        }
+        return activatedRecommendations;
+    }
+
+    @Override
+    public void rest(int numberOfCycles) {
+        Set<Rule> newRules = mergeCycle(numberOfCycles);
+        for (Rule newRule : newRules) {
+            addRule(newRule);
+        }
+    }
+
+    @Override
+    public void teach(String sentence) {
+        String[] tokens = sentence.split("\\s");
+        List<String> tokenList = new ArrayList<>();
+        for (String token : tokens) {
+            tokenList.add(token.toLowerCase());
+        }
+
+        int ruleIndices[] = findRuleIndices(tokenList);
+        Rule taughtRule = makeTaughtRule(tokenList, ruleIndices[0], ruleIndices[1]);
+
+        addRule(taughtRule);
     }
 
     /**
@@ -70,7 +195,7 @@ public class ExpertSystemImpl implements ExpertSystem {
      * @param predicate the Predicate to be added
      */
 
-    private void addPredicate(IPredicate predicate) {
+    private void addPredicate(Predicate predicate) {
         switch (predicate.getType()) {
             case FACT:
                 addFact((Fact) predicate);
@@ -78,94 +203,6 @@ public class ExpertSystemImpl implements ExpertSystem {
             case RECOMMENDATION:
                 addRecommendation((Recommendation) predicate);
         }
-    }
-
-    /**
-     * Adds multiple Tags to the ES.
-     *
-     * @param tags the Tags to be added
-     * @deprecated
-     */
-    public void addTags(Set<Tag> tags) {
-        for (Tag t : tags) {
-            addTag(t);
-        }
-    }
-
-    /**
-     * Adds a Fact to the ES.
-     *
-     * @param fact the Fact to be added
-     * @return <code>true</code> if the ES did not already contain the specified Fact
-     */
-    public boolean addFact(Fact fact) {
-        return facts.add(fact);
-    }
-
-    /**
-     * Removes a fact from the ES.
-     * @param fact the Fact to be removed
-     * @return <code>true</code> if the ES did not remove the specified Fact
-     */
-
-    public boolean removeFact(Fact fact) {
-        return facts.remove(fact);
-    }
-
-    /**
-     * Adds a Rule to the ES.
-     *
-     * @param rule the Rule to be added
-     * @return <code>true</code> if the ES did not already contain the specified Rule
-     */
-    public boolean addRule(Rule rule) {
-        return readyRules.add(rule);
-    }
-
-    /**
-     * Adds a Recommendation to the ES.
-     *
-     * @param rec the Recommendation to be added
-     * @return <code>true</code> if the ES did not already contain the specified Recommendation
-     */
-    public boolean addRecommendation(Recommendation rec) {
-        return recommendations.add(rec);
-    }
-
-    /**
-     * Gets all the Recommendations of the ES.
-     *
-     * @return the Recommendations of the ES
-     */
-    public Set<Recommendation> getRecommendations() {
-        return recommendations;
-    }
-
-    /**
-     * Gets the ready Rules of the ES.
-     *
-     * @return the ready Rules of the ES
-     */
-    public Set<Rule> getReadyRules() { // For testing purposes
-        return readyRules;
-    }
-
-    /**
-     * Gets the active Rules of the ES.
-     *
-     * @return the active Rules of the ES
-     */
-    public Set<Rule> getActiveRules() { // For testing purposes
-        return activeRules;
-    }
-
-    /**
-     * Gets the Facts of the ES.
-     *
-     * @return the Facts of the ES
-     */
-    public Set<Fact> getFacts() { // For testing purposes
-        return facts;
     }
 
     /**
@@ -197,8 +234,8 @@ public class ExpertSystemImpl implements ExpertSystem {
      * @param inputFactSet Set of Facts in ES
      * @param allActivatedPredicates Set of activated Predicates
      */
-    private void generateProvenRule(Set<Fact> inputFactSet, Set<IPredicate> allActivatedPredicates) {
-        Set<IPredicate> outputPredicates = new HashSet<>();
+    private void generateProvenRule(Set<Fact> inputFactSet, Set<Predicate> allActivatedPredicates) {
+        Set<Predicate> outputPredicates = new HashSet<>();
         outputPredicates.addAll(allActivatedPredicates);
         Rule provenRule = new Rule(inputFactSet, outputPredicates);
         addRule(provenRule);
@@ -209,7 +246,7 @@ public class ExpertSystemImpl implements ExpertSystem {
      *
      * @param predicate the Predicate that has arguments to replace
      */
-    private void replaceVariableArguments(IPredicate predicate) {
+    private void replaceVariableArguments(Predicate predicate) {
         int argumentIndex = 0;
 
         for (Argument argument : predicate.getArguments()) {
@@ -220,90 +257,6 @@ public class ExpertSystemImpl implements ExpertSystem {
         }
     }
 
-
-    /**
-     * {@code shouldGenerateRule} defaults to false
-     * @see #think(boolean)
-     */
-
-    public Set<Tag> think() {
-        Set<IPredicate> allactivatedPredicates = new HashSet<>();
-        Set<IPredicate> activatedPredicates;
-        do {
-            activatedPredicates = thinkCycle();
-            allactivatedPredicates.addAll(activatedPredicates);
-        } while (!activatedPredicates.isEmpty());
-        Set<Tag> activatedRecommendations = new HashSet<>();
-        for (IPredicate predicate : allactivatedPredicates) {
-            if (predicate instanceof Recommendation)
-                activatedRecommendations.add((Recommendation) predicate);
-        }
-        return activatedRecommendations;
-    }
-
-    /**
-     * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
-     * possible.
-     * <p>
-     * Stops once the system reaches natural quiescence and generates a new rule.
-     *
-     * @param shouldGenerateRule if true generates the new rule proven by a think cycle
-     * @return the activated Recommendations as a result of thinking
-     */
-
-    public Set<Tag> think(boolean shouldGenerateRule) {
-        Set<IPredicate> allactivatedPredicates = new HashSet<>();
-        Set<IPredicate> activatedPredicates;
-        Set<Fact> inputFactSet = getFacts();
-        Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
-        do {
-            activatedPredicates = thinkCycle();
-            allactivatedPredicates.addAll(activatedPredicates);
-        } while (!activatedPredicates.isEmpty());
-        Set<Tag> activatedRecommendations = new HashSet<>();
-        for (IPredicate predicate : allactivatedPredicates) {
-            if (predicate instanceof Recommendation)
-                activatedRecommendations.add((Recommendation) predicate);
-        }
-        if (shouldGenerateRule) {
-            generateProvenRule(inputFactSetClone, allactivatedPredicates);
-        }
-        return activatedRecommendations;
-    }
-
-    /**
-     * Makes the ES think for a fixed number of cycles. The number of cycles represents how much effort is being put
-     * into thinking. Each cycle is a run-through of all the ready Rules, activating Rules if possible. Note that a Rule
-     * that is activated in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
-     * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
-     * quiescence. Generates a new rule.
-     *
-     * @param numberOfCycles the number of cycles to think for
-     * @param shouldGenerateRule if true generates the new rule proven by a think cycle
-     * @return the activated Recommendations as a result of thinking
-     */
-    public Set<Tag> think(int numberOfCycles, boolean shouldGenerateRule) {
-        Set<IPredicate> allactivatedPredicates = new HashSet<>();
-        Set<IPredicate> activatedPredicates;
-        Set<Fact> inputFactSet = getFacts();
-        Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
-        for (int i = 0; i < numberOfCycles; i++) {
-            activatedPredicates = thinkCycle();
-            if (activatedPredicates.isEmpty())
-                break;
-            allactivatedPredicates.addAll(activatedPredicates);
-        }
-        Set<Tag> activatedRecommendations = new HashSet<>();
-        for (IPredicate predicate : allactivatedPredicates) {
-            if (predicate instanceof Recommendation)
-                activatedRecommendations.add((Recommendation) predicate);
-        }
-        if (shouldGenerateRule) {
-            generateProvenRule(inputFactSetClone, allactivatedPredicates);
-        }
-        return activatedRecommendations;
-    }
-
     /**
      * Makes the ES think for a single cycle.
      * <p>
@@ -311,8 +264,8 @@ public class ExpertSystemImpl implements ExpertSystem {
      *
      * @return the activated Predicates as a result of thinking
      */
-    private Set<IPredicate> thinkCycle() {
-        Set<IPredicate> activatedPredicates = new HashSet<>();
+    private Set<Predicate> thinkCycle() {
+        Set<Predicate> activatedPredicates = new HashSet<>();
         Set<Rule> pendingActivatedRules = new HashSet<>();
         for (Rule rule : readyRules) {
             boolean shouldActivate = true;
@@ -330,11 +283,11 @@ public class ExpertSystemImpl implements ExpertSystem {
         return activatedPredicates;
     }
 
-    private void activateRules(Set<IPredicate> activatedPredicates, Set<Rule> pendingActivatedRules) {
+    private void activateRules(Set<Predicate> activatedPredicates, Set<Rule> pendingActivatedRules) {
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
             activeRules.add(rule);
-            for (IPredicate predicate : rule.getOutputPredicates()) {
+            for (Predicate predicate : rule.getOutputPredicates()) {
                 replaceVariableArguments(predicate);
                 activatedPredicates.add(predicate);
                 addPredicate(predicate);
@@ -387,44 +340,6 @@ public class ExpertSystemImpl implements ExpertSystem {
                 }
             }
         }
-    }
-
-    /**
-     * Process that occurs when ES is not thinking.
-     * <p>
-     * Currently calls addRule to merge rules
-     *
-     * @param numberOfCycles how many cycles over the ruleset
-     */
-    public void rest(int numberOfCycles) {
-        Set<Rule> newRules = mergeCycle(numberOfCycles);
-        for (Rule newRule : newRules) {
-            addRule(newRule);
-        }
-    }
-
-    /**
-     * Generates rules from a natural language sentence
-     * <p>
-     * NB: Sentences must contain one token from {"if", "when", "while", "first"}, and one token from {"then", "next", "do"},
-     *  to denote input facts and output predicates respectively
-     *  <p>
-     *  e.g. "If Human(near) Then Move(steps=10)"
-     *
-     * @param sentence that contains input and output delimiters
-     */
-
-    public void teach(String sentence) {
-        String[] tokens = sentence.split("\\s");
-        List<String> tokenList = new ArrayList<>();
-        for (String token : tokens) {
-            tokenList.add(token.toLowerCase());
-        }
-
-        int ruleIndices[] = findRuleIndices(tokenList);
-        Rule taughtRule = makeTaughtRule(tokenList, ruleIndices[0], ruleIndices[1]);
-
-        addRule(taughtRule);
     }
 
     private int[] findRuleIndices(List<String> tokenList) {

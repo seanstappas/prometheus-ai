@@ -38,45 +38,29 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         inputTags = new HashMap<>();
     }
 
-    /**
-     * Resets the KNN to a state from a database.
-     *
-     * @param dbFilename the filename of the database to be read from
-     */
+    @Override
     public void reset(String dbFilename) {
 
     }
 
-    /**
-     * Resets the KNN by clearing all data structures.
-     */
+    @Override
     public void resetEmpty() {
     	clearKN();
     }
 
-    /**
-     * Saves the current state of the KNN to a database.
-     *
-     * @param dbFilename the filename of the database
-     */
+    @Override
     public void saveKNN(String dbFilename) {
 
     }
 
-    /**
-     * Clears all the Knowledge Nodes from the KNN.
-     */
+    @Override
     public void clearKN() {
         mapKN.clear();
         activeTags.clear();
         inputTags.clear();
     }
 
-    /**
-     * Adds a Knowledge Node to the KNN.
-     *
-     * @param kn the Knowledge Node to be added
-     */
+    @Override
     public void addKN(KnowledgeNode kn) {
         if(kn.type.equals(KnowledgeNode.InputType.FACT)){
         	this.mapKN.put(kn.fact, kn);
@@ -89,48 +73,27 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         }
     }
 
-    /**
-     * Deletes a Knowledge Node from the KNN.
-     *
-     * @param tag the input Tag of the Knowledge Node to be deleted
-     */
+    @Override
     public void delKN(Tag tag) {
     	mapKN.remove(tag);
     }
 
-    /**
-     * Adds a fired Tag to the KNN.
-     *
-     * @param tag the fired Tag to be added
-     */
+    @Override
     public void addFiredTag(Tag tag, double objectTruth) {
     	this.activeTags.put(tag, objectTruth);
     }
 
-    /**
-     * Get access of input Tags
-     *
-     * @return	the access of the input Tags found from the KNN using output from the neural network
-     */
+    @Override
     public HashMap<Tag, Double> getInputTags(){
     	return this.inputTags;
     }
 
-    /**
-     * Get access of active Tags
-     *
-     * @return	the Access of active Tags
-     */
+    @Override
     public HashMap<Tag, Double> getActiveTags() {
 		return this.activeTags;
     }
 
-    /**
-     * Lambda search, a search to find out the best relation between a know list of tags and a wanted item tag
-     *
-     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param item the wanted item tag
-     */
+    @Override
     public void lambdaSearch(ArrayList<Tuple> NNoutputs, Tag item){
     	HashMap<Tag, Double> bestPath = new HashMap<>();
     	double bestObjectTruth = 0;
@@ -187,12 +150,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     	this.activeTags.putAll(bestPath);
     }
 
-	/**
-	 * Backward searching with unlimited time
-	 *
-	 * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-	 * @param score the minimum number of matching needed from the output list of a KN in order for that KN to become active.
-	 */
+    @Override
 	public void backwardSearch(ArrayList<Tuple> NNoutputs, double score){
 		getInputForBackwardSearch(NNoutputs);
 
@@ -220,12 +178,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 		} while (!pendingFacts.isEmpty());
 	}
 
-	/**
-	 * Creating input Tags from string in the output of Neural Network (NN)
-	 * This method is used only for backward or lambda search because no excitation is needed during the Tag creation
-	 *
-	 * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-	 */
+    @Override
 	public void getInputForBackwardSearch(ArrayList<Tuple> NNoutputs){
 		for(Tuple tp : NNoutputs){
 			boolean found = false;
@@ -264,13 +217,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 		}
 	}
 
-	/**
-	 * Backward search with ply as input
-	 *
-	 * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-	 * @param score indication of accuracy
-	 * @param ply number of cycle the AI wanted to search
-	 */
+    @Override
 	public void backwardSearch(ArrayList<Tuple> NNoutputs, double score, int ply){
 		getInputForBackwardSearch(NNoutputs);
 
@@ -299,12 +246,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
 	}
 
-	/**
-	 * Forward searching with ply as number of depth
-	 *
-	 * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-	 * @param ply number of time of searching in the knowledge node network
-	 */
+    @Override
 	public void forwardSearch(ArrayList<Tuple> NNoutputs, int ply){
 		getInputForForwardSearch(NNoutputs);
 
@@ -324,11 +266,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 		}
 	}
 
-	/**
-	 * forwardSearch with unlimited time
-	 *
-	 * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-	 */
+    @Override
 	public void forwardSearch(ArrayList<Tuple> NNoutputs){
 		getInputForForwardSearch(NNoutputs);
 
@@ -350,12 +288,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 		}while(!allActived);
 	}
 
-	/**
-	 * Creating input Tags from string in the output of Neural Network (NN)
-	 * This method is used only for forward search because excitation may be active during the Tag creation
-	 *
-	 * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-	 */
+    @Override
 	public void getInputForForwardSearch(ArrayList<Tuple> NNoutputs){
 		for(Tuple tp : NNoutputs){
 			boolean found = false;
@@ -388,11 +321,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 		}
 	}
 
-	/**
-	 * Create a KN from a Tuple in KNN
-	 *
-	 * @param tp tuple used to create the KN
-	 */
+    @Override
 	public void createKNfromTuple(Tuple tp){
 		if(tp.s.charAt(0) == '@'){
 			Recommendation rc = new Recommendation(tp.s);
@@ -413,13 +342,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 		}
 	}
 
-	/**
-	 * Excites a Knowledge Node.
-	 *
-	 * @param kn the Knowledge Node to excite
-	 * @param value the accuracy from the neural network
-	 * If excitation leads to firing, this will add the fired kn to the activeTag.
-	 */
+    @Override
 	public void excite(KnowledgeNode kn, int value) {
 		kn.increaseActivation(value);
 		if(kn.activation * kn.strength >= kn.threshold){
@@ -438,11 +361,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 		}
 	}
 
-	/**
-	 * Fires a Knowledge Node.
-	 *
-	 * @param kn Knowledge Node to fire
-	 */
+    @Override
 	public void fire(KnowledgeNode kn) {
 		for (Tag t : kn.outputs.keySet()) {
 			KnowledgeNode currentKN = this.mapKN.get(t);
@@ -457,11 +376,7 @@ public class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 		}
 	}
 
-	/**
-	 * Update the confidence of those active KN found in output list of a KN with its latest confidence value
-	 *
-	 * @param kn the kn that has a new confidence value
-	 */
+    @Override
 	public void updateConfidence(KnowledgeNode kn){
 		for(Tag t : kn.outputs.keySet()) {
 			KnowledgeNode currentKN = this.mapKN.get(t);

@@ -11,13 +11,13 @@ import java.util.*;
  */
 public class Rule extends Tag {
     private Set<Fact> inputFacts;
-    private Set<IPredicate> outputPredicates;
+    private Set<Predicate> outputPredicates;
 
     public Set<Fact> getInputFacts() {
         return inputFacts;
     }
 
-    public Set<IPredicate> getOutputPredicates() {
+    public Set<Predicate> getOutputPredicates() {
         return outputPredicates;
     }
 
@@ -30,7 +30,7 @@ public class Rule extends Tag {
         for (Fact fact : this.inputFacts) {
             value = value * fact.getConfidenceValue();
         }
-        for (IPredicate outputPredicate : this.outputPredicates) {
+        for (Predicate outputPredicate : this.outputPredicates) {
             outputPredicate.setConfidenceValue(value);
         }
     }
@@ -40,7 +40,7 @@ public class Rule extends Tag {
      * @see #Rule(Set, Set, double)
      */
 
-    public Rule(Fact[] inputFacts, IPredicate[] outputPredicate) {
+    public Rule(Fact[] inputFacts, Predicate[] outputPredicate) {
         this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputPredicate)), 1.0);
     }
 
@@ -50,7 +50,7 @@ public class Rule extends Tag {
      * @see #Rule(Set, Set, double)
      */
 
-    public Rule(Set<Fact> inputFacts, Set<IPredicate> outputPredicate) {
+    public Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicate) {
         this(inputFacts, outputPredicate, 1.0);
     }
 
@@ -64,7 +64,7 @@ public class Rule extends Tag {
      * @param confidenceValue  The confidence value of the Rule.
      */
 
-    private Rule(Set<Fact> inputFacts, Set<IPredicate> outputPredicates, double confidenceValue) {
+    private Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicates, double confidenceValue) {
         this.inputFacts = new HashSet<>(inputFacts);
         this.outputPredicates = new HashSet<>(outputPredicates);
         this.type = TagType.RULE;
@@ -149,7 +149,7 @@ public class Rule extends Tag {
 
         int outputPredicateIndex = tokens.indexOf("->");
 
-        IPredicate[] outputIPredicates = makeOutputPredicateList(tokens, outputPredicateIndex);
+        Predicate[] outputPredicates = makeOutputPredicateList(tokens, outputPredicateIndex);
 
         List<Fact> inputFactList = new ArrayList<>();
 
@@ -160,7 +160,7 @@ public class Rule extends Tag {
             }
             else {
                 Fact[] inputFacts = inputFactList.toArray(new Fact[inputFactList.size()]);
-                Rule rule = new Rule(inputFacts, outputIPredicates);
+                Rule rule = new Rule(inputFacts, outputPredicates);
                 ruleList.add(rule);
 
                 inputFactList.clear();
@@ -169,19 +169,19 @@ public class Rule extends Tag {
         return ruleList;
     }
 
-    private static IPredicate[] makeOutputPredicateList(List<String> tokens, int outputPredicateIndex) {
-        IPredicate[] outputIPredicates = new IPredicate[tokens.size() - outputPredicateIndex - 1];
+    private static Predicate[] makeOutputPredicateList(List<String> tokens, int outputPredicateIndex) {
+        Predicate[] outputPredicates = new Predicate[tokens.size() - outputPredicateIndex - 1];
 
         for (int i = outputPredicateIndex + 1; i < tokens.size(); i++) {
             if (!tokens.get(i).contains("@")) {
                 Fact fact = new Fact(tokens.get(i));
-                outputIPredicates[i - outputPredicateIndex - 1] = fact;
+                outputPredicates[i - outputPredicateIndex - 1] = fact;
             } else {
                 Recommendation rec = new Recommendation(tokens.get(i));
-                outputIPredicates[i - outputPredicateIndex - 1] = rec;
+                outputPredicates[i - outputPredicateIndex - 1] = rec;
             }
         }
-        return outputIPredicates;
+        return outputPredicates;
     }
 
 

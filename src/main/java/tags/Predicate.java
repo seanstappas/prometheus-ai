@@ -6,7 +6,7 @@ import java.util.List;
  * Interface for Predicates (Implemented by Fact and Recommendation)
  */
 
-public interface IPredicate {
+public interface Predicate {
     @Override
     boolean equals(Object o);
 

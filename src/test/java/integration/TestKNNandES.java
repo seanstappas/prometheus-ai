@@ -275,7 +275,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         Rule rule2 = new Rule(new Fact[]{new Fact("Dog(&x,breed=pug,age=1)", 0.7), new Fact("Bat(*)", 1.0)}, outputPredicates2);
         Rule rule3 = new Rule(new Fact[]{new Fact("Dog(friendly,breed=pug,age=1)", 0.9), new Fact("Elephant(friendly,size=big,intelligent)", 0.8)}, outputPredicates3);
         Rule rule4 = new Rule(new Fact[]{new Fact("Frog(&x,slimy,&y)", 0.6), new Fact("Elephant(*)", 0.7)}, outputPredicates4);
-        Rule rule5 = new Rule(new Fact[]{new Fact("Hog(*)", 0.2), new Fact("Frog(?,slimy,sound=ribbit)", 0.9)}, new IPredicate[]{recZ});
+        Rule rule5 = new Rule(new Fact[]{new Fact("Hog(*)", 0.2), new Fact("Frog(?,slimy,sound=ribbit)", 0.9)}, new Predicate[]{recZ});
         Rule[] testRules = {
                 rule1,
                 rule2,
@@ -377,8 +377,8 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         Rule rule2 = new Rule(new Fact[]{new Fact("Dog(&x,breed=pug,age=1)"), new Fact("Bat(*)")}, outputPredicates2);
         Rule rule3 = new Rule(new Fact[]{new Fact("Dog(friendly,breed=pug,age=1)"), new Fact("Elephant(friendly,size=big,intelligent)")}, outputPredicates3);
         Rule rule4 = new Rule(new Fact[]{new Fact("Frog(&x,slimy,&y)"), new Fact("Elephant(*)")}, outputPredicates4);
-        Rule rule5 = new Rule(new Fact[]{new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")}, new IPredicate[]{recZ, outputFact});
-        Rule rule6 = new Rule(new Fact[]{new Fact("Hog(*)"), new Fact("Iguana(small)")}, new IPredicate[]{recY});
+        Rule rule5 = new Rule(new Fact[]{new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")}, new Predicate[]{recZ, outputFact});
+        Rule rule6 = new Rule(new Fact[]{new Fact("Hog(*)"), new Fact("Iguana(small)")}, new Predicate[]{recY});
         Rule[] testRules = {
                 rule1,
                 rule2,
@@ -486,7 +486,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
                 new Fact[]{
                         new Fact("Aardvark(brown,strange,speed=slow"),
                         new Fact("Bat(black,speed=10)")},
-                new IPredicate[]{
+                new Predicate[]{
                         new Fact("Elephant(friendly,size=big,intelligent)"),
                         new Fact("Dog(friendly,breed=pug,age<2)"),
                         new Fact("Hog(colour=green,size=huge,sound=ribbit,big)"),
@@ -496,7 +496,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         Rule rule2 = new Rule(new Fact[]{new Fact("Dog(&x,breed=pug,age=1)"), new Fact("Bat(*)")}, outputPredicates2);
         Rule rule3 = new Rule(new Fact[]{new Fact("Dog(friendly,breed=pug,age=1)"), new Fact("Elephant(friendly,size=big,intelligent)")}, outputPredicates3);
         Rule rule4 = new Rule(new Fact[]{new Fact("Frog(&x,slimy,&y)"), new Fact("Elephant(*)")}, outputPredicates4);
-        Rule rule5 = new Rule(new Fact[]{new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")}, new IPredicate[]{recZ});
+        Rule rule5 = new Rule(new Fact[]{new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")}, new Predicate[]{recZ});
         Rule[] testRules = {
                 rule1,
                 rule2,
@@ -588,7 +588,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
                 new Fact[]{
                         new Fact("Goose(loud,nationality=canadian,wingspan=4)"),
                         new Fact("Aardvark(brown,?,speed=slow)")},
-                new IPredicate[]{
+                new Predicate[]{
                         new Fact("Hog(colour=green,size=huge,sound=ribbit,big)")})
         );
 
@@ -626,16 +626,16 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
 
         Rule rule1 = new Rule(
                 new Fact[]{new Fact("human(near")},
-                new IPredicate[]{new Recommendation("@move(10)")});
+                new Predicate[]{new Recommendation("@move(10)")});
         Rule rule2 = new Rule(
                 new Fact[]{new Fact("attacked()")},
-                new IPredicate[]{new Recommendation("@retreat(quickly,carefully)")});
+                new Predicate[]{new Recommendation("@retreat(quickly,carefully)")});
         Rule rule3 = new Rule(
                 new Fact[]{new Fact("eyes(multiple)"), new Fact("wings(2)")},
-                new IPredicate[]{new Fact("insect()"), new Recommendation("@investigate()")});
+                new Predicate[]{new Fact("insect()"), new Recommendation("@investigate()")});
         Rule rule4 = new Rule(
                 new Fact[]{new Fact("legs(8)"), new Fact("diet(carnivorous)")},
-                new IPredicate[]{new Fact("insect()"), new Recommendation("@investigate()")});
+                new Predicate[]{new Fact("insect()"), new Recommendation("@investigate()")});
 
         Rule rule5 = new Rule("battery(low) distance(!close) -> @lowpowermode() battery(conservation)");
 
