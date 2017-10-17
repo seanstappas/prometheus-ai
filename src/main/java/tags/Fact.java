@@ -1,5 +1,8 @@
 package tags;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,22 +22,25 @@ public class Fact extends Tag implements Predicate {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         Fact fact = (Fact) o;
 
-        if (predicateName != null ? !predicateName.equals(fact.predicateName) : fact.predicateName != null)
-            return false;
-        return arguments != null ? arguments.equals(fact.arguments) : fact.arguments == null;
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(predicateName, fact.predicateName)
+                .append(arguments, fact.arguments)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (predicateName != null ? predicateName.hashCode() : 0);
-        result = 31 * result + (arguments != null ? arguments.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(predicateName)
+                .append(arguments)
+                .toHashCode();
     }
 
     /**

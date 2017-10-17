@@ -7,7 +7,6 @@ import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
 import knn.api.Tuple;
 import knn.guice.KnowledgeNodeNetworkModule;
-import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import tags.*;
@@ -15,6 +14,9 @@ import tags.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Running es.internal.ExpertSystemImpl and knn.internal.KnowledgeNodeNetwork
@@ -87,7 +89,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after foward searching: " + activeTags);
 
-        Assert.assertEquals(activeTags, expectedActiveTags);
+        assertEquals(activeTags, expectedActiveTags);
         System.out.println("");
 
         return activeTags;
@@ -122,7 +124,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after 0 ply forward searching: " + activeTags);
 
-        Assert.assertEquals(activeTags, expectedActiveTags);
+        assertEquals(activeTags, expectedActiveTags);
         System.out.println("");
 
         return activeTags;
@@ -157,7 +159,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after backward searching: " + activeTags);
 
-        Assert.assertEquals(activeTags, expectedActiveTags);
+        assertEquals(activeTags, expectedActiveTags);
         System.out.println("");
 
         return activeTags;
@@ -189,7 +191,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after 2 ply backward searching: " + activeTags);
 
-        Assert.assertEquals(activeTags, expectedActiveTags);
+        assertEquals(activeTags, expectedActiveTags);
         System.out.println("");
 
         return activeTags;
@@ -221,8 +223,8 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after lambda searching: " + activeTags);
 
-        Assert.assertTrue(activeTags.containsKey(factToSearch));
-        Assert.assertTrue(activeTags.get(factToSearch) == 70.0);
+        assertTrue(activeTags.containsKey(factToSearch));
+        assertTrue(activeTags.get(factToSearch) == 70.0);
         System.out.println("");
 
         return activeTags;
@@ -301,25 +303,25 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         Set<Fact> initialFacts = es.getFacts();
         Set<Fact> expectedInitialFacts = new HashSet<>();
         expectedInitialFacts.addAll(Arrays.asList(testFacts));
-        Assert.assertEquals(initialFacts, expectedInitialFacts);
+        assertEquals(initialFacts, expectedInitialFacts);
         System.out.println("[ES] Initial facts: " + initialFacts);
 
         Set<Recommendation> initialRecommendations = es.getRecommendations();
         Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
         expectedInitialRecommendations.addAll(Arrays.asList(testRecommendations));
-        Assert.assertEquals(initialRecommendations, expectedInitialRecommendations);
+        assertEquals(initialRecommendations, expectedInitialRecommendations);
         System.out.println("[ES] Initial recommendations: " + initialRecommendations);
 
         Set<Rule> initialRules = es.getReadyRules();
         Set<Rule> expectedInitialRules = new HashSet<>();
         expectedInitialRules.addAll(Arrays.asList(testRules));
-        Assert.assertEquals(initialRules, expectedInitialRules);
+        assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules: " + initialRules);
 
         Set<Tag> activatedRecommendations = es.think();
         Set<Tag> expectedActivatedRecommendations = new HashSet<>();
         expectedActivatedRecommendations.add(recZ);
-        Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendations);
+        assertEquals(activatedRecommendations, expectedActivatedRecommendations);
         System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
 
         Set<Fact> facts = es.getFacts();
@@ -329,7 +331,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedFacts.addAll(Arrays.asList(outputPredicates2));
         expectedFacts.addAll(Arrays.asList(outputPredicates3));
         expectedFacts.addAll(Arrays.asList(outputPredicates4));
-        Assert.assertEquals(facts, expectedFacts);
+        assertEquals(facts, expectedFacts);
         System.out.println("[ES] Final facts: " + facts);
 
         Set<Recommendation> recommendations = es.getRecommendations();
@@ -337,13 +339,13 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedRecommendations.add(recX);
         expectedRecommendations.add(recY);
         expectedRecommendations.add(recZ);
-        Assert.assertEquals(recommendations, expectedRecommendations);
+        assertEquals(recommendations, expectedRecommendations);
         System.out.println("[ES] Final recommendations: " + recommendations);
 
         Set<Rule> readyRules = es.getReadyRules();
         Set<Rule> expectedReadyRules = new HashSet<>();
         expectedReadyRules.add(unactivatedRule);
-        Assert.assertEquals(expectedReadyRules, readyRules);
+        assertEquals(expectedReadyRules, readyRules);
         System.out.println("[ES] Final ready rules: " + readyRules);
 
         Set<Rule> activeRules = es.getActiveRules();
@@ -353,7 +355,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedActiveRules.add(rule3);
         expectedActiveRules.add(rule4);
         expectedActiveRules.add(rule5);
-        Assert.assertEquals(expectedActiveRules, activeRules);
+        assertEquals(expectedActiveRules, activeRules);
         System.out.println("[ES] Final active rules: " + activeRules);
     }
 
@@ -405,25 +407,25 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         Set<Fact> initialFacts = es.getFacts();
         Set<Fact> expectedInitialFacts = new HashSet<>();
         expectedInitialFacts.addAll(Arrays.asList(testFacts));
-        Assert.assertEquals(initialFacts, expectedInitialFacts);
+        assertEquals(initialFacts, expectedInitialFacts);
         System.out.println("[ES] Initial facts: " + initialFacts);
 
         Set<Recommendation> initialRecommendations = es.getRecommendations();
         Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
         expectedInitialRecommendations.addAll(Arrays.asList(testRecommendations));
-        Assert.assertEquals(initialRecommendations, expectedInitialRecommendations);
+        assertEquals(initialRecommendations, expectedInitialRecommendations);
         System.out.println("[ES] Initial recommendations: " + initialRecommendations);
 
         Set<Rule> initialRules = es.getReadyRules();
         Set<Rule> expectedInitialRules = new HashSet<>();
         expectedInitialRules.addAll(Arrays.asList(testRules));
-        Assert.assertEquals(initialRules, expectedInitialRules);
+        assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules: " + initialRules);
 
         Set<Tag> activatedRecommendations = es.think(5, false);
         Set<Tag> expectedActivatedRecommendations = new HashSet<>();
         expectedActivatedRecommendations.add(recZ);
-        Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendations);
+        assertEquals(activatedRecommendations, expectedActivatedRecommendations);
         System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
 
         Set<Fact> facts = es.getFacts();
@@ -434,7 +436,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedFacts.addAll(Arrays.asList(outputPredicates3));
         expectedFacts.addAll(Arrays.asList(outputPredicates4));
         expectedFacts.add(outputFact);
-        Assert.assertEquals(facts, expectedFacts);
+        assertEquals(facts, expectedFacts);
         System.out.println("[ES] Final facts: " + facts);
 
         Set<Recommendation> recommendations = es.getRecommendations();
@@ -442,7 +444,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedRecommendations.add(recX);
         expectedRecommendations.add(recY);
         expectedRecommendations.add(recZ);
-        Assert.assertEquals(recommendations, expectedRecommendations);
+        assertEquals(recommendations, expectedRecommendations);
         System.out.println("[ES] Final recommendations: " + recommendations);
 
 
@@ -451,7 +453,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         Set<Rule> expectedReadyRules = new HashSet<>();
         expectedReadyRules.add(unactivatedRule);
         expectedReadyRules.add(rule6);
-        Assert.assertEquals(expectedReadyRules, readyRules);
+        assertEquals(expectedReadyRules, readyRules);
         System.out.println("[ES] Final ready rules: " + readyRules);
 
 
@@ -462,7 +464,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedActiveRules.add(rule3);
         expectedActiveRules.add(rule4);
         expectedActiveRules.add(rule5);
-        Assert.assertEquals(expectedActiveRules, activeRules);
+        assertEquals(expectedActiveRules, activeRules);
         System.out.println("[ES] Final active rules: " + activeRules);
     }
 
@@ -522,25 +524,25 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         Set<Fact> initialFacts = es.getFacts();
         Set<Fact> expectedInitialFacts = new HashSet<>();
         expectedInitialFacts.addAll(Arrays.asList(testFacts));
-        Assert.assertEquals(initialFacts, expectedInitialFacts);
+        assertEquals(initialFacts, expectedInitialFacts);
         System.out.println("[ES] Initial facts: " + initialFacts);
 
         Set<Recommendation> initialRecommendations = es.getRecommendations();
         Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
         expectedInitialRecommendations.addAll(Arrays.asList(testRecommendations));
-        Assert.assertEquals(initialRecommendations, expectedInitialRecommendations);
+        assertEquals(initialRecommendations, expectedInitialRecommendations);
         System.out.println("[ES] Initial recommendations: " + initialRecommendations);
 
         Set<Rule> initialRules = es.getReadyRules();
         Set<Rule> expectedInitialRules = new HashSet<>();
         expectedInitialRules.addAll(Arrays.asList(testRules));
-        Assert.assertEquals(initialRules, expectedInitialRules);
+        assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules: " + initialRules);
 
         Set<Tag> activatedRecommendations = es.think(true);
         Set<Tag> expectedActivatedRecommendations = new HashSet<>();
         expectedActivatedRecommendations.add(recZ);
-        Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendations);
+        assertEquals(activatedRecommendations, expectedActivatedRecommendations);
         System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
 
         Set<Fact> facts = es.getFacts();
@@ -550,7 +552,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedFacts.addAll(Arrays.asList(outputPredicates2));
         expectedFacts.addAll(Arrays.asList(outputPredicates3));
         expectedFacts.addAll(Arrays.asList(outputPredicates4));
-        Assert.assertEquals(facts, expectedFacts);
+        assertEquals(facts, expectedFacts);
         System.out.println("[ES] Final facts: " + facts);
 
         Set<Recommendation> recommendations = es.getRecommendations();
@@ -558,7 +560,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedRecommendations.add(recX);
         expectedRecommendations.add(recY);
         expectedRecommendations.add(recZ);
-        Assert.assertEquals(recommendations, expectedRecommendations);
+        assertEquals(recommendations, expectedRecommendations);
         System.out.println("[ES] Final recommendations: " + recommendations);
 
 
@@ -567,7 +569,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         Set<Rule> expectedReadyRules = new HashSet<>();
         expectedReadyRules.add(unactivatedRule);
         expectedReadyRules.add(provenRule);
-        Assert.assertEquals(expectedReadyRules, readyRules);
+        assertEquals(expectedReadyRules, readyRules);
         System.out.println("[ES] Final ready rules: " + readyRules);
 
         Set<Rule> activeRules = es.getActiveRules();
@@ -577,7 +579,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedActiveRules.add(rule3);
         expectedActiveRules.add(rule4);
         expectedActiveRules.add(rule5);
-        Assert.assertEquals(expectedActiveRules, activeRules);
+        assertEquals(expectedActiveRules, activeRules);
         System.out.println("[ES] Final active rules: " + activeRules);
 
         System.out.println();
@@ -585,7 +587,6 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
 
         es.rest(1);
         es.getReadyRules().removeAll(readyRules);
-        Set<Rule> restRules = es.getReadyRules();
         Set<Rule> expectedRestRules = new HashSet<>();
         expectedRestRules.add(new Rule(
                 new Fact[]{
@@ -595,8 +596,42 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
                         new Fact("Hog(colour=green,size=huge,sound=ribbit,big)")})
         );
 
-        Assert.assertEquals(restRules.iterator().next(), expectedRestRules.iterator().next()); // TODO: Why does a.equals(b) but not b.equals(a) ?
-        System.out.println("[ES] Final rest rules: " + restRules);
+
+        Rule expected = expectedRestRules.iterator().next();
+        Rule actual = readyRules.iterator().next();
+
+        System.out.println(expectedRestRules.equals(readyRules));
+        System.out.println(readyRules.equals(expectedRestRules));
+
+        System.out.println(actual.getInputFacts().equals(expected.getInputFacts()));
+        System.out.println(expected.getInputFacts().equals(actual.getInputFacts()));
+
+        System.out.println(actual.getOutputPredicates().equals(expected.getOutputPredicates()));
+        System.out.println(expected.getOutputPredicates().equals(actual.getOutputPredicates()));
+
+        System.out.println(actual.getOutputPredicates().iterator().next().equals(expected.getOutputPredicates().iterator().next()));
+        System.out.println(expected.getOutputPredicates().iterator().next().equals(actual.getOutputPredicates().iterator().next()));
+
+        System.out.println(actual.getOutputPredicates());
+        System.out.println(expected.getOutputPredicates());
+
+        System.out.println(actual.getOutputPredicates().hashCode());
+        System.out.println(expected.getOutputPredicates().hashCode());
+        System.out.println(expected.getOutputPredicates().iterator().next().hashCode());
+        System.out.println(actual.getOutputPredicates().iterator().next().hashCode());
+        System.out.println(expected.getOutputPredicates().iterator().next().hashCode());
+        System.out.println(actual.getOutputPredicates().iterator().next().hashCode());
+
+        assertEquals(expected.getOutputPredicates(), actual.getOutputPredicates());
+        assertEquals(expected.getOutputPredicates().iterator().next(), actual.getOutputPredicates().iterator().next());
+        assertEquals(actual.getOutputPredicates().iterator().next(), expected.getOutputPredicates().iterator().next());
+        assertEquals(actual.getOutputPredicates().iterator().next().getArguments(), expected.getOutputPredicates().iterator().next().getArguments());
+        assertEquals(expected.getOutputPredicates().iterator().next().getArguments(), actual.getOutputPredicates().iterator().next().getArguments());
+        actual.getOutputPredicates().equals(expected.getOutputPredicates());
+//        assertEquals(actual.getOutputPredicates(), expected.getOutputPredicates());
+
+//        assertEquals(expected, actual); // TODO: Why does a.equals(b) but not b.equals(a) ?
+        System.out.println("[ES] Final rest rules: " + readyRules);
     }
 
     /**
@@ -648,7 +683,7 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         expectedTaughtSentences.add(rule4);
         expectedTaughtSentences.add(rule5);
 
-        Assert.assertEquals(taughtSentences, expectedTaughtSentences);
+        assertEquals(taughtSentences, expectedTaughtSentences);
 
         System.out.println("[ES] Final taught rules" + taughtSentences);
     }
@@ -691,11 +726,11 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         System.out.println("[ES] Initial activated tags (from KNN): " + activatedTags);
 
         Set<Fact> initialFacts = es.getFacts();
-        Assert.assertEquals(initialFacts, expectedInitialFacts);
+        assertEquals(initialFacts, expectedInitialFacts);
         System.out.println("[ES] Initial facts (for ES): " + initialFacts);
 
         Set<Rule> initialRules = es.getReadyRules();
-        Assert.assertEquals(initialRules, expectedInitialRules);
+        assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules (for ES): " + initialRules);
 
         Set<Tag> activatedRecommendations = es.think();
@@ -704,6 +739,6 @@ public class TestKNNandES { // TODO: integration with Google's GSON libary
         Set<Tag> expectedActivatedRecommendation = new HashSet<>();
         expectedActivatedRecommendation.add(new Recommendation("@avoid(scary,dangerous)"));
         expectedActivatedRecommendation.add(new Recommendation("@isPet(easy,calm,bark)"));
-        Assert.assertEquals(activatedRecommendations, expectedActivatedRecommendation);
+        assertEquals(activatedRecommendations, expectedActivatedRecommendation);
     }
 }

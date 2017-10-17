@@ -1,5 +1,8 @@
 package tags;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Tag to be used throughout the Prometheus system. Possesses a confidence value.
  */
@@ -32,20 +35,22 @@ public abstract class Tag {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         Tag tag = (Tag) o;
 
-        return Double.compare(tag.confidenceValue, confidenceValue) == 0 && type == tag.type;
+        return new EqualsBuilder()
+                .append(confidenceValue, tag.confidenceValue)
+                .append(type, tag.type)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(confidenceValue);
-        result = (int) (temp ^ (temp >>> 32));
-        result = 31 * result + type.hashCode();
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(confidenceValue)
+                .append(type)
+                .toHashCode();
     }
 }

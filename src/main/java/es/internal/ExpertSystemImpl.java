@@ -14,7 +14,6 @@ class ExpertSystemImpl implements ExpertSystem {
     private Set<Rule> activeRules;
     private Set<Fact> facts;
     private Set<Recommendation> recommendations;
-    private Map<String, Argument> pendingReplacementPairs;
 
     /**
      * Creates an Expert System (ES).
@@ -25,7 +24,6 @@ class ExpertSystemImpl implements ExpertSystem {
         facts = new HashSet<>();
         recommendations = new HashSet<>();
         activeRules = new HashSet<>();
-        pendingReplacementPairs = new HashMap<>();
     }
 
     @Override
@@ -213,7 +211,7 @@ class ExpertSystemImpl implements ExpertSystem {
      * @param inputFact fact contained in a Rule
      * @return true if (at least) two facts match
      */
-    private boolean factsContains(Fact inputFact) {
+    private boolean factsContains(Fact inputFact, Map<String, Argument> pendingReplacementPairs) {
         boolean result = false;
         for (Fact f : facts) {
             VariableReturn matchesResult = f.matches(inputFact);
@@ -247,7 +245,7 @@ class ExpertSystemImpl implements ExpertSystem {
      *
      * @param predicate the Predicate that has arguments to replace
      */
-    private void replaceVariableArguments(Predicate predicate) {
+    private void replaceVariableArguments(Predicate predicate, Map<String, Argument> pendingReplacementPairs) {
         int argumentIndex = 0;
 
         for (Argument argument : predicate.getArguments()) {
@@ -268,10 +266,11 @@ class ExpertSystemImpl implements ExpertSystem {
     private Set<Predicate> thinkCycle() {
         Set<Predicate> activatedPredicates = new HashSet<>();
         Set<Rule> pendingActivatedRules = new HashSet<>();
+        Map<String, Argument> pendingReplacementPairs = new HashMap<>();
         for (Rule rule : readyRules) {
             boolean shouldActivate = true;
             for (Fact fact : rule.getInputFacts()) {
-                if (!factsContains(fact)) {
+                if (!factsContains(fact, pendingReplacementPairs)) {
                     shouldActivate = false;
                     break;
                 }
@@ -280,16 +279,16 @@ class ExpertSystemImpl implements ExpertSystem {
                 pendingActivatedRules.add(rule);
             }
         }
-        activateRules(activatedPredicates, pendingActivatedRules);
+        activateRules(activatedPredicates, pendingActivatedRules, pendingReplacementPairs);
         return activatedPredicates;
     }
 
-    private void activateRules(Set<Predicate> activatedPredicates, Set<Rule> pendingActivatedRules) {
+    private void activateRules(Set<Predicate> activatedPredicates, Set<Rule> pendingActivatedRules, Map<String, Argument> pendingReplacementPairs) {
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
             activeRules.add(rule);
             for (Predicate predicate : rule.getOutputPredicates()) {
-                replaceVariableArguments(predicate);
+                replaceVariableArguments(predicate, pendingReplacementPairs);
                 activatedPredicates.add(predicate);
                 addPredicate(predicate);
             }

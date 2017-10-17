@@ -1,5 +1,8 @@
 package tags;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.*;
 
 /**
@@ -214,23 +217,26 @@ public class Rule extends Tag {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         Rule rule = (Rule) o;
 
-        if (inputFacts != null ? !inputFacts.equals(rule.inputFacts) : rule.inputFacts != null) return false;
-        return outputPredicates != null ? outputPredicates.equals(rule.outputPredicates) : rule.outputPredicates == null;
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(inputFacts, rule.inputFacts)
+                .append(outputPredicates, rule.outputPredicates)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (inputFacts != null ? inputFacts.hashCode() : 0);
-        result = 31 * result + (outputPredicates != null ? outputPredicates.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(inputFacts)
+                .append(outputPredicates)
+                .toHashCode();
     }
-
 
     /**
      * Prints Rule as inputFacts, outputPredicates, and confidenceValue
