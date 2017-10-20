@@ -1,10 +1,14 @@
 package knn.internal;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import knn.api.KnowledgeNodeNetwork;
+import knn.api.KnowledgeNodeNetworkFactory;
 
 public class KnowledgeNodeNetworkInternalModule extends AbstractModule {
     protected void configure() {
-        bind(KnowledgeNodeNetwork.class).to(KnowledgeNodeNetworkImpl.class);
+        install(new FactoryModuleBuilder()
+                .implement(KnowledgeNodeNetwork.class, KnowledgeNodeNetworkImpl.class)
+                .build(KnowledgeNodeNetworkFactory.class));
     }
 }

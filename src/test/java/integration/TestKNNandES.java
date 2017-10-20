@@ -50,7 +50,7 @@ public class TestKNNandES {
      * Test the forward Search of the Knowledge Node network
      *
      */
-    public HashMap<Tag, Double> forwardSearchTest() {
+    public Map<Tag, Double> forwardSearchTest() {
         System.out.println("***Forward Search Test***");
         setupKNN();
         ArrayList<Tuple> inputs = new ArrayList<>();
@@ -60,9 +60,9 @@ public class TestKNNandES {
         inputs.add(data2);
 
         knn.forwardSearch(inputs);
-        HashMap<Tag, Double> inputTags = knn.getInputTags();
-        HashMap<Tag, Double> activeTags = knn.getActiveTags();
-        HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
+        Map<Tag, Double> inputTags = knn.getInputTags();
+        Map<Tag, Double> activeTags = knn.getActiveTags();
+        Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("calm(safe>5)"), 55.0);
         expectedActiveTags.put(new Fact("dog(wolflike,length>50,weight>20)"), 100.0);
         expectedActiveTags.put(new Fact("zoo(easy,attractive)"), 45.0);
@@ -96,7 +96,7 @@ public class TestKNNandES {
         return activeTags;
     }
 
-    public HashMap<Tag, Double> forwardSearchWithPlyTest() {
+    public Map<Tag, Double> forwardSearchWithPlyTest() {
         System.out.println("***Forward Search with Ply Test***");
         setupKNN();
         ArrayList<Tuple> inputs = new ArrayList<>();
@@ -106,9 +106,9 @@ public class TestKNNandES {
         inputs.add(data2);
 
         knn.forwardSearch(inputs, 1);
-        HashMap<Tag, Double> inputTags = knn.getInputTags();
-        HashMap<Tag, Double> activeTags = knn.getActiveTags();
-        HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
+        Map<Tag, Double> inputTags = knn.getInputTags();
+        Map<Tag, Double> activeTags = knn.getActiveTags();
+        Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("fast(speed,dynamic)"), 50.0);
         expectedActiveTags.put(new Rule("cat(feline,length>50,weight>20) dog(wolflike,length>50,weight>20) -> @fight(dangerous)"), 100.0);
         expectedActiveTags.put(new Fact("fur(strands,insulator)"), 100.0);
@@ -131,7 +131,7 @@ public class TestKNNandES {
         return activeTags;
     }
 
-    public HashMap<Tag, Double> backwardSearchTest() {
+    public Map<Tag, Double> backwardSearchTest() {
         System.out.println("***Backward Search Test***");
         setupKNN();
         ArrayList<Tuple> inputs = new ArrayList<>();
@@ -141,9 +141,9 @@ public class TestKNNandES {
         inputs.add(data2);
 
         knn.backwardSearch(inputs, 0.5);
-        HashMap<Tag, Double> inputTags = knn.getInputTags();
-        HashMap<Tag, Double> activeTags = knn.getActiveTags();
-        HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
+        Map<Tag, Double> inputTags = knn.getInputTags();
+        Map<Tag, Double> activeTags = knn.getActiveTags();
+        Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("calm(safe>5)"), 100.0);
         expectedActiveTags.put(new Fact("fast(speed,dynamic)"), 40.0);
         expectedActiveTags.put(new Fact("fur(strands,insulator)"), 80.0);
@@ -166,7 +166,7 @@ public class TestKNNandES {
         return activeTags;
     }
 
-    public HashMap<Tag, Double> backwardSearchWithPlyTest() {
+    public Map<Tag, Double> backwardSearchWithPlyTest() {
         System.out.println("***Backward Search with Ply Test***");
         setupKNN();
         ArrayList<Tuple> inputs = new ArrayList<>();
@@ -176,9 +176,9 @@ public class TestKNNandES {
         inputs.add(data2);
 
         knn.backwardSearch(inputs, 0.5, 2);
-        HashMap<Tag, Double> inputTags = knn.getInputTags();
-        HashMap<Tag, Double> activeTags = knn.getActiveTags();
-        HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
+        Map<Tag, Double> inputTags = knn.getInputTags();
+        Map<Tag, Double> activeTags = knn.getActiveTags();
+        Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("calm(safe>5)"), 100.0);
         expectedActiveTags.put(new Fact("fast(speed,dynamic)"), 40.0);
         expectedActiveTags.put(new Fact("fur(strands,insulator)"), 80.0);
@@ -198,7 +198,7 @@ public class TestKNNandES {
         return activeTags;
     }
 
-    public HashMap<Tag, Double> lambdaSearchTest() {
+    public Map<Tag, Double> lambdaSearchTest() {
         System.out.println("***Lambda Search Test***");
 
         setupKNN();
@@ -210,9 +210,9 @@ public class TestKNNandES {
         Fact factToSearch = new Fact(item);
 
         knn.lambdaSearch(inputs, factToSearch);
-        HashMap<Tag, Double> inputTags = knn.getInputTags();
-        HashMap<Tag, Double> activeTags = knn.getActiveTags();
-        HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
+        Map<Tag, Double> inputTags = knn.getInputTags();
+        Map<Tag, Double> activeTags = knn.getActiveTags();
+        Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("fur(strands,insulator)"), 100.0);
         expectedActiveTags.put(new Fact("mammal(vertebrate,land)"), 100.0);
         expectedActiveTags.put(new Fact("cat(feline,length>50,weight>20)"), 100.0);
@@ -703,7 +703,7 @@ public class TestKNNandES {
         Tuple data2 = new Tuple("cat", 10);
         inputs.add(data2);
         knn.forwardSearch(inputs);
-        HashMap<Tag, Double> activatedTags = knn.getActiveTags();
+        Map<Tag, Double> activatedTags = knn.getActiveTags();
         es.reset();
         es.addTags(activatedTags.keySet());
 

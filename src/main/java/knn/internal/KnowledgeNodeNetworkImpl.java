@@ -1,5 +1,6 @@
 package knn.internal;
 
+import com.google.inject.assistedinject.Assisted;
 import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
 import knn.api.Tuple;
@@ -9,21 +10,21 @@ import tags.Rule;
 import tags.Tag;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
-	private HashMap<Tag, KnowledgeNode> mapKN;
-	private HashMap<Tag, Double> inputTags;
-    private HashMap<Tag, Double> activeTags;
+	private Map<Tag, KnowledgeNode> mapKN;
+	private Map<Tag, Double> inputTags;
+    private Map<Tag, Double> activeTags;
 
     @Inject
-    public KnowledgeNodeNetworkImpl(){
-    	mapKN = new HashMap<>();
-        activeTags = new HashMap<>();
-        inputTags = new HashMap<>();
+    public KnowledgeNodeNetworkImpl(
+			@Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
+			@Assisted("inputTags") Map<Tag, Double> inputTags,
+			@Assisted("activeTags") Map<Tag, Double> activeTags){
+        this.mapKN = mapKN;
+        this.inputTags = inputTags;
+        this.activeTags = activeTags;
     }
 
     @Override
@@ -72,12 +73,12 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public HashMap<Tag, Double> getInputTags(){
+    public Map<Tag, Double> getInputTags(){
     	return this.inputTags;
     }
 
     @Override
-    public HashMap<Tag, Double> getActiveTags() {
+    public Map<Tag, Double> getActiveTags() {
 		return this.activeTags;
     }
 

@@ -1,10 +1,11 @@
 package knn.internal;
 
+import com.google.inject.Guice;
 import knn.api.KnowledgeNodeNetwork;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
+import prometheus.api.Prometheus;
+import prometheus.guice.PrometheusModule;
 
 /**
  * Created by seanstappas1 on 2017-10-13.
@@ -14,7 +15,8 @@ public class KnowledgeNodeNetworkImplTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        knn = new KnowledgeNodeNetworkImpl();
+        Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
+        knn = prometheus.getKnowledgeNodeNetwork();
     }
 
     @Test

@@ -3,7 +3,7 @@ package knn.api;
 import tags.Tag;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sean on 10/13/2017.
@@ -59,14 +59,14 @@ public interface KnowledgeNodeNetwork {
      *
      * @return	the access of the input Tags found from the KNN using output from the neural network
      */
-    HashMap<Tag, Double> getInputTags();
+    Map<Tag, Double> getInputTags();
 
     /**
      * Get access of active Tags
      *
      * @return	the Access of active Tags
      */
-    HashMap<Tag, Double> getActiveTags();
+    Map<Tag, Double> getActiveTags();
 
     /**
      * Lambda search, a search to find out the best relation between a know list of tags and a wanted item tag
