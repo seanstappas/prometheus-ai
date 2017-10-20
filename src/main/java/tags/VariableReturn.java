@@ -10,7 +10,7 @@ public class VariableReturn {
     /**
      * True if two facts match
      */
-    private boolean doesMatch;
+    private boolean factMatch;
     /**
      * `pairs` specifies a variable argument that may be replaced:
      * k: name of argument to replace, v: argument to replace it with
@@ -27,12 +27,12 @@ public class VariableReturn {
     }
 
 
-    public boolean isDoesMatch() {
-        return doesMatch;
+    public boolean isFactMatch() {
+        return factMatch;
     }
 
-    public void setDoesMatch(boolean doesMatch) {
-        this.doesMatch = doesMatch;
+    public void setFactMatch(boolean factMatch) {
+        this.factMatch = factMatch;
     }
 
 

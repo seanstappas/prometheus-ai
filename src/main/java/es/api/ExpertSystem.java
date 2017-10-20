@@ -1,9 +1,6 @@
 package es.api;
 
-import tags.Fact;
-import tags.Recommendation;
-import tags.Rule;
-import tags.Tag;
+import tags.*;
 
 import java.util.Set;
 
@@ -25,9 +22,22 @@ public interface ExpertSystem {
      * Adds multiple Tags to the ES.
      *
      * @param tags the Tags to be added
-     * @deprecated
+     * @deprecated Use {@link #addPredicate(Predicate)} for Facts and Recommendations and
+     * {@link #addRecommendation(Recommendation)} for Recommendations instead.
      */
+    @Deprecated
     void addTags(Set<Tag> tags);
+
+    /**
+     * Adds a Tag to the ES. Will cast the tag to either a Rule, a Fact, or a Recommendation.
+     *
+     * @param tag the Tag to be added
+     * @return <code>true</code> if the Tag is successfully added
+     * @deprecated Use {@link #addPredicate(Predicate)} for Facts and Recommendations and
+     * {@link #addRecommendation(Recommendation)} for Recommendations instead.
+     */
+    @Deprecated
+    boolean addTag(Tag tag);
 
     /**
      * Adds a Fact to the ES.
@@ -138,4 +148,12 @@ public interface ExpertSystem {
      * @param sentence that contains input and output delimiters
      */
     void teach(String sentence);
+
+    /**
+     * Add a Predicate to the ES. Will cast the tag to either a Rule, a Fact.
+     *
+     * @param predicate the Predicate to be added
+     * @return <code>true</code> if the Predicate is successfully added
+     */
+    boolean addPredicate(Predicate predicate);
 }

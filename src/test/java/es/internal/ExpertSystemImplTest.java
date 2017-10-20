@@ -6,16 +6,15 @@ import org.testng.annotations.Test;
 import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
+import tags.Tag;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertTrue;
 
-/**
- * Created by seanstappas1 on 2017-10-13.
- */
 public class ExpertSystemImplTest {
     private ExpertSystem es;
     private Set<Rule> readyRules;
@@ -33,24 +32,68 @@ public class ExpertSystemImplTest {
     }
 
     @Test
-    public void testReset() throws Exception {
+    public void mustResetRulesFactsAndRecommendations() throws Exception {
+        // given
+        readyRules.add(mock(Rule.class));
+        activeRules.add(mock(Rule.class));
+        facts.add(mock(Fact.class));
+        recommendations.add(mock(Recommendation.class));
+
+        // when
         es.reset();
 
-        assertTrue(es.getActiveRules().isEmpty());
-        assertTrue(es.getReadyRules().isEmpty());
-        assertTrue(es.getFacts().isEmpty());
-        assertTrue(es.getRecommendations().isEmpty());
+        // then
+        assertTrue(readyRules.isEmpty());
+        assertTrue(activeRules.isEmpty());
+        assertTrue(facts.isEmpty());
+        assertTrue(recommendations.isEmpty());
     }
 
     @Test
-    public void testDeactivateRules() throws Exception {
+    public void mustDeactivateRules() throws Exception {
+        // given
+        Rule readyRule = mock(Rule.class);
+        Rule activeRule = mock(Rule.class);
+        readyRules.add(readyRule);
+        activeRules.add(activeRule);
+
+        // when
+        es.deactivateRules();
+
+        // then
+        assertTrue(readyRules.contains(readyRule));
+        assertTrue(readyRules.contains(activeRule));
+        assertTrue(activeRules.isEmpty());
+    }
+
+    @Test
+    public void mustAddTags() throws Exception {
+        Set<Tag> tags = new HashSet<>();
         Rule rule = mock(Rule.class);
+        Fact fact = mock(Fact.class);
+        Recommendation recommendation = mock(Recommendation.class);
+        tags.add(rule);
+        tags.add(fact);
+        tags.add(recommendation);
 
-        es.addRule(rule);
+        // given
+        when(rule.getType()).thenReturn(Tag.TagType.RULE);
+        when(fact.getType()).thenReturn(Tag.TagType.FACT);
+        when(recommendation.getType()).thenReturn(Tag.TagType.RECOMMENDATION);
+
+        // when
+        es.addTags(tags);
+
+        // then
+        assertTrue(readyRules.contains(rule));
+        assertTrue(activeRules.isEmpty());
+        assertTrue(facts.contains(fact));
+        assertTrue(recommendations.contains(recommendation));
     }
 
     @Test
-    public void testAddTags() throws Exception {
+    public void mustAddTag() throws Exception {
+
     }
 
     @Test

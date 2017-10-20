@@ -53,6 +53,19 @@ class ExpertSystemImpl implements ExpertSystem {
     }
 
     @Override
+    public boolean addTag(Tag tag) {
+        switch (tag.getType()) {
+            case RULE:
+                return addRule((Rule) tag);
+            case FACT:
+                return addFact((Fact) tag);
+            case RECOMMENDATION:
+                return addRecommendation((Recommendation) tag);
+        }
+        return false;
+    }
+
+    @Override
     public boolean addFact(Fact fact) {
         return facts.add(fact);
     }
@@ -174,39 +187,15 @@ class ExpertSystemImpl implements ExpertSystem {
         addRule(taughtRule);
     }
 
-    /**
-     * Adds a Tag to the ES. Will cast the tag to either a Rule, a Fact, or a Recommendation.
-     *
-     * @param tag the Tag to be added
-     * @return <code>true</code> if the Tag is successfully added
-     * @deprecated
-     */
-    private boolean addTag(Tag tag) {
-        switch (tag.type) {
-            case RULE:
-                return addRule((Rule) tag);
-            case FACT:
-                return addFact((Fact) tag);
-            case RECOMMENDATION:
-                return addRecommendation((Recommendation) tag);
-        }
-        return false;
-    }
-
-    /**
-     * Add a Predicate to the ES. Will cast the tag to either a Rule, a Fact.
-     *
-     * @param predicate the Predicate to be added
-     */
-
-    private void addPredicate(Predicate predicate) {
+    @Override
+    public boolean addPredicate(Predicate predicate) {
         switch (predicate.getType()) {
             case FACT:
-                addFact((Fact) predicate);
-                return;
+                return addFact((Fact) predicate);
             case RECOMMENDATION:
-                addRecommendation((Recommendation) predicate);
+                return addRecommendation((Recommendation) predicate);
         }
+        return false;
     }
 
     /**
@@ -220,7 +209,7 @@ class ExpertSystemImpl implements ExpertSystem {
         boolean result = false;
         for (Fact f : facts) {
             VariableReturn matchesResult = f.matches(inputFact);
-            if (matchesResult.isDoesMatch()) {
+            if (matchesResult.isFactMatch()) {
                 if (matchesResult.getPairs().size() > 0) {
                     pendingReplacementPairs.putAll(matchesResult.getPairs());
                 }
@@ -335,7 +324,7 @@ class ExpertSystemImpl implements ExpertSystem {
             for (Rule ruleTwo : inputRules) {
                 for (Fact inputFact : ruleOne.getInputFacts()) {
                     for (Fact outputIPredicate : ruleTwo.getInputFacts()) {
-                        if (outputIPredicate.matches(inputFact).isDoesMatch()) {
+                        if (outputIPredicate.matches(inputFact).isFactMatch()) {
                             Rule mergedRule = new Rule(ruleOne.getInputFacts(), ruleTwo.getOutputPredicates());
                             mergedRules.add(mergedRule);
                             break;

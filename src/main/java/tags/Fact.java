@@ -148,13 +148,13 @@ public class Fact extends Tag implements Predicate {
         if (matchPredicateName(inputFact, result)) return result;
         if (matchArgumentsSize(inputFact, result)) return result;
         if (matchArguments(result, inputFact.arguments)) return result;
-        result.setDoesMatch(true);
+        result.setFactMatch(true);
         return result;
     }
 
     private boolean matchPredicateName(Fact inputFact, VariableReturn result) {
         if (!this.predicateName.equals(inputFact.predicateName)) {
-            result.setDoesMatch(false);
+            result.setFactMatch(false);
             return true;
         }
         return false;
@@ -168,21 +168,21 @@ public class Fact extends Tag implements Predicate {
             Argument argFact = (Argument) iterFact.next();
             Argument argInputFact = (Argument) iterInputFact.next();
             if (argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL) || argInputFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
-                result.setDoesMatch(true);
+                result.setFactMatch(true);
                 return true;
             }
             if (argInputFact.getSymbol().equals(Argument.ArgTypes.VAR)) {
-                result.setDoesMatch(true);
+                result.setFactMatch(true);
                 result.getPairs().put(argInputFact.getName(), argFact);
             }
-            result.setDoesMatch(argFact.matches(argInputFact));
-            if (!result.isDoesMatch()) {
+            result.setFactMatch(argFact.matches(argInputFact));
+            if (!result.isFactMatch()) {
                 return true;
             }
         }
         if (iterInputFact.hasNext()) {
             Argument argFact = (Argument) iterInputFact.next();
-            result.setDoesMatch((argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)));
+            result.setFactMatch((argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)));
             return true;
         }
         return false;
@@ -192,7 +192,7 @@ public class Fact extends Tag implements Predicate {
         if (inputFact.arguments.size() > this.arguments.size()) {
             for (int i = this.arguments.size(); i < inputFact.arguments.size(); i++) {
                 if (!inputFact.arguments.get(i).getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
-                    result.setDoesMatch(false);
+                    result.setFactMatch(false);
                     return true;
                 }
             }
