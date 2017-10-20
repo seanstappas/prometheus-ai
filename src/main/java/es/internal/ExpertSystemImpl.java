@@ -1,5 +1,6 @@
 package es.internal;
 
+import com.google.inject.assistedinject.Assisted;
 import es.api.ExpertSystem;
 import tags.*;
 
@@ -19,11 +20,15 @@ class ExpertSystemImpl implements ExpertSystem {
      * Creates an Expert System (ES).
      */
     @Inject
-    public ExpertSystemImpl() {
-        readyRules = new HashSet<>();
-        facts = new HashSet<>();
-        recommendations = new HashSet<>();
-        activeRules = new HashSet<>();
+    public ExpertSystemImpl(
+            @Assisted("readyRules") Set<Rule> readyRules,
+            @Assisted("activeRules") Set<Rule> activeRules,
+            @Assisted("facts") Set<Fact> facts,
+            @Assisted("recommendations") Set<Recommendation> recommendations) {
+        this.readyRules = readyRules;
+        this.activeRules = activeRules;
+        this.facts = facts;
+        this.recommendations = recommendations;
     }
 
     @Override

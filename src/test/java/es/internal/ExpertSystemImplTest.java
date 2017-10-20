@@ -4,24 +4,32 @@ import es.api.ExpertSystem;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import tags.Fact;
-import tags.Predicate;
+import tags.Recommendation;
 import tags.Rule;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Created by seanstappas1 on 2017-10-13.
  */
 public class ExpertSystemImplTest {
     private ExpertSystem es;
+    private Set<Rule> readyRules;
+    private Set<Rule> activeRules;
+    private Set<Fact> facts;
+    private Set<Recommendation> recommendations;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        es = new ExpertSystemImpl();
+        readyRules = new HashSet<>();
+        facts = new HashSet<>();
+        recommendations = new HashSet<>();
+        activeRules = new HashSet<>();
+        es = new ExpertSystemImpl(readyRules, activeRules, facts, recommendations);
     }
 
     @Test
@@ -39,28 +47,6 @@ public class ExpertSystemImplTest {
         Rule rule = mock(Rule.class);
 
         es.addRule(rule);
-
-        Set<Integer> set = new HashSet<>();
-        set.add(1);
-        set.add(2);
-        set.add(3);
-        System.out.println(set);
-        set.removeAll(set);
-        System.out.println(set);
-
-        Set<Rule> expectedRestRules = new HashSet<>();
-        expectedRestRules.add(new Rule(
-                new Fact[]{
-                        new Fact("Goose(loud,nationality=canadian,wingspan=4)"),
-                        new Fact("Aardvark(brown,?,speed=slow)")},
-                new Predicate[]{
-                        new Fact("Hog(colour=green,size=huge,sound=ribbit,big)")})
-        );
-        System.out.println(expectedRestRules);
-        expectedRestRules.removeAll(expectedRestRules);
-        System.out.println(expectedRestRules);
-
-
     }
 
     @Test

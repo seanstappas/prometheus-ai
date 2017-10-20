@@ -2,13 +2,13 @@ package integration;
 
 import com.google.inject.Guice;
 import es.api.ExpertSystem;
-import es.guice.ExpertSystemModule;
 import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
 import knn.api.Tuple;
-import knn.guice.KnowledgeNodeNetworkModule;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import prometheus.api.Prometheus;
+import prometheus.guice.PrometheusModule;
 import tags.*;
 
 import java.io.BufferedReader;
@@ -21,14 +21,15 @@ import static org.testng.Assert.assertTrue;
 /**
  * Running es.internal.ExpertSystemImpl and knn.internal.KnowledgeNodeNetwork
  */
-public class TestKNNandES { // TODO: integration with Google's GSON libary
+public class TestKNNandES {
     private KnowledgeNodeNetwork knn;
     private ExpertSystem es;
 
     @BeforeTest
     public void setup() {
-        knn = Guice.createInjector(new KnowledgeNodeNetworkModule()).getInstance(KnowledgeNodeNetwork.class);
-        es = Guice.createInjector(new ExpertSystemModule()).getInstance(ExpertSystem.class);
+        Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
+        es = prometheus.getExpertSystem();
+        knn = prometheus.getKnowledgeNodeNetwork();
     }
 
     /**
