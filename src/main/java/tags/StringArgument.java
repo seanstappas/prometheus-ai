@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *  i.e. "ARG != big" {@literal ->} this.value.equals("big"; this.isNeg==true
  */
 
-class StringArgument extends Argument {
+final class StringArgument extends Argument {
 
     private boolean isNeg;
     private String value;

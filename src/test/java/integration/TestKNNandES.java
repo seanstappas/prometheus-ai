@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Running es.internal.ExpertSystemImpl and knn.internal.KnowledgeNodeNetwork
+ * Running es.internal.NeuralNetworkImpl and knn.internal.KnowledgeNodeNetwork
  */
 public class TestKNNandES {
     private KnowledgeNodeNetwork knn;

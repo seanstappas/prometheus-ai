@@ -6,7 +6,7 @@ package tags;
  * i.e. "?", "*" or {@literal "&x"}
  */
 
-class VariableArgument extends Argument {
+final class VariableArgument extends Argument {
 
     /**
      * Constructor of variable Arguments

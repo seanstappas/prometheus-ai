@@ -12,7 +12,7 @@ import java.util.*;
  * Recommendations) as outputs.
  * They only activate when all the input Facts are active.
  */
-public class Rule extends Tag {
+public final class Rule extends Tag {
     private Set<Fact> inputFacts;
     private Set<Predicate> outputPredicates;
 

@@ -4,6 +4,10 @@ import es.api.ExpertSystem;
 import es.api.ExpertSystemFactory;
 import knn.api.KnowledgeNodeNetwork;
 import knn.api.KnowledgeNodeNetworkFactory;
+import meta.api.MetaReasoner;
+import meta.api.MetaReasonerFactory;
+import nn.api.NeuralNetwork;
+import nn.api.NeuralNetworkFactory;
 import prometheus.api.Prometheus;
 
 import javax.inject.Inject;
@@ -11,13 +15,31 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 class PrometheusImpl implements Prometheus{
-    private ExpertSystem es;
+    private NeuralNetwork nn;
     private KnowledgeNodeNetwork knn;
+    private ExpertSystem es;
+    private MetaReasoner meta;
 
     @Inject
-    public PrometheusImpl(ExpertSystemFactory expertSystemFactory, KnowledgeNodeNetworkFactory knowledgeNodeNetworkFactory) {
+    public PrometheusImpl(
+            NeuralNetworkFactory neuralNetworkFactory,
+            ExpertSystemFactory expertSystemFactory,
+            KnowledgeNodeNetworkFactory knowledgeNodeNetworkFactory,
+            MetaReasonerFactory metaReasonerFactory) {
+        this.nn = neuralNetworkFactory.create();
         this.es = expertSystemFactory.create(new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
         this.knn = knowledgeNodeNetworkFactory.create(new HashMap<>(), new HashMap<>(), new HashMap<>());
+        this.meta = metaReasonerFactory.create();
+    }
+
+    @Override
+    public NeuralNetwork getNeuralNetwork() {
+        return nn;
+    }
+
+    @Override
+    public KnowledgeNodeNetwork getKnowledgeNodeNetwork() {
+        return knn;
     }
 
     @Override
@@ -26,7 +48,7 @@ class PrometheusImpl implements Prometheus{
     }
 
     @Override
-    public KnowledgeNodeNetwork getKnowledgeNodeNetwork() {
-        return knn;
+    public MetaReasoner getMetaReasoner() {
+        return meta;
     }
 }

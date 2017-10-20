@@ -4,9 +4,6 @@ import tags.*;
 
 import java.util.Set;
 
-/**
- * Created by Sean on 10/13/2017.
- */
 public interface ExpertSystem {
     /**
      * Resets the ES by clearing all Rules, Recommendations, and Facts.

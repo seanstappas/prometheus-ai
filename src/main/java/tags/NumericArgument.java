@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *  i.e. "ARG != 5" {@literal ->} this.value==5; this.isNeg==true
  */
 
-class NumericArgument extends Argument {
+final class NumericArgument extends Argument {
 
     private boolean isNeg;
     private int value;
