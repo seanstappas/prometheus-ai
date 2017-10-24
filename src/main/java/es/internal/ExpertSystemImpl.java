@@ -125,8 +125,6 @@ class ExpertSystemImpl implements ExpertSystem {
     public Set<Tag> think(boolean shouldGenerateRule) {
         Set<Predicate> allActivatedPredicates = new HashSet<>();
         Set<Predicate> activatedPredicates;
-        Set<Fact> inputFactSet = getFacts();
-        Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
         do {
             activatedPredicates = thinkCycle();
             allActivatedPredicates.addAll(activatedPredicates);
@@ -136,6 +134,8 @@ class ExpertSystemImpl implements ExpertSystem {
             if (predicate instanceof Recommendation)
                 activatedRecommendations.add((Recommendation) predicate);
         }
+        Set<Fact> inputFactSet = getFacts();
+        Set<Fact> inputFactSetClone = new HashSet<>(inputFactSet);
         if (shouldGenerateRule) {
             generateProvenRule(inputFactSetClone, allActivatedPredicates);
         }

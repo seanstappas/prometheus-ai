@@ -12,7 +12,7 @@ import java.util.List;
  *<p>
  * Recommendations are composed of a predicate name and a set of arguments: @P(ARG1, ARG2, ...)
  */
-public final class Recommendation extends Tag implements Predicate {
+public class Recommendation extends Tag implements Predicate {
     /**
      * Creates a Recommendation.
      *

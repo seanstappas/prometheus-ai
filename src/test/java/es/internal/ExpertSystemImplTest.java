@@ -13,6 +13,8 @@ import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 public class ExpertSystemImplTest {
@@ -92,44 +94,144 @@ public class ExpertSystemImplTest {
     }
 
     @Test
-    public void mustAddTag() throws Exception {
+    public void mustAddRuleTag() throws Exception {
+        Rule rule = mock(Rule.class);
 
+        // given
+        when(rule.getType()).thenReturn(Tag.TagType.RULE);
+
+        // when
+        es.addTag(rule);
+
+        // then
+        assertTrue(readyRules.contains(rule));
+        assertTrue(activeRules.isEmpty());
     }
 
     @Test
-    public void testAddFact() throws Exception {
+    public void mustAddFactTag() throws Exception {
+        Fact fact = mock(Fact.class);
+
+        // given
+        when(fact.getType()).thenReturn(Tag.TagType.FACT);
+
+        // when
+        es.addTag(fact);
+
+        // then
+        assertTrue(facts.contains(fact));
     }
 
     @Test
-    public void testRemoveFact() throws Exception {
+    public void mustAddRecommendationTag() throws Exception {
+        Recommendation recommendation = mock(Recommendation.class);
+
+        // given
+        when(recommendation.getType()).thenReturn(Tag.TagType.RECOMMENDATION);
+
+        // when
+        es.addTag(recommendation);
+
+        // then
+        assertTrue(recommendations.contains(recommendation));
     }
 
     @Test
-    public void testAddRule() throws Exception {
+    public void mustAddRule() throws Exception {
+        Rule rule = mock(Rule.class);
+
+        // given
+        when(rule.getType()).thenReturn(Tag.TagType.RULE);
+
+        // when
+        es.addRule(rule);
+
+        // then
+        assertTrue(readyRules.contains(rule));
+        assertTrue(activeRules.isEmpty());
     }
 
     @Test
-    public void testAddRecommendation() throws Exception {
+    public void mustAddFact() throws Exception {
+        Fact fact = mock(Fact.class);
+
+        // given
+        when(fact.getType()).thenReturn(Tag.TagType.FACT);
+
+        // when
+        es.addFact(fact);
+
+        // then
+        assertTrue(facts.contains(fact));
     }
 
     @Test
-    public void testGetRecommendations() throws Exception {
+    public void mustAddRecommendation() throws Exception {
+        Recommendation recommendation = mock(Recommendation.class);
+
+        // given
+        when(recommendation.getType()).thenReturn(Tag.TagType.RECOMMENDATION);
+
+        // when
+        es.addRecommendation(recommendation);
+
+        // then
+        assertTrue(recommendations.contains(recommendation));
     }
 
     @Test
-    public void testGetReadyRules() throws Exception {
+    public void mustRemoveFact() throws Exception {
+        Fact fact = mock(Fact.class);
+
+        // given
+        facts.add(fact);
+
+        // when
+        es.removeFact(fact);
+
+        // then
+        assertTrue(facts.isEmpty());
     }
 
     @Test
-    public void testGetActiveRules() throws Exception {
+    public void mustGetRecommendations() throws Exception {
+        // when
+        Set<Recommendation> actualRecommendations = es.getRecommendations();
+
+        // then
+        assertSame(actualRecommendations, recommendations);
     }
 
     @Test
-    public void testGetFacts() throws Exception {
+    public void mustGetReadyRules() throws Exception {
+        // when
+        Set<Rule> actualReadyRules = es.getReadyRules();
+
+        // then
+        assertSame(actualReadyRules, readyRules);
     }
 
     @Test
-    public void testThink() throws Exception {
+    public void mustGetActiveRules() throws Exception {
+        // when
+        Set<Rule> actualActiveRules = es.getActiveRules();
+
+        // then
+        assertSame(actualActiveRules, activeRules);
+    }
+
+    @Test
+    public void mustGetFacts() throws Exception {
+        // when
+        Set<Fact> actualFacts = es.getFacts();
+
+        // then
+        assertSame(actualFacts, facts);
+    }
+
+    @Test
+    public void mustThink() throws Exception {
+
     }
 
     @Test
