@@ -295,7 +295,7 @@ public class TestKNNandES {
             es.addFact(fact);
         }
         for (Rule rule : testRules) {
-            es.addRule(rule);
+            es.addReadyRule(rule);
         }
         for (Recommendation recommendation : testRecommendations) {
             es.addRecommendation(recommendation);
@@ -319,7 +319,7 @@ public class TestKNNandES {
         assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules: " + initialRules);
 
-        Set<Tag> activatedRecommendations = es.think();
+        Set<Recommendation> activatedRecommendations = es.think();
         Set<Tag> expectedActivatedRecommendations = new HashSet<>();
         expectedActivatedRecommendations.add(recZ);
         assertEquals(activatedRecommendations, expectedActivatedRecommendations);
@@ -399,7 +399,7 @@ public class TestKNNandES {
             es.addFact(fact);
         }
         for (Rule rule : testRules) {
-            es.addRule(rule);
+            es.addReadyRule(rule);
         }
         for (Recommendation recommendation : testRecommendations) {
             es.addRecommendation(recommendation);
@@ -423,7 +423,7 @@ public class TestKNNandES {
         assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules: " + initialRules);
 
-        Set<Tag> activatedRecommendations = es.think(5, false);
+        Set<Recommendation> activatedRecommendations = es.think(false, 5);
         Set<Tag> expectedActivatedRecommendations = new HashSet<>();
         expectedActivatedRecommendations.add(recZ);
         assertEquals(activatedRecommendations, expectedActivatedRecommendations);
@@ -516,7 +516,7 @@ public class TestKNNandES {
             es.addFact(fact);
         }
         for (Rule rule : testRules) {
-            es.addRule(rule);
+            es.addReadyRule(rule);
         }
         for (Recommendation recommendation : testRecommendations) {
             es.addRecommendation(recommendation);
@@ -540,7 +540,7 @@ public class TestKNNandES {
         assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules: " + initialRules);
 
-        Set<Tag> activatedRecommendations = es.think(true);
+        Set<Recommendation> activatedRecommendations = es.think(true);
         Set<Tag> expectedActivatedRecommendations = new HashSet<>();
         expectedActivatedRecommendations.add(recZ);
         assertEquals(activatedRecommendations, expectedActivatedRecommendations);
@@ -587,7 +587,9 @@ public class TestKNNandES {
         System.out.println("***Rest Cycle***");
 
         es.rest(1);
-        es.getReadyRules().removeAll(readyRules);
+        for (Rule rule : new HashSet<>(readyRules)) {
+            es.removeReadyRule(rule);
+        }
         Set<Rule> expectedRestRules = new HashSet<>();
         expectedRestRules.add(new Rule(
                 new Fact[]{
@@ -597,38 +599,36 @@ public class TestKNNandES {
                         new Fact("Hog(colour=green,size=huge,sound=ribbit,big)")})
         );
 
-
         Rule expected = expectedRestRules.iterator().next();
         Rule actual = readyRules.iterator().next();
 
-        System.out.println(expectedRestRules.equals(readyRules));
-        System.out.println(readyRules.equals(expectedRestRules));
-
-        System.out.println(actual.getInputFacts().equals(expected.getInputFacts()));
-        System.out.println(expected.getInputFacts().equals(actual.getInputFacts()));
-
-        System.out.println(actual.getOutputPredicates().equals(expected.getOutputPredicates()));
-        System.out.println(expected.getOutputPredicates().equals(actual.getOutputPredicates()));
-
-        System.out.println(actual.getOutputPredicates().iterator().next().equals(expected.getOutputPredicates().iterator().next()));
-        System.out.println(expected.getOutputPredicates().iterator().next().equals(actual.getOutputPredicates().iterator().next()));
-
-        System.out.println(actual.getOutputPredicates());
-        System.out.println(expected.getOutputPredicates());
-
-        System.out.println(actual.getOutputPredicates().hashCode());
-        System.out.println(expected.getOutputPredicates().hashCode());
-        System.out.println(expected.getOutputPredicates().iterator().next().hashCode());
-        System.out.println(actual.getOutputPredicates().iterator().next().hashCode());
-        System.out.println(expected.getOutputPredicates().iterator().next().hashCode());
-        System.out.println(actual.getOutputPredicates().iterator().next().hashCode());
+//        System.out.println(expectedRestRules.equals(readyRules));
+//        System.out.println(readyRules.equals(expectedRestRules));
+//
+//        System.out.println(actual.getInputFacts().equals(expected.getInputFacts()));
+//        System.out.println(expected.getInputFacts().equals(actual.getInputFacts()));
+//
+//        System.out.println(actual.getOutputPredicates().equals(expected.getOutputPredicates()));
+//        System.out.println(expected.getOutputPredicates().equals(actual.getOutputPredicates()));
+//
+//        System.out.println(actual.getOutputPredicates().iterator().next().equals(expected.getOutputPredicates().iterator().next()));
+//        System.out.println(expected.getOutputPredicates().iterator().next().equals(actual.getOutputPredicates().iterator().next()));
+//
+//        System.out.println(actual.getOutputPredicates());
+//        System.out.println(expected.getOutputPredicates());
+//
+//        System.out.println(actual.getOutputPredicates().hashCode());
+//        System.out.println(expected.getOutputPredicates().hashCode());
+//        System.out.println(expected.getOutputPredicates().iterator().next().hashCode());
+//        System.out.println(actual.getOutputPredicates().iterator().next().hashCode());
+//        System.out.println(expected.getOutputPredicates().iterator().next().hashCode());
+//        System.out.println(actual.getOutputPredicates().iterator().next().hashCode());
 
         assertEquals(expected.getOutputPredicates(), actual.getOutputPredicates());
         assertEquals(expected.getOutputPredicates().iterator().next(), actual.getOutputPredicates().iterator().next());
         assertEquals(actual.getOutputPredicates().iterator().next(), expected.getOutputPredicates().iterator().next());
         assertEquals(actual.getOutputPredicates().iterator().next().getArguments(), expected.getOutputPredicates().iterator().next().getArguments());
         assertEquals(expected.getOutputPredicates().iterator().next().getArguments(), actual.getOutputPredicates().iterator().next().getArguments());
-        actual.getOutputPredicates().equals(expected.getOutputPredicates());
 //        assertEquals(actual.getOutputPredicates(), expected.getOutputPredicates());
 
 //        assertEquals(expected, actual); // TODO: Why does a.equals(b) but not b.equals(a) ?
@@ -658,7 +658,7 @@ public class TestKNNandES {
         List<Rule> multipleRules =
                 Rule.makeRules("eyes(multiple) wings(2) OR legs(8) diet(carnivorous) -> insect() @investigate()");
         for (Rule rule : multipleRules) {
-            es.addRule(rule);
+            es.addReadyRule(rule);
         }
         Set<Rule> taughtSentences = es.getReadyRules();
         Set<Rule> expectedTaughtSentences = new HashSet<>();
@@ -734,7 +734,7 @@ public class TestKNNandES {
         assertEquals(initialRules, expectedInitialRules);
         System.out.println("[ES] Initial rules (for ES): " + initialRules);
 
-        Set<Tag> activatedRecommendations = es.think();
+        Set<Recommendation> activatedRecommendations = es.think();
         System.out.println("[ES] Active recommendation (for Meta): " + activatedRecommendations);
 
         Set<Tag> expectedActivatedRecommendation = new HashSet<>();

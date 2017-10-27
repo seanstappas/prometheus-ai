@@ -17,7 +17,8 @@ public abstract class Tag {
     public enum TagType {
         FACT,
         RULE,
-        RECOMMENDATION
+        RECOMMENDATION,
+        EMPTY
     }
 
     double getConfidenceValue() {

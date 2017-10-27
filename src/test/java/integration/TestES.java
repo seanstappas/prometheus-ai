@@ -2,11 +2,12 @@ package integration;
 
 import com.google.inject.Guice;
 import es.api.ExpertSystem;
-import es.guice.ExpertSystemModule;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import prometheus.api.Prometheus;
+import prometheus.guice.PrometheusModule;
 
 /**
  * Expert System Unit Tests
@@ -16,7 +17,8 @@ public class TestES {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        es = Guice.createInjector(new ExpertSystemModule()).getInstance(ExpertSystem.class);
+        Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
+        es = prometheus.getExpertSystem();
     }
 
     @AfterMethod
@@ -75,7 +77,7 @@ public class TestES {
 
     @Test
     public void testThinkNumCycles() throws Exception {
-        es.think(0, true);
+        es.think(true, 0);
     }
 
 }

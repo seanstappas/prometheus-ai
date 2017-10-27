@@ -14,15 +14,20 @@ import java.util.Set;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class ExpertSystemImplTest {
+    private final static int NUM_TEST_CYCLES = 5;
+    private final static String TEST_SENTENCE = "Test sentence.";
     private ExpertSystem es;
     private Set<Rule> readyRules;
     private Set<Rule> activeRules;
     private Set<Fact> facts;
     private Set<Recommendation> recommendations;
+    private Thinker thinker;
+    private Teacher teacher;
+    private Rester rester;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -30,7 +35,100 @@ public class ExpertSystemImplTest {
         facts = new HashSet<>();
         recommendations = new HashSet<>();
         activeRules = new HashSet<>();
-        es = new ExpertSystemImpl(readyRules, activeRules, facts, recommendations);
+        thinker = mock(Thinker.class);
+        teacher = mock(Teacher.class);
+        rester = mock(Rester.class);
+        ThinkerFactory thinkerFactory = mock(ThinkerFactory.class);
+        when(thinkerFactory.create(readyRules, activeRules, facts, recommendations)).thenReturn(thinker);
+        TeacherFactory teacherFactory = mock(TeacherFactory.class);
+        when(teacherFactory.create(readyRules)).thenReturn(teacher);
+        ResterFactory resterFactory = mock(ResterFactory.class);
+        when(resterFactory.create(readyRules)).thenReturn(rester);
+        es = new ExpertSystemImpl(readyRules, activeRules, facts, recommendations, thinkerFactory, teacherFactory, resterFactory);
+    }
+
+    @Test
+    public void mustThink() throws Exception {
+        Set<Recommendation> expected = new HashSet<>();
+        expected.add(mock(Recommendation.class));
+
+        // given
+        when(thinker.think(false, Integer.MAX_VALUE)).thenReturn(expected);
+
+        // when
+        Set<Recommendation> actual = es.think();
+
+        // then
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void mustThinkWithoutRuleGeneration() throws Exception {
+        Set<Recommendation> expected = new HashSet<>();
+        expected.add(mock(Recommendation.class));
+
+        // given
+        when(thinker.think(false, Integer.MAX_VALUE)).thenReturn(expected);
+
+        // when
+        Set<Recommendation> actual = es.think(false);
+
+        // then
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void mustThinkWithRuleGeneration() throws Exception {
+        Set<Recommendation> expected = new HashSet<>();
+        expected.add(mock(Recommendation.class));
+
+        // given
+        when(thinker.think(true, Integer.MAX_VALUE)).thenReturn(expected);
+
+        // when
+        Set<Recommendation> actual = es.think(true);
+
+        // then
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void mustThinkWithRuleGenerationAndCycles() throws Exception {
+        Set<Recommendation> expected = new HashSet<>();
+        expected.add(mock(Recommendation.class));
+
+        // given
+        when(thinker.think(true, NUM_TEST_CYCLES)).thenReturn(expected);
+
+        // when
+        Set<Recommendation> actual = es.think(true, NUM_TEST_CYCLES);
+
+        // then
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testTeach() throws Exception {
+        // given
+        when(teacher.teach(TEST_SENTENCE)).thenReturn(true);
+
+        // when
+        boolean actualTeachResult = es.teach(TEST_SENTENCE);
+
+        // then
+        assertTrue(actualTeachResult);
+    }
+
+    @Test
+    public void testRest() throws Exception {
+        // given
+        when(rester.rest(NUM_TEST_CYCLES)).thenReturn(true);
+
+        // when
+        boolean actualRestResult = es.rest(NUM_TEST_CYCLES);
+
+        // then
+        assertTrue(actualRestResult);
     }
 
     @Test
@@ -94,6 +192,20 @@ public class ExpertSystemImplTest {
     }
 
     @Test
+    public void mustNotAddInvalidTag() throws Exception {
+        Tag tag = mock(Tag.class);
+
+        // given
+        when(tag.getType()).thenReturn(Tag.TagType.EMPTY);
+
+        // when
+        boolean actualAddResult = es.addTag(tag);
+
+        // then
+        assertFalse(actualAddResult);
+    }
+
+    @Test
     public void mustAddRuleTag() throws Exception {
         Rule rule = mock(Rule.class);
 
@@ -144,7 +256,7 @@ public class ExpertSystemImplTest {
         when(rule.getType()).thenReturn(Tag.TagType.RULE);
 
         // when
-        es.addRule(rule);
+        es.addReadyRule(rule);
 
         // then
         assertTrue(readyRules.contains(rule));
@@ -195,59 +307,49 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustGetRecommendations() throws Exception {
+        // given
+        recommendations.add(mock(Recommendation.class));
+
         // when
         Set<Recommendation> actualRecommendations = es.getRecommendations();
 
         // then
-        assertSame(actualRecommendations, recommendations);
+        assertEquals(actualRecommendations, recommendations);
     }
 
     @Test
     public void mustGetReadyRules() throws Exception {
+        // given
+        readyRules.add(mock(Rule.class));
+
         // when
         Set<Rule> actualReadyRules = es.getReadyRules();
 
         // then
-        assertSame(actualReadyRules, readyRules);
+        assertEquals(actualReadyRules, readyRules);
     }
 
     @Test
     public void mustGetActiveRules() throws Exception {
+        // given
+        activeRules.add(mock(Rule.class));
+
         // when
         Set<Rule> actualActiveRules = es.getActiveRules();
 
         // then
-        assertSame(actualActiveRules, activeRules);
+        assertEquals(actualActiveRules, activeRules);
     }
 
     @Test
     public void mustGetFacts() throws Exception {
+        // given
+        facts.add(mock(Fact.class));
+
         // when
         Set<Fact> actualFacts = es.getFacts();
 
         // then
-        assertSame(actualFacts, facts);
+        assertEquals(actualFacts, facts);
     }
-
-    @Test
-    public void mustThink() throws Exception {
-
-    }
-
-    @Test
-    public void testThink1() throws Exception {
-    }
-
-    @Test
-    public void testThink2() throws Exception {
-    }
-
-    @Test
-    public void testRest() throws Exception {
-    }
-
-    @Test
-    public void testTeach() throws Exception {
-    }
-
 }
