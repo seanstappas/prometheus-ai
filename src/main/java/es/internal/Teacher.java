@@ -4,9 +4,7 @@ import com.google.inject.assistedinject.Assisted;
 import tags.Rule;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 class Teacher {
     private Set<Rule> readyRules;
@@ -17,15 +15,14 @@ class Teacher {
         this.readyRules = readyRules;
     }
 
-    boolean teach(String sentence) {
+    void teach(String sentence) {
         String[] tokens = sentence.split("\\s");
         List<String> tokenList = new ArrayList<>();
         for (String token : tokens) {
             tokenList.add(token.toLowerCase());
         }
         int ruleIndices[] = findRuleIndices(tokenList);
-        Rule taughtRule = makeTaughtRule(tokenList, ruleIndices[0], ruleIndices[1]);
-        return readyRules.add(taughtRule);
+        makeTaughtRule(tokenList, ruleIndices[0], ruleIndices[1]).ifPresent(readyRules::add);
     }
 
     private int[] findRuleIndices(List<String> tokenList) {
@@ -49,17 +46,16 @@ class Teacher {
         return new int[]{inputIndex, outputIndex};
     }
 
-    private Rule makeTaughtRule(List<String> tokenList, int inputIndex, int outputIndex) {
-        Rule newRule = new Rule();
+    private Optional<Rule> makeTaughtRule(List<String> tokenList, int inputIndex, int outputIndex) {
         if (inputIndex < outputIndex) {
             String[] inputFacts = tokenList.subList(inputIndex + 1, outputIndex).toArray(new String[0]);
             String[] outputFacts = tokenList.subList(outputIndex + 1, tokenList.size()).toArray(new String[0]);
-            newRule = new Rule(inputFacts, outputFacts);
+            return Optional.of(new Rule(inputFacts, outputFacts));
         } else if (inputIndex > outputIndex) {
             String[] inputFacts = tokenList.subList(inputIndex + 1, tokenList.size()).toArray(new String[0]);
             String[] outputFacts = tokenList.subList(outputIndex + 1, inputIndex).toArray(new String[0]);
-            newRule = new Rule(inputFacts, outputFacts);
+            return Optional.of(new Rule(inputFacts, outputFacts));
         }
-        return newRule;
+        return Optional.empty();
     }
 }

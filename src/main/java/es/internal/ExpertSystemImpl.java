@@ -50,13 +50,13 @@ class ExpertSystemImpl implements ExpertSystem {
     }
 
     @Override
-    public boolean teach(String sentence) {
-        return teacher.teach(sentence);
+    public void teach(String sentence) {
+        teacher.teach(sentence);
     }
 
     @Override
-    public boolean rest(int numberOfCycles) {
-        return rester.rest(numberOfCycles);
+    public void rest(int numberOfCycles) {
+        rester.rest(numberOfCycles);
     }
 
     @Override

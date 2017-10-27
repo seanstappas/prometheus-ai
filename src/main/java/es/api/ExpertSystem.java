@@ -45,9 +45,8 @@ public interface ExpertSystem {
      * e.g. "If Human(near) Then Move(steps=10)"
      *
      * @param sentence that contains input and output delimiters
-     * @return <code>true</code> if a new Rule was added as a result of teaching
      */
-    boolean teach(String sentence);
+    void teach(String sentence);
 
     /**
      * Process that occurs when ES is not thinking.
@@ -55,9 +54,8 @@ public interface ExpertSystem {
      * Currently calls addReadyRule to merge rules
      *
      * @param numberOfCycles the number of rest cycles
-     * @return <code>true</code> if new merged Rules were added as a result of resting
      */
-    boolean rest(int numberOfCycles);
+    void rest(int numberOfCycles);
 
     /**
      * Resets the ES by clearing all Rules, Recommendations, and Facts.

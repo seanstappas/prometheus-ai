@@ -28,7 +28,7 @@ public class Rule extends Tag {
      * Sets confidence value of output tags to the product of the confidence value of input tags.
      */
 
-    private void setoutputFactsConfidenceValue() {
+    private void setOutputFactsConfidenceValue() {
         double value = 1.0;
         for (Fact fact : this.inputFacts) {
             value = value * fact.getConfidenceValue();
@@ -73,19 +73,7 @@ public class Rule extends Tag {
         this.type = TagType.RULE;
         this.setConfidenceValue(confidenceValue);
 
-        setoutputFactsConfidenceValue();
-    }
-
-    /**
-     * {@code confidenceValue} defaults to 1.0
-     * @see #Rule(Set, Set, double)
-     */
-
-    public Rule() {
-        this.inputFacts = new HashSet<>();
-        this.outputPredicates = new HashSet<>();
-        this.type = TagType.RULE;
-        this.setConfidenceValue(1.0);
+        setOutputFactsConfidenceValue();
     }
 
     /**

@@ -109,26 +109,14 @@ public class ExpertSystemImplTest {
 
     @Test
     public void testTeach() throws Exception {
-        // given
-        when(teacher.teach(TEST_SENTENCE)).thenReturn(true);
-
         // when
-        boolean actualTeachResult = es.teach(TEST_SENTENCE);
-
-        // then
-        assertTrue(actualTeachResult);
+        es.teach(TEST_SENTENCE);
     }
 
     @Test
     public void testRest() throws Exception {
-        // given
-        when(rester.rest(NUM_TEST_CYCLES)).thenReturn(true);
-
         // when
-        boolean actualRestResult = es.rest(NUM_TEST_CYCLES);
-
-        // then
-        assertTrue(actualRestResult);
+       es.rest(NUM_TEST_CYCLES);
     }
 
     @Test
