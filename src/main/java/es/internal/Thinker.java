@@ -53,7 +53,7 @@ class Thinker {
      * <p>
      * Adds generate rule to ES
      *
-     * @param inputFactSet Set of Facts in ES
+     * @param inputFactSet           Set of Facts in ES
      * @param allActivatedPredicates Set of activated Predicates
      */
     private void generateProvenRule(Set<Fact> inputFactSet, Set<Predicate> allActivatedPredicates) {

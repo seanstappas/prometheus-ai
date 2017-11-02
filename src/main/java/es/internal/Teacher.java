@@ -27,7 +27,7 @@ class Teacher {
 
     private int[] findRuleIndices(List<String> tokenList) {
         int inputIndex = -1;
-        String [] inputTokens = {"if", "when", "while", "first"};
+        String[] inputTokens = {"if", "when", "while", "first"};
         for (String inputToken : inputTokens) {
             if (tokenList.contains(inputToken)) {
                 inputIndex = tokenList.indexOf(inputToken);
@@ -36,7 +36,7 @@ class Teacher {
         }
 
         int outputIndex = -1;
-        String [] outputTokens = {"then", "next", "do"};
+        String[] outputTokens = {"then", "next", "do"};
         for (String outputToken : outputTokens) {
             if (tokenList.contains(outputToken)) {
                 outputIndex = tokenList.indexOf(outputToken);

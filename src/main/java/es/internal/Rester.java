@@ -23,6 +23,7 @@ class Rester {
      * current set of new rules.
      * <p>
      * i.e. rule 1 = A -> B, rule 2 = B -> C, rule 3 = A -> C
+     *
      * @param numberOfCycles how many cycles over the rule-set to attempt to merge
      */
     void rest(int numberOfCycles) {
