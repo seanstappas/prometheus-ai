@@ -53,11 +53,11 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void addKN(KnowledgeNode kn) {
-        if (kn.type.equals(KnowledgeNode.InputType.FACT)) {
+        if (kn.type.equals(Tag.TagType.FACT)) {
             mapKN.put(kn.fact, kn);
-        } else if (kn.type.equals(KnowledgeNode.InputType.RECOMMENDATION)) {
+        } else if (kn.type.equals(Tag.TagType.RECOMMENDATION)) {
             mapKN.put(kn.recommendation, kn);
-        } else if (kn.type.equals(KnowledgeNode.InputType.RULE)) {
+        } else if (kn.type.equals(Tag.TagType.RULE)) {
             mapKN.put(kn.rule, kn);
         }
     }
@@ -186,7 +186,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         for (Tuple tp : nnOutputs) {
             boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
-                if (kn.type.equals(KnowledgeNode.InputType.FACT)) {
+                if (kn.type.equals(Tag.TagType.FACT)) {
                     if (kn.fact.getPredicateName().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
                         kn.updateBelief();
@@ -194,7 +194,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                         activeTags.put(kn.fact, kn.belief);
                         found = true;
                     }
-                } else if (kn.type.equals(KnowledgeNode.InputType.RECOMMENDATION)) {
+                } else if (kn.type.equals(Tag.TagType.RECOMMENDATION)) {
                     if (kn.recommendation.getPredicateName().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
                         kn.updateBelief();
@@ -202,7 +202,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                         activeTags.put(kn.recommendation, kn.belief);
                         found = true;
                     }
-                } else if (kn.type.equals(KnowledgeNode.InputType.RULE)) {
+                } else if (kn.type.equals(Tag.TagType.RULE)) {
                     if (kn.rule.toString().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
                         kn.updateBelief();
@@ -265,19 +265,19 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         for (Tuple tp : nnOutputs) {
             boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
-                if (kn.type.equals(KnowledgeNode.InputType.FACT)) {
+                if (kn.type.equals(Tag.TagType.FACT)) {
                     if (kn.fact.getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
                         inputTags.put(kn.fact, kn.belief);
                         found = true;
                     }
-                } else if (kn.type.equals(KnowledgeNode.InputType.RECOMMENDATION)) {
+                } else if (kn.type.equals(Tag.TagType.RECOMMENDATION)) {
                     if (kn.recommendation.getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
                         inputTags.put(kn.recommendation, kn.belief);
                         found = true;
                     }
-                } else if (kn.type.equals(KnowledgeNode.InputType.RULE)) {
+                } else if (kn.type.equals(Tag.TagType.RULE)) {
                     if (kn.rule.toString().equals(tp.s)) {
                         excite(kn, tp.value);
                         inputTags.put(kn.rule, kn.belief);

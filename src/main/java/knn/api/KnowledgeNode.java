@@ -8,8 +8,7 @@ import tags.Tag;
 import java.util.HashMap;
 
 public final class KnowledgeNode {
-	public InputType type;
-    public enum InputType {FACT, RECOMMENDATION, RULE}
+	public Tag.TagType type;
     public Fact fact;
     public Rule rule;
     public Recommendation recommendation;
@@ -27,15 +26,15 @@ public final class KnowledgeNode {
 
     public KnowledgeNode(Tag inputName, HashMap<Tag, Double> outputFacts, int threshold) {
         if(inputName.type.equals(Tag.TagType.FACT)){
-        	this.type = InputType.FACT;
+        	this.type = Tag.TagType.FACT;
         	this.fact = (Fact) inputName;
         }
         else if(inputName.type.equals(Tag.TagType.RECOMMENDATION)){
-        	this.type = InputType.RECOMMENDATION;
+        	this.type = Tag.TagType.RECOMMENDATION;
         	this.recommendation = (Recommendation) inputName;
         }
         else if(inputName.type.equals(Tag.TagType.RULE)){
-        	this.type = InputType.RULE;
+        	this.type = Tag.TagType.RULE;
         	this.rule = (Rule) inputName;
         }
         this.outputs = outputFacts;
@@ -54,15 +53,15 @@ public final class KnowledgeNode {
      */
     public KnowledgeNode(Tag inputName, HashMap<Tag, Double> outputFacts, int threshold, int strength, double maxAge) {
         if(inputName.type.equals(Tag.TagType.FACT)){
-        	this.type = InputType.FACT;
+        	this.type = Tag.TagType.FACT;
         	this.fact = (Fact) inputName;
         }
         else if(inputName.type.equals(Tag.TagType.RECOMMENDATION)){
-        	this.type = InputType.RECOMMENDATION;
+        	this.type = Tag.TagType.RECOMMENDATION;
         	this.recommendation = (Recommendation) inputName;
         }
         else if(inputName.type.equals(Tag.TagType.RULE)){
-        	this.type = InputType.RULE;
+        	this.type = Tag.TagType.RULE;
         	this.rule = (Rule) inputName;
         }
         this.outputs = outputFacts;
@@ -84,15 +83,15 @@ public final class KnowledgeNode {
         this.outputs = new HashMap<>();
         
         if(inputInfo[0].charAt(0) == '@'){
-        	this.type = InputType.RECOMMENDATION;
+        	this.type = Tag.TagType.RECOMMENDATION;
         	this.recommendation = new Recommendation(inputInfo[0]);
         }
         else if(inputInfo[0].contains("->")){
-        	this.type = InputType.RULE;
+        	this.type = Tag.TagType.RULE;
         	this.rule = new Rule(inputInfo[0]);
         }
         else if(inputInfo[0].matches(".*\\(.*\\).*")){
-        	this.type = InputType.FACT;
+        	this.type = Tag.TagType.FACT;
         	this.fact = new Fact(inputInfo[0]);
         }
         this.threshold = Integer.parseInt(inputInfo[1]);
@@ -119,10 +118,10 @@ public final class KnowledgeNode {
      * @return the corresponding tag of the KN
      */
     public Tag typeChecker(){
-    	if(this.type.equals(InputType.FACT)){
+    	if(this.type.equals(Tag.TagType.FACT)){
             return this.fact;
 		}
-		else if(this.type.equals(InputType.RECOMMENDATION)){
+		else if(this.type.equals(Tag.TagType.RECOMMENDATION)){
             return this.recommendation;
 		}
 		else{
@@ -158,12 +157,12 @@ public final class KnowledgeNode {
     @Override
     public String toString() {
     	StringBuilder result = new StringBuilder();
-        if(this.type.equals(InputType.RECOMMENDATION)){
+        if(this.type.equals(Tag.TagType.RECOMMENDATION)){
         	result.append(this.recommendation.toString());
         	result.append(" threshold is ").append(this.threshold);
         	return result.toString();
         }
-        else if(this.type.equals(InputType.RULE)){
+        else if(this.type.equals(Tag.TagType.RULE)){
         	result.append(this.rule.toString());
         	result.append(" threshold is ").append(this.threshold);
         	return result.toString();
