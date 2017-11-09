@@ -16,6 +16,8 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private Map<Tag, KnowledgeNode> mapKN;
     private Map<Tag, Double> inputTags;
     private Map<Tag, Double> activeTags;
+    // TODO: Remove Maps here, associate Object truth (belief...) with KN object
+    // TODO: Rename Object truth to belief
 
     @Inject
     public KnowledgeNodeNetworkImpl(
@@ -144,6 +146,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         HashMap<Tag, Double> pendingFacts = new HashMap<>();
         do {
             pendingFacts.clear();
+
             for (KnowledgeNode kn : mapKN.values()) {
                 int matching = 0;
                 for (Tag t : kn.outputs.keySet()) {
@@ -163,6 +166,35 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             }
             activeTags.putAll(pendingFacts);
         } while (!pendingFacts.isEmpty());
+    }
+
+    @Override
+    public void backwardSearch(ArrayList<Tuple> nnOutputs, double score, int ply) {
+        getInputForBackwardSearch(nnOutputs);
+
+        for (int i = 0; i < ply; i++) {
+            ArrayList<Tag> previousActiveList = new ArrayList<>();
+            previousActiveList.addAll(activeTags.keySet());
+
+            for (KnowledgeNode kn : mapKN.values()) {
+                int matching = 0;
+                for (Tag t : kn.outputs.keySet()) {
+                    if (previousActiveList.contains(t)) {
+                        matching++;
+                        double backwardConfidence = (kn.outputs.get(t) * mapKN.get(t).objectTruth) / 100;
+                        kn.listOfRelatedTruth.put(t, backwardConfidence);
+                    }
+                }
+                if ((double) matching / kn.outputs.size() >= score) {
+                    Tag knType = kn.typeChecker();
+                    kn.updateObjectConfidence();
+                    if (!activeTags.containsKey(knType)) {
+                        activeTags.put(knType, kn.objectTruth);
+                    }
+                }
+            }
+        }
+
     }
 
     @Override
@@ -200,35 +232,6 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                 createKNfromTuple(tp);
             }
         }
-    }
-
-    @Override
-    public void backwardSearch(ArrayList<Tuple> nnOutputs, double score, int ply) {
-        getInputForBackwardSearch(nnOutputs);
-
-        for (int i = 0; i < ply; i++) {
-            ArrayList<Tag> previousActiveList = new ArrayList<>();
-            previousActiveList.addAll(activeTags.keySet());
-
-            for (KnowledgeNode kn : mapKN.values()) {
-                int matching = 0;
-                for (Tag t : kn.outputs.keySet()) {
-                    if (previousActiveList.contains(t)) {
-                        matching++;
-                        double backwardConfidence = (kn.outputs.get(t) * mapKN.get(t).objectTruth) / 100;
-                        kn.listOfRelatedTruth.put(t, backwardConfidence);
-                    }
-                }
-                if ((double) matching / kn.outputs.size() >= score) {
-                    Tag knType = kn.typeChecker();
-                    kn.updateObjectConfidence();
-                    if (!activeTags.containsKey(knType)) {
-                        activeTags.put(knType, kn.objectTruth);
-                    }
-                }
-            }
-        }
-
     }
 
     @Override
