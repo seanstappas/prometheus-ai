@@ -16,7 +16,7 @@ public final class KnowledgeNode {
     public HashMap<Tag, Double> outputs;										// Integer is the value of confidence
     public double activation = 0;			    									// int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
     public double threshold;                                                        // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
-    public double objectTruth = 0;
+    public double belief = 0;
     public HashMap<Tag, Double> listOfRelatedTruth;
     public int strength = 1;													// Which strength approach to take?
     public boolean isActivated = false;
@@ -81,7 +81,7 @@ public final class KnowledgeNode {
      */
     public KnowledgeNode(String[] inputInfo) {
     	this.listOfRelatedTruth = new HashMap<>();
-        this.outputs = new HashMap<Tag, Double>();
+        this.outputs = new HashMap<>();
         
         if(inputInfo[0].charAt(0) == '@'){
         	this.type = InputType.RECOMMENDATION;
@@ -120,28 +120,25 @@ public final class KnowledgeNode {
      */
     public Tag typeChecker(){
     	if(this.type.equals(InputType.FACT)){
-			Tag t = this.fact;
-			return t;
+            return this.fact;
 		}
 		else if(this.type.equals(InputType.RECOMMENDATION)){
-			Tag t = this.recommendation;
-			return t;
+            return this.recommendation;
 		}
 		else{
-			Tag t = this.rule;
-			return t;
+            return this.rule;
 		}     	
     }
     
     /**
      * update object confidence value
      */
-    public void updateObjectConfidence(){
+    public void updateBelief(){
     	double sum=0;
     	for(Tag t : this.listOfRelatedTruth.keySet()){
     		sum = sum + this.listOfRelatedTruth.get(t);
     	}
-    	this.objectTruth = sum / this.listOfRelatedTruth.size();
+    	this.belief = sum / this.listOfRelatedTruth.size();
     }
     
     /**
@@ -154,34 +151,34 @@ public final class KnowledgeNode {
         return this.age;
     }
 
-    public void setObjectTruth(double value){
-        this.objectTruth = value;
+    public void setBelief(double belief){
+        this.belief = belief;
     }
 
     @Override
     public String toString() {
-    	String result = "";
+    	StringBuilder result = new StringBuilder();
         if(this.type.equals(InputType.RECOMMENDATION)){
-        	result += this.recommendation.toString();
-        	result += " threshold is " + this.threshold;
-        	return result;
+        	result.append(this.recommendation.toString());
+        	result.append(" threshold is ").append(this.threshold);
+        	return result.toString();
         }
         else if(this.type.equals(InputType.RULE)){
-        	result += this.rule.toString();
-        	result += " threshold is " + this.threshold;
-        	return result;
+        	result.append(this.rule.toString());
+        	result.append(" threshold is ").append(this.threshold);
+        	return result.toString();
         }
         else{
-            result += this.fact.toString();
-            result = result + " threshold is " + this.threshold + " => ";
+            result.append(this.fact.toString());
+            result.append(" threshold is ").append(this.threshold).append(" => ");
         }
         
         for(Tag t : this.outputs.keySet()){
-        	result += t.toString();
-        	result = result + " with membershipTruth=" + this.outputs.get(t) + "; ";
+        	result.append(t.toString());
+        	result.append(" with membershipTruth=").append(this.outputs.get(t)).append("; ");
         }
         
-        return result;
+        return result.toString();
     }
 
     public void increaseActivation() {

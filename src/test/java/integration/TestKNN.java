@@ -70,11 +70,11 @@ public class TestKNN {
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("dog"))
                 {
-                    kn.setObjectTruth(100);
+                    kn.setBelief(100);
                     knn.fire(kn);
                 }
                 else if(f.getPredicateName().equals("cat")){
-                    kn.setObjectTruth(100);
+                    kn.setBelief(100);
                     knn.fire(kn);
                 }
             }
@@ -92,7 +92,7 @@ public class TestKNN {
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("dog"))
                 {
-                    kn.setObjectTruth(85);
+                    kn.setBelief(85);
                     knn.updateConfidence(kn);
                 }
             }

@@ -142,59 +142,43 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     @Override
     public void backwardSearch(ArrayList<Tuple> nnOutputs, double score) {
         getInputForBackwardSearch(nnOutputs);
-
         HashMap<Tag, Double> pendingFacts = new HashMap<>();
         do {
-            pendingFacts.clear();
-
-            for (KnowledgeNode kn : mapKN.values()) {
-                int matching = 0;
-                for (Tag t : kn.outputs.keySet()) {
-                    if (activeTags.containsKey(t)) {
-                        matching++;
-                        double backwardConfidence = (kn.outputs.get(t) * mapKN.get(t).objectTruth) / 100;
-                        kn.listOfRelatedTruth.put(t, backwardConfidence);
-                    }
-                }
-                if ((double) matching / kn.outputs.size() >= score) {
-                    Tag knType = kn.typeChecker();
-                    kn.updateObjectConfidence();
-                    if (!activeTags.containsKey(knType)) {
-                        pendingFacts.put(knType, kn.objectTruth);
-                    }
-                }
-            }
-            activeTags.putAll(pendingFacts);
+            backwardSearchCycle(score, pendingFacts);
         } while (!pendingFacts.isEmpty());
     }
 
     @Override
     public void backwardSearch(ArrayList<Tuple> nnOutputs, double score, int ply) {
         getInputForBackwardSearch(nnOutputs);
-
+        HashMap<Tag, Double> pendingFacts = new HashMap<>();
         for (int i = 0; i < ply; i++) {
-            ArrayList<Tag> previousActiveList = new ArrayList<>();
-            previousActiveList.addAll(activeTags.keySet());
+            backwardSearchCycle(score, pendingFacts);
+        }
 
-            for (KnowledgeNode kn : mapKN.values()) {
-                int matching = 0;
-                for (Tag t : kn.outputs.keySet()) {
-                    if (previousActiveList.contains(t)) {
-                        matching++;
-                        double backwardConfidence = (kn.outputs.get(t) * mapKN.get(t).objectTruth) / 100;
-                        kn.listOfRelatedTruth.put(t, backwardConfidence);
-                    }
+    }
+
+    private void backwardSearchCycle(double score, HashMap<Tag, Double> pendingFacts) {
+        pendingFacts.clear();
+        Set<Tag> prevActiveTags = new HashSet<>(activeTags.keySet());
+        for (KnowledgeNode kn : mapKN.values()) {
+            int matching = 0;
+            for (Tag t : kn.outputs.keySet()) {
+                if (prevActiveTags.contains(t)) {
+                    matching++;
+                    double backwardConfidence = (kn.outputs.get(t) * mapKN.get(t).belief) / 100;
+                    kn.listOfRelatedTruth.put(t, backwardConfidence);
                 }
-                if ((double) matching / kn.outputs.size() >= score) {
-                    Tag knType = kn.typeChecker();
-                    kn.updateObjectConfidence();
-                    if (!activeTags.containsKey(knType)) {
-                        activeTags.put(knType, kn.objectTruth);
-                    }
+            }
+            if ((double) matching / kn.outputs.size() >= score) {
+                Tag knType = kn.typeChecker();
+                kn.updateBelief();
+                if (!activeTags.containsKey(knType)) {
+                    pendingFacts.put(knType, kn.belief);
                 }
             }
         }
-
+        activeTags.putAll(pendingFacts);
     }
 
     @Override
@@ -205,25 +189,25 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                 if (kn.type.equals(KnowledgeNode.InputType.FACT)) {
                     if (kn.fact.getPredicateName().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
-                        kn.updateObjectConfidence();
-                        inputTags.put(kn.fact, kn.objectTruth);
-                        activeTags.put(kn.fact, kn.objectTruth);
+                        kn.updateBelief();
+                        inputTags.put(kn.fact, kn.belief);
+                        activeTags.put(kn.fact, kn.belief);
                         found = true;
                     }
                 } else if (kn.type.equals(KnowledgeNode.InputType.RECOMMENDATION)) {
                     if (kn.recommendation.getPredicateName().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
-                        kn.updateObjectConfidence();
-                        inputTags.put(kn.recommendation, kn.objectTruth);
-                        activeTags.put(kn.recommendation, kn.objectTruth);
+                        kn.updateBelief();
+                        inputTags.put(kn.recommendation, kn.belief);
+                        activeTags.put(kn.recommendation, kn.belief);
                         found = true;
                     }
                 } else if (kn.type.equals(KnowledgeNode.InputType.RULE)) {
                     if (kn.rule.toString().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
-                        kn.updateObjectConfidence();
-                        inputTags.put(kn.rule, kn.objectTruth);
-                        activeTags.put(kn.rule, kn.objectTruth);
+                        kn.updateBelief();
+                        inputTags.put(kn.rule, kn.belief);
+                        activeTags.put(kn.rule, kn.belief);
                         found = true;
                     }
                 }
@@ -284,19 +268,19 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                 if (kn.type.equals(KnowledgeNode.InputType.FACT)) {
                     if (kn.fact.getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
-                        inputTags.put(kn.fact, kn.objectTruth);
+                        inputTags.put(kn.fact, kn.belief);
                         found = true;
                     }
                 } else if (kn.type.equals(KnowledgeNode.InputType.RECOMMENDATION)) {
                     if (kn.recommendation.getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
-                        inputTags.put(kn.recommendation, kn.objectTruth);
+                        inputTags.put(kn.recommendation, kn.belief);
                         found = true;
                     }
                 } else if (kn.type.equals(KnowledgeNode.InputType.RULE)) {
                     if (kn.rule.toString().equals(tp.s)) {
                         excite(kn, tp.value);
-                        inputTags.put(kn.rule, kn.objectTruth);
+                        inputTags.put(kn.rule, kn.belief);
                         found = true;
                     }
                 }
@@ -332,8 +316,8 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             Tag ownTag = kn.typeChecker();
             if (value != 0) {
                 kn.listOfRelatedTruth.put(ownTag, kn.accuracy[value]);
-                kn.updateObjectConfidence();
-                activeTags.put(ownTag, kn.objectTruth);
+                kn.updateBelief();
+                activeTags.put(ownTag, kn.belief);
             }
             kn.isActivated = true;
             fire(kn);
@@ -351,10 +335,10 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             currentKN.activation += 100;
             if (currentKN.activation >= currentKN.threshold) {
                 Tag parentTag = kn.typeChecker();
-                currentKN.listOfRelatedTruth.put(parentTag, (kn.objectTruth * kn.outputs.get(t)) / 100);
-                currentKN.updateObjectConfidence();
+                currentKN.listOfRelatedTruth.put(parentTag, (kn.belief * kn.outputs.get(t)) / 100);
+                currentKN.updateBelief();
                 currentKN.isActivated = true;
-                activeTags.put(t, currentKN.objectTruth);
+                activeTags.put(t, currentKN.belief);
             }
         }
     }
@@ -365,9 +349,9 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             KnowledgeNode currentKN = mapKN.get(t);
             if (currentKN.isActivated) {
                 Tag parentTag = kn.typeChecker();
-                currentKN.listOfRelatedTruth.put(parentTag, (kn.objectTruth * kn.outputs.get(t)) / 100);
-                currentKN.updateObjectConfidence();
-                activeTags.put(t, currentKN.objectTruth);
+                currentKN.listOfRelatedTruth.put(parentTag, (kn.belief * kn.outputs.get(t)) / 100);
+                currentKN.updateBelief();
+                activeTags.put(t, currentKN.belief);
                 updateConfidence(currentKN);
             }
         }
@@ -378,7 +362,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @param prentToSartPoint path from common to stratPoint
      */
     private void objectTruthEstimate(ArrayList<Tag> parentToItem, ArrayList<Tag> prentToSartPoint) {
-        Collections.reverse(prentToSartPoint); //prentToSartPoint become start point to parent because the first KN that has an objectTruth is the startPoint and it is calculate from the Neural Network
+        Collections.reverse(prentToSartPoint); //prentToSartPoint become start point to parent because the first KN that has an belief is the startPoint and it is calculate from the Neural Network
         backwardConfidence(prentToSartPoint);
         forwardConfidence(parentToItem);
     }
@@ -389,30 +373,30 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @param item               the item tag wanted to search
      * @param parentToItem       the
      * @param parentToStartPoint
-     * @return the actual maximum objectTruth found
+     * @return the actual maximum belief found
      */
     private double getBestObjectTruth(HashMap<Tag, Double> bestPath, double bestObjectTruth, Tag item, ArrayList<Tag> parentToItem, ArrayList<Tag> parentToStartPoint) {
-        if (mapKN.get(item).objectTruth > bestObjectTruth) {
+        if (mapKN.get(item).belief > bestObjectTruth) {
             bestPath.clear();
             for (Tag tag : parentToStartPoint) {
-                bestPath.put(tag, mapKN.get(tag).objectTruth);
+                bestPath.put(tag, mapKN.get(tag).belief);
             }
             for (Tag tag : parentToItem) {
-                bestPath.put(tag, mapKN.get(tag).objectTruth);
+                bestPath.put(tag, mapKN.get(tag).belief);
             }
-            bestObjectTruth = mapKN.get(item).objectTruth;
+            bestObjectTruth = mapKN.get(item).belief;
         }
         return bestObjectTruth;
     }
 
     /**
-     * @param start the tag that start the path which the objectTruth should not be reset
-     * @param path  path that contains tags needed to be reset their objectTruth value
+     * @param start the tag that start the path which the belief should not be reset
+     * @param path  path that contains tags needed to be reset their belief value
      */
     private void resetAllObjectTruth(Tag start, HashMap<Tag, Double> path) {
         for (Tag tag : path.keySet()) {
             if (!tag.equals(start)) {
-                mapKN.get(tag).objectTruth = 0;
+                mapKN.get(tag).belief = 0;
             }
         }
     }
@@ -429,10 +413,10 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             for (int i = 0; i < path.size() - 1; i++) {
                 Tag current = path.get(i);
                 Tag next = path.get(i + 1);
-                listOfObjectTruth.add(mapKN.get(current).objectTruth);
-                mapKN.get(next).objectTruth = mapKN.get(current).objectTruth * mapKN.get(current).outputs.get(next) / 100;
+                listOfObjectTruth.add(mapKN.get(current).belief);
+                mapKN.get(next).belief = mapKN.get(current).belief * mapKN.get(current).outputs.get(next) / 100;
             }
-            listOfObjectTruth.add(mapKN.get(path.get(path.size() - 1)).objectTruth);
+            listOfObjectTruth.add(mapKN.get(path.get(path.size() - 1)).belief);
 
             for (Double objectTruth : listOfObjectTruth) {
                 totalConfidence = (totalConfidence * objectTruth) / 100;
@@ -453,11 +437,11 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             for (int i = 0; i < path.size() - 1; i++) {
                 Tag current = path.get(i);
                 Tag next = path.get(i + 1);
-                listOfObjectTruth.add(mapKN.get(current).objectTruth);
-                mapKN.get(next).listOfRelatedTruth.put(current, (mapKN.get(current).objectTruth * mapKN.get(next).outputs.get(current) / 100));
-                mapKN.get(next).updateObjectConfidence();
+                listOfObjectTruth.add(mapKN.get(current).belief);
+                mapKN.get(next).listOfRelatedTruth.put(current, (mapKN.get(current).belief * mapKN.get(next).outputs.get(current) / 100));
+                mapKN.get(next).updateBelief();
             }
-            listOfObjectTruth.add(mapKN.get(path.get(path.size() - 1)).objectTruth);
+            listOfObjectTruth.add(mapKN.get(path.get(path.size() - 1)).belief);
 
             for (Double objectTruth : listOfObjectTruth) {
                 totalConfidence = (totalConfidence * objectTruth) / 100;
