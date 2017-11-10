@@ -1,22 +1,21 @@
 package knn.api;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public final class KnowledgeNode {
-	public Tag.TagType type;
-    public Fact fact;
-    public Rule rule;
-    public Recommendation recommendation;
-    public HashMap<Tag, Double> outputs;										// Integer is the value of confidence
+    public Tag inputTag;
+    public Map<Tag, Double> outputs;										// Integer is the value of confidence
     public double activation = 0;			    									// int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
     public double threshold;                                                        // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
     public double belief = 0;
-    public HashMap<Tag, Double> listOfRelatedTruth;
+    public Map<Tag, Double> listOfRelatedTruth;
     public int strength = 1;													// Which strength approach to take?
     public boolean isActivated = false;
     public boolean isFired = false;
@@ -24,19 +23,8 @@ public final class KnowledgeNode {
     private double age = System.currentTimeMillis() / 1000L; 					// Age timestamp. Set to current UNIX time when node is newly formed.
     private double maxAge = 60;
 
-    public KnowledgeNode(Tag inputName, HashMap<Tag, Double> outputFacts, int threshold) {
-        if(inputName.type.equals(Tag.TagType.FACT)){
-        	this.type = Tag.TagType.FACT;
-        	this.fact = (Fact) inputName;
-        }
-        else if(inputName.type.equals(Tag.TagType.RECOMMENDATION)){
-        	this.type = Tag.TagType.RECOMMENDATION;
-        	this.recommendation = (Recommendation) inputName;
-        }
-        else if(inputName.type.equals(Tag.TagType.RULE)){
-        	this.type = Tag.TagType.RULE;
-        	this.rule = (Rule) inputName;
-        }
+    public KnowledgeNode(Tag inputTag, Map<Tag, Double> outputFacts, int threshold) {
+        this.inputTag = inputTag;
         this.outputs = outputFacts;
         this.threshold = threshold;
         this.listOfRelatedTruth = new HashMap<>();
@@ -51,19 +39,8 @@ public final class KnowledgeNode {
      * @param strength    the strength value to bias activation
      * @param maxAge      threshold age for the node to be discarded
      */
-    public KnowledgeNode(Tag inputName, HashMap<Tag, Double> outputFacts, int threshold, int strength, double maxAge) {
-        if(inputName.type.equals(Tag.TagType.FACT)){
-        	this.type = Tag.TagType.FACT;
-        	this.fact = (Fact) inputName;
-        }
-        else if(inputName.type.equals(Tag.TagType.RECOMMENDATION)){
-        	this.type = Tag.TagType.RECOMMENDATION;
-        	this.recommendation = (Recommendation) inputName;
-        }
-        else if(inputName.type.equals(Tag.TagType.RULE)){
-        	this.type = Tag.TagType.RULE;
-        	this.rule = (Rule) inputName;
-        }
+    public KnowledgeNode(Tag inputName, Map<Tag, Double> outputFacts, int threshold, int strength, double maxAge) {
+        this.inputTag = inputName;
         this.outputs = outputFacts;
         this.threshold = threshold;
         this.outputs = outputFacts;
@@ -83,16 +60,13 @@ public final class KnowledgeNode {
         this.outputs = new HashMap<>();
         
         if(inputInfo[0].charAt(0) == '@'){
-        	this.type = Tag.TagType.RECOMMENDATION;
-        	this.recommendation = new Recommendation(inputInfo[0]);
+        	this.inputTag = new Recommendation(inputInfo[0]);
         }
         else if(inputInfo[0].contains("->")){
-        	this.type = Tag.TagType.RULE;
-        	this.rule = new Rule(inputInfo[0]);
+        	this.inputTag = new Rule(inputInfo[0]);
         }
         else if(inputInfo[0].matches(".*\\(.*\\).*")){
-        	this.type = Tag.TagType.FACT;
-        	this.fact = new Fact(inputInfo[0]);
+        	this.inputTag = new Fact(inputInfo[0]);
         }
         this.threshold = Integer.parseInt(inputInfo[1]);
         
@@ -110,23 +84,6 @@ public final class KnowledgeNode {
         		this.outputs.put(f, Double.parseDouble(inputInfo[i+1]));
         	}
         }
-    }
-    
-    /**
-     * Check what type of Tag this knowledge node has
-     * 
-     * @return the corresponding tag of the KN
-     */
-    public Tag typeChecker(){
-    	if(this.type.equals(Tag.TagType.FACT)){
-            return this.fact;
-		}
-		else if(this.type.equals(Tag.TagType.RECOMMENDATION)){
-            return this.recommendation;
-		}
-		else{
-            return this.rule;
-		}     	
     }
     
     /**
@@ -156,28 +113,20 @@ public final class KnowledgeNode {
 
     @Override
     public String toString() {
-    	StringBuilder result = new StringBuilder();
-        if(this.type.equals(Tag.TagType.RECOMMENDATION)){
-        	result.append(this.recommendation.toString());
-        	result.append(" threshold is ").append(this.threshold);
-        	return result.toString();
-        }
-        else if(this.type.equals(Tag.TagType.RULE)){
-        	result.append(this.rule.toString());
-        	result.append(" threshold is ").append(this.threshold);
-        	return result.toString();
-        }
-        else{
-            result.append(this.fact.toString());
-            result.append(" threshold is ").append(this.threshold).append(" => ");
-        }
-        
-        for(Tag t : this.outputs.keySet()){
-        	result.append(t.toString());
-        	result.append(" with membershipTruth=").append(this.outputs.get(t)).append("; ");
-        }
-        
-        return result.toString();
+        return new ToStringBuilder(this)
+                .append("inputTag", inputTag)
+                .append("outputs", outputs)
+                .append("activation", activation)
+                .append("threshold", threshold)
+                .append("belief", belief)
+                .append("listOfRelatedTruth", listOfRelatedTruth)
+                .append("strength", strength)
+                .append("isActivated", isActivated)
+                .append("isFired", isFired)
+                .append("accuracy", accuracy)
+                .append("age", age)
+                .append("maxAge", maxAge)
+                .toString();
     }
 
     public void increaseActivation() {

@@ -53,13 +53,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void addKN(KnowledgeNode kn) {
-        if (kn.type.equals(Tag.TagType.FACT)) {
-            mapKN.put(kn.fact, kn);
-        } else if (kn.type.equals(Tag.TagType.RECOMMENDATION)) {
-            mapKN.put(kn.recommendation, kn);
-        } else if (kn.type.equals(Tag.TagType.RULE)) {
-            mapKN.put(kn.rule, kn);
-        }
+        mapKN.put(kn.inputTag, kn);
     }
 
     @Override
@@ -171,7 +165,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                 }
             }
             if ((double) matching / kn.outputs.size() >= score) {
-                Tag knType = kn.typeChecker();
+                Tag knType = kn.inputTag;
                 kn.updateBelief();
                 if (!activeTags.containsKey(knType)) {
                     pendingFacts.put(knType, kn.belief);
@@ -186,28 +180,28 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         for (Tuple tp : nnOutputs) {
             boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
-                if (kn.type.equals(Tag.TagType.FACT)) {
-                    if (kn.fact.getPredicateName().equals(tp.s)) {
-                        kn.listOfRelatedTruth.put(kn.fact, kn.accuracy[tp.value]);
+                if (kn.inputTag.type.equals(Tag.TagType.FACT)) {
+                    if (((Fact)kn.inputTag).getPredicateName().equals(tp.s)) {
+                        kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
-                        inputTags.put(kn.fact, kn.belief);
-                        activeTags.put(kn.fact, kn.belief);
+                        inputTags.put(kn.inputTag, kn.belief);
+                        activeTags.put(kn.inputTag, kn.belief);
                         found = true;
                     }
-                } else if (kn.type.equals(Tag.TagType.RECOMMENDATION)) {
-                    if (kn.recommendation.getPredicateName().equals(tp.s)) {
-                        kn.listOfRelatedTruth.put(kn.recommendation, kn.accuracy[tp.value]);
+                } else if (kn.inputTag.type.equals(Tag.TagType.RECOMMENDATION)) {
+                    if (((Recommendation)kn.inputTag).getPredicateName().equals(tp.s)) {
+                        kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
-                        inputTags.put(kn.recommendation, kn.belief);
-                        activeTags.put(kn.recommendation, kn.belief);
+                        inputTags.put(kn.inputTag, kn.belief);
+                        activeTags.put(kn.inputTag, kn.belief);
                         found = true;
                     }
-                } else if (kn.type.equals(Tag.TagType.RULE)) {
-                    if (kn.rule.toString().equals(tp.s)) {
-                        kn.listOfRelatedTruth.put(kn.rule, kn.accuracy[tp.value]);
+                } else if (kn.inputTag.type.equals(Tag.TagType.RULE)) {
+                    if (kn.inputTag.toString().equals(tp.s)) {
+                        kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
-                        inputTags.put(kn.rule, kn.belief);
-                        activeTags.put(kn.rule, kn.belief);
+                        inputTags.put(kn.inputTag, kn.belief);
+                        activeTags.put(kn.inputTag, kn.belief);
                         found = true;
                     }
                 }
@@ -265,22 +259,22 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         for (Tuple tp : nnOutputs) {
             boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
-                if (kn.type.equals(Tag.TagType.FACT)) {
-                    if (kn.fact.getPredicateName().equals(tp.s)) {
+                if (kn.inputTag.type.equals(Tag.TagType.FACT)) {
+                    if (((Fact)kn.inputTag).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
-                        inputTags.put(kn.fact, kn.belief);
+                        inputTags.put(kn.inputTag, kn.belief);
                         found = true;
                     }
-                } else if (kn.type.equals(Tag.TagType.RECOMMENDATION)) {
-                    if (kn.recommendation.getPredicateName().equals(tp.s)) {
+                } else if (kn.inputTag.type.equals(Tag.TagType.RECOMMENDATION)) {
+                    if (((Recommendation)kn.inputTag).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
-                        inputTags.put(kn.recommendation, kn.belief);
+                        inputTags.put(kn.inputTag, kn.belief);
                         found = true;
                     }
-                } else if (kn.type.equals(Tag.TagType.RULE)) {
-                    if (kn.rule.toString().equals(tp.s)) {
+                } else if (kn.inputTag.type.equals(Tag.TagType.RULE)) {
+                    if (kn.inputTag.toString().equals(tp.s)) {
                         excite(kn, tp.value);
-                        inputTags.put(kn.rule, kn.belief);
+                        inputTags.put(kn.inputTag, kn.belief);
                         found = true;
                     }
                 }
@@ -313,7 +307,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public void excite(KnowledgeNode kn, int value) {
         kn.increaseActivation(value);
         if (kn.activation * kn.strength >= kn.threshold) {
-            Tag ownTag = kn.typeChecker();
+            Tag ownTag = kn.inputTag;
             if (value != 0) {
                 kn.listOfRelatedTruth.put(ownTag, kn.accuracy[value]);
                 kn.updateBelief();
@@ -334,13 +328,14 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             KnowledgeNode currentKN = mapKN.get(t);
             currentKN.activation += 100;
             if (currentKN.activation >= currentKN.threshold) {
-                Tag parentTag = kn.typeChecker();
+                Tag parentTag = kn.inputTag;
                 currentKN.listOfRelatedTruth.put(parentTag, (kn.belief * kn.outputs.get(t)) / 100);
                 currentKN.updateBelief();
                 currentKN.isActivated = true;
                 activeTags.put(t, currentKN.belief);
             }
         }
+        // TODO: Reset age to zero when firing
     }
 
     @Override
@@ -348,7 +343,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         for (Tag t : kn.outputs.keySet()) {
             KnowledgeNode currentKN = mapKN.get(t);
             if (currentKN.isActivated) {
-                Tag parentTag = kn.typeChecker();
+                Tag parentTag = kn.inputTag;
                 currentKN.listOfRelatedTruth.put(parentTag, (kn.belief * kn.outputs.get(t)) / 100);
                 currentKN.updateBelief();
                 activeTags.put(t, currentKN.belief);
@@ -512,7 +507,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             for (KnowledgeNode kn : mapKN.values()) {
                 for (Tag tg : kn.outputs.keySet()) {
                     if (allParents.contains(tg)) {
-                        Tag knType = kn.typeChecker();
+                        Tag knType = kn.inputTag;
                         if (!allParents.contains(knType)) {
                             allParents.add(knType);
                             added = true;

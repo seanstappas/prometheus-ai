@@ -8,7 +8,7 @@ public final class Tuple {
 	 * Tuple is the format to mimic the output of Neural Network
 	 * 
 	 * @param input			the string value
-	 * @param inputValue	the accurarcy calculated from the Neural Network
+	 * @param inputValue	the accuracy calculated from the Neural Network
 	 */
 	public Tuple(String input, int inputValue){
 		this.s = input;

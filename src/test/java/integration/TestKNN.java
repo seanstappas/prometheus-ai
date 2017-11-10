@@ -65,7 +65,7 @@ public class TestKNN {
     public void fireTesting(){
         setupKNN();
         for(KnowledgeNode kn : animal){
-            Tag t = kn.typeChecker();
+            Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT){
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("dog"))
@@ -87,7 +87,7 @@ public class TestKNN {
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags);
 
         for(KnowledgeNode kn : animal){
-            Tag t = kn.typeChecker();
+            Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT){
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("dog"))
@@ -109,7 +109,7 @@ public class TestKNN {
     public void exciteTest(){
         setupKNN();
         for(KnowledgeNode kn : animal){
-            Tag t = kn.typeChecker();
+            Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT ){
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("dog")){
@@ -126,7 +126,7 @@ public class TestKNN {
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags);
 
         for(KnowledgeNode kn : animal){
-            Tag t = kn.typeChecker();
+            Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT){
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("husky")){
