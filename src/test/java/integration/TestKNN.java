@@ -5,6 +5,7 @@ import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
 import knn.api.Tuple;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import prometheus.api.Prometheus;
@@ -32,6 +33,7 @@ public class TestKNN {
         knn = prometheus.getKnowledgeNodeNetwork();
     }
 
+    @BeforeMethod
     public void setupKNN(){
         knn.resetEmpty();
         try{
@@ -63,7 +65,6 @@ public class TestKNN {
 
     @Test
     public void fireTesting(){
-        setupKNN();
         for(KnowledgeNode kn : animal){
             Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT){
@@ -84,7 +85,7 @@ public class TestKNN {
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 75.0);
         System.out.println("[fire Test] KNs to fire: dog(wow, carnivore) : 100.0, cat(meow, carnivore) : 100.0");
         System.out.println("[fire Test] Active Tags: " + knn.getActiveTags().toString());
-        Assert.assertEquals(knn.getActiveTags(), expectedActiveTags);
+        Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
 
         for(KnowledgeNode kn : animal){
             Tag t = kn.inputTag;
@@ -101,13 +102,12 @@ public class TestKNN {
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 69.0);
         System.out.println("[fire Test] KN with an updated confidence: dog(wow, carnivore) : 85.0");
         System.out.println("[fire Test] updated active Tags: " + knn.getActiveTags().toString());
-        Assert.assertEquals(knn.getActiveTags(), expectedActiveTags);
+        Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
         System.out.println("");
     }
 
     @Test
     public void exciteTest(){
-        setupKNN();
         for(KnowledgeNode kn : animal){
             Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT ){
@@ -123,7 +123,7 @@ public class TestKNN {
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 80.0);
         System.out.println("[excite integration] Tags to excite 1st: dog(wow, carnivore) : 10");
         System.out.println("[excite integration] Active Tags: " + knn.getActiveTags().toString());
-        Assert.assertEquals(knn.getActiveTags(), expectedActiveTags);
+        Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
 
         for(KnowledgeNode kn : animal){
             Tag t = kn.inputTag;
@@ -144,13 +144,12 @@ public class TestKNN {
         expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 75.75);
         expectedActiveTags.put(new Fact("dog(wow, carnivore)"), 85.0);
         System.out.println("[excite integration] Active Tags: " + knn.getActiveTags().toString());
-        Assert.assertEquals(knn.getActiveTags(), expectedActiveTags);
+        Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
         System.out.println("");
     }
 
     @Test
     public void CreateKNFromTupleTest(){
-        knn.resetEmpty();
         Tuple tp1 = new Tuple("monkey(intelligent,length>50,weight>3)", 10);
         Tuple tp2 = new Tuple("@isAnimal(calm,bark)", 10);
         Tuple tp3 = new Tuple("friend(nice,kind) -> @meet(community,people>2)", 10);
@@ -167,7 +166,6 @@ public class TestKNN {
 
     @Test
     public void getInputForForwardSearchTest(){
-        knn.resetEmpty();
         Tuple tp1 = new Tuple("monkey", 10);
         Tuple tp2 = new Tuple("isAnimal", 10);
         Tuple tp3 = new Tuple("{ [[friend([nice, kind]) 100.0% ]]=>[[@meet([community, people > 2]) 100.0% ]]100.0% }", 10);

@@ -3,7 +3,7 @@ package knn.api;
 import tags.Tag;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Sean on 10/13/2017.
@@ -52,14 +52,16 @@ public interface KnowledgeNodeNetwork {
      *
      * @param tag the fired Tag to be added
      */
-    void addFiredTag(Tag tag, double objectTruth);
+    void addFiredTag(Tag tag);
 
     /**
      * Get access of active Tags
      *
      * @return	the Access of active Tags
      */
-    Map<Tag, Double> getActiveTags();
+    Set<Tag> getActiveTags();
+
+    KnowledgeNode getKnowledgeNode(Tag tag);
 
     /**
      * Lambda search, a search to find out the best relation between a know list of tags and a wanted item tag

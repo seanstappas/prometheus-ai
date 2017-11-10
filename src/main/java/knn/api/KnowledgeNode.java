@@ -20,7 +20,7 @@ public final class KnowledgeNode {
     public boolean isActivated = false;
     public boolean isFired = false;
     public double[] accuracy = {0, 2, 5, 11, 27, 50, 73, 88, 95, 98, 100};        //sigmoid function activation value
-    private double age = System.currentTimeMillis() / 1000L;                    // Age timestamp. Set to current UNIX time when node is newly formed.
+    public double age = System.currentTimeMillis() / 1000L;                    // Age timestamp. Set to current UNIX time when node is newly formed.
     private double maxAge = 60;
 
     public KnowledgeNode(Tag inputTag, Map<Tag, Double> outputFacts, int threshold) {
