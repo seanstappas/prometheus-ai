@@ -181,7 +181,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
                 if (kn.inputTag.type.equals(Tag.TagType.FACT)) {
-                    if (((Fact)kn.inputTag).getPredicateName().equals(tp.s)) {
+                    if (((Fact) kn.inputTag).getPredicateName().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
                         inputTags.put(kn.inputTag, kn.belief);
@@ -189,7 +189,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                         found = true;
                     }
                 } else if (kn.inputTag.type.equals(Tag.TagType.RECOMMENDATION)) {
-                    if (((Recommendation)kn.inputTag).getPredicateName().equals(tp.s)) {
+                    if (((Recommendation) kn.inputTag).getPredicateName().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
                         inputTags.put(kn.inputTag, kn.belief);
@@ -260,13 +260,13 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
                 if (kn.inputTag.type.equals(Tag.TagType.FACT)) {
-                    if (((Fact)kn.inputTag).getPredicateName().equals(tp.s)) {
+                    if (((Fact) kn.inputTag).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
                         inputTags.put(kn.inputTag, kn.belief);
                         found = true;
                     }
                 } else if (kn.inputTag.type.equals(Tag.TagType.RECOMMENDATION)) {
-                    if (((Recommendation)kn.inputTag).getPredicateName().equals(tp.s)) {
+                    if (((Recommendation) kn.inputTag).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
                         inputTags.put(kn.inputTag, kn.belief);
                         found = true;
