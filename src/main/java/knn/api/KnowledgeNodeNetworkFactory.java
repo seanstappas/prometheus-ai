@@ -10,6 +10,5 @@ public interface KnowledgeNodeNetworkFactory {
     @Inject
     KnowledgeNodeNetwork create(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
-            @Assisted("inputTags") Map<Tag, Double> inputTags,
             @Assisted("activeTags") Map<Tag, Double> activeTags);
 }

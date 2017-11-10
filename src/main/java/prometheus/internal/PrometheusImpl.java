@@ -28,7 +28,7 @@ class PrometheusImpl implements Prometheus{
             MetaReasonerFactory metaReasonerFactory) {
         this.nn = neuralNetworkFactory.create();
         this.es = expertSystemFactory.create(new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
-        this.knn = knowledgeNodeNetworkFactory.create(new HashMap<>(), new HashMap<>(), new HashMap<>());
+        this.knn = knowledgeNodeNetworkFactory.create(new HashMap<>(), new HashMap<>());
         this.meta = metaReasonerFactory.create();
     }
 
