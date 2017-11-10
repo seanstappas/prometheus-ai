@@ -156,17 +156,11 @@ public class TestKNN {
         Tuple tp3 = new Tuple("friend(nice,kind) -> @meet(community,people>2)", 10);
         Tuple tp4 = new Tuple("chair", 10);
 
-        knn.createKNfromTuple(tp1);
-        knn.createKNfromTuple(tp2);
-        knn.createKNfromTuple(tp3);
-        knn.createKNfromTuple(tp4);
         HashMap<Tag, Double> expectedInputTags = new HashMap<>();
         expectedInputTags.put(new Fact("monkey(intelligent,length>50,weight>3)"), 0.0);
         expectedInputTags.put(new Recommendation("@isAnimal(calm,bark)"), 0.0);
         expectedInputTags.put(new Rule("friend(nice,kind) -> @meet(community,people>2)"), 0.0);
         expectedInputTags.put(new Fact("chair()"), 0.0);
-        System.out.println("[CreateKNFromTuple integration] Input Tags: " + knn.getInputTags().toString());
-        Assert.assertEquals(knn.getInputTags(), expectedInputTags);
         Assert.assertTrue(knn.getActiveTags().isEmpty());
         System.out.println("");
     }
@@ -199,8 +193,6 @@ public class TestKNN {
         expectedInputTags.put(new Fact("banana()"), 0.0);
         System.out.println("[getInputForForwardSearchTest] Output from NN: monkey, @isAnimal");
         System.out.println("[getInputForForwardSearchTest] A wanted rule from the Meta: friend(nice,kind) -> @meet(community,people>2)");
-        System.out.println("[getInputForForwardSearchTest] Input Tags: " + knn.getInputTags().toString());
-        Assert.assertEquals(knn.getInputTags(), expectedInputTags);
         System.out.println("");
     }
 
@@ -231,8 +223,6 @@ public class TestKNN {
         expectedInputTags.put(new Fact("apple()"), 0.0);
         System.out.println("[getInputForBackwardSearchTest] Output from NN: monkey, @isAnimal");
         System.out.println("[getInputForBackwardSearchTest] A wanted rule from the Meta: friend(nice,kind) -> @meet(community,people>2)");
-        System.out.println("[getInputForBackwardSearchTest] Input Tags: " + knn.getInputTags().toString());
-        Assert.assertEquals(knn.getInputTags(), expectedInputTags);
         System.out.println("");
     }
 

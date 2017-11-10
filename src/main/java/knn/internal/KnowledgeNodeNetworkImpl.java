@@ -6,7 +6,6 @@ import knn.api.KnowledgeNodeNetwork;
 import knn.api.Tuple;
 import tags.Fact;
 import tags.Recommendation;
-import tags.Rule;
 import tags.Tag;
 
 import javax.inject.Inject;
@@ -14,7 +13,6 @@ import java.util.*;
 
 class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private Map<Tag, KnowledgeNode> mapKN;
-    private Map<Tag, Double> inputTags;
     private Map<Tag, Double> activeTags;
     // TODO: Remove Maps here, associate Object truth (belief...) with KN object
     // TODO: Rename Object truth to belief
@@ -22,10 +20,8 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     @Inject
     public KnowledgeNodeNetworkImpl(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
-            @Assisted("inputTags") Map<Tag, Double> inputTags,
             @Assisted("activeTags") Map<Tag, Double> activeTags) {
         this.mapKN = mapKN;
-        this.inputTags = inputTags;
         this.activeTags = activeTags;
     }
 
@@ -48,7 +44,6 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public void clearKN() {
         mapKN.clear();
         activeTags.clear();
-        inputTags.clear();
     }
 
     @Override
@@ -64,11 +59,6 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     @Override
     public void addFiredTag(Tag tag, double objectTruth) {
         activeTags.put(tag, objectTruth);
-    }
-
-    @Override
-    public Map<Tag, Double> getInputTags() {
-        return inputTags;
     }
 
     @Override
@@ -178,36 +168,26 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     @Override
     public void getInputForBackwardSearch(List<Tuple> nnOutputs) {
         for (Tuple tp : nnOutputs) {
-            boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
                 if (kn.inputTag.type.equals(Tag.TagType.FACT)) {
                     if (((Fact) kn.inputTag).getPredicateName().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
-                        inputTags.put(kn.inputTag, kn.belief);
                         activeTags.put(kn.inputTag, kn.belief);
-                        found = true;
                     }
                 } else if (kn.inputTag.type.equals(Tag.TagType.RECOMMENDATION)) {
                     if (((Recommendation) kn.inputTag).getPredicateName().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
-                        inputTags.put(kn.inputTag, kn.belief);
                         activeTags.put(kn.inputTag, kn.belief);
-                        found = true;
                     }
                 } else if (kn.inputTag.type.equals(Tag.TagType.RULE)) {
                     if (kn.inputTag.toString().equals(tp.s)) {
                         kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
-                        inputTags.put(kn.inputTag, kn.belief);
                         activeTags.put(kn.inputTag, kn.belief);
-                        found = true;
                     }
                 }
-            }
-            if (!found) {
-                createKNfromTuple(tp);
             }
         }
     }
@@ -257,49 +237,21 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     @Override
     public void getInputForForwardSearch(List<Tuple> nnOutputs) {
         for (Tuple tp : nnOutputs) {
-            boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
                 if (kn.inputTag.type.equals(Tag.TagType.FACT)) {
                     if (((Fact) kn.inputTag).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
-                        inputTags.put(kn.inputTag, kn.belief);
-                        found = true;
                     }
                 } else if (kn.inputTag.type.equals(Tag.TagType.RECOMMENDATION)) {
                     if (((Recommendation) kn.inputTag).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
-                        inputTags.put(kn.inputTag, kn.belief);
-                        found = true;
                     }
                 } else if (kn.inputTag.type.equals(Tag.TagType.RULE)) {
                     if (kn.inputTag.toString().equals(tp.s)) {
                         excite(kn, tp.value);
-                        inputTags.put(kn.inputTag, kn.belief);
-                        found = true;
                     }
                 }
             }
-            if (!found) {
-                createKNfromTuple(tp);
-            }
-        }
-    }
-
-    @Override
-    public void createKNfromTuple(Tuple tp) {
-        if (tp.s.charAt(0) == '@') {
-            Recommendation rc = new Recommendation(tp.s);
-            inputTags.put(rc, 0.0);
-        } else if (tp.s.contains("->")) {
-            Rule r = new Rule(tp.s);
-            inputTags.put(r, 0.0);
-        } else if (tp.s.matches(".*\\(.*\\).*")) {
-            Fact f = new Fact(tp.s);
-            inputTags.put(f, 0.0);
-        } else {
-            String str = tp.s + "()";
-            Fact f = new Fact(str);
-            inputTags.put(f, 0.0);
         }
     }
 

@@ -60,7 +60,6 @@ public class TestKNNandES {
         inputs.add(data2);
 
         knn.forwardSearch(inputs);
-        Map<Tag, Double> inputTags = knn.getInputTags();
         Map<Tag, Double> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("calm(safe>5)"), 55.0);
@@ -87,7 +86,6 @@ public class TestKNNandES {
         expectedActiveTags.put(new Rule("coward(scared,safe) loyal(easy,calm) -> @isSafe(easy,calm)"), 24.2);
 
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
-        System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after foward searching: " + activeTags);
 
         assertEquals(activeTags, expectedActiveTags);
@@ -106,7 +104,6 @@ public class TestKNNandES {
         inputs.add(data2);
 
         knn.forwardSearch(inputs, 1);
-        Map<Tag, Double> inputTags = knn.getInputTags();
         Map<Tag, Double> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("fast(speed,dynamic)"), 50.0);
@@ -122,7 +119,6 @@ public class TestKNNandES {
         expectedActiveTags.put(new Rule("bark(sound,loud) pet(scary,attractive) -> @isPet(easy,calm,bark)"), 100.0);
 
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
-        System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after 0 ply forward searching: " + activeTags);
 
         assertEquals(activeTags, expectedActiveTags);
@@ -141,7 +137,6 @@ public class TestKNNandES {
         inputs.add(data2);
 
         knn.backwardSearch(inputs, 0.5);
-        Map<Tag, Double> inputTags = knn.getInputTags();
         Map<Tag, Double> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("calm(safe>5)"), 100.0);
@@ -157,7 +152,6 @@ public class TestKNNandES {
         expectedActiveTags.put(new Fact("sheep(wool,length>100,height>100,weight>50)"), 80.0);
 
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
-        System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after backward searching: " + activeTags);
 
         assertEquals(activeTags, expectedActiveTags);
@@ -176,7 +170,6 @@ public class TestKNNandES {
         inputs.add(data2);
 
         knn.backwardSearch(inputs, 0.5, 2);
-        Map<Tag, Double> inputTags = knn.getInputTags();
         Map<Tag, Double> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("calm(safe>5)"), 100.0);
@@ -189,7 +182,6 @@ public class TestKNNandES {
         expectedActiveTags.put(new Fact("bark(sound,loud)"), 80.0);
 
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
-        System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after 2 ply backward searching: " + activeTags);
 
         assertEquals(activeTags, expectedActiveTags);
@@ -210,7 +202,6 @@ public class TestKNNandES {
         Fact factToSearch = new Fact(item);
 
         knn.lambdaSearch(inputs, factToSearch);
-        Map<Tag, Double> inputTags = knn.getInputTags();
         Map<Tag, Double> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTags = new HashMap<>();
         expectedActiveTags.put(new Fact("fur(strands,insulator)"), 100.0);
@@ -221,7 +212,6 @@ public class TestKNNandES {
 
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] String trying to find out a link with: " + item);
-        System.out.println("[KNN] Input tags found in KNN: " + inputTags.toString());
         System.out.println("[KNN] Active tags after lambda searching: " + activeTags);
 
         assertTrue(activeTags.containsKey(factToSearch));

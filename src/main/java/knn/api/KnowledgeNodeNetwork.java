@@ -55,13 +55,6 @@ public interface KnowledgeNodeNetwork {
     void addFiredTag(Tag tag, double objectTruth);
 
     /**
-     * Get access of input Tags
-     *
-     * @return	the access of the input Tags found from the KNN using output from the neural network
-     */
-    Map<Tag, Double> getInputTags();
-
-    /**
      * Get access of active Tags
      *
      * @return	the Access of active Tags
@@ -123,13 +116,6 @@ public interface KnowledgeNodeNetwork {
      * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */
     void getInputForForwardSearch(List<Tuple> NNoutputs);
-
-    /**
-     * Create a KN from a Tuple in KNN
-     *
-     * @param tp tuple used to create the KN
-     */
-    void createKNfromTuple(Tuple tp);
 
     /**
      * Excites a Knowledge Node.
