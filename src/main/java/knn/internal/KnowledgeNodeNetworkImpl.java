@@ -77,27 +77,27 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void lambdaSearch(ArrayList<Tuple> nnOutputs, Tag item) {
-        HashMap<Tag, Double> bestPath = new HashMap<>();
+    public void lambdaSearch(List<Tuple> nnOutputs, Tag item) {
+        Map<Tag, Double> bestPath = new HashMap<>();
         double bestObjectTruth = 0;
 
         //Convert information from the NN to tags
         getInputForBackwardSearch(nnOutputs);
 
         for (Tag startPoint : activeTags.keySet()) {
-            ArrayList<Tag> commonParents = findCommonParents(item, startPoint);
+            List<Tag> commonParents = findCommonParents(item, startPoint);
 
             //For each parent of the startPoint, find if there is a non cycle path that connect both the startPoint and the Item tag
             for (Tag parentOfStartPoint : commonParents) {
-                ArrayList<Tag> descendants = new ArrayList<>();
+                List<Tag> descendants = new ArrayList<>();
                 depthFirstSearch(parentOfStartPoint, descendants);
                 for (Tag tag : descendants) {
                     if (tag.equals(item)) {
                         resetAllObjectTruth(startPoint, bestPath); //ObjectTruth of Tag t should not be reset because it is the starting point to calculate a new path
-                        ArrayList<Tag> bads = new ArrayList<>();
-                        ArrayList<Tag> pathParentToItem = pathFinder(parentOfStartPoint, tag, bads); //path from the common parent the item
-                        ArrayList<Tag> pathParentToStartPoint; //path from the common parent to the startPoint
-                        ArrayList<Tag> prevPathParentToStartPoint;
+                        List<Tag> bads = new ArrayList<>();
+                        List<Tag> pathParentToItem = pathFinder(parentOfStartPoint, tag, bads); //path from the common parent the item
+                        List<Tag> pathParentToStartPoint; //path from the common parent to the startPoint
+                        List<Tag> prevPathParentToStartPoint;
                         int numOfSame;
 
                         //find if there is any tag beside the startPoint and the parentOfStartPoint from the pathParentToStartPoint is also belong to pathParentToItem
@@ -134,25 +134,25 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void backwardSearch(ArrayList<Tuple> nnOutputs, double score) {
+    public void backwardSearch(List<Tuple> nnOutputs, double score) {
         getInputForBackwardSearch(nnOutputs);
-        HashMap<Tag, Double> pendingFacts = new HashMap<>();
+        Map<Tag, Double> pendingFacts = new HashMap<>();
         do {
             backwardSearchCycle(score, pendingFacts);
         } while (!pendingFacts.isEmpty());
     }
 
     @Override
-    public void backwardSearch(ArrayList<Tuple> nnOutputs, double score, int ply) {
+    public void backwardSearch(List<Tuple> nnOutputs, double score, int ply) {
         getInputForBackwardSearch(nnOutputs);
-        HashMap<Tag, Double> pendingFacts = new HashMap<>();
+        Map<Tag, Double> pendingFacts = new HashMap<>();
         for (int i = 0; i < ply; i++) {
             backwardSearchCycle(score, pendingFacts);
         }
 
     }
 
-    private void backwardSearchCycle(double score, HashMap<Tag, Double> pendingFacts) {
+    private void backwardSearchCycle(double score, Map<Tag, Double> pendingFacts) {
         pendingFacts.clear();
         Set<Tag> prevActiveTags = new HashSet<>(activeTags.keySet());
         for (KnowledgeNode kn : mapKN.values()) {
@@ -176,7 +176,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void getInputForBackwardSearch(ArrayList<Tuple> nnOutputs) {
+    public void getInputForBackwardSearch(List<Tuple> nnOutputs) {
         for (Tuple tp : nnOutputs) {
             boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
@@ -213,7 +213,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void forwardSearch(ArrayList<Tuple> nnOutputs, int ply) {
+    public void forwardSearch(List<Tuple> nnOutputs, int ply) {
         getInputForForwardSearch(nnOutputs);
 
         if (ply > 0 && !activeTags.isEmpty()) {
@@ -233,7 +233,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void forwardSearch(ArrayList<Tuple> nnOutputs) {
+    public void forwardSearch(List<Tuple> nnOutputs) {
         getInputForForwardSearch(nnOutputs);
 
         boolean allActivated;
@@ -255,7 +255,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void getInputForForwardSearch(ArrayList<Tuple> nnOutputs) {
+    public void getInputForForwardSearch(List<Tuple> nnOutputs) {
         for (Tuple tp : nnOutputs) {
             boolean found = false;
             for (KnowledgeNode kn : mapKN.values()) {
@@ -356,7 +356,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @param parentToItem     path from common parent to the item
      * @param prentToSartPoint path from common to stratPoint
      */
-    private void objectTruthEstimate(ArrayList<Tag> parentToItem, ArrayList<Tag> prentToSartPoint) {
+    private void objectTruthEstimate(List<Tag> parentToItem, List<Tag> prentToSartPoint) {
         Collections.reverse(prentToSartPoint); //prentToSartPoint become start point to parent because the first KN that has an belief is the startPoint and it is calculate from the Neural Network
         backwardConfidence(prentToSartPoint);
         forwardConfidence(parentToItem);
@@ -370,7 +370,8 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @param parentToStartPoint
      * @return the actual maximum belief found
      */
-    private double getBestObjectTruth(HashMap<Tag, Double> bestPath, double bestObjectTruth, Tag item, ArrayList<Tag> parentToItem, ArrayList<Tag> parentToStartPoint) {
+    private double getBestObjectTruth(Map<Tag, Double> bestPath, double bestObjectTruth, Tag item,
+                                      List<Tag> parentToItem, List<Tag> parentToStartPoint) {
         if (mapKN.get(item).belief > bestObjectTruth) {
             bestPath.clear();
             for (Tag tag : parentToStartPoint) {
@@ -388,7 +389,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @param start the tag that start the path which the belief should not be reset
      * @param path  path that contains tags needed to be reset their belief value
      */
-    private void resetAllObjectTruth(Tag start, HashMap<Tag, Double> path) {
+    private void resetAllObjectTruth(Tag start, Map<Tag, Double> path) {
         for (Tag tag : path.keySet()) {
             if (!tag.equals(start)) {
                 mapKN.get(tag).belief = 0;
@@ -401,10 +402,10 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      *
      * @param path a path of KN with descending order, parental to child KN
      */
-    private void forwardConfidence(ArrayList<Tag> path) {
+    private void forwardConfidence(List<Tag> path) {
         double totalConfidence = 100;
         if (path.size() != 1) {
-            ArrayList<Double> listOfObjectTruth = new ArrayList<>();
+            List<Double> listOfObjectTruth = new ArrayList<>();
             for (int i = 0; i < path.size() - 1; i++) {
                 Tag current = path.get(i);
                 Tag next = path.get(i + 1);
@@ -413,7 +414,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             }
             listOfObjectTruth.add(mapKN.get(path.get(path.size() - 1)).belief);
 
-            for (Double objectTruth : listOfObjectTruth) {
+            for (double objectTruth : listOfObjectTruth) {
                 totalConfidence = (totalConfidence * objectTruth) / 100;
             }
         }
@@ -425,10 +426,10 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @param path a path of KN with ascending order, child to parental KN
      *             Note the calculation does not follow a mathematic logic, and this need to be modify in the future
      */
-    private void backwardConfidence(ArrayList<Tag> path) {
+    private void backwardConfidence(List<Tag> path) {
         double totalConfidence = 100;
         if (path.size() != 1) {
-            ArrayList<Double> listOfObjectTruth = new ArrayList<>();
+            List<Double> listOfObjectTruth = new ArrayList<>();
             for (int i = 0; i < path.size() - 1; i++) {
                 Tag current = path.get(i);
                 Tag next = path.get(i + 1);
@@ -438,7 +439,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             }
             listOfObjectTruth.add(mapKN.get(path.get(path.size() - 1)).belief);
 
-            for (Double objectTruth : listOfObjectTruth) {
+            for (double objectTruth : listOfObjectTruth) {
                 totalConfidence = (totalConfidence * objectTruth) / 100;
             }
         }
@@ -454,15 +455,15 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @return an ArrayList that stores all the tags of the found path. The first slot of the list is the starting tag and the last slot is the ending tag
      * Note this method can only go descendant order
      */
-    private ArrayList<Tag> pathFinder(Tag start, Tag end, ArrayList<Tag> badComponents) {
-        ArrayList<Tag> currentPath = new ArrayList<>();
+    private List<Tag> pathFinder(Tag start, Tag end, List<Tag> badComponents) {
+        List<Tag> currentPath = new ArrayList<>();
         currentPath.add(start);
         if (mapKN.get(start).outputs.containsKey(end) && !badComponents.contains(start)) {
             currentPath.add(end);
             return currentPath;
         } else {
             for (Tag t : mapKN.get(start).outputs.keySet()) {
-                ArrayList<Tag> template = pathFinder(t, end, badComponents);
+                List<Tag> template = pathFinder(t, end, badComponents);
                 if (template.get(template.size() - 1).equals(end) && !badComponents.contains(start)) {
                     currentPath.addAll(template);
                     break;
@@ -477,12 +478,12 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @param startPoint the starting tag to go
      * @return a list of common parent that has a path to both item and start point
      */
-    private ArrayList<Tag> findCommonParents(Tag item, Tag startPoint) {
-        HashSet<Tag> allParentsofStartPoint = findAllParentOfGivenTag(startPoint);
+    private List<Tag> findCommonParents(Tag item, Tag startPoint) {
+        Set<Tag> allParentsofStartPoint = findAllParentOfGivenTag(startPoint);
 
-        ArrayList<Tag> commonParents = new ArrayList<>();
+        List<Tag> commonParents = new ArrayList<>();
         for (Tag parent : allParentsofStartPoint) {
-            ArrayList<Tag> belowTags = new ArrayList<>();
+            List<Tag> belowTags = new ArrayList<>();
             depthFirstSearch(parent, belowTags);
             for (Tag tg : belowTags) {
                 if (tg.equals(item)) {
@@ -498,8 +499,8 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @param t the wanted tag to find its parents
      * @return a HashSet of tags that has a path to the wanted tag t
      */
-    private HashSet<Tag> findAllParentOfGivenTag(Tag t) {
-        HashSet<Tag> allParents = new HashSet<>();
+    private Set<Tag> findAllParentOfGivenTag(Tag t) {
+        Set<Tag> allParents = new HashSet<>();
         allParents.add(t);
         boolean added;
         do {
@@ -527,7 +528,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      * @param tag       the tag to start the DFS
      * @param tagsFound to store all the tag found during DFS
      */
-    private void depthFirstSearch(Tag tag, ArrayList<Tag> tagsFound) {
+    private void depthFirstSearch(Tag tag, List<Tag> tagsFound) {
         tagsFound.add(tag);
         for (Tag t : mapKN.get(tag).outputs.keySet()) {
             if (!tagsFound.contains(t)) {

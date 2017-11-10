@@ -2,7 +2,7 @@ package knn.api;
 
 import tags.Tag;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,7 +74,7 @@ public interface KnowledgeNodeNetwork {
      * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      * @param item the wanted item tag
      */
-    void lambdaSearch(ArrayList<Tuple> NNoutputs, Tag item);
+    void lambdaSearch(List<Tuple> NNoutputs, Tag item);
 
     /**
      * Backward searching with unlimited time
@@ -82,7 +82,7 @@ public interface KnowledgeNodeNetwork {
      * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      * @param score the minimum number of matching needed from the output list of a KN in order for that KN to become active.
      */
-    void backwardSearch(ArrayList<Tuple> NNoutputs, double score);
+    void backwardSearch(List<Tuple> NNoutputs, double score);
 
     /**
      * Creating input Tags from string in the output of Neural Network (NN)
@@ -90,7 +90,7 @@ public interface KnowledgeNodeNetwork {
      *
      * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */
-    void getInputForBackwardSearch(ArrayList<Tuple> NNoutputs);
+    void getInputForBackwardSearch(List<Tuple> NNoutputs);
 
     /**
      * Backward search with ply as input
@@ -99,7 +99,7 @@ public interface KnowledgeNodeNetwork {
      * @param score indication of accuracy
      * @param ply number of cycle the AI wanted to search
      */
-    void backwardSearch(ArrayList<Tuple> NNoutputs, double score, int ply);
+    void backwardSearch(List<Tuple> NNoutputs, double score, int ply);
 
     /**
      * Forward searching with ply as number of depth
@@ -107,14 +107,14 @@ public interface KnowledgeNodeNetwork {
      * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      * @param ply number of time of searching in the knowledge node network
      */
-    void forwardSearch(ArrayList<Tuple> NNoutputs, int ply);
+    void forwardSearch(List<Tuple> NNoutputs, int ply);
 
     /**
      * forwardSearch with unlimited time
      *
      * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */
-    void forwardSearch(ArrayList<Tuple> NNoutputs);
+    void forwardSearch(List<Tuple> NNoutputs);
 
     /**
      * Creating input Tags from string in the output of Neural Network (NN)
@@ -122,7 +122,7 @@ public interface KnowledgeNodeNetwork {
      *
      * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */
-    void getInputForForwardSearch(ArrayList<Tuple> NNoutputs);
+    void getInputForForwardSearch(List<Tuple> NNoutputs);
 
     /**
      * Create a KN from a Tuple in KNN
