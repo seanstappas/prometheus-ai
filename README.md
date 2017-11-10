@@ -1,9 +1,9 @@
 # Prometheus AI
 Prometheus AI model, containing the following layers:
-* Neural Network (NN)
-* Knowledge Node Network (KNN)
-* Expert System (ES)
-* Meta Reasoner (META)
+* [Neural Network (NN)](src/main/java/nn)
+* [Knowledge Node Network (KNN)](src/main/java/knn)
+* [Expert System (ES)](src/main/java/es)
+* [Meta Reasoner (META)](src/main/java/meta)
 
 The KNN and ES are still under active development, and the NN and META are basic skeletons at this point.
 
