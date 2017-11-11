@@ -7,8 +7,10 @@ Prometheus AI model, containing the following layers:
 
 The KNN and ES are still under active development, and the NN and META are basic skeletons at this point.
 
-## Background
+## Contributing
+To contribute changes to the code base, create a branch and submit a [pull request](https://help.github.com/articles/about-pull-requests/).
 
+## Background
 ### Prometheus Theory
 For a basic and slightly outdated overview of Prometheus, see the [report provided in the `docs` directory](docs/prometheus-ai-1.pdf). For further background on the theory of Prometheus, contact [Prof. Vybihal](http://www.cs.mcgill.ca/~jvybihal/).
 
