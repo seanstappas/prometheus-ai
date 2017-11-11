@@ -15,7 +15,7 @@ public final class KnowledgeNode {
     public double activation = 0;                                                    // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
     public double threshold;                                                        // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
     public double belief = 0;
-    public Map<Tag, Double> listOfRelatedTruth;
+    public Map<Tag, Double> listOfRelatedTruths;
     public int strength = 1;                                                    // Which strength approach to take?
     public boolean isActivated = false;
     public boolean isFired = false;
@@ -27,7 +27,7 @@ public final class KnowledgeNode {
         this.inputTag = inputTag;
         this.outputs = outputFacts;
         this.threshold = threshold;
-        this.listOfRelatedTruth = new HashMap<>();
+        this.listOfRelatedTruths = new HashMap<>();
     }
 
     /**
@@ -47,7 +47,7 @@ public final class KnowledgeNode {
         this.threshold = threshold;
         this.strength = strength;
         this.maxAge = maxAge;
-        this.listOfRelatedTruth = new HashMap<>();
+        this.listOfRelatedTruths = new HashMap<>();
     }
 
     /**
@@ -56,7 +56,7 @@ public final class KnowledgeNode {
      * @param inputInfo The info String to create the Knowledge Node
      */
     public KnowledgeNode(String[] inputInfo) {
-        this.listOfRelatedTruth = new HashMap<>();
+        this.listOfRelatedTruths = new HashMap<>();
         this.outputs = new HashMap<>();
 
         if (inputInfo[0].charAt(0) == '@') {
@@ -87,10 +87,10 @@ public final class KnowledgeNode {
      */
     public void updateBelief() {
         double sum = 0;
-        for (Tag t : this.listOfRelatedTruth.keySet()) {
-            sum = sum + this.listOfRelatedTruth.get(t);
+        for (Tag t : this.listOfRelatedTruths.keySet()) {
+            sum = sum + this.listOfRelatedTruths.get(t);
         }
-        this.belief = sum / this.listOfRelatedTruth.size();
+        this.belief = sum / this.listOfRelatedTruths.size();
     }
 
     /**
@@ -115,7 +115,7 @@ public final class KnowledgeNode {
                 .append("activation", activation)
                 .append("threshold", threshold)
                 .append("belief", belief)
-                .append("listOfRelatedTruth", listOfRelatedTruth)
+                .append("listOfRelatedTruths", listOfRelatedTruths)
                 .append("strength", strength)
                 .append("isActivated", isActivated)
                 .append("isFired", isFired)

@@ -159,7 +159,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                 if (prevActiveTags.contains(t)) {
                     matching++;
                     double backwardConfidence = (kn.outputs.get(t) * mapKN.get(t).belief) / 100;
-                    kn.listOfRelatedTruth.put(t, backwardConfidence);
+                    kn.listOfRelatedTruths.put(t, backwardConfidence);
                 }
             }
             if ((double) matching / kn.outputs.size() >= score) {
@@ -179,19 +179,19 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             for (KnowledgeNode kn : mapKN.values()) {
                 if (kn.inputTag.type.equals(Tag.TagType.FACT)) {
                     if (((Fact) kn.inputTag).getPredicateName().equals(tp.s)) {
-                        kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
+                        kn.listOfRelatedTruths.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
                         activeTags.add(kn.inputTag);
                     }
                 } else if (kn.inputTag.type.equals(Tag.TagType.RECOMMENDATION)) {
                     if (((Recommendation) kn.inputTag).getPredicateName().equals(tp.s)) {
-                        kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
+                        kn.listOfRelatedTruths.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
                         activeTags.add(kn.inputTag);
                     }
                 } else if (kn.inputTag.type.equals(Tag.TagType.RULE)) {
                     if (kn.inputTag.toString().equals(tp.s)) {
-                        kn.listOfRelatedTruth.put(kn.inputTag, kn.accuracy[tp.value]);
+                        kn.listOfRelatedTruths.put(kn.inputTag, kn.accuracy[tp.value]);
                         kn.updateBelief();
                         activeTags.add(kn.inputTag);
                     }
@@ -269,7 +269,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         if (kn.activation * kn.strength >= kn.threshold) {
             Tag ownTag = kn.inputTag;
             if (value != 0) {
-                kn.listOfRelatedTruth.put(ownTag, kn.accuracy[value]);
+                kn.listOfRelatedTruths.put(ownTag, kn.accuracy[value]);
                 kn.updateBelief();
                 activeTags.add(ownTag);
             }
@@ -289,7 +289,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             currentKN.activation += 100;
             if (currentKN.activation >= currentKN.threshold) {
                 Tag parentTag = kn.inputTag;
-                currentKN.listOfRelatedTruth.put(parentTag, (kn.belief * kn.outputs.get(t)) / 100);
+                currentKN.listOfRelatedTruths.put(parentTag, (kn.belief * kn.outputs.get(t)) / 100);
                 currentKN.updateBelief();
                 currentKN.isActivated = true;
                 activeTags.add(t);
@@ -304,7 +304,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             KnowledgeNode currentKN = mapKN.get(t);
             if (currentKN.isActivated) {
                 Tag parentTag = kn.inputTag;
-                currentKN.listOfRelatedTruth.put(parentTag, (kn.belief * kn.outputs.get(t)) / 100);
+                currentKN.listOfRelatedTruths.put(parentTag, (kn.belief * kn.outputs.get(t)) / 100);
                 currentKN.updateBelief();
                 activeTags.add(t);
                 updateConfidence(currentKN);
@@ -394,7 +394,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                 Tag current = path.get(i);
                 Tag next = path.get(i + 1);
                 listOfObjectTruth.add(mapKN.get(current).belief);
-                mapKN.get(next).listOfRelatedTruth.put(current, (mapKN.get(current).belief * mapKN.get(next).outputs.get(current) / 100));
+                mapKN.get(next).listOfRelatedTruths.put(current, (mapKN.get(current).belief * mapKN.get(next).outputs.get(current) / 100));
                 mapKN.get(next).updateBelief();
             }
             listOfObjectTruth.add(mapKN.get(path.get(path.size() - 1)).belief);
