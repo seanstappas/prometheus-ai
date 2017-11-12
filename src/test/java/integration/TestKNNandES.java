@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.util.*;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Running es.internal.NeuralNetworkImpl and knn.internal.KnowledgeNodeNetwork
@@ -215,6 +216,8 @@ public class TestKNNandES {
     @Test
     public void lambdaSearchTest() {
         System.out.println("***Lambda Search Test***");
+
+        assertTrue(false);
 
         ArrayList<Tuple> inputs = new ArrayList<>();
         Tuple data1 = new Tuple("mammal", 10);
