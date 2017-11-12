@@ -622,7 +622,7 @@ public class TestKNNandES {
     }
 
     /**
-     * Tests the teach functionality (basic) & Rule generation with OR of the ES.
+     * Tests the teach functionality (basic) and Rule generation with OR of the ES.
      */
 
     @Test
