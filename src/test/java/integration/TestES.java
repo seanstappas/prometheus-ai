@@ -2,8 +2,6 @@ package integration;
 
 import com.google.inject.Guice;
 import es.api.ExpertSystem;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import prometheus.api.Prometheus;
@@ -401,6 +399,7 @@ public class TestES {
 //        assertEquals(actual.getOutputPredicates(), expected.getOutputPredicates());
 
 //        assertEquals(expected, actual); // TODO: Why does a.equals(b) but not b.equals(a) ?
+        assertEquals(actual, expected);
         System.out.println("[ES] Final rest rules: " + readyRules);
     }
 

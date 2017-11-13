@@ -63,58 +63,58 @@ public interface KnowledgeNodeNetwork {
     /**
      * Lambda search, a search to find out the best relation between a know list of tags and a wanted item tag
      *
-     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      * @param item the wanted item tag
      */
-    void lambdaSearch(List<Tuple> NNoutputs, Tag item);
+    void lambdaSearch(List<Tuple> nnOutputs, Tag item);
 
     /**
      * Backward searching with unlimited time
      *
-     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      * @param score the minimum number of matching needed from the output list of a KN in order for that KN to become active.
      */
-    void backwardSearch(List<Tuple> NNoutputs, double score);
+    void backwardSearch(List<Tuple> nnOutputs, double score);
 
     /**
      * Creating input Tags from string in the output of Neural Network (NN)
      * This method is used only for backward or lambda search because no excitation is needed during the Tag creation
      *
-     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */
-    void getInputForBackwardSearch(List<Tuple> NNoutputs);
+    void getInputForBackwardSearch(List<Tuple> nnOutputs);
 
     /**
      * Backward search with ply as input
      *
-     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      * @param score indication of accuracy
      * @param ply number of cycle the AI wanted to search
      */
-    void backwardSearch(List<Tuple> NNoutputs, double score, int ply);
+    void backwardSearch(List<Tuple> nnOutputs, double score, int ply);
 
     /**
      * Forward searching with ply as number of depth
      *
-     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      * @param ply number of time of searching in the knowledge node network
      */
-    void forwardSearch(List<Tuple> NNoutputs, int ply);
+    void forwardSearch(List<Tuple> nnOutputs, int ply);
 
     /**
      * forwardSearch with unlimited time
      *
-     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */
-    void forwardSearch(List<Tuple> NNoutputs);
+    void forwardSearch(List<Tuple> nnOutputs);
 
     /**
      * Creating input Tags from string in the output of Neural Network (NN)
      * This method is used only for forward search because excitation may be active during the Tag creation
      *
-     * @param NNoutputs a list of tuple of form (String, value) to mimic the output of Neural Network
+     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */
-    void getInputForForwardSearch(List<Tuple> NNoutputs);
+    void getInputForForwardSearch(List<Tuple> nnOutputs);
 
     /**
      * Excites a Knowledge Node.

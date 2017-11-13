@@ -99,11 +99,22 @@ final class NumericArgument extends Argument {
 
     }
 
+    public void setNeg(boolean neg) {
+        isNeg = neg;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
     /**
      * Prints name (when appropriate), symbol and value
      * @return the Argument as a String.
      */
-
     @Override
     public String toString() {
         switch (getSymbol()) {
@@ -147,22 +158,10 @@ final class NumericArgument extends Argument {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
+        return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(isNeg)
                 .append(value)
                 .toHashCode();
-    }
-
-    public void setNeg(boolean neg) {
-        isNeg = neg;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 }

@@ -2,6 +2,7 @@ package tags;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,38 +14,8 @@ import java.util.List;
  * Recommendations are composed of a predicate name and a set of arguments: @P(ARG1, ARG2, ...)
  */
 public class Recommendation extends Tag implements Predicate {
-    /**
-     * Creates a Recommendation.
-     *
-     * @param value the value of the Recommendation
-     */
-
     private String predicateName;
     private List<Argument> arguments;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Recommendation that = (Recommendation) o;
-
-        return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(predicateName, that.predicateName)
-                .append(arguments, that.arguments)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
-                .append(predicateName)
-                .append(arguments)
-                .toHashCode();
-    }
 
     /**
      * Constructs a Recommendation object from a string
@@ -72,21 +43,8 @@ public class Recommendation extends Tag implements Predicate {
      *
      * @see #Recommendation(String, double)
      */
-
     public Recommendation(String value) {
         this(value, 1.0);
-    }
-
-    /**
-     * Prints predicate name, arguments and confidence value of recommendation
-     * <p>
-     * e.g. "[@P(ARG1, ARG2) 100%]"
-     * @return string value of Recommendation
-     */
-
-    @Override
-    public String toString() {
-        return "[@" + predicateName + '(' + arguments + ") " + getConfidenceValue() * 100 + "% ]";
     }
 
     /**
@@ -125,5 +83,42 @@ public class Recommendation extends Tag implements Predicate {
         return arguments;
     }
 
+    /**
+     * Prints predicate name, arguments and confidence value of recommendation
+     * <p>
+     * e.g. "[@P(ARG1, ARG2) 100%]"
+     *
+     * @return string value of Recommendation
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("type", type)
+                .append("predicateName", predicateName)
+                .append("arguments", arguments)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Recommendation that = (Recommendation) o;
+
+        return new EqualsBuilder()
+                .append(predicateName, that.predicateName)
+                .append(arguments, that.arguments)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(predicateName)
+                .append(arguments)
+                .toHashCode();
+    }
 }
 

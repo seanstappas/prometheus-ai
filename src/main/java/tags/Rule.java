@@ -2,6 +2,7 @@ package tags;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.*;
 
@@ -202,6 +203,22 @@ public class Rule extends Tag {
         this.setConfidenceValue(1.0);
     }
 
+    /**
+     * Prints Rule as inputFacts, outputPredicates, and confidenceValue
+     * <p>
+     * i.e. "{[[P1() 100%] [P2() 100%]] {@literal ->} [@P4 100%] 100%}"
+     *
+     * @return Rule as string
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("type", type)
+                .append("inputFacts", inputFacts)
+                .append("outputPredicates", outputPredicates)
+                .toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -211,7 +228,6 @@ public class Rule extends Tag {
         Rule rule = (Rule) o;
 
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
                 .append(inputFacts, rule.inputFacts)
                 .append(outputPredicates, rule.outputPredicates)
                 .isEquals();
@@ -219,22 +235,9 @@ public class Rule extends Tag {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
+        return new HashCodeBuilder()
                 .append(inputFacts)
                 .append(outputPredicates)
                 .toHashCode();
     }
-
-    /**
-     * Prints Rule as inputFacts, outputPredicates, and confidenceValue
-     * <p>
-     * i.e. "{[[P1() 100%] [P2() 100%]] {@literal ->} [@P4 100%] 100%}"
-     * @return Rule as string
-     */
-    @Override
-    public String toString() {
-        return "{ " + inputFacts + "=>" + outputPredicates + getConfidenceValue() * 100 + "% }";
-    }
-
 }

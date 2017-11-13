@@ -2,6 +2,7 @@ package tags;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Arguments are composed of a name and symbol
@@ -119,10 +120,12 @@ public class Argument {
         }
     }
 
-
     @Override
     public String toString() {
-        return "" + name;
+        return new ToStringBuilder(this)
+                .append("name", name)
+                .append("symbol", symbol)
+                .toString();
     }
 
     @Override
@@ -141,7 +144,7 @@ public class Argument {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
+        return new HashCodeBuilder()
                 .append(name)
                 .append(symbol)
                 .toHashCode();

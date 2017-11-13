@@ -2,6 +2,7 @@ package tags;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,30 +19,6 @@ public class Fact extends Tag implements Predicate {
 
     private String predicateName;
     private List<Argument> arguments;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Fact fact = (Fact) o;
-
-        return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(predicateName, fact.predicateName)
-                .append(arguments, fact.arguments)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
-                .append(predicateName)
-                .append(arguments)
-                .toHashCode();
-    }
 
     /**
      * Constructs a Fact object from a string
@@ -79,11 +56,6 @@ public class Fact extends Tag implements Predicate {
      * e.g. "[P(ARG1, ARG2) 100%]"
      * @return string value of Fact
      */
-
-    @Override
-    public String toString() {
-        return "[" + predicateName + '(' + arguments + ") " + getConfidenceValue() * 100 + "% ]";
-    }
 
     /**
      * Parses a raw string into a list of string tokens that represent each argument
@@ -205,5 +177,36 @@ public class Fact extends Tag implements Predicate {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("type", type)
+                .append("predicateName", predicateName)
+                .append("arguments", arguments)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Fact fact = (Fact) o;
+
+        return new EqualsBuilder()
+                .append(predicateName, fact.predicateName)
+                .append(arguments, fact.arguments)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(predicateName)
+                .append(arguments)
+                .toHashCode();
     }
 }

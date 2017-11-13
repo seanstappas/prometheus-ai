@@ -23,5 +23,4 @@ public interface Predicate {
     List<Argument> getArguments();
 
     Tag.TagType getType();
-
 }
