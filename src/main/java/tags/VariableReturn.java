@@ -3,7 +3,7 @@ package tags;
 import java.util.HashMap;
 
 /**
- * Subclass for Variable Return object returned by Fact.matches methods.
+ * Subclass for Variable Return object returned by Fact.getMatchResult methods.
  */
 
 public class VariableReturn {

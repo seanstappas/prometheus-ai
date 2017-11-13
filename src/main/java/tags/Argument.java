@@ -38,7 +38,7 @@ public class Argument {
          */
         LT,
         /**
-         * argument matches on a corresponding argument in a fact with same predicate name (see BASH '?')
+         * argument getMatchResult on a corresponding argument in a fact with same predicate name (see BASH '?')
          */
         MATCHONE,
         /**
@@ -46,7 +46,7 @@ public class Argument {
          */
         VAR,
         /**
-         * argument matches on &gt; 0 arguments in a fact with same predicate name (see BASH '*')
+         * argument getMatchResult on &gt; 0 arguments in a fact with same predicate name (see BASH '*')
          */
         MATCHALL,
         /**

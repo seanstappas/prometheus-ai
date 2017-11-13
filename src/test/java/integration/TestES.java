@@ -367,9 +367,11 @@ public class TestES {
         );
 
         Rule expected = expectedRestRules.iterator().next();
+        System.out.println("Expected rest rules: " + expectedReadyRules);
         Rule actual = readyRules.iterator().next();
+        System.out.println("Ready rules: " + readyRules);
 
-//        System.out.println(expectedRestRules.equals(readyRules));
+        System.out.println(expectedRestRules.equals(readyRules));
 //        System.out.println(readyRules.equals(expectedRestRules));
 //
 //        System.out.println(actual.getInputFacts().equals(expected.getInputFacts()));

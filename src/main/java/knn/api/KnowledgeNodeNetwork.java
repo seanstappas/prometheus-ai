@@ -5,9 +5,6 @@ import tags.Tag;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by Sean on 10/13/2017.
- */
 public interface KnowledgeNodeNetwork {
     /**
      * Resets the KNN to a state from a database.

@@ -141,18 +141,25 @@ public class Fact extends Tag implements Predicate {
      * @param inputFact fact contained in a Rule
      * @return true if facts are 'matched' (notice not necessarily equal)
      */
-
-    public VariableReturn matches(Fact inputFact) {
+    public VariableReturn getMatchResult(Fact inputFact) {
 
         VariableReturn result = new VariableReturn();
-        if (matchPredicateName(inputFact, result)) return result;
-        if (matchArgumentsSize(inputFact, result)) return result;
-        if (matchArguments(result, inputFact.arguments)) return result;
+        if (noMatchPredicateName(inputFact, result)) return result;
+        if (noMatchArgumentsSize(inputFact, result)) return result;
+        if (noMatchArguments(result, inputFact.arguments)) return result;
         result.setFactMatch(true);
         return result;
     }
 
-    private boolean matchPredicateName(Fact inputFact, VariableReturn result) {
+
+    public boolean matches(Fact inputFact) {
+        VariableReturn result = new VariableReturn();
+        return !noMatchPredicateName(inputFact, result)
+                && !noMatchArgumentsSize(inputFact, result)
+                && !noMatchArguments(result, inputFact.arguments);
+    }
+
+    private boolean noMatchPredicateName(Fact inputFact, VariableReturn result) {
         if (!this.predicateName.equals(inputFact.predicateName)) {
             result.setFactMatch(false);
             return true;
@@ -160,7 +167,7 @@ public class Fact extends Tag implements Predicate {
         return false;
     }
 
-    private boolean matchArguments(VariableReturn result, List<Argument> iterInputFactArguments) {
+    private boolean noMatchArguments(VariableReturn result, List<Argument> iterInputFactArguments) {
         Iterator iterFact = this.arguments.iterator();
         Iterator iterInputFact = iterInputFactArguments.iterator();
 
@@ -188,7 +195,7 @@ public class Fact extends Tag implements Predicate {
         return false;
     }
 
-    private boolean matchArgumentsSize(Fact inputFact, VariableReturn result) {
+    private boolean noMatchArgumentsSize(Fact inputFact, VariableReturn result) {
         if (inputFact.arguments.size() > this.arguments.size()) {
             for (int i = this.arguments.size(); i < inputFact.arguments.size(); i++) {
                 if (!inputFact.arguments.get(i).getSymbol().equals(Argument.ArgTypes.MATCHALL)) {

@@ -71,7 +71,7 @@ class ThinkCycleExecutor {
     }
 
     /**
-     * Checks if a particular fact matches with any other fact in the ES
+     * Checks if a particular fact getMatchResult with any other fact in the ES
      * If inputFact contains a variable argument, matching pair placed in pendingReplacementPairs
      *
      * @param inputFact fact contained in a Rule
@@ -80,7 +80,7 @@ class ThinkCycleExecutor {
     private boolean factsContains(Fact inputFact, Map<String, Argument> pendingReplacementPairs) {
         boolean result = false;
         for (Fact f : facts) {
-            VariableReturn matchesResult = f.matches(inputFact);
+            VariableReturn matchesResult = f.getMatchResult(inputFact);
             if (matchesResult.isFactMatch()) {
                 if (matchesResult.getPairs().size() > 0) {
                     pendingReplacementPairs.putAll(matchesResult.getPairs());
