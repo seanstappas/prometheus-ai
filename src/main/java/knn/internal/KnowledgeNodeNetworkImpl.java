@@ -14,8 +14,6 @@ import java.util.*;
 class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
-    // TODO: Remove Maps here, associate Object truth (belief...) with KN object
-    // TODO: Rename Object truth to belief
 
     @Inject
     public KnowledgeNodeNetworkImpl(

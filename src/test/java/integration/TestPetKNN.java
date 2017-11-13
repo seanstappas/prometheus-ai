@@ -23,7 +23,8 @@ import java.util.HashMap;
 /**
  * Knowledge Node Network Unit Tests
  */
-public class TestKNN {
+public class TestPetKNN {
+    private static final String PET_DATA_PATH = "./petData";
     private KnowledgeNodeNetwork knn;
     private ArrayList<KnowledgeNode> animal = new ArrayList<>();
 
@@ -37,7 +38,7 @@ public class TestKNN {
     public void setupKNN(){
         knn.resetEmpty();
         try{
-            BufferedReader br = new BufferedReader(new FileReader("./petData")); //change the directory for the integration file to run
+            BufferedReader br = new BufferedReader(new FileReader(PET_DATA_PATH)); //change the directory for the integration file to run
             String line;
             while( (line = br.readLine()) != null){
                 String[] info = line.split(";\\s+");
@@ -47,13 +48,11 @@ public class TestKNN {
             br.close();
         }
         catch(Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
 
-        for(int i=0; i<animal.size(); i++){
-            knn.addKN(animal.get(i));
-            //System.out.println(animal.get(i).toString());
-            //System.out.println(" ");
+        for (KnowledgeNode anAnimal : animal) {
+            knn.addKN(anAnimal);
         }
     }
 
@@ -149,7 +148,7 @@ public class TestKNN {
     }
 
     @Test
-    public void CreateKNFromTupleTest(){
+    public void createKNFromTupleTest(){
         Tuple tp1 = new Tuple("monkey(intelligent,length>50,weight>3)", 10);
         Tuple tp2 = new Tuple("@isAnimal(calm,bark)", 10);
         Tuple tp3 = new Tuple("friend(nice,kind) -> @meet(community,people>2)", 10);
@@ -225,15 +224,15 @@ public class TestKNN {
     }
 
     @Test
-    public void KNtoStringTest(){
+    public void knToStringTest(){
         String[] info1 = {"Tiger(carnivore,length>50,weight>90)", "100", "monkey(intelligent,length>50,weight>3)", "100"};
         KnowledgeNode kn1 = new KnowledgeNode(info1);
         String[] info2 = {"@isTiger(danger,run)", "100"};
         KnowledgeNode kn2 = new KnowledgeNode(info2);
         String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)", "100"};
         KnowledgeNode kn3 = new KnowledgeNode(info3);
-        System.out.println("[KNtoStringTest]: "+ kn1.toString());
-        System.out.println("[KNtoStringTest]: "+ kn2.toString());
-        System.out.println("[KNtoStringTest]: "+ kn3.toString());
+        System.out.println("[knToStringTest]: "+ kn1.toString());
+        System.out.println("[knToStringTest]: "+ kn2.toString());
+        System.out.println("[knToStringTest]: "+ kn3.toString());
     }
 }
