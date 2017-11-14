@@ -8,14 +8,15 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class KnowledgeNode {
     // Final fields
-    public static final double[] SIGMOID_VALUES = {0, 2, 5, 11, 27, 50, 73, 88, 95, 98, 100}; //sigmoid function activation value
+    private static final double[] SIGMOID_VALUES = {0, 2, 5, 11, 27, 50, 73, 88, 95, 98, 100}; //sigmoid function activation value
     public final Tag inputTag;
-    public final Map<Tag, Double> outputs;  // Integer is the value of confidence
+    public final Set<Tag> outputTags;  // Integer is the value of confidence
     public final double threshold; // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
     public final int strength; // Which strength approach to take?
     private final double maxAge;
@@ -36,7 +37,7 @@ public final class KnowledgeNode {
     public KnowledgeNode(
             @Assisted("data") String[] data)
             throws KnowledgeNodeParseException {
-        this.outputs = new HashMap<>();
+        this.outputTags = new HashSet<>();
 
         if (data[0].charAt(0) == '@') {
             this.inputTag = new Recommendation(data[0]);
@@ -45,20 +46,21 @@ public final class KnowledgeNode {
         } else if (data[0].matches(".*\\(.*\\).*")) {
             this.inputTag = new Fact(data[0]);
         } else {
-            throw new KnowledgeNodeParseException("Invalid input tag.");
+            throw new KnowledgeNodeParseException(MessageFormat.format(
+                    "Invalid input tag: {0}.", data[0]));
         }
         this.threshold = Integer.parseInt(data[1]);
 
         for (int i = 2; i < data.length; i += 2) {
             if (data[i].charAt(0) == '@') {
-                Recommendation rcmd = new Recommendation(data[i]);
-                this.outputs.put(rcmd, Double.parseDouble(data[i + 1]));
+                this.outputTags.add(new Recommendation(data[i]));
             } else if (data[i].contains("->")) {
-                Rule r = new Rule(data[i]);
-                this.outputs.put(r, Double.parseDouble(data[i + 1]));
+                this.outputTags.add(new Rule(data[i]));
             } else if (data[i].matches(".*\\(.*\\).*")) {
-                Fact f = new Fact(data[i]);
-                this.outputs.put(f, Double.parseDouble(data[i + 1]));
+                this.outputTags.add(new Fact(data[i]));
+            } else {
+                throw new KnowledgeNodeParseException(MessageFormat.format(
+                        "Invalid output tag: {0}.", data[i]));
             }
         }
         this.strength = 1;
@@ -90,7 +92,7 @@ public final class KnowledgeNode {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("inputTag", inputTag)
-                .append("outputs", outputs)
+                .append("outputs", outputTags)
                 .append("activation", activation)
                 .append("threshold", threshold)
                 .append("belief", belief)

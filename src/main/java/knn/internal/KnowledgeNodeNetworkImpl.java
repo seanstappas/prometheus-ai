@@ -153,12 +153,12 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         Set<Tag> prevActiveTags = new HashSet<>(activeTags);
         for (KnowledgeNode kn : mapKN.values()) {
             int matching = 0;
-            for (Tag t : kn.outputs.keySet()) {
+            for (Tag t : kn.outputTags) {
                 if (prevActiveTags.contains(t)) {
                     matching++;
                 }
             }
-            if ((double) matching / kn.outputs.size() >= score) {
+            if ((double) matching / kn.outputTags.size() >= score) {
                 Tag knType = kn.inputTag;
                 kn.updateBelief();
                 if (!activeTags.contains(knType)) {
@@ -261,7 +261,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             kn.isActivated = true;
             fire(kn);
             kn.isFired = true;
-            for (Tag t : kn.outputs.keySet()) {
+            for (Tag t : kn.outputTags) {
                 updateConfidence(mapKN.get(t));
             }
         }
@@ -269,7 +269,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void fire(KnowledgeNode kn) {
-        for (Tag t : kn.outputs.keySet()) {
+        for (Tag t : kn.outputTags) {
             KnowledgeNode currentKN = mapKN.get(t);
             currentKN.activation += 100;
             if (currentKN.activation >= currentKN.threshold) {
@@ -283,7 +283,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void updateConfidence(KnowledgeNode kn) {
-        for (Tag t : kn.outputs.keySet()) {
+        for (Tag t : kn.outputTags) {
             KnowledgeNode currentKN = mapKN.get(t);
             if (currentKN.isActivated) {
                 currentKN.updateBelief();
@@ -351,7 +351,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                 Tag current = path.get(i);
                 Tag next = path.get(i + 1);
                 listOfObjectTruth.add(mapKN.get(current).belief);
-                mapKN.get(next).belief = mapKN.get(current).belief * mapKN.get(current).outputs.get(next) / 100;
+                mapKN.get(next).belief = 0;
             }
             listOfObjectTruth.add(mapKN.get(path.get(path.size() - 1)).belief);
 
@@ -398,11 +398,11 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private List<Tag> pathFinder(Tag start, Tag end, List<Tag> badComponents) {
         List<Tag> currentPath = new ArrayList<>();
         currentPath.add(start);
-        if (mapKN.get(start).outputs.containsKey(end) && !badComponents.contains(start)) {
+        if (mapKN.get(start).outputTags.contains(end) && !badComponents.contains(start)) {
             currentPath.add(end);
             return currentPath;
         } else {
-            for (Tag t : mapKN.get(start).outputs.keySet()) {
+            for (Tag t : mapKN.get(start).outputTags) {
                 List<Tag> template = pathFinder(t, end, badComponents);
                 if (template.get(template.size() - 1).equals(end) && !badComponents.contains(start)) {
                     currentPath.addAll(template);
@@ -446,7 +446,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         do {
             added = false;
             for (KnowledgeNode kn : mapKN.values()) {
-                for (Tag tg : kn.outputs.keySet()) {
+                for (Tag tg : kn.outputTags) {
                     if (allParents.contains(tg)) {
                         Tag knType = kn.inputTag;
                         if (!allParents.contains(knType)) {
@@ -470,7 +470,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      */
     private void depthFirstSearch(Tag tag, List<Tag> tagsFound) {
         tagsFound.add(tag);
-        for (Tag t : mapKN.get(tag).outputs.keySet()) {
+        for (Tag t : mapKN.get(tag).outputTags) {
             if (!tagsFound.contains(t)) {
                 depthFirstSearch(t, tagsFound);
             }
