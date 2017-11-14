@@ -15,18 +15,14 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-/**
- * Knowledge Node Network Unit Tests
- */
-public class TestPetKNN {
-    private static final String PET_DATA_PATH = "./petData";
+public class KnowledgeNodeNetworkPetTest {
+    private static final String PET_DATA_PATH = "data/petData";
     private KnowledgeNodeNetwork knn;
-    private ArrayList<KnowledgeNode> animal = new ArrayList<>();
+    private List<KnowledgeNode> knowledgeNodes = new ArrayList<>();
 
     @BeforeTest
     public void setup() {
@@ -36,24 +32,7 @@ public class TestPetKNN {
 
     @BeforeMethod
     public void setupKNN(){
-        knn.resetEmpty();
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(PET_DATA_PATH)); //change the directory for the integration file to run
-            String line;
-            while( (line = br.readLine()) != null){
-                String[] info = line.split(";\\s+");
-                KnowledgeNode kn = new KnowledgeNode(info);
-                animal.add(kn);
-            }
-            br.close();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-
-        for (KnowledgeNode anAnimal : animal) {
-            knn.addKN(anAnimal);
-        }
+        KnnDataLoader.loadDate(knn, PET_DATA_PATH, knowledgeNodes);
     }
 
     @Test
@@ -64,7 +43,7 @@ public class TestPetKNN {
 
     @Test
     public void fireTesting(){
-        for(KnowledgeNode kn : animal){
+        for(KnowledgeNode kn : knowledgeNodes){
             Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT){
                 Fact f = (Fact)t;
@@ -80,13 +59,13 @@ public class TestPetKNN {
             }
         }
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
-        expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 82.5);
+        expectedActiveTags.put(new Fact("knowledgeNodes(multicellular,vertebrate,invertebrate)"), 82.5);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 75.0);
         System.out.println("[fire Test] KNs to fire: dog(wow, carnivore) : 100.0, cat(meow, carnivore) : 100.0");
         System.out.println("[fire Test] Active Tags: " + knn.getActiveTags().toString());
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
 
-        for(KnowledgeNode kn : animal){
+        for(KnowledgeNode kn : knowledgeNodes){
             Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT){
                 Fact f = (Fact)t;
@@ -97,7 +76,7 @@ public class TestPetKNN {
                 }
             }
         }
-        expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 75.75);
+        expectedActiveTags.put(new Fact("knowledgeNodes(multicellular,vertebrate,invertebrate)"), 75.75);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 69.0);
         System.out.println("[fire Test] KN with an updated confidence: dog(wow, carnivore) : 85.0");
         System.out.println("[fire Test] updated active Tags: " + knn.getActiveTags().toString());
@@ -107,7 +86,7 @@ public class TestPetKNN {
 
     @Test
     public void exciteTest(){
-        for(KnowledgeNode kn : animal){
+        for(KnowledgeNode kn : knowledgeNodes){
             Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT ){
                 Fact f = (Fact)t;
@@ -117,14 +96,14 @@ public class TestPetKNN {
             }
         }
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
-        expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 90.0);
+        expectedActiveTags.put(new Fact("knowledgeNodes(multicellular,vertebrate,invertebrate)"), 90.0);
         expectedActiveTags.put(new Fact("dog(wow, carnivore)"), 100.0);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 80.0);
         System.out.println("[excite integration] Tags to excite 1st: dog(wow, carnivore) : 10");
         System.out.println("[excite integration] Active Tags: " + knn.getActiveTags().toString());
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
 
-        for(KnowledgeNode kn : animal){
+        for(KnowledgeNode kn : knowledgeNodes){
             Tag t = kn.inputTag;
             if(t.type == Tag.TagType.FACT){
                 Fact f = (Fact)t;
@@ -140,7 +119,7 @@ public class TestPetKNN {
         expectedActiveTags.put(new Fact("cat(meow, carnivore)"), 100.0);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 69.0);
         expectedActiveTags.put(new Fact("husky(Ranger,male,length>58,weight=26)"), 100.0);
-        expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 75.75);
+        expectedActiveTags.put(new Fact("knowledgeNodes(multicellular,vertebrate,invertebrate)"), 75.75);
         expectedActiveTags.put(new Fact("dog(wow, carnivore)"), 85.0);
         System.out.println("[excite integration] Active Tags: " + knn.getActiveTags().toString());
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
@@ -178,9 +157,9 @@ public class TestPetKNN {
         String[] info1 = {"monkey(intelligent,length>50,weight>3)", "100"};
         String[] info2 = {"@isAnimal(calm,bark)", "100"};
         String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)", "100"};
-        knn.addKN(new KnowledgeNode(info1));
-        knn.addKN(new KnowledgeNode(info2));
-        knn.addKN(new KnowledgeNode(info3));
+        knn.addKnowledgeNode(new KnowledgeNode(info1));
+        knn.addKnowledgeNode(new KnowledgeNode(info2));
+        knn.addKnowledgeNode(new KnowledgeNode(info3));
 
         knn.getInputForForwardSearch(NNoutputs);
         HashMap<Tag, Double> expectedInputTags = new HashMap<>();
@@ -208,9 +187,9 @@ public class TestPetKNN {
         String[] info1 = {"Tiger(carnivore,length>50,weight>90)", "100"};
         String[] info2 = {"@isTiger(danger,run)", "100"};
         String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)", "100"};
-        knn.addKN(new KnowledgeNode(info1));
-        knn.addKN(new KnowledgeNode(info2));
-        knn.addKN(new KnowledgeNode(info3));
+        knn.addKnowledgeNode(new KnowledgeNode(info1));
+        knn.addKnowledgeNode(new KnowledgeNode(info2));
+        knn.addKnowledgeNode(new KnowledgeNode(info3));
 
         knn.getInputForBackwardSearch(NNoutputs);
         HashMap<Tag, Double> expectedInputTags = new HashMap<>();

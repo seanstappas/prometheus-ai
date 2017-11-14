@@ -15,10 +15,7 @@ import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 
-/**
- * Expert System Unit Tests
- */
-public class TestES {
+public class ExpertSystemTest {
     private ExpertSystem es;
 
     @BeforeMethod

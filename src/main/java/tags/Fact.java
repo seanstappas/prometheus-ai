@@ -3,6 +3,7 @@ package tags;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -181,8 +182,7 @@ public class Fact extends Tag implements Predicate {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("type", type)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("predicateName", predicateName)
                 .append("arguments", arguments)
                 .toString();

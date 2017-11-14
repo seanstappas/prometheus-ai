@@ -11,7 +11,7 @@ public abstract class Tag {
      */
     public TagType type;
 
-    public enum TagType {
+    public enum TagType { // TODO: remove this tag type, just use instanceof
         FACT,
         RULE,
         RECOMMENDATION,

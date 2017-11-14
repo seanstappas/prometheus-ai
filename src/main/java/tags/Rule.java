@@ -3,6 +3,7 @@ package tags;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.*;
 
@@ -212,8 +213,7 @@ public class Rule extends Tag {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("type", type)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("inputFacts", inputFacts)
                 .append("outputPredicates", outputPredicates)
                 .toString();

@@ -1,7 +1,6 @@
 package integration;
 
 import com.google.inject.Guice;
-import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
 import knn.api.Tuple;
 import org.testng.annotations.BeforeMethod;
@@ -13,8 +12,6 @@ import tags.Fact;
 import tags.Rule;
 import tags.Tag;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,11 +19,8 @@ import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 
-/**
- * Knowledge Node Network Unit Tests
- */
-public class TestAnimalKNN {
-    private static final String ANIMAL_DATA_PATH = "./animalData";
+public class KnowledgeNodeNetworkAnimalTest {
+    private static final String ANIMAL_DATA_PATH = "data/animalData";
     private KnowledgeNodeNetwork knn;
 
     @BeforeTest
@@ -41,25 +35,7 @@ public class TestAnimalKNN {
      */
     @BeforeMethod
     public void setupKNN() {
-        knn.resetEmpty();
-        ArrayList<KnowledgeNode> animal = new ArrayList<>();
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(ANIMAL_DATA_PATH)); //change the local directory for the integration file to run
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] info = line.split(";\\s+");
-                KnowledgeNode kn = new KnowledgeNode(info);
-                animal.add(kn);
-            }
-            br.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        for (KnowledgeNode anAnimal : animal) {
-            knn.addKN(anAnimal);
-        }
+        KnnDataLoader.loadDate(knn, ANIMAL_DATA_PATH, new ArrayList<>());
     }
 
     /**

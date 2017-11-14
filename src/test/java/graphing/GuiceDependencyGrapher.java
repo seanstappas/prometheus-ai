@@ -1,4 +1,4 @@
-package integration;
+package graphing;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class Grapher {
+public class GuiceDependencyGrapher {
     public static void main(String[] args) throws IOException {
         Injector injector = Guice.createInjector(new PrometheusModule());
         graph("prometheus.dot", injector);

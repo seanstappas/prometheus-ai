@@ -30,27 +30,27 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void resetEmpty() {
-        clearKN();
+        clearKnowledgeNodes();
     }
 
     @Override
-    public void saveKNN(String dbFilename) {
+    public void save(String dbFilename) {
 
     }
 
     @Override
-    public void clearKN() {
+    public void clearKnowledgeNodes() {
         mapKN.clear();
         activeTags.clear();
     }
 
     @Override
-    public void addKN(KnowledgeNode kn) {
+    public void addKnowledgeNode(KnowledgeNode kn) {
         mapKN.put(kn.inputTag, kn);
     }
 
     @Override
-    public void delKN(Tag tag) {
+    public void deleteKnowledgeNode(Tag tag) {
         mapKN.remove(tag);
     }
 

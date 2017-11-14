@@ -23,26 +23,26 @@ public interface KnowledgeNodeNetwork {
      *
      * @param dbFilename the filename of the database
      */
-    void saveKNN(String dbFilename);
+    void save(String dbFilename);
 
     /**
      * Clears all the Knowledge Nodes from the KNN.
      */
-    void clearKN();
+    void clearKnowledgeNodes();
 
     /**
      * Adds a Knowledge Node to the KNN.
      *
      * @param kn the Knowledge Node to be added
      */
-    void addKN(KnowledgeNode kn);
+    void addKnowledgeNode(KnowledgeNode kn);
 
     /**
      * Deletes a Knowledge Node from the KNN.
      *
      * @param tag the input Tag of the Knowledge Node to be deleted
      */
-    void delKN(Tag tag);
+    void deleteKnowledgeNode(Tag tag);
 
     /**
      * Adds a fired Tag to the KNN.
