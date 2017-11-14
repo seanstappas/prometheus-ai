@@ -22,7 +22,7 @@ public final class KnowledgeNode {
     private final double maxAge;
 
     // Modifiable fields
-    public boolean isFired = false;
+    public boolean isFired = false; // TODO: Remove isFired flag from KN (just need activeTags from KNN)
     public double age = 0; // Age timestamp. Set to current UNIX time when node is newly formed.
     public double belief = 0;
     public double activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
