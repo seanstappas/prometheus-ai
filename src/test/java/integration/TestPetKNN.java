@@ -164,7 +164,7 @@ public class TestPetKNN {
     }
 
     @Test
-    public void getInputForForwardSearchTest(){
+    public void getInputForForwardSearchTest() throws Exception{
         Tuple tp1 = new Tuple("monkey", 10);
         Tuple tp2 = new Tuple("isAnimal", 10);
         Tuple tp3 = new Tuple("{ [[friend([nice, kind]) 100.0% ]]=>[[@meet([community, people > 2]) 100.0% ]]100.0% }", 10);
@@ -194,7 +194,7 @@ public class TestPetKNN {
     }
 
     @Test
-    public void getInputForBackwardSearchTest(){
+    public void getInputForBackwardSearchTest() throws Exception {
         Tuple tp1 = new Tuple("Tiger", 10);
         Tuple tp2 = new Tuple("isTiger", 10);
         Tuple tp3 = new Tuple("{ [[friend([nice, kind]) 100.0% ]]=>[[@meet([community, people > 2]) 100.0% ]]100.0% }", 10);
@@ -224,7 +224,7 @@ public class TestPetKNN {
     }
 
     @Test
-    public void knToStringTest(){
+    public void knToStringTest()  throws Exception{
         String[] info1 = {"Tiger(carnivore,length>50,weight>90)", "100", "monkey(intelligent,length>50,weight>3)", "100"};
         KnowledgeNode kn1 = new KnowledgeNode(info1);
         String[] info2 = {"@isTiger(danger,run)", "100"};

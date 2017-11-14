@@ -88,7 +88,7 @@ public interface KnowledgeNodeNetwork {
      * Backward search with ply as input
      *
      * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param score indication of accuracy
+     * @param score indication of SIGMOID_VALUES
      * @param ply number of cycle the AI wanted to search
      */
     void backwardSearch(List<Tuple> nnOutputs, double score, int ply);
@@ -120,7 +120,7 @@ public interface KnowledgeNodeNetwork {
      * Excites a Knowledge Node.
      *
      * @param kn the Knowledge Node to excite
-     * @param value the accuracy from the neural network
+     * @param value the SIGMOID_VALUES from the neural network
      * If excitation leads to firing, this will add the fired kn to the activeTag.
      */
     void excite(KnowledgeNode kn, int value);
