@@ -10,7 +10,7 @@ The KNN and ES are still under active development, and the NN and META are basic
 ![alt text](docs/knn_graph.png)
 
 ## Contributing
-To contribute changes to the code base, create a branch and submit a [pull request](https://help.github.com/articles/about-pull-requests/). The branch merge will require a code review from me and that all tests (in the [`test`](src/test) directory) are passed. These tests will automatically be run at every change to the main branch with Travis CI.
+To contribute changes to the code base, create a branch and submit a [pull request](https://help.github.com/articles/about-pull-requests/). The branch merge will require a code review and that all tests (in the [`test`](src/test) directory) are passed. These tests will automatically be run at every change to the main branch with Travis CI.
 
 ## Background
 ### Prometheus Theory
