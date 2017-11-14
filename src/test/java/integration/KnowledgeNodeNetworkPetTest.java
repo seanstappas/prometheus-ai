@@ -59,7 +59,7 @@ public class KnowledgeNodeNetworkPetTest {
             }
         }
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
-        expectedActiveTags.put(new Fact("knowledgeNodes(multicellular,vertebrate,invertebrate)"), 82.5);
+        expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 82.5);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 75.0);
         System.out.println("[fire Test] KNs to fire: dog(wow, carnivore) : 100.0, cat(meow, carnivore) : 100.0");
         System.out.println("[fire Test] Active Tags: " + knn.getActiveTags().toString());
@@ -76,7 +76,7 @@ public class KnowledgeNodeNetworkPetTest {
                 }
             }
         }
-        expectedActiveTags.put(new Fact("knowledgeNodes(multicellular,vertebrate,invertebrate)"), 75.75);
+        expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 75.75);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 69.0);
         System.out.println("[fire Test] KN with an updated confidence: dog(wow, carnivore) : 85.0");
         System.out.println("[fire Test] updated active Tags: " + knn.getActiveTags().toString());
@@ -96,7 +96,7 @@ public class KnowledgeNodeNetworkPetTest {
             }
         }
         HashMap<Tag, Double> expectedActiveTags = new HashMap<>();
-        expectedActiveTags.put(new Fact("knowledgeNodes(multicellular,vertebrate,invertebrate)"), 90.0);
+        expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 90.0);
         expectedActiveTags.put(new Fact("dog(wow, carnivore)"), 100.0);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 80.0);
         System.out.println("[excite integration] Tags to excite 1st: dog(wow, carnivore) : 10");
@@ -119,7 +119,7 @@ public class KnowledgeNodeNetworkPetTest {
         expectedActiveTags.put(new Fact("cat(meow, carnivore)"), 100.0);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 69.0);
         expectedActiveTags.put(new Fact("husky(Ranger,male,length>58,weight=26)"), 100.0);
-        expectedActiveTags.put(new Fact("knowledgeNodes(multicellular,vertebrate,invertebrate)"), 75.75);
+        expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 75.75);
         expectedActiveTags.put(new Fact("dog(wow, carnivore)"), 85.0);
         System.out.println("[excite integration] Active Tags: " + knn.getActiveTags().toString());
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
