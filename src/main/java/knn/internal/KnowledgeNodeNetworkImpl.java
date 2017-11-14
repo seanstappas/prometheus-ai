@@ -258,7 +258,6 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
                 kn.updateBelief();
                 activeTags.add(ownTag);
             }
-            kn.isActivated = true;
             fire(kn);
             kn.isFired = true;
             for (Tag t : kn.outputTags) {
@@ -274,7 +273,6 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
             currentKN.activation += 100;
             if (currentKN.activation >= currentKN.threshold) {
                 currentKN.updateBelief();
-                currentKN.isActivated = true;
                 activeTags.add(t);
             }
         }
@@ -283,14 +281,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void updateConfidence(KnowledgeNode kn) {
-        for (Tag t : kn.outputTags) {
-            KnowledgeNode currentKN = mapKN.get(t);
-            if (currentKN.isActivated) {
-                currentKN.updateBelief();
-                activeTags.add(t);
-                updateConfidence(currentKN);
-            }
-        }
+        // TODO: Update belief properly here?
     }
 
     /**

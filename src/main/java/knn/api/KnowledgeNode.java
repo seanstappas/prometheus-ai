@@ -22,7 +22,6 @@ public final class KnowledgeNode {
     private final double maxAge;
 
     // Modifiable fields
-    public boolean isActivated = false;
     public boolean isFired = false;
     public double age = 0; // Age timestamp. Set to current UNIX time when node is newly formed.
     public double belief = 0;
@@ -97,7 +96,6 @@ public final class KnowledgeNode {
                 .append("threshold", threshold)
                 .append("belief", belief)
                 .append("strength", strength)
-                .append("isActivated", isActivated)
                 .append("isFired", isFired)
                 .append("age", age)
                 .append("maxAge", maxAge)
