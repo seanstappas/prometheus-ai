@@ -31,7 +31,7 @@ TestNG is a testing library much like JUnit. It is used for all the unit tests a
 ### Apache Commons Lang 3
 Apache Commons Lang provides many nice objects to avoid boilerplate code for Java objects. It is used for creating the `hashCode()`, `equals()` and `toString()` methods of most objects in the code. Details on this library can be found [here](https://commons.apache.org/proper/commons-lang/).
 
-### Graphstream
+### GraphStream
 Graphstream is used for plotting the KNN network. Details on this library can be found [here](http://graphstream-project.org/).
 
 ## Javadoc
