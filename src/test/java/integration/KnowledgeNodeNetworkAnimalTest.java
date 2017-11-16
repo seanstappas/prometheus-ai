@@ -20,7 +20,7 @@ import java.util.Set;
 import static org.testng.Assert.assertEquals;
 
 public class KnowledgeNodeNetworkAnimalTest {
-    private static final String ANIMAL_DATA_PATH = "data/animalData";
+    private static final String ANIMAL_DATA_PATH = "data/animalData.txt";
     private KnowledgeNodeNetwork knn;
 
     @BeforeTest
@@ -31,7 +31,7 @@ public class KnowledgeNodeNetworkAnimalTest {
 
 
     /**
-     * Sets up a KNN by reading a input data file (in this case called petData.txt)
+     * Sets up a KNN by reading a input data file (in this case called petData.txt.txt)
      */
     @BeforeMethod
     public void setupKNN() {

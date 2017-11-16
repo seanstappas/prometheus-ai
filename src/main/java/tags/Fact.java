@@ -16,7 +16,7 @@ import java.util.List;
  * Facts are composed of a predicate name and a set of arguments: P(ARG1, ARG2, ...)
  */
 
-public class Fact extends Tag implements Predicate {
+public class Fact extends Predicate {
 
     private String predicateName;
     private List<Argument> arguments;
@@ -38,7 +38,7 @@ public class Fact extends Tag implements Predicate {
         this.type = TagType.FACT;
         this.predicateName = tokens[0];
         this.arguments = argStringParser(tokens);
-        this.setConfidenceValue(confidenceValue);
+        this.setConfidence(confidenceValue);
     }
 
     /**

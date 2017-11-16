@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class KnowledgeNodeNetworkPetTest {
-    private static final String PET_DATA_PATH = "data/petData";
+    private static final String PET_DATA_PATH = "data/petData.txt";
     private KnowledgeNodeNetwork knn;
     private List<KnowledgeNode> knowledgeNodes = new ArrayList<>();
 

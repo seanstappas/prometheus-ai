@@ -14,7 +14,7 @@ import java.util.List;
  *<p>
  * Recommendations are composed of a predicate name and a set of arguments: @P(ARG1, ARG2, ...)
  */
-public class Recommendation extends Tag implements Predicate {
+public class Recommendation extends Predicate {
     private String predicateName;
     private List<Argument> arguments;
 
@@ -36,7 +36,7 @@ public class Recommendation extends Tag implements Predicate {
         this.type = TagType.RECOMMENDATION;
         this.predicateName = tokens[0].replace("@", "");
         this.arguments = argStringParser(tokens);
-        this.setConfidenceValue(confidenceValue);
+        this.setConfidence(confidenceValue);
     }
 
     /**

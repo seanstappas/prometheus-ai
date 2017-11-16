@@ -14,7 +14,7 @@ import tags.Tag;
 import java.util.*;
 
 public class KnnGrapher {
-    private static final String ANIMAL_DATA_PATH = "data/animalData";
+    private static final String ANIMAL_DATA_PATH = "data/animalData.txt";
 
     public static void main(String args[]) {
         // Create KNN

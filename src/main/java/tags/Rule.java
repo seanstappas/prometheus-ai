@@ -33,10 +33,10 @@ public class Rule extends Tag {
     private void setOutputFactsConfidenceValue() {
         double value = 1.0;
         for (Fact fact : this.inputFacts) {
-            value = value * fact.getConfidenceValue();
+            value = value * fact.getConfidence();
         }
         for (Predicate outputPredicate : this.outputPredicates) {
-            outputPredicate.setConfidenceValue(value);
+            outputPredicate.setConfidence(value);
         }
     }
 
@@ -73,7 +73,7 @@ public class Rule extends Tag {
         this.inputFacts = new HashSet<>(inputFacts);
         this.outputPredicates = new HashSet<>(outputPredicates);
         this.type = TagType.RULE;
-        this.setConfidenceValue(confidenceValue);
+        this.setConfidence(confidenceValue);
 
         setOutputFactsConfidenceValue();
     }
@@ -94,7 +94,7 @@ public class Rule extends Tag {
             addOutputPredicate(outputPredicate);
         }
         this.type = TagType.RULE;
-        this.setConfidenceValue(confidenceValue);
+        this.setConfidence(confidenceValue);
     }
 
     private void addOutputPredicate(String outputPredicate) {
@@ -201,7 +201,7 @@ public class Rule extends Tag {
 
         this.inputFacts = new HashSet<>(Arrays.asList(inputFacts));
         this.type = TagType.RULE;
-        this.setConfidenceValue(1.0);
+        this.setConfidence(1.0);
     }
 
     /**

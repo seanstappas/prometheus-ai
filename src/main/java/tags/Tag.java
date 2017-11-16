@@ -4,7 +4,7 @@ package tags;
  * Tag to be used throughout the Prometheus system. Possesses a confidence value.
  */
 public abstract class Tag {
-    private double confidenceValue;
+    private double confidence;
 
     /**
      * The type of the Tag (FACT, RULE, or RECOMMENDATION).
@@ -18,12 +18,12 @@ public abstract class Tag {
         EMPTY
     }
 
-    double getConfidenceValue() {
-        return confidenceValue;
+    double getConfidence() {
+        return confidence;
     }
 
-    public void setConfidenceValue(double confidenceValue) {
-        this.confidenceValue = confidenceValue;
+    void setConfidence(double confidence) {
+        this.confidence = confidence;
     }
 
     public TagType getType() {
