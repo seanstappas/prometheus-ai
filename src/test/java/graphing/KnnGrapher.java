@@ -27,7 +27,7 @@ public class KnnGrapher {
         Collections.shuffle(knowledgeNodes);
         Set<String> activeIDs = new HashSet<>();
         for (int i = 0; i < knowledgeNodes.size() / 2; i++) {
-            Tag inputTag = knowledgeNodes.get(i).inputTag;
+            Tag inputTag = knowledgeNodes.get(i).getInputTag();
             knn.addFiredTag(inputTag);
             activeIDs.add(inputTag.toString());
         }
@@ -47,8 +47,8 @@ public class KnnGrapher {
         graph.display();
 
         for (KnowledgeNode knowledgeNode : knowledgeNodes) {
-            String id = knowledgeNode.inputTag.toString();
-            for (Tag t : knowledgeNode.outputTags) {
+            String id = knowledgeNode.getInputTag().toString();
+            for (Tag t : knowledgeNode.getOutputTags()) {
                 String tagID = t.toString();
                 graph.addEdge(id + tagID, id, tagID);
             }

@@ -1,9 +1,7 @@
 package knn.internal;
 
 import com.google.inject.assistedinject.Assisted;
-import knn.api.KnowledgeNode;
-import knn.api.KnowledgeNodeNetwork;
-import knn.api.Tuple;
+import knn.api.*;
 import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
@@ -15,6 +13,10 @@ import java.util.*;
 class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
+    private DirectSearcher directSearcher;
+    private ForwardSearcher forwardSearcher;
+    private BackwardSearcher backwardSearcher;
+    private LambdaSearcher lambdaSearcher;
 
     // TODO: Implement "direct" search of a Tag, which excites a node and returns activated Tags
     // TODO: Make forward search call "direct" search repeatedly
@@ -24,16 +26,21 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     // TODO: Implement "lambda" searching as described in doc (ply-limited backwards + forwards search)
     // TODO: Sort nodes by age before searching
 
-    // TODO?: Discuss thinking vs searching
-    // TODO?: Continue cascading activation even if node is already active?
-    // TODO?: Backward search: makes more sense to have matching number instead of ratio
-
     @Inject
     public KnowledgeNodeNetworkImpl(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
-            @Assisted("activeTags") Set<Tag> activeTags) {
+            @Assisted("activeTags") Set<Tag> activeTags,
+            @Assisted("backwardSearchMatchRatio") double backwardSearchMatchRatio,
+            DirectSearcherFactory directSearcherFactory,
+            ForwardSearcherFactory forwardSearcherFactory,
+            BackwardSearcherFactory backwardSearcherFactory,
+            LambdaSearcherFactory lambdaSearcherFactory) {
         this.mapKN = mapKN;
         this.activeTags = activeTags;
+        this.directSearcher = directSearcherFactory.create(mapKN, activeTags);
+        this.forwardSearcher = forwardSearcherFactory.create(directSearcher);
+        this.backwardSearcher = backwardSearcherFactory.create(mapKN, activeTags, backwardSearchMatchRatio);
+        this.lambdaSearcher = lambdaSearcherFactory.create(forwardSearcher, backwardSearcher);
     }
 
     @Override
@@ -59,7 +66,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void addKnowledgeNode(KnowledgeNode kn) {
-        mapKN.put(kn.inputTag, kn);
+        mapKN.put(kn.getInputTag(), kn);
     }
 
     @Override
@@ -84,47 +91,26 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     // ------------------ REFACTORED SEARCH START ------------------
 
+    @Override
     public Set<Tag> directSearch(Tag inputTag) {
-        Set<Tag> activatedTags = new HashSet<>();
-        if (mapKN.containsKey(inputTag)) {
-            this.activeTags.add(inputTag);
-            KnowledgeNode kn = mapKN.get(inputTag);
-            boolean fired = kn.excite();
-            if (fired) {
-                activatedTags.addAll(kn.outputTags);
-            }
-        }
-        this.activeTags.addAll(activatedTags);
-        return activatedTags; // return activated OUTPUT tags (excluding the provided input)
+        return directSearcher.search(inputTag);
     }
 
     public Set<Tag> forwardThink() {
-        return forwardSearch(this.activeTags);
+        return forwardSearcher.search(this.activeTags);
     }
 
     public Set<Tag> forwardThink(int ply) {
-        return forwardSearch(this.activeTags, ply);
+        return forwardSearcher.search(this.activeTags, ply);
     }
 
     public Set<Tag> forwardSearch(Set<Tag> inputTags) {
-        return forwardSearch(inputTags, Integer.MAX_VALUE);
+        return forwardSearcher.search(inputTags);
     }
 
+    @Override
     public Set<Tag> forwardSearch(Set<Tag> inputTags, int ply) {
-        Set<Tag> allActivatedTags = new HashSet<>(inputTags);
-        for (int i = 0; i < ply; i++) {
-            Set<Tag> activatedTags = new HashSet<>();
-            for (Tag t : inputTags) {
-                Set<Tag> directActivatedTags = directSearch(t);
-                activatedTags.addAll(directActivatedTags);
-            }
-            allActivatedTags.addAll(activatedTags);
-            if (activatedTags.isEmpty()) {
-                break;
-            }
-            inputTags = activatedTags;
-        }
-        return allActivatedTags;
+        return forwardSearcher.search(inputTags, ply);
     }
 
     public Set<Tag> backwardThink(int ply) {
@@ -225,13 +211,13 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         Set<Tag> prevActiveTags = new HashSet<>(activeTags);
         for (KnowledgeNode kn : mapKN.values()) {
             int matching = 0;
-            for (Tag t : kn.outputTags) {
+            for (Tag t : kn.getOutputTags()) {
                 if (prevActiveTags.contains(t)) {
                     matching++;
                 }
             }
-            if ((double) matching / kn.outputTags.size() >= score) {
-                Tag knType = kn.inputTag;
+            if ((double) matching / kn.getOutputTags().size() >= score) {
+                Tag knType = kn.getInputTag();
                 kn.updateBelief();
                 if (!activeTags.contains(knType)) {
                     pendingFacts.add(knType);
@@ -245,20 +231,20 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public void getInputForBackwardSearch(List<Tuple> nnOutputs) {
         for (Tuple tp : nnOutputs) {
             for (KnowledgeNode kn : mapKN.values()) {
-                if (kn.inputTag instanceof Fact) {
-                    if (((Fact) kn.inputTag).getPredicateName().equals(tp.s)) {
+                if (kn.getInputTag() instanceof Fact) {
+                    if (((Fact) kn.getInputTag()).getPredicateName().equals(tp.s)) {
                         kn.updateBelief();
-                        activeTags.add(kn.inputTag);
+                        activeTags.add(kn.getInputTag());
                     }
-                } else if (kn.inputTag instanceof Recommendation) {
-                    if (((Recommendation) kn.inputTag).getPredicateName().equals(tp.s)) {
+                } else if (kn.getInputTag() instanceof Recommendation) {
+                    if (((Recommendation) kn.getInputTag()).getPredicateName().equals(tp.s)) {
                         kn.updateBelief();
-                        activeTags.add(kn.inputTag);
+                        activeTags.add(kn.getInputTag());
                     }
-                } else if (kn.inputTag instanceof Rule) {
-                    if (kn.inputTag.toString().equals(tp.s)) {
+                } else if (kn.getInputTag() instanceof Rule) {
+                    if (kn.getInputTag().toString().equals(tp.s)) {
                         kn.updateBelief();
-                        activeTags.add(kn.inputTag);
+                        activeTags.add(kn.getInputTag());
                     }
                 }
             }
@@ -304,16 +290,16 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public void getInputForForwardSearch(List<Tuple> nnOutputs) {
         for (Tuple tp : nnOutputs) {
             for (KnowledgeNode kn : mapKN.values()) {
-                if (kn.inputTag instanceof Fact) {
-                    if (((Fact) kn.inputTag).getPredicateName().equals(tp.s)) {
+                if (kn.getInputTag() instanceof Fact) {
+                    if (((Fact) kn.getInputTag()).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
                     }
-                } else if (kn.inputTag instanceof Recommendation) {
-                    if (((Recommendation) kn.inputTag).getPredicateName().equals(tp.s)) {
+                } else if (kn.getInputTag() instanceof Recommendation) {
+                    if (((Recommendation) kn.getInputTag()).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
                     }
-                } else if (kn.inputTag instanceof Rule) {
-                    if (kn.inputTag.toString().equals(tp.s)) {
+                } else if (kn.getInputTag() instanceof Rule) {
+                    if (kn.getInputTag().toString().equals(tp.s)) {
                         excite(kn, tp.value);
                     }
                 }
@@ -325,14 +311,14 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public void excite(KnowledgeNode kn, int value) {
         kn.excite(value);
         if (kn.activation * kn.strength >= kn.threshold) {
-            Tag ownTag = kn.inputTag;
+            Tag ownTag = kn.getInputTag();
             if (value != 0) {
                 kn.updateBelief();
                 activeTags.add(ownTag);
             }
             fire(kn);
             kn.isFired = true;
-            for (Tag t : kn.outputTags) {
+            for (Tag t : kn.getOutputTags()) {
                 updateConfidence(mapKN.get(t));
             }
         }
@@ -340,7 +326,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void fire(KnowledgeNode kn) {
-        for (Tag t : kn.outputTags) {
+        for (Tag t : kn.getOutputTags()) {
             KnowledgeNode currentKN = mapKN.get(t);
             currentKN.activation += 100;
             if (currentKN.activation >= currentKN.threshold) {
@@ -461,11 +447,11 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private List<Tag> pathFinder(Tag start, Tag end, List<Tag> badComponents) {
         List<Tag> currentPath = new ArrayList<>();
         currentPath.add(start);
-        if (mapKN.get(start).outputTags.contains(end) && !badComponents.contains(start)) {
+        if (mapKN.get(start).getOutputTags().contains(end) && !badComponents.contains(start)) {
             currentPath.add(end);
             return currentPath;
         } else {
-            for (Tag t : mapKN.get(start).outputTags) {
+            for (Tag t : mapKN.get(start).getOutputTags()) {
                 List<Tag> template = pathFinder(t, end, badComponents);
                 if (template.get(template.size() - 1).equals(end) && !badComponents.contains(start)) {
                     currentPath.addAll(template);
@@ -509,9 +495,9 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         do {
             added = false;
             for (KnowledgeNode kn : mapKN.values()) {
-                for (Tag tg : kn.outputTags) {
+                for (Tag tg : kn.getOutputTags()) {
                     if (allParents.contains(tg)) {
-                        Tag knType = kn.inputTag;
+                        Tag knType = kn.getInputTag();
                         if (!allParents.contains(knType)) {
                             allParents.add(knType);
                             added = true;
@@ -533,7 +519,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
      */
     private void depthFirstSearch(Tag tag, List<Tag> tagsFound) {
         tagsFound.add(tag);
-        for (Tag t : mapKN.get(tag).outputTags) {
+        for (Tag t : mapKN.get(tag).getOutputTags()) {
             if (!tagsFound.contains(t)) {
                 depthFirstSearch(t, tagsFound);
             }

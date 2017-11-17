@@ -60,6 +60,10 @@ public interface KnowledgeNodeNetwork {
 
     KnowledgeNode getKnowledgeNode(Tag tag);
 
+    Set<Tag> directSearch(Tag inputTag);
+
+    Set<Tag> forwardSearch(Set<Tag> inputTags, int ply);
+
     /**
      * Lambda search, a search to find out the best relation between a know list of tags and a wanted item tag
      *

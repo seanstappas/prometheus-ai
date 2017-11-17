@@ -15,8 +15,8 @@ import java.util.Set;
 public class KnowledgeNode {
     // Final fields
     private static final double[] SIGMOID_VALUES = {0, 2, 5, 11, 27, 50, 73, 88, 95, 98, 100}; //sigmoid function activation value
-    public final Tag inputTag;
-    public final Set<Tag> outputTags;  // Integer is the value of confidence
+    private final Tag inputTag;
+    private final Set<Tag> outputTags;  // Integer is the value of confidence
     public final double threshold; // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
     public final int strength; // Which strength approach to take?
     private final double maxAge;
@@ -118,4 +118,13 @@ public class KnowledgeNode {
         return activation;
     }
 
+
+    public Tag getInputTag() {
+        return inputTag;
+    }
+
+
+    public Set<Tag> getOutputTags() {
+        return outputTags;
+    }
 }

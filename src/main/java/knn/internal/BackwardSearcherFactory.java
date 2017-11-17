@@ -1,16 +1,17 @@
-package knn.api;
+package knn.internal;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import knn.api.KnowledgeNode;
 import tags.Tag;
 
 import java.util.Map;
 import java.util.Set;
 
-public interface KnowledgeNodeNetworkFactory {
+interface BackwardSearcherFactory {
     @Inject
-    KnowledgeNodeNetwork create(
+    BackwardSearcher create(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
             @Assisted("activeTags") Set<Tag> activeTags,
-            @Assisted("backwardSearchMatchRatio") double backwardSearchMatchRatio);
+            @Assisted("partialMatchRatio") double partialMatchRatio);
 }

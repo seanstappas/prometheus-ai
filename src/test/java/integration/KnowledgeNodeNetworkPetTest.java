@@ -44,7 +44,7 @@ public class KnowledgeNodeNetworkPetTest {
     @Test
     public void fireTesting(){
         for(KnowledgeNode kn : knowledgeNodes){
-            Tag t = kn.inputTag;
+            Tag t = kn.getInputTag();
             if(t instanceof Fact){
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("dog"))
@@ -66,7 +66,7 @@ public class KnowledgeNodeNetworkPetTest {
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
 
         for(KnowledgeNode kn : knowledgeNodes){
-            Tag t = kn.inputTag;
+            Tag t = kn.getInputTag();
             if(t instanceof Fact){
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("dog"))
@@ -87,7 +87,7 @@ public class KnowledgeNodeNetworkPetTest {
     @Test
     public void exciteTest(){
         for(KnowledgeNode kn : knowledgeNodes){
-            Tag t = kn.inputTag;
+            Tag t = kn.getInputTag();
             if(t instanceof Fact){
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("dog")){
@@ -104,7 +104,7 @@ public class KnowledgeNodeNetworkPetTest {
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
 
         for(KnowledgeNode kn : knowledgeNodes){
-            Tag t = kn.inputTag;
+            Tag t = kn.getInputTag();
             if(t instanceof Fact){
                 Fact f = (Fact)t;
                 if(f.getPredicateName().equals("husky")){

@@ -10,5 +10,14 @@ public class KnowledgeNodeNetworkInternalModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(KnowledgeNodeNetwork.class, KnowledgeNodeNetworkImpl.class)
                 .build(KnowledgeNodeNetworkFactory.class));
+
+        install(new FactoryModuleBuilder()
+                .build(DirectSearcherFactory.class));
+        install(new FactoryModuleBuilder()
+                .build(ForwardSearcherFactory.class));
+        install(new FactoryModuleBuilder()
+                .build(BackwardSearcherFactory.class));
+        install(new FactoryModuleBuilder()
+                .build(LambdaSearcherFactory.class));
     }
 }
