@@ -12,7 +12,7 @@ import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class KnowledgeNode {
+public class KnowledgeNode {
     // Final fields
     private static final double[] SIGMOID_VALUES = {0, 2, 5, 11, 27, 50, 73, 88, 95, 98, 100}; //sigmoid function activation value
     public final Tag inputTag;
@@ -102,12 +102,16 @@ public final class KnowledgeNode {
                 .toString();
     }
 
-    public void increaseActivation() {
-        this.activation++;
+    public boolean excite() {
+        double oldActivation = activation;
+        activation++;
+        return oldActivation < threshold && activation >= threshold;
     }
 
-    public void increaseActivation(int value) {
-        this.activation = this.activation + SIGMOID_VALUES[value];
+    public boolean excite(int value) {
+        double oldActivation = activation;
+        activation += SIGMOID_VALUES[value];
+        return oldActivation < threshold && activation >= threshold;
     }
 
     public double getActivation() {

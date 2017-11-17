@@ -16,6 +16,18 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
 
+    // TODO: Implement "direct" search of a Tag, which excites a node and returns activated Tags
+    // TODO: Make forward search call "direct" search repeatedly
+    // TODO: Provide list of Tags as input to all the "search" methods. "Thinking" will call "search" on ALL active Tags
+    // TODO: Create "Searcher" class for forwards, backwards and lambda, each "search" method returns activated Tags
+    // TODO: Make "search" methods return ALL activated Tags
+    // TODO: Implement "lambda" searching as described in doc (ply-limited backwards + forwards search)
+    // TODO: Sort nodes by age before searching
+
+    // TODO?: Discuss thinking vs searching
+    // TODO?: Continue cascading activation even if node is already active?
+    // TODO?: Backward search: makes more sense to have matching number instead of ratio
+
     @Inject
     public KnowledgeNodeNetworkImpl(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
@@ -69,6 +81,65 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public KnowledgeNode getKnowledgeNode(Tag tag) {
         return mapKN.get(tag);
     }
+
+    // ------------------ REFACTORED SEARCH START ------------------
+
+    public Set<Tag> directSearch(Tag inputTag) {
+        Set<Tag> activatedTags = new HashSet<>();
+        if (mapKN.containsKey(inputTag)) {
+            this.activeTags.add(inputTag);
+            KnowledgeNode kn = mapKN.get(inputTag);
+            boolean fired = kn.excite();
+            if (fired) {
+                activatedTags.addAll(kn.outputTags);
+            }
+        }
+        this.activeTags.addAll(activatedTags);
+        return activatedTags; // return activated OUTPUT tags (excluding the provided input)
+    }
+
+    public Set<Tag> forwardThink() {
+        return forwardSearch(this.activeTags);
+    }
+
+    public Set<Tag> forwardThink(int ply) {
+        return forwardSearch(this.activeTags, ply);
+    }
+
+    public Set<Tag> forwardSearch(Set<Tag> inputTags) {
+        return forwardSearch(inputTags, Integer.MAX_VALUE);
+    }
+
+    public Set<Tag> forwardSearch(Set<Tag> inputTags, int ply) {
+        Set<Tag> allActivatedTags = new HashSet<>(inputTags);
+        for (int i = 0; i < ply; i++) {
+            Set<Tag> activatedTags = new HashSet<>();
+            for (Tag t : inputTags) {
+                Set<Tag> directActivatedTags = directSearch(t);
+                activatedTags.addAll(directActivatedTags);
+            }
+            allActivatedTags.addAll(activatedTags);
+            if (activatedTags.isEmpty()) {
+                break;
+            }
+            inputTags = activatedTags;
+        }
+        return allActivatedTags;
+    }
+
+    public Set<Tag> backwardThink(int ply) {
+        return backwardSearch(this.activeTags, ply, 1);
+    }
+
+    public Set<Tag> backwardSearch(Set<Tag> inputTags, int ply, int numRequiredMatches) {
+        return null;
+    }
+
+    public Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply) {
+        return null;
+    }
+
+    // ------------------ REFACTORED SEARCH END ------------------
 
     @Override
     public void lambdaSearch(List<Tuple> nnOutputs, Tag item) {
@@ -252,7 +323,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void excite(KnowledgeNode kn, int value) {
-        kn.increaseActivation(value);
+        kn.excite(value);
         if (kn.activation * kn.strength >= kn.threshold) {
             Tag ownTag = kn.inputTag;
             if (value != 0) {

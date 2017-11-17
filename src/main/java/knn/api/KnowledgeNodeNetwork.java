@@ -54,7 +54,7 @@ public interface KnowledgeNodeNetwork {
     /**
      * Get access of active Tags
      *
-     * @return	the Access of active Tags
+     * @return the Access of active Tags
      */
     Set<Tag> getActiveTags();
 
@@ -64,7 +64,7 @@ public interface KnowledgeNodeNetwork {
      * Lambda search, a search to find out the best relation between a know list of tags and a wanted item tag
      *
      * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param item the wanted item tag
+     * @param item      the wanted item tag
      */
     void lambdaSearch(List<Tuple> nnOutputs, Tag item);
 
@@ -72,7 +72,9 @@ public interface KnowledgeNodeNetwork {
      * Backward searching with unlimited time
      *
      * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param score the minimum number of matching needed from the output list of a KN in order for that KN to become active.
+     * @param score     the minimum number of matching needed from the output list of a KN in order for that KN to
+     *                  become active. For example, if score = 0.5, than at least half of the provided input tags must
+     *                  be found in the output tags of a KN to activate that KN.
      */
     void backwardSearch(List<Tuple> nnOutputs, double score);
 
@@ -88,8 +90,8 @@ public interface KnowledgeNodeNetwork {
      * Backward search with ply as input
      *
      * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param score indication of SIGMOID_VALUES
-     * @param ply number of cycle the AI wanted to search
+     * @param score     indication of SIGMOID_VALUES
+     * @param ply       number of cycle the AI wanted to search
      */
     void backwardSearch(List<Tuple> nnOutputs, double score, int ply);
 
@@ -97,7 +99,7 @@ public interface KnowledgeNodeNetwork {
      * Forward searching with ply as number of depth
      *
      * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param ply number of time of searching in the knowledge node network
+     * @param ply       number of time of searching in the knowledge node network
      */
     void forwardSearch(List<Tuple> nnOutputs, int ply);
 
@@ -119,9 +121,9 @@ public interface KnowledgeNodeNetwork {
     /**
      * Excites a Knowledge Node.
      *
-     * @param kn the Knowledge Node to excite
+     * @param kn    the Knowledge Node to excite
      * @param value the SIGMOID_VALUES from the neural network
-     * If excitation leads to firing, this will add the fired kn to the activeTag.
+     *              If excitation leads to firing, this will add the fired kn to the activeTag.
      */
     void excite(KnowledgeNode kn, int value);
 

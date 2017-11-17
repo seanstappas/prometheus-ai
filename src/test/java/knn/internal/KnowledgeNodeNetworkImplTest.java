@@ -1,11 +1,15 @@
 package knn.internal;
 
 import com.google.inject.Guice;
+import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import prometheus.api.Prometheus;
 import prometheus.guice.PrometheusModule;
+import tags.Tag;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by seanstappas1 on 2017-10-13.
@@ -17,6 +21,15 @@ public class KnowledgeNodeNetworkImplTest {
     public void setUp() throws Exception {
         Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
         knn = prometheus.getKnowledgeNodeNetwork();
+    }
+
+    @Test
+    public void mustDirectSearch() throws Exception {
+        Tag tagToActivate = mock(Tag.class);
+        KnowledgeNode knToFire = mock(KnowledgeNode.class);
+
+        // given
+
     }
 
     @Test
