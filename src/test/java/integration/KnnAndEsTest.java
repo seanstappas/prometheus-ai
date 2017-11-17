@@ -64,17 +64,12 @@ public class KnnAndEsTest {
         Set<Rule> expectedInitialRules = new HashSet<>();
 
         for (Tag t : activatedTags) {
-            switch (t.type) {
-                case FACT:
-                    expectedInitialFacts.add((Fact) t);
-                    break;
-                case RULE:
-                    expectedInitialRules.add((Rule) t);
-                    break;
-                case RECOMMENDATION:
-                    expectedInitialRecommendations.add((Recommendation) t);
-                    break;
-            }
+            if (t instanceof Fact)
+                expectedInitialFacts.add((Fact) t);
+            else if (t instanceof Rule)
+                expectedInitialRules.add((Rule) t);
+            else if (t instanceof Recommendation)
+                expectedInitialRecommendations.add((Recommendation) t);
         }
         System.out.println("[ES] Initial activated tags (from KNN): " + activatedTags);
 

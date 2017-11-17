@@ -6,6 +6,7 @@ import knn.api.KnowledgeNodeNetwork;
 import knn.api.Tuple;
 import tags.Fact;
 import tags.Recommendation;
+import tags.Rule;
 import tags.Tag;
 
 import javax.inject.Inject;
@@ -173,17 +174,17 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public void getInputForBackwardSearch(List<Tuple> nnOutputs) {
         for (Tuple tp : nnOutputs) {
             for (KnowledgeNode kn : mapKN.values()) {
-                if (kn.inputTag.type.equals(Tag.TagType.FACT)) {
+                if (kn.inputTag instanceof Fact) {
                     if (((Fact) kn.inputTag).getPredicateName().equals(tp.s)) {
                         kn.updateBelief();
                         activeTags.add(kn.inputTag);
                     }
-                } else if (kn.inputTag.type.equals(Tag.TagType.RECOMMENDATION)) {
+                } else if (kn.inputTag instanceof Recommendation) {
                     if (((Recommendation) kn.inputTag).getPredicateName().equals(tp.s)) {
                         kn.updateBelief();
                         activeTags.add(kn.inputTag);
                     }
-                } else if (kn.inputTag.type.equals(Tag.TagType.RULE)) {
+                } else if (kn.inputTag instanceof Rule) {
                     if (kn.inputTag.toString().equals(tp.s)) {
                         kn.updateBelief();
                         activeTags.add(kn.inputTag);
@@ -232,15 +233,15 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public void getInputForForwardSearch(List<Tuple> nnOutputs) {
         for (Tuple tp : nnOutputs) {
             for (KnowledgeNode kn : mapKN.values()) {
-                if (kn.inputTag.type.equals(Tag.TagType.FACT)) {
+                if (kn.inputTag instanceof Fact) {
                     if (((Fact) kn.inputTag).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
                     }
-                } else if (kn.inputTag.type.equals(Tag.TagType.RECOMMENDATION)) {
+                } else if (kn.inputTag instanceof Recommendation) {
                     if (((Recommendation) kn.inputTag).getPredicateName().equals(tp.s)) {
                         excite(kn, tp.value);
                     }
-                } else if (kn.inputTag.type.equals(Tag.TagType.RULE)) {
+                } else if (kn.inputTag instanceof Rule) {
                     if (kn.inputTag.toString().equals(tp.s)) {
                         excite(kn, tp.value);
                     }

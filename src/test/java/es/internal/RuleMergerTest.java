@@ -5,7 +5,6 @@ import org.testng.annotations.Test;
 import tags.Fact;
 import tags.Predicate;
 import tags.Rule;
-import tags.Tag;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -13,7 +12,8 @@ import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 
 
 public class RuleMergerTest {
@@ -51,11 +51,6 @@ public class RuleMergerTest {
         predicates2.add(p2);
 
         // given
-        when(fact1.getType()).thenReturn(Tag.TagType.FACT);
-        when(fact2.getType()).thenReturn(Tag.TagType.FACT);
-        when(p1.getType()).thenReturn(Tag.TagType.FACT);
-        when(p2.getType()).thenReturn(Tag.TagType.FACT);
-
         when(fact1.matches(p2)).thenReturn(false);
         when(fact2.matches(p1)).thenReturn(false);
 
@@ -99,11 +94,6 @@ public class RuleMergerTest {
         predicates2.add(p2);
 
         // given
-        when(fact1.getType()).thenReturn(Tag.TagType.FACT);
-        when(fact2.getType()).thenReturn(Tag.TagType.FACT);
-        when(p1.getType()).thenReturn(Tag.TagType.FACT);
-        when(p2.getType()).thenReturn(Tag.TagType.FACT);
-
         when(p2.matches(fact1)).thenReturn(false);
         when(fact1.matches(p2)).thenReturn(false);
 

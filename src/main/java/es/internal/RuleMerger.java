@@ -3,7 +3,6 @@ package es.internal;
 import tags.Fact;
 import tags.Predicate;
 import tags.Rule;
-import tags.Tag;
 
 import java.util.Optional;
 import java.util.Set;
@@ -17,7 +16,7 @@ class RuleMerger {
                     for (Fact inputFact : ruleOne.getInputFacts()) {
                         if (match) {
                             for (Predicate outputIPredicate : ruleTwo.getOutputPredicates()) {
-                                if (outputIPredicate.getType() != Tag.TagType.FACT ||
+                                if (!(outputIPredicate instanceof Fact) ||
                                         !((Fact)outputIPredicate).matches(inputFact)) {
                                     match = false;
                                     break;

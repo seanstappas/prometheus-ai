@@ -164,11 +164,6 @@ public class ExpertSystemImplTest {
         tags.add(fact);
         tags.add(recommendation);
 
-        // given
-        when(rule.getType()).thenReturn(Tag.TagType.RULE);
-        when(fact.getType()).thenReturn(Tag.TagType.FACT);
-        when(recommendation.getType()).thenReturn(Tag.TagType.RECOMMENDATION);
-
         // when
         es.addTags(tags);
 
@@ -183,9 +178,6 @@ public class ExpertSystemImplTest {
     public void mustNotAddInvalidTag() throws Exception {
         Tag tag = mock(Tag.class);
 
-        // given
-        when(tag.getType()).thenReturn(Tag.TagType.EMPTY);
-
         // when
         boolean actualAddResult = es.addTag(tag);
 
@@ -196,9 +188,6 @@ public class ExpertSystemImplTest {
     @Test
     public void mustAddRuleTag() throws Exception {
         Rule rule = mock(Rule.class);
-
-        // given
-        when(rule.getType()).thenReturn(Tag.TagType.RULE);
 
         // when
         es.addTag(rule);
@@ -212,9 +201,6 @@ public class ExpertSystemImplTest {
     public void mustAddFactTag() throws Exception {
         Fact fact = mock(Fact.class);
 
-        // given
-        when(fact.getType()).thenReturn(Tag.TagType.FACT);
-
         // when
         es.addTag(fact);
 
@@ -226,9 +212,6 @@ public class ExpertSystemImplTest {
     public void mustAddRecommendationTag() throws Exception {
         Recommendation recommendation = mock(Recommendation.class);
 
-        // given
-        when(recommendation.getType()).thenReturn(Tag.TagType.RECOMMENDATION);
-
         // when
         es.addTag(recommendation);
 
@@ -239,9 +222,6 @@ public class ExpertSystemImplTest {
     @Test
     public void mustAddRule() throws Exception {
         Rule rule = mock(Rule.class);
-
-        // given
-        when(rule.getType()).thenReturn(Tag.TagType.RULE);
 
         // when
         es.addReadyRule(rule);
@@ -255,9 +235,6 @@ public class ExpertSystemImplTest {
     public void mustAddFact() throws Exception {
         Fact fact = mock(Fact.class);
 
-        // given
-        when(fact.getType()).thenReturn(Tag.TagType.FACT);
-
         // when
         es.addFact(fact);
 
@@ -268,9 +245,6 @@ public class ExpertSystemImplTest {
     @Test
     public void mustAddRecommendation() throws Exception {
         Recommendation recommendation = mock(Recommendation.class);
-
-        // given
-        when(recommendation.getType()).thenReturn(Tag.TagType.RECOMMENDATION);
 
         // when
         es.addRecommendation(recommendation);

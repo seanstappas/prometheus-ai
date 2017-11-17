@@ -35,7 +35,6 @@ public class Fact extends Predicate {
 
         String[] tokens = value.split("[(),]");
 
-        this.type = TagType.FACT;
         this.predicateName = tokens[0];
         this.arguments = argStringParser(tokens);
         this.setConfidence(confidenceValue);

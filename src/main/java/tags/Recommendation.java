@@ -33,7 +33,6 @@ public class Recommendation extends Predicate {
 
         String[] tokens = value.split("[(),]");
 
-        this.type = TagType.RECOMMENDATION;
         this.predicateName = tokens[0].replace("@", "");
         this.arguments = argStringParser(tokens);
         this.setConfidence(confidenceValue);

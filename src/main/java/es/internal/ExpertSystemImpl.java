@@ -82,14 +82,12 @@ class ExpertSystemImpl implements ExpertSystem {
 
     @Override
     public boolean addTag(Tag tag) {
-        switch (tag.getType()) {
-            case RULE:
-                return addReadyRule((Rule) tag);
-            case FACT:
-                return addFact((Fact) tag);
-            case RECOMMENDATION:
-                return addRecommendation((Recommendation) tag);
-        }
+        if (tag instanceof Rule)
+            return addReadyRule((Rule) tag);
+        else if (tag instanceof Fact)
+            return addFact((Fact) tag);
+        else if (tag instanceof Recommendation)
+            return addRecommendation((Recommendation) tag);
         return false;
     }
 

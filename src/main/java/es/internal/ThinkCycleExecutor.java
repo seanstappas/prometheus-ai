@@ -61,12 +61,10 @@ class ThinkCycleExecutor {
      * @return <code>true</code> if the Predicate is successfully added
      */
     private boolean addPredicate(Predicate predicate) {
-        switch (predicate.getType()) {
-            case FACT:
-                return facts.add((Fact) predicate);
-            case RECOMMENDATION:
-                return recommendations.add((Recommendation) predicate);
-        }
+        if (predicate instanceof Fact)
+            return facts.add((Fact) predicate);
+        else if (predicate instanceof Recommendation)
+            return recommendations.add((Recommendation) predicate);
         return false;
     }
 
