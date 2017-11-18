@@ -114,15 +114,15 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     public Set<Tag> backwardThink(int ply) {
-        return backwardSearch(this.activeTags, ply, 1);
+        return backwardSearcher.search(this.activeTags, ply);
     }
 
-    public Set<Tag> backwardSearch(Set<Tag> inputTags, int ply, int numRequiredMatches) {
-        return null;
+    public Set<Tag> backwardSearch(Set<Tag> inputTags, int ply) {
+        return backwardSearcher.search(inputTags, ply);
     }
 
     public Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply) {
-        return null;
+        return lambdaSearcher.search(inputTags, ply);
     }
 
     // ------------------ REFACTORED SEARCH END ------------------
