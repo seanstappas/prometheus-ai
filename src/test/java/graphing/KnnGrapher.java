@@ -47,10 +47,10 @@ public class KnnGrapher {
         graph.display();
 
         for (KnowledgeNode knowledgeNode : knowledgeNodes) {
-            String id = knowledgeNode.getInputTag().toString();
+            String inputID = knowledgeNode.getInputTag().toString();
             for (Tag t : knowledgeNode.getOutputTags()) {
-                String tagID = t.toString();
-                graph.addEdge(id + tagID, id, tagID);
+                String outputID = t.toString();
+                graph.addEdge(inputID + outputID, inputID, outputID, true);
             }
         }
 
