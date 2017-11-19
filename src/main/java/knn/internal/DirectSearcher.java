@@ -27,7 +27,7 @@ class DirectSearcher {
      * @param inputTag the input Tag to search for
      * @return the activated output tags (excluding the given input Tag)
      */
-    public Set<Tag> search(Tag inputTag) {
+    Set<Tag> search(Tag inputTag) {
         Set<Tag> activatedTags = new HashSet<>();
         if (mapKN.containsKey(inputTag)) {
             KnowledgeNode kn = mapKN.get(inputTag);

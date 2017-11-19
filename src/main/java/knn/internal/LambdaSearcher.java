@@ -19,7 +19,7 @@ class LambdaSearcher extends Searcher<Set<Tag>> {
     }
 
     @Override
-    public Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
+    Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
         Set<Tag> backwardTags = backwardSearcher.search(inputTags, ply);
         return forwardSearcher.search(backwardTags, ply);
     }
