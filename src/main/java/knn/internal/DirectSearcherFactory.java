@@ -8,7 +8,7 @@ import tags.Tag;
 import java.util.Map;
 import java.util.Set;
 
-public interface DirectSearcherFactory {
+interface DirectSearcherFactory {
     @Inject
     DirectSearcher create(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,

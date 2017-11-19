@@ -36,7 +36,7 @@ public class LambdaSearcherTest {
         when(forwardSearcher.search(backwardTags, ply)).thenReturn(forwardTags);
 
         // when
-        Set<Tag> activatedTags = lambdaSearcher.search(inputTags, ply);
+        Set<Tag> activatedTags = lambdaSearcher.searchInternal(inputTags, ply);
 
         // then
         assertEquals(forwardTags, activatedTags);

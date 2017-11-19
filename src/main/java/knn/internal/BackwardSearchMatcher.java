@@ -3,12 +3,11 @@ package knn.internal;
 import knn.api.KnowledgeNode;
 import tags.Tag;
 
-import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 class BackwardSearchMatcher {
-    public Set<Tag> match(Set<Tag> inputTags, KnowledgeNode kn, int numRequiredMatches) {
-        Set<Tag> activatedTags = new HashSet<>();
+    public Optional<Tag> match(Set<Tag> inputTags, KnowledgeNode kn, int numRequiredMatches) {
         int matchCount = 0;
         for (Tag t : inputTags) {
             if (kn.getOutputTags().contains(t)) {
@@ -18,10 +17,9 @@ class BackwardSearchMatcher {
         if (matchCount >= numRequiredMatches) {
             boolean fired = kn.excite();
             if (fired) {
-                activatedTags.add(kn.getInputTag());
-                activatedTags.addAll(kn.getOutputTags());
+                return Optional.of(kn.getInputTag());
             }
         }
-        return activatedTags;
+        return Optional.empty();
     }
 }

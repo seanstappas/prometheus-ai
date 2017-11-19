@@ -96,33 +96,34 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         return directSearcher.search(inputTag);
     }
 
-    public Set<Tag> forwardThink() {
-        return forwardSearcher.search(this.activeTags);
-    }
-
-    public Set<Tag> forwardThink(int ply) {
-        return forwardSearcher.search(this.activeTags, ply);
-    }
-
-    public Set<Tag> forwardSearch(Set<Tag> inputTags) {
-        return forwardSearcher.search(inputTags);
-    }
-
     @Override
     public Set<Tag> forwardSearch(Set<Tag> inputTags, int ply) {
         return forwardSearcher.search(inputTags, ply);
     }
 
-    public Set<Tag> backwardThink(int ply) {
-        return backwardSearcher.search(this.activeTags, ply);
+    @Override
+    public Set<Tag> forwardThink(int ply) {
+        return forwardSearcher.search(activeTags, ply);
     }
 
+    @Override
     public Set<Tag> backwardSearch(Set<Tag> inputTags, int ply) {
         return backwardSearcher.search(inputTags, ply);
     }
 
+    @Override
+    public Set<Tag> backwardThink(int ply) {
+        return backwardSearcher.search(activeTags, ply);
+    }
+
+    @Override
     public Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply) {
         return lambdaSearcher.search(inputTags, ply);
+    }
+
+    @Override
+    public Set<Tag> lambdaThink(int ply) {
+        return lambdaSearcher.search(activeTags, ply);
     }
 
     // ------------------ REFACTORED SEARCH END ------------------

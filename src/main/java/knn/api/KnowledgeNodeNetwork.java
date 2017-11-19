@@ -64,6 +64,16 @@ public interface KnowledgeNodeNetwork {
 
     Set<Tag> forwardSearch(Set<Tag> inputTags, int ply);
 
+    Set<Tag> forwardThink(int ply);
+
+    Set<Tag> backwardSearch(Set<Tag> inputTags, int ply);
+
+    Set<Tag> backwardThink(int ply);
+
+    Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply);
+
+    Set<Tag> lambdaThink(int ply);
+
     /**
      * Lambda match, a match to find out the best relation between a know list of tags and a wanted item tag
      *

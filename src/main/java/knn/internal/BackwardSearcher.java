@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class BackwardSearcher extends Searcher<Set<Tag>> {
+class BackwardSearcher extends Searcher<Set<Tag>> {
     private final Map<Tag, KnowledgeNode> mapKN;
     private final Set<Tag> activeTags;
     private final double partialMatchRatio;
@@ -28,18 +28,16 @@ public class BackwardSearcher extends Searcher<Set<Tag>> {
     }
 
     @Override
-    public Set<Tag> search(Set<Tag> inputTags, int ply) {
-        int numRequiredMatches = (int)(partialMatchRatio * inputTags.size());
+    public Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
         Set<Tag> allActivatedTags = new HashSet<>(inputTags);
-        for (int i = 0; i < ply; i++) {
+        for (int i = 0; i < ply && !inputTags.isEmpty(); i++) {
+            int numRequiredMatches = (int)(partialMatchRatio * inputTags.size());
             Set<Tag> activatedTags = new HashSet<>();
             for (KnowledgeNode kn : mapKN.values()) {
-                activatedTags.addAll(backwardSearchMatcher.match(inputTags, kn, numRequiredMatches));
+                backwardSearchMatcher.match(inputTags, kn, numRequiredMatches).ifPresent(activatedTags::add);
             }
             allActivatedTags.addAll(activatedTags);
-            if (activatedTags.isEmpty()) {
-                break;
-            }
+            inputTags = activatedTags;
         }
         this.activeTags.addAll(allActivatedTags);
         return allActivatedTags;

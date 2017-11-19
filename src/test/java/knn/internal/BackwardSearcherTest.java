@@ -32,17 +32,18 @@ public class BackwardSearcherTest {
         int ply = 5;
         int numRequiredMatches = 2;
         KnowledgeNode kn = mock(KnowledgeNode.class);
-        Set<Tag> backwardSearchMatcherTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class)));
+        Tag backwardSearchMatcherTag = mock(Tag.class);
 
         // given
         mapKN.put(mock(Tag.class), kn);
-        when(backwardSearchMatcher.match(inputTags, kn, numRequiredMatches)).thenReturn(backwardSearchMatcherTags);
+        when(backwardSearchMatcher.match(inputTags, kn, numRequiredMatches))
+                .thenReturn(Optional.of(backwardSearchMatcherTag));
 
         // when
-        Set<Tag> allActivatedTags = backwardSearcher.search(inputTags, ply);
+        Set<Tag> allActivatedTags = backwardSearcher.searchInternal(inputTags, ply);
 
         // then
         assertTrue(allActivatedTags.containsAll(inputTags));
-        assertTrue(allActivatedTags.containsAll(backwardSearchMatcherTags));
+        assertTrue(allActivatedTags.contains(backwardSearchMatcherTag));
     }
 }

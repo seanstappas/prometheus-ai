@@ -6,7 +6,7 @@ import tags.Tag;
 
 import java.util.Set;
 
-public class LambdaSearcher extends Searcher<Set<Tag>> {
+class LambdaSearcher extends Searcher<Set<Tag>> {
     private final ForwardSearcher forwardSearcher;
     private final BackwardSearcher backwardSearcher;
 
@@ -19,7 +19,7 @@ public class LambdaSearcher extends Searcher<Set<Tag>> {
     }
 
     @Override
-    public Set<Tag> search(Set<Tag> inputTags, int ply) {
+    public Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
         Set<Tag> backwardTags = backwardSearcher.search(inputTags, ply);
         return forwardSearcher.search(backwardTags, ply);
     }

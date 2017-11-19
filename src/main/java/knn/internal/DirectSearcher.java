@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class DirectSearcher {
+class DirectSearcher {
     private final Map<Tag, KnowledgeNode> mapKN;
     private final Set<Tag> activeTags;
 

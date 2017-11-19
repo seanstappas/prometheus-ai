@@ -81,4 +81,81 @@ public class KnowledgeNodeNetworkImplTest {
         assertEquals(outputTags, activatedTags);
     }
 
+    @Test
+    public void mustForwardThink() throws Exception {
+        Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+        int ply = 5;
+
+        // given
+        when(forwardSearcher.search(activeTags, ply)).thenReturn(outputTags);
+
+        // when
+        Set<Tag> activatedTags = knn.forwardThink(ply);
+
+        // then
+        assertEquals(outputTags, activatedTags);
+    }
+
+    @Test
+    public void mustBackwardSearch() throws Exception {
+        Set<Tag> inputTags = new HashSet<>(Collections.singletonList(mock(Tag.class)));
+        Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+        int ply = 5;
+
+        // given
+        when(backwardSearcher.search(inputTags, ply)).thenReturn(outputTags);
+
+        // when
+        Set<Tag> activatedTags = knn.backwardSearch(inputTags, ply);
+
+        // then
+        assertEquals(outputTags, activatedTags);
+    }
+
+    @Test
+    public void mustBackwardThink() throws Exception {
+        Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+        int ply = 5;
+
+        // given
+        when(backwardSearcher.search(activeTags, ply)).thenReturn(outputTags);
+
+        // when
+        Set<Tag> activatedTags = knn.backwardThink(ply);
+
+        // then
+        assertEquals(outputTags, activatedTags);
+    }
+
+    @Test
+    public void mustLambdaSearch() throws Exception {
+        Set<Tag> inputTags = new HashSet<>(Collections.singletonList(mock(Tag.class)));
+        Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+        int ply = 5;
+
+        // given
+        when(lambdaSearcher.search(inputTags, ply)).thenReturn(outputTags);
+
+        // when
+        Set<Tag> activatedTags = knn.lambdaSearch(inputTags, ply);
+
+        // then
+        assertEquals(outputTags, activatedTags);
+    }
+
+    @Test
+    public void mustLambdaThink() throws Exception {
+        Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+        int ply = 5;
+
+        // given
+        when(lambdaSearcher.search(activeTags, ply)).thenReturn(outputTags);
+
+        // when
+        Set<Tag> activatedTags = knn.lambdaThink(ply);
+
+        // then
+        assertEquals(outputTags, activatedTags);
+    }
+
 }

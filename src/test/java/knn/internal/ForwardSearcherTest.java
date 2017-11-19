@@ -42,7 +42,7 @@ public class ForwardSearcherTest {
         when(directSearcher.search(t4)).thenReturn(Collections.emptySet());
 
         // when
-        Set<Tag> actualAllActivatedTags = forwardSearcher.search(inputTags, ply);
+        Set<Tag> actualAllActivatedTags = forwardSearcher.searchInternal(inputTags, ply);
 
         // then
         assertEquals(expectedAllActivatedTags, actualAllActivatedTags);
