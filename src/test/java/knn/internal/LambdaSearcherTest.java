@@ -25,7 +25,7 @@ public class LambdaSearcherTest {
     }
 
     @Test
-    public void testSearch() throws Exception {
+    public void mustLambdaSearch() throws Exception {
         Set<Tag> inputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class)));
         Set<Tag> backwardTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class)));
         Set<Tag> forwardTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class)));

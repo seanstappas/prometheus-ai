@@ -26,7 +26,7 @@ public class BackwardSearcherTest {
     }
 
     @Test
-    public void testSearch() throws Exception {
+    public void mustBackwardSearch() throws Exception {
         Set<Tag> inputTags = new HashSet<>(Arrays.asList(
                 mock(Tag.class), mock(Tag.class), mock(Tag.class), mock(Tag.class)));
         int ply = 5;

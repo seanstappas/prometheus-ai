@@ -65,4 +65,20 @@ public class KnowledgeNodeNetworkImplTest {
         assertEquals(outputTags, activatedTags);
     }
 
+    @Test
+    public void mustForwardSearch() throws Exception {
+        Set<Tag> inputTags = new HashSet<>(Collections.singletonList(mock(Tag.class)));
+        Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+        int ply = 5;
+
+        // given
+        when(forwardSearcher.search(inputTags, ply)).thenReturn(outputTags);
+
+        // when
+        Set<Tag> activatedTags = knn.forwardSearch(inputTags, ply);
+
+        // then
+        assertEquals(outputTags, activatedTags);
+    }
+
 }
