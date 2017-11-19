@@ -13,6 +13,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class KnowledgeNode {
+    private static final int ACTIVATION_INCREMENT = 100;
+    // TODO: make all these private
+
     // Final fields
     private static final double[] SIGMOID_VALUES = {0, 2, 5, 11, 27, 50, 73, 88, 95, 98, 100}; //sigmoid function activation value
     private final Tag inputTag;
@@ -104,11 +107,11 @@ public class KnowledgeNode {
 
     public boolean excite() {
         double oldActivation = activation;
-        activation++;
+        activation += ACTIVATION_INCREMENT;
         return oldActivation < threshold && activation >= threshold;
     }
 
-    public boolean excite(int value) {
+    public boolean excite_sigmoid(int value) {
         double oldActivation = activation;
         activation += SIGMOID_VALUES[value];
         return oldActivation < threshold && activation >= threshold;

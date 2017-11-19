@@ -38,7 +38,7 @@ public class KnnAndEsTest {
      */
     @BeforeMethod
     public void setupKNN() {
-        KnnDataLoader.loadDate(knn, ANIMAL_DATA_PATH, new ArrayList<>());
+        KnnDataLoader.loadData(knn, ANIMAL_DATA_PATH, new ArrayList<>());
     }
 
     /**

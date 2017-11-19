@@ -32,7 +32,7 @@ public class KnowledgeNodeNetworkPetTest {
 
     @BeforeMethod
     public void setupKNN(){
-        KnnDataLoader.loadDate(knn, PET_DATA_PATH, knowledgeNodes);
+        KnnDataLoader.loadData(knn, PET_DATA_PATH, knowledgeNodes);
     }
 
     @Test
@@ -99,8 +99,8 @@ public class KnowledgeNodeNetworkPetTest {
         expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 90.0);
         expectedActiveTags.put(new Fact("dog(wow, carnivore)"), 100.0);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 80.0);
-        System.out.println("[excite integration] Tags to excite 1st: dog(wow, carnivore) : 10");
-        System.out.println("[excite integration] Active Tags: " + knn.getActiveTags().toString());
+        System.out.println("[excite_sigmoid integration] Tags to excite_sigmoid 1st: dog(wow, carnivore) : 10");
+        System.out.println("[excite_sigmoid integration] Active Tags: " + knn.getActiveTags().toString());
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
 
         for(KnowledgeNode kn : knowledgeNodes){
@@ -115,13 +115,13 @@ public class KnowledgeNodeNetworkPetTest {
                 }
             }
         }
-        System.out.println("[excite integration] Tags to excite 2nd: husky(Ranger,male,length>58,weight=26) : 10, cat(meow, carnivore) : 10");
+        System.out.println("[excite_sigmoid integration] Tags to excite_sigmoid 2nd: husky(Ranger,male,length>58,weight=26) : 10, cat(meow, carnivore) : 10");
         expectedActiveTags.put(new Fact("cat(meow, carnivore)"), 100.0);
         expectedActiveTags.put(new Fact("pet(dog>100,cat>80)"), 69.0);
         expectedActiveTags.put(new Fact("husky(Ranger,male,length>58,weight=26)"), 100.0);
         expectedActiveTags.put(new Fact("animal(multicellular,vertebrate,invertebrate)"), 75.75);
         expectedActiveTags.put(new Fact("dog(wow, carnivore)"), 85.0);
-        System.out.println("[excite integration] Active Tags: " + knn.getActiveTags().toString());
+        System.out.println("[excite_sigmoid integration] Active Tags: " + knn.getActiveTags().toString());
         Assert.assertEquals(knn.getActiveTags(), expectedActiveTags.keySet());
         System.out.println("");
     }

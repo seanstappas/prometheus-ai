@@ -2,6 +2,7 @@ package knn.api;
 
 import tags.Tag;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +50,9 @@ public interface KnowledgeNodeNetwork {
      *
      * @param tag the fired Tag to be added
      */
-    void addFiredTag(Tag tag);
+    void addActiveTag(Tag tag);
+
+    void addActiveTags(Set<Tag> tags);
 
     /**
      * Get access of active Tags
@@ -59,6 +62,8 @@ public interface KnowledgeNodeNetwork {
     Set<Tag> getActiveTags();
 
     KnowledgeNode getKnowledgeNode(Tag tag);
+
+    Collection<KnowledgeNode> getKnowledgeNodes();
 
     Set<Tag> directSearch(Tag inputTag);
 
@@ -135,7 +140,7 @@ public interface KnowledgeNodeNetwork {
     /**
      * Excites a Knowledge Node.
      *
-     * @param kn    the Knowledge Node to excite
+     * @param kn    the Knowledge Node to excite_sigmoid
      * @param value the SIGMOID_VALUES from the neural network
      *              If excitation leads to firing, this will add the fired kn to the activeTag.
      */

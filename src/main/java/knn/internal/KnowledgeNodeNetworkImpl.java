@@ -75,8 +75,13 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void addFiredTag(Tag tag) {
+    public void addActiveTag(Tag tag) {
         activeTags.add(tag);
+    }
+
+    @Override
+    public void addActiveTags(Set<Tag> tags) {
+        activeTags.addAll(tags);
     }
 
     @Override
@@ -87,6 +92,11 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     @Override
     public KnowledgeNode getKnowledgeNode(Tag tag) {
         return mapKN.get(tag);
+    }
+
+    @Override
+    public Collection<KnowledgeNode> getKnowledgeNodes() {
+        return Collections.unmodifiableCollection(mapKN.values());
     }
 
     // ------------------ REFACTORED SEARCH START ------------------
@@ -310,7 +320,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void excite(KnowledgeNode kn, int value) {
-        kn.excite(value);
+        kn.excite_sigmoid(value);
         if (kn.activation * kn.strength >= kn.threshold) {
             Tag ownTag = kn.getInputTag();
             if (value != 0) {

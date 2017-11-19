@@ -12,8 +12,8 @@ import java.util.Set;
 class BackwardSearcher extends Searcher<Set<Tag>> {
     private final Map<Tag, KnowledgeNode> mapKN;
     private final Set<Tag> activeTags;
-    private final double partialMatchRatio;
     private final BackwardSearchMatcher backwardSearchMatcher;
+    private double partialMatchRatio;
 
     @Inject
     public BackwardSearcher(
@@ -27,17 +27,22 @@ class BackwardSearcher extends Searcher<Set<Tag>> {
         this.backwardSearchMatcher = backwardSearchMatcher;
     }
 
+    void setMatchRatio(double partialMatchRatio) {
+        this.partialMatchRatio = partialMatchRatio;
+    }
+
     @Override
     public Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
         Set<Tag> allActivatedTags = new HashSet<>(inputTags);
-        for (int i = 0; i < ply && !inputTags.isEmpty(); i++) {
-            int numRequiredMatches = (int)(partialMatchRatio * inputTags.size());
+        Set<Tag> currentPlyInputTags = new HashSet<>(inputTags);
+        for (int i = 0; i < ply && !currentPlyInputTags.isEmpty(); i++) {
+            int numRequiredMatches = (int)(partialMatchRatio * currentPlyInputTags.size());
             Set<Tag> activatedTags = new HashSet<>();
             for (KnowledgeNode kn : mapKN.values()) {
-                backwardSearchMatcher.match(inputTags, kn, numRequiredMatches).ifPresent(activatedTags::add);
+                backwardSearchMatcher.match(currentPlyInputTags, kn, numRequiredMatches).ifPresent(activatedTags::add);
             }
             allActivatedTags.addAll(activatedTags);
-            inputTags = activatedTags;
+            currentPlyInputTags = activatedTags;
         }
         this.activeTags.addAll(allActivatedTags);
         return allActivatedTags;

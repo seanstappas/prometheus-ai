@@ -19,14 +19,15 @@ class ForwardSearcher extends Searcher<Set<Tag>> {
     @Override
     Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
         Set<Tag> allActivatedTags = new HashSet<>(inputTags);
-        for (int i = 0; i < ply && !inputTags.isEmpty(); i++) {
+        Set<Tag> currentPlyInputTags = new HashSet<>(inputTags);
+        for (int i = 0; i < ply && !currentPlyInputTags.isEmpty(); i++) {
             Set<Tag> activatedTags = new HashSet<>();
-            for (Tag t : inputTags) {
+            for (Tag t : currentPlyInputTags) {
                 Set<Tag> directActivatedTags = directSearcher.search(t);
                 activatedTags.addAll(directActivatedTags);
             }
             allActivatedTags.addAll(activatedTags);
-            inputTags = activatedTags;
+            currentPlyInputTags = activatedTags;
         }
         return allActivatedTags;
     }

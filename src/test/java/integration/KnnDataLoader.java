@@ -5,10 +5,15 @@ import knn.api.KnowledgeNodeNetwork;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class KnnDataLoader {
-    public static void loadDate(KnowledgeNodeNetwork knn, String filename, List<KnowledgeNode> knowledgeNodes) {
+    public static void loadData(KnowledgeNodeNetwork knn, String filename) {
+        loadData(knn, filename, new ArrayList<>());
+    }
+
+    public static void loadData(KnowledgeNodeNetwork knn, String filename, List<KnowledgeNode> knowledgeNodes) {
         knn.resetEmpty();
 
         try {
@@ -27,6 +32,5 @@ public class KnnDataLoader {
         for (KnowledgeNode knowledgeNode : knowledgeNodes) {
             knn.addKnowledgeNode(knowledgeNode);
         }
-
     }
 }
