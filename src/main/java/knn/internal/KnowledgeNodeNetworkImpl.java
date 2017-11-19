@@ -18,12 +18,12 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private BackwardSearcher backwardSearcher;
     private LambdaSearcher lambdaSearcher;
 
-    // TODO: Implement "direct" search of a Tag, which excites a node and returns activated Tags
-    // TODO: Make forward search call "direct" search repeatedly
-    // TODO: Provide list of Tags as input to all the "search" methods. "Thinking" will call "search" on ALL active Tags
-    // TODO: Create "Searcher" class for forwards, backwards and lambda, each "search" method returns activated Tags
-    // TODO: Make "search" methods return ALL activated Tags
-    // TODO: Implement "lambda" searching as described in doc (ply-limited backwards + forwards search)
+    // TODO: Implement "direct" match of a Tag, which excites a node and returns activated Tags
+    // TODO: Make forward match call "direct" match repeatedly
+    // TODO: Provide list of Tags as input to all the "match" methods. "Thinking" will call "match" on ALL active Tags
+    // TODO: Create "Searcher" class for forwards, backwards and lambda, each "match" method returns activated Tags
+    // TODO: Make "match" methods return ALL activated Tags
+    // TODO: Implement "lambda" searching as described in doc (ply-limited backwards + forwards match)
     // TODO: Sort nodes by age before searching
 
     @Inject
@@ -355,7 +355,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     /**
      * @param bestPath           previous found best path
      * @param bestObjectTruth    previous best found best confidence
-     * @param item               the item tag wanted to search
+     * @param item               the item tag wanted to match
      * @param parentToItem       the
      * @param parentToStartPoint
      * @return the actual maximum belief found
@@ -463,7 +463,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     /**
-     * @param item       the item tag wanted to search for
+     * @param item       the item tag wanted to match for
      * @param startPoint the starting tag to go
      * @return a list of common parent that has a path to both item and start point
      */
@@ -512,7 +512,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
 
     /**
-     * Depth first search (DFS) on a specific tag
+     * Depth first match (DFS) on a specific tag
      *
      * @param tag       the tag to start the DFS
      * @param tagsFound to store all the tag found during DFS

@@ -21,16 +21,22 @@ public class DirectSearcher {
         this.activeTags = activeTags;
     }
 
+    /**
+     * Search for the given input Tag in the KN map.
+     *
+     * @param inputTag the input Tag to search for
+     * @return the activated output tags (excluding the given input Tag)
+     */
     public Set<Tag> search(Tag inputTag) {
         Set<Tag> activatedTags = new HashSet<>();
         if (mapKN.containsKey(inputTag)) {
-            this.activeTags.add(inputTag);
             KnowledgeNode kn = mapKN.get(inputTag);
             boolean fired = kn.excite();
             if (fired) {
                 activatedTags.addAll(kn.getOutputTags());
             }
         }
+        this.activeTags.add(inputTag);
         this.activeTags.addAll(activatedTags);
         return activatedTags; // return activated OUTPUT tags (excluding the provided input)
     }

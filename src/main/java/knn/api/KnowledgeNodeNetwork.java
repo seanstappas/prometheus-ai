@@ -65,7 +65,7 @@ public interface KnowledgeNodeNetwork {
     Set<Tag> forwardSearch(Set<Tag> inputTags, int ply);
 
     /**
-     * Lambda search, a search to find out the best relation between a know list of tags and a wanted item tag
+     * Lambda match, a match to find out the best relation between a know list of tags and a wanted item tag
      *
      * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      * @param item      the wanted item tag
@@ -84,18 +84,18 @@ public interface KnowledgeNodeNetwork {
 
     /**
      * Creating input Tags from string in the output of Neural Network (NN)
-     * This method is used only for backward or lambda search because no excitation is needed during the Tag creation
+     * This method is used only for backward or lambda match because no excitation is needed during the Tag creation
      *
      * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */
     void getInputForBackwardSearch(List<Tuple> nnOutputs);
 
     /**
-     * Backward search with ply as input
+     * Backward match with ply as input
      *
      * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      * @param score     indication of SIGMOID_VALUES
-     * @param ply       number of cycle the AI wanted to search
+     * @param ply       number of cycle the AI wanted to match
      */
     void backwardSearch(List<Tuple> nnOutputs, double score, int ply);
 
@@ -116,7 +116,7 @@ public interface KnowledgeNodeNetwork {
 
     /**
      * Creating input Tags from string in the output of Neural Network (NN)
-     * This method is used only for forward search because excitation may be active during the Tag creation
+     * This method is used only for forward match because excitation may be active during the Tag creation
      *
      * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
      */
