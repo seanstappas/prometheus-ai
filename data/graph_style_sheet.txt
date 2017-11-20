@@ -1,21 +1,29 @@
 graph {
+    padding: 30;
 }
 
 node {
-	size: 10px, 15px;
+	size: 10px, 10px;
 	fill-color: black;
 	text-mode: hidden;
 }
 
 edge {
+	arrow-size: 3px, 2px;
 }
 
 sprite {
 }
 
-node.fact {
+node.knowledgenode {
+	size: 20px, 20px;
 	text-mode: hidden;
 	fill-color: #4e79a7;
+}
+
+node.fact {
+	text-mode: hidden;
+	fill-color: #b07aa1;
 }
 
 node.rule {
@@ -28,7 +36,7 @@ node.recommendation {
 	fill-color: #f28e2b;
 }
 
-node.marked {
+node.active {
 	text-mode: hidden;
 	fill-color: #e15759;
 }

@@ -2,7 +2,10 @@ package knn.api;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
@@ -90,21 +93,6 @@ public class KnowledgeNode {
         this.belief = belief;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("inputTag", inputTag)
-                .append("outputs", outputTags)
-                .append("activation", activation)
-                .append("threshold", threshold)
-                .append("belief", belief)
-                .append("strength", strength)
-                .append("isFired", isFired)
-                .append("age", age)
-                .append("maxAge", maxAge)
-                .toString();
-    }
-
     public boolean excite() {
         double oldActivation = activation;
         activation += ACTIVATION_INCREMENT;
@@ -129,5 +117,56 @@ public class KnowledgeNode {
 
     public Set<Tag> getOutputTags() {
         return outputTags;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("inputTag", inputTag)
+                .append("outputs", outputTags)
+                .append("activation", activation)
+                .append("threshold", threshold)
+                .append("belief", belief)
+                .append("strength", strength)
+                .append("isFired", isFired)
+                .append("age", age)
+                .append("maxAge", maxAge)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        KnowledgeNode that = (KnowledgeNode) o;
+
+        return new EqualsBuilder()
+                .append(threshold, that.threshold)
+                .append(strength, that.strength)
+                .append(maxAge, that.maxAge)
+                .append(isFired, that.isFired)
+                .append(age, that.age)
+                .append(belief, that.belief)
+                .append(activation, that.activation)
+                .append(inputTag, that.inputTag)
+                .append(outputTags, that.outputTags)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(inputTag)
+                .append(outputTags)
+                .append(threshold)
+                .append(strength)
+                .append(maxAge)
+                .append(isFired)
+                .append(age)
+                .append(belief)
+                .append(activation)
+                .toHashCode();
     }
 }

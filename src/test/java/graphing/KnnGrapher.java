@@ -17,8 +17,8 @@ import tags.Tag;
 import java.util.*;
 
 public class KnnGrapher implements ViewerListener {
-    Graph graph;
-    Set<String> activeIDs;
+    private Graph graph;
+    private Set<String> activeIDs;
 
     private static final String ANIMAL_DATA_PATH = "data/animalData.txt";
 
@@ -26,7 +26,7 @@ public class KnnGrapher implements ViewerListener {
         new KnnGrapher();
     }
 
-    public KnnGrapher() throws InterruptedException {
+    private KnnGrapher() throws InterruptedException {
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
         // Create KNN
@@ -58,9 +58,13 @@ public class KnnGrapher implements ViewerListener {
 
         for (KnowledgeNode knowledgeNode : knowledgeNodes) {
             String inputID = knowledgeNode.getInputTag().toString();
+            String knID = knowledgeNode.toString();
+            graph.addEdge(inputID + knID, inputID, knID, true);
+
             for (Tag t : knowledgeNode.getOutputTags()) {
                 String outputID = t.toString();
-                graph.addEdge(inputID + outputID, inputID, outputID, true);
+//                graph.addEdge(inputID + outputID, inputID, outputID, true);
+                graph.addEdge(knID + outputID, knID, outputID, true);
                 updateLabels();
                 Thread.sleep(100);
             }
@@ -81,7 +85,7 @@ public class KnnGrapher implements ViewerListener {
         String nodeType = id.split("\\[")[0].toLowerCase();
         node.addAttribute("ui.label", id);
         if (activeIDs.contains(id)) {
-            node.setAttribute("ui.class", "marked");
+            node.setAttribute("ui.class", "active");
         } else {
             node.setAttribute("ui.class", nodeType);
         }
