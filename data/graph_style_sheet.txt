@@ -1,0 +1,39 @@
+graph {
+}
+
+node {
+	size: 10px, 15px;
+	fill-color: black;
+	text-mode: hidden;
+}
+
+edge {
+}
+
+sprite {
+}
+
+node.fact {
+	text-mode: hidden;
+	fill-color: #4e79a7;
+}
+
+node.rule {
+	text-mode: hidden;
+	fill-color: #76b7b2;
+}
+
+node.recommendation {
+	text-mode: hidden;
+	fill-color: #f28e2b;
+}
+
+node.marked {
+	text-mode: hidden;
+	fill-color: #e15759;
+}
+
+node.clicked {
+	text-mode: normal;
+    text-background-mode: plain;
+}
