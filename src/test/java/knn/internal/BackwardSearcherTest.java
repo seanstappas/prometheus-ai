@@ -43,7 +43,6 @@ public class BackwardSearcherTest {
         Set<Tag> allActivatedTags = backwardSearcher.searchInternal(inputTags, ply);
 
         // then
-        assertTrue(allActivatedTags.containsAll(inputTags));
         assertTrue(allActivatedTags.contains(backwardSearchMatcherTag));
     }
 }

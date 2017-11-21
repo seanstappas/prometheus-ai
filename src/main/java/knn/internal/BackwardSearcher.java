@@ -33,7 +33,7 @@ class BackwardSearcher extends Searcher<Set<Tag>> {
 
     @Override
     public Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
-        Set<Tag> allActivatedTags = new HashSet<>(inputTags);
+        Set<Tag> allActivatedTags = new HashSet<>();
         Set<Tag> currentPlyInputTags = new HashSet<>(inputTags);
         for (int i = 0; i < ply && !currentPlyInputTags.isEmpty(); i++) {
             int numRequiredMatches = (int)(partialMatchRatio * currentPlyInputTags.size());

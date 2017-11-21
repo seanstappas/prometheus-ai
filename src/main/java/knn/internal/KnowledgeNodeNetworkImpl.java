@@ -127,6 +127,11 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
+    public void setBackwardSearchMatchRatio(double ratio) {
+        backwardSearcher.setMatchRatio(ratio);
+    }
+
+    @Override
     public Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply) {
         return lambdaSearcher.search(inputTags, ply);
     }

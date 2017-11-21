@@ -65,6 +65,8 @@ public interface KnowledgeNodeNetwork {
 
     Collection<KnowledgeNode> getKnowledgeNodes();
 
+    // For all search methods, the Tags returned are the NEWLY fired tags, excluding the input tags.
+
     Set<Tag> directSearch(Tag inputTag);
 
     Set<Tag> forwardSearch(Set<Tag> inputTags, int ply);
@@ -74,6 +76,8 @@ public interface KnowledgeNodeNetwork {
     Set<Tag> backwardSearch(Set<Tag> inputTags, int ply);
 
     Set<Tag> backwardThink(int ply);
+
+    void setBackwardSearchMatchRatio(double ratio);
 
     Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply);
 

@@ -33,7 +33,7 @@ public class ForwardSearcherTest {
         Set<Tag> directActivatedTags1 = new HashSet<>(Collections.singletonList(t3));
         Set<Tag> directActivatedTags2 = new HashSet<>(Collections.singletonList(t4));
         int ply = Integer.MAX_VALUE;
-        Set<Tag> expectedAllActivatedTags = new HashSet<>(Arrays.asList(t1, t2, t3, t4));
+        Set<Tag> expectedAllActivatedTags = new HashSet<>(Arrays.asList(t3, t4));
 
         // given
         when(directSearcher.search(t1)).thenReturn(directActivatedTags1);

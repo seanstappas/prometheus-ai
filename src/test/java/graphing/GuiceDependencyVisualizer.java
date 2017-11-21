@@ -37,7 +37,7 @@ public class GuiceDependencyVisualizer {
     }
 
     private static String hideClassPaths(String s) {
-        s = s.replaceAll("\\w[a-z\\d_\\.]+\\.([A-Z][A-Za-z\\d_\\$]*)", "$1");
+        s = s.replaceAll("\\w[a-z\\d_\\.]+\\.([A-Z][A-Za-z\\d_$]*)", "$1");
         s = s.replaceAll("value=[\\w-]+", "random");
         return s;
     }

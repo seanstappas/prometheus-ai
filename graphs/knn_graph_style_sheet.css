@@ -1,9 +1,8 @@
 graph {
-    padding: 30;
 }
 
 node {
-	size: 10px, 10px;
+	size: 10px;
 	fill-color: black;
 	text-mode: hidden;
 }
@@ -16,9 +15,20 @@ sprite {
 }
 
 node.knowledgenode {
-	size: 20px, 20px;
+	size: 20px;
 	text-mode: hidden;
 	fill-color: #4e79a7;
+}
+
+node.active_knowledgenode {
+	size: 20px;
+	text-mode: hidden;
+	fill-color: #e15759;
+}
+
+node.active {
+	text-mode: hidden;
+	fill-color: #e15759;
 }
 
 node.fact {
@@ -36,7 +46,17 @@ node.recommendation {
 	fill-color: #f28e2b;
 }
 
-node.active {
+node.active_fact {
+	text-mode: hidden;
+	fill-color: #e15759;
+}
+
+node.active_rule {
+	text-mode: hidden;
+	fill-color: #e15759;
+}
+
+node.active_recommendation {
 	text-mode: hidden;
 	fill-color: #e15759;
 }

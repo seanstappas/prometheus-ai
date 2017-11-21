@@ -93,16 +93,23 @@ public class KnowledgeNode {
         this.belief = belief;
     }
 
+    /**
+     * @return true if the KN has been newly fired, i.e., it was not fired before this excitation.
+     */
     public boolean excite() {
         double oldActivation = activation;
         activation += ACTIVATION_INCREMENT;
-        return oldActivation < threshold && activation >= threshold;
+        return oldActivation < threshold && isFired();
     }
 
     public boolean excite_sigmoid(int value) {
         double oldActivation = activation;
         activation += SIGMOID_VALUES[value];
-        return oldActivation < threshold && activation >= threshold;
+        return oldActivation < threshold && isFired();
+    }
+
+    public boolean isFired() {
+        return activation >= threshold;
     }
 
     public double getActivation() {
@@ -123,14 +130,7 @@ public class KnowledgeNode {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("inputTag", inputTag)
-                .append("outputs", outputTags)
-                .append("activation", activation)
-                .append("threshold", threshold)
-                .append("belief", belief)
-                .append("strength", strength)
-                .append("isFired", isFired)
-                .append("age", age)
-                .append("maxAge", maxAge)
+                .append("outputTags", outputTags)
                 .toString();
     }
 

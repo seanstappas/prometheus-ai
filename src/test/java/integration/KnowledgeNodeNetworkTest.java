@@ -36,7 +36,6 @@ public class KnowledgeNodeNetworkTest {
         int i = 0;
         for (KnowledgeNode kn : knn.getKnowledgeNodes()) {
             knn.addActiveTag(kn.getInputTag());
-            expectedActivatedTags.add(kn.getInputTag());
             expectedActivatedTags.addAll(kn.getOutputTags());
             if (i == knn.getKnowledgeNodes().size() / 2) {
                 break;

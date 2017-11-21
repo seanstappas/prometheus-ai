@@ -18,7 +18,7 @@ class ForwardSearcher extends Searcher<Set<Tag>> {
 
     @Override
     Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
-        Set<Tag> allActivatedTags = new HashSet<>(inputTags);
+        Set<Tag> allActivatedTags = new HashSet<>();
         Set<Tag> currentPlyInputTags = new HashSet<>(inputTags);
         for (int i = 0; i < ply && !currentPlyInputTags.isEmpty(); i++) {
             Set<Tag> activatedTags = new HashSet<>();
