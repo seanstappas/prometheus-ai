@@ -3,6 +3,7 @@ package graphing;
 import tags.Tag;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.Set;
 
 class KnnForwardThinkVisualizer extends KnnGraphVisualizer {
@@ -13,10 +14,10 @@ class KnnForwardThinkVisualizer extends KnnGraphVisualizer {
 
     @Override
     Set<Tag> search() {
-        return knn.forwardThink(1);
+        return Collections.emptySet();
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new KnnForwardThinkVisualizer().visualize();
+        new KnnForwardThinkVisualizer().visualize(false);
     }
 }

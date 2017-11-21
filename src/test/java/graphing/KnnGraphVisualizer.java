@@ -16,7 +16,7 @@ import java.util.Set;
 abstract class KnnGraphVisualizer extends GraphVisualizer {
     private static final int NUM_INITIAL_ACTIVE_TAGS = 5;
     private static final String KNN_STYLE_SHEET_PATH = "graphs/knn_graph_style_sheet.css";
-    private static final String ANIMAL_DATA_PATH = "data/animalData.txt";
+    private static final String ANIMAL_DATA_PATH = "data/animalData2.txt";
     private Set<String> activeIDs;
 
     KnowledgeNodeNetwork knn;
@@ -87,7 +87,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     @Override
     boolean updateGraph() {
         Set<Tag> activatedTags = search();
-        for (Tag t : activatedTags) {
+        for (Tag t : knn.getActiveTags()) {
             String id = t.toString();
             activeIDs.add(id);
             updateNodeTagClass(id);

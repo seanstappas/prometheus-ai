@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 abstract class GraphVisualizer implements ViewerListener {
     Graph graph;
     ViewerPipe fromViewer;
+    private boolean updated = true;
 
     private boolean loop = true;
 
@@ -31,21 +32,30 @@ abstract class GraphVisualizer implements ViewerListener {
     public abstract void buttonReleased(String id);
 
     final void visualize() throws InterruptedException {
+        visualize(true);
+    }
+
+    final void visualize(boolean saveScreenshot) throws InterruptedException {
         setupGraph();
         setupNodes();
         int iteration = 0;
-        Thread.sleep(2000);
-        saveScreenshot(String.valueOf(iteration));
         long lastTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - lastTime < getSleepDelay()) {};
+        if (saveScreenshot) {
+            saveScreenshot(String.valueOf(iteration));
+        }
+        lastTime = System.currentTimeMillis();
         while (loop) {
             fromViewer.pump();
-            if (System.currentTimeMillis() - lastTime >= getSleepDelay()) {
-                iteration++;
-                boolean updated = updateGraph();
-                if (updated) {
-                    saveScreenshot(String.valueOf(iteration));
+            if (updated) {
+                if (System.currentTimeMillis() - lastTime >= getSleepDelay()) {
+                    iteration++;
+                    updated = updateGraph();
+                    if (updated && saveScreenshot) {
+                        saveScreenshot(String.valueOf(iteration));
+                    }
+                    lastTime = System.currentTimeMillis();
                 }
-                lastTime = System.currentTimeMillis();
             }
         }
     }

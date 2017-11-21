@@ -18,6 +18,6 @@ class KnnBackwardThinkVisualizer extends KnnGraphVisualizer {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new KnnBackwardThinkVisualizer().visualize();
+        new KnnBackwardThinkVisualizer().visualize(true);
     }
 }

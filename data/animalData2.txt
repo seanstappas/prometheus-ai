@@ -1,0 +1,31 @@
+dog(wolflike,length>50,weight>20); 100; bark(sound,loud); 100; fur(strands,insulator); 100; fast(speed,dynamic); 50; teeth(grind,food); 100; cat(feline,length>50,weight>20) dog(wolflike,length>50,weight>20) -> @fight(dangerous); 100
+cat(feline,length>50,weight>20); 100; fur(strands,insulator); 100; teeth(grind,food); 100; cat(feline,length>50,weight>20) dog(wolflike,length>50,weight>20) -> @fight(dangerous); 100
+sheep(wool,length>100,height>100,weight>50); 100; fur(strands,insulator); 100; horse(fast,length>100,height>100,weight>50,speed=40) sheep(wool,length>100,height>100,weight>50) chicken(eggs,length<50,weight<10) -> @isFarmAnimals(easy,calm,safe); 100
+horse(fast,length>100,height>100,weight>50,speed=40); 100; teeth(grind,food); 100; horse(fast,length>100,height>100,weight>50,speed=40) sheep(wool,length>100,height>100,weight>50) chicken(eggs,length<50,weight<10) -> @isFarmAnimals(easy,calm,safe); 100
+chicken(eggs,length<50,weight<10); 100; feathers(floating,insulator,flight); 100; horse(fast,length>100,height>100,weight>50,speed=40) sheep(wool,length>100,height>100,weight>50) chicken(eggs,length<50,weight<10) -> @isFarmAnimals(easy,calm,safe); 100
+shark(predator,length>50,speed>10); 100; teeth(grind,food); 100; massive(big,heavy); 50
+bark(sound,loud); 100; mammal(vertebrate,land); 100; bark(sound,loud) pet(scary,attractive) -> @isPet(easy,calm,bark); 100
+fur(strands,insulator); 100; mammal(vertebrate,land); 100
+fast(speed,dynamic); 100; mammal(vertebrate,land); 50; fish(vertebrate,water); 60
+massive(big,heavy); 100; massive(big,heavy) teeth(grind,food) -> @scary(scary,dangerous); 100
+feathers(floating,insulator,flight); 100; bird(vertebrate,air); 100
+teeth(grind,food); 100; mammal(vertebrate,land); 50; fish(vertebrate,water); 70; massive(big,heavy) teeth(grind,food) -> @scary(scary,dangerous); 100
+mammal(vertebrate,land); 100; calm(safe>5); 80; confused(blur,prey); 80
+bird(vertebrate,air); 100; confused(blur,prey); 80; coward(scared,safe); 30
+fish(vertebrate,water); 100; straightforward(smart,precise); 100; zoo(easy,attractive); 90
+calm(safe>5); 100; food(easy,nutritious); 20; transport(easy,speed>10); 40; pet(scary,attractive); 80
+confused(blur,prey); 100; food(easy,nutritious); 60
+coward(scared,safe); 100; transport(easy,speed>10); 60; zoo(easy,attractive); 60; coward(scared,safe) loyal(easy,calm) -> @isSafe(easy,calm); 100
+straightforward(smart,precise); 100; zoo(easy,attractive); 90
+food(easy,nutritious); 100; loyal(easy,calm); 100
+transport(easy,speed>10); 100; loyal(easy,calm); 50
+zoo(easy,attractive); 100; enemy(scary,dangerous); 90
+pet(scary,attractive); 100; loyal(easy,calm); 90; bark(sound,loud) pet(scary,attractive) -> @isPet(easy,calm,bark); 100
+loyal(easy,calm); 100; coward(scared,safe) loyal(easy,calm) -> @isSafe(easy,calm); 100
+enemy(scary,dangerous); 100; enemy(scary,dangerous) -> @avoid(scary,dangerous); 100
+massive(big,heavy) teeth(grind,food) -> @scary(scary,dangerous); 100
+cat(feline,length>50,weight>20) dog(wolflike,length>50,weight>20) -> @fight(dangerous); 100
+horse(fast,length>100,height>100,weight>50,speed=40) sheep(wool,length>100,height>100,weight>50) chicken(eggs,length<50,weight<10) -> @isFarmAnimals(easy,calm,safe); 100
+bark(sound,loud) pet(scary,attractive) -> @isPet(easy,calm,bark); 100
+enemy(scary,dangerous) -> @avoid(scary,dangerous); 100
+coward(scared,safe) loyal(easy,calm) -> @isSafe(easy,calm); 100
