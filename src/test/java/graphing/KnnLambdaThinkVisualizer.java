@@ -11,7 +11,7 @@ class KnnLambdaThinkVisualizer extends KnnGraphVisualizer {
 
     @Override
     String getScreenshotSavePath(String suffix) {
-        return MessageFormat.format("graphs/knn_lambda_think_{0}.png", suffix);
+        return MessageFormat.format("graphs/knn/knn_lambda_think_{0}.png", suffix);
     }
 
     @Override

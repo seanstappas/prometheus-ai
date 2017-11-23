@@ -17,21 +17,19 @@ import java.util.Set;
 
 public class KnowledgeNode {
     private static final int ACTIVATION_INCREMENT = 100;
-    // TODO: make all these private
 
     // Final fields
     private static final double[] SIGMOID_VALUES = {0, 2, 5, 11, 27, 50, 73, 88, 95, 98, 100}; //sigmoid function activation value
     private final Tag inputTag;
     private final Set<Tag> outputTags;  // Integer is the value of confidence
-    public final double threshold; // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
-    public final int strength; // Which strength approach to take?
+    private final double threshold; // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
+    private final int strength; // Which strength approach to take?
     private final double maxAge;
 
     // Modifiable fields
-    public boolean isFired = false; // TODO: Remove isFired flag from KN (just need activeTags from KNN)
-    public double age = 0; // Age timestamp. Set to current UNIX time when node is newly formed.
-    public double belief = 0;
-    public double activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
+    private double age = 0; // Age timestamp. Set to current UNIX time when node is newly formed.
+    private double belief = 0;
+    private double activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
 
     /**
      * Creates a Knowledge Node from Strings.
@@ -89,6 +87,10 @@ public class KnowledgeNode {
         return this.age;
     }
 
+    public double getBelief() {
+        return belief;
+    }
+
     public void setBelief(double belief) {
         this.belief = belief;
     }
@@ -99,12 +101,6 @@ public class KnowledgeNode {
     public boolean excite() {
         double oldActivation = activation;
         activation += ACTIVATION_INCREMENT;
-        return oldActivation < threshold && isFired();
-    }
-
-    public boolean excite_sigmoid(int value) {
-        double oldActivation = activation;
-        activation += SIGMOID_VALUES[value];
         return oldActivation < threshold && isFired();
     }
 
@@ -146,7 +142,6 @@ public class KnowledgeNode {
                 .append(threshold, that.threshold)
                 .append(strength, that.strength)
                 .append(maxAge, that.maxAge)
-                .append(isFired, that.isFired)
                 .append(age, that.age)
                 .append(belief, that.belief)
                 .append(activation, that.activation)
@@ -163,7 +158,6 @@ public class KnowledgeNode {
                 .append(threshold)
                 .append(strength)
                 .append(maxAge)
-                .append(isFired)
                 .append(age)
                 .append(belief)
                 .append(activation)

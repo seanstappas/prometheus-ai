@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class GuiceDependencyVisualizer {
-    private static final String GRAPH_SAVE_PATH = "graphs/guice_graph.dot";
+    private static final String GRAPH_SAVE_PATH = "graphs/guice/guice_graph.dot";
 
     public static void main(String[] args) throws IOException {
         Injector injector = Guice.createInjector(new PrometheusModule());

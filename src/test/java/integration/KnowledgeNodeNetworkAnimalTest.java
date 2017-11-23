@@ -12,12 +12,10 @@ import tags.Fact;
 import tags.Rule;
 import tags.Tag;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class KnowledgeNodeNetworkAnimalTest {
     private static final String ANIMAL_DATA_PATH = "data/animalData.txt";
@@ -51,11 +49,16 @@ public class KnowledgeNodeNetworkAnimalTest {
         Tuple data2 = new Tuple("cat", 10);
         inputs.add(data2);
 
-        knn.forwardSearch(inputs);
+        Fact fact1 = new Fact("dog(wolflike,length>50,weight>20)");
+        Fact fact2 = new Fact("cat(feline,length>50,weight>20)");
+
+        knn.addActiveTags(fact1, fact2);
+
+        knn.forwardThink(0);
         Set<Tag> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTagsAndBeliefs = new HashMap<>();
         expectedActiveTagsAndBeliefs.put(new Fact("calm(safe>5)"), 55.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("dog(wolflike,length>50,weight>20)"), 100.0);
+        expectedActiveTagsAndBeliefs.put(fact1, 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("zoo(easy,attractive)"), 45.0);
         expectedActiveTagsAndBeliefs.put(new Fact("bark(sound,loud)"), 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("straightforward(smart,precise)"), 50.0);
@@ -69,7 +72,7 @@ public class KnowledgeNodeNetworkAnimalTest {
         expectedActiveTagsAndBeliefs.put(new Fact("fur(strands,insulator)"), 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("mammal(vertebrate,land)"), 68.75);
         expectedActiveTagsAndBeliefs.put(new Fact("food(easy,nutritious)"), 22.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("cat(feline,length>50,weight>20)"), 100.0);
+        expectedActiveTagsAndBeliefs.put(fact2, 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("fish(vertebrate,water)"), 50.0);
         expectedActiveTagsAndBeliefs.put(new Fact("pet(scary,attractive)"), 44.0);
         expectedActiveTagsAndBeliefs.put(new Fact("confused(blur,prey)"), 55.0);
@@ -82,7 +85,7 @@ public class KnowledgeNodeNetworkAnimalTest {
 
         assertEquals(activeTags, expectedActiveTagsAndBeliefs.keySet());
         for (Tag t : activeTags) {
-            assertEquals(knn.getKnowledgeNode(t).belief, 0d);
+            assertEquals(knn.getKnowledgeNode(t).getBelief(), 0d);
         }
         System.out.println("");
 
@@ -97,27 +100,28 @@ public class KnowledgeNodeNetworkAnimalTest {
         Tuple data2 = new Tuple("cat", 10);
         inputs.add(data2);
 
-        knn.forwardSearch(inputs, 1);
+        Fact fact1 = new Fact("dog(wolflike,length>50,weight>20)");
+        Fact fact2 = new Fact("cat(feline,length>50,weight>20)");
+
+        knn.addActiveTags(fact1, fact2);
+
+        knn.forwardThink(1);
         Set<Tag> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTagsAndBeliefs = new HashMap<>();
-        expectedActiveTagsAndBeliefs.put(new Fact("fast(speed,dynamic)"), 50.0);
         expectedActiveTagsAndBeliefs.put(new Rule("cat(feline,length>50,weight>20) dog(wolflike,length>50,weight>20) -> @fight(dangerous)"), 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("fur(strands,insulator)"), 100.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("mammal(vertebrate,land)"), 68.75);
-        expectedActiveTagsAndBeliefs.put(new Fact("dog(wolflike,length>50,weight>20)"), 100.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("cat(feline,length>50,weight>20)"), 100.0);
+        expectedActiveTagsAndBeliefs.put(fact1, 100.0);
+        expectedActiveTagsAndBeliefs.put(fact2, 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("bark(sound,loud)"), 100.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("fish(vertebrate,water)"), 50.0);
         expectedActiveTagsAndBeliefs.put(new Fact("teeth(grind,food)"), 100.0);
-        expectedActiveTagsAndBeliefs.put(new Rule("massive(big,heavy) teeth(grind,food) -> @scary(scary,dangerous)"), 100.0);
-        expectedActiveTagsAndBeliefs.put(new Rule("bark(sound,loud) pet(scary,attractive) -> @isPet(easy,calm,bark)"), 100.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("fast(speed,dynamic)"), 100.0);
 
         System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] Active tags after 0 ply forward searching: " + activeTags);
 
         assertEquals(activeTags, expectedActiveTagsAndBeliefs.keySet());
         for (Tag t : activeTags) {
-            assertEquals(knn.getKnowledgeNode(t).belief, 0d);
+            assertEquals(knn.getKnowledgeNode(t).getBelief(), 0d);
         }
         System.out.println("");
 
@@ -126,33 +130,31 @@ public class KnowledgeNodeNetworkAnimalTest {
     @Test
     public void backwardSearchTest() {
         System.out.println("***Backward Search Test***");
-        ArrayList<Tuple> inputs = new ArrayList<>();
-        Tuple data1 = new Tuple("calm", 10);
-        inputs.add(data1);
-        Tuple data2 = new Tuple("coward", 10);
-        inputs.add(data2);
+        Fact fact1 = new Fact("calm(safe>5)");
+        Fact fact2 = new Fact("coward(scared,safe)");
+        knn.addActiveTags(fact1, fact2);
 
-        knn.backwardSearch(inputs, 0.5);
+        knn.setBackwardSearchMatchRatio(0.5);
+        knn.backwardThink(0);
         Set<Tag> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTagsAndBeliefs = new HashMap<>();
-        expectedActiveTagsAndBeliefs.put(new Fact("calm(safe>5)"), 100.0);
+        expectedActiveTagsAndBeliefs.put(fact1, 100.0);
+        expectedActiveTagsAndBeliefs.put(fact2, 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("fast(speed,dynamic)"), 40.0);
         expectedActiveTagsAndBeliefs.put(new Fact("fur(strands,insulator)"), 80.0);
         expectedActiveTagsAndBeliefs.put(new Fact("mammal(vertebrate,land)"), 80.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("coward(scared,safe)"), 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("bird(vertebrate,air)"), 30.0);
         expectedActiveTagsAndBeliefs.put(new Fact("feathers(floating,insulator,flight)"), 30.0);
         expectedActiveTagsAndBeliefs.put(new Fact("dog(wolflike,length>50,weight>20)"), 60.0);
         expectedActiveTagsAndBeliefs.put(new Fact("bark(sound,loud)"), 80.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("chicken(eggs,length<50,weight<10)"), 30.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("sheep(wool,length>100,height>100,weight>50)"), 80.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("teeth(grind,food)"), 80.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("cat(feline,length>50,weight>20)"), 80.0);
 
-        System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] Active tags after backward searching: " + activeTags);
 
         assertEquals(activeTags, expectedActiveTagsAndBeliefs.keySet());
         for (Tag t : activeTags) {
-            assertEquals(knn.getKnowledgeNode(t).belief, 0d);
+            assertEquals(knn.getKnowledgeNode(t).getBelief(), 0d);
         }
         System.out.println("");
     }
@@ -160,30 +162,29 @@ public class KnowledgeNodeNetworkAnimalTest {
     @Test
     public void backwardSearchWithPlyTest() {
         System.out.println("***Backward Search with Ply Test***");
-        ArrayList<Tuple> inputs = new ArrayList<>();
-        Tuple data1 = new Tuple("calm", 10);
-        inputs.add(data1);
-        Tuple data2 = new Tuple("coward", 10);
-        inputs.add(data2);
+        Fact fact1 = new Fact("calm(safe>5)");
+        Fact fact2 = new Fact("coward(scared,safe)");
+        knn.addActiveTags(fact1, fact2);
 
-        knn.backwardSearch(inputs, 0.5, 2);
+        knn.setBackwardSearchMatchRatio(0.5);
+        knn.backwardThink(2);
         Set<Tag> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTagsAndBeliefs = new HashMap<>();
-        expectedActiveTagsAndBeliefs.put(new Fact("calm(safe>5)"), 100.0);
+        expectedActiveTagsAndBeliefs.put(fact1, 100.0);
+        expectedActiveTagsAndBeliefs.put(fact2, 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("fast(speed,dynamic)"), 40.0);
         expectedActiveTagsAndBeliefs.put(new Fact("fur(strands,insulator)"), 80.0);
         expectedActiveTagsAndBeliefs.put(new Fact("mammal(vertebrate,land)"), 80.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("coward(scared,safe)"), 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("bird(vertebrate,air)"), 30.0);
         expectedActiveTagsAndBeliefs.put(new Fact("feathers(floating,insulator,flight)"), 30.0);
         expectedActiveTagsAndBeliefs.put(new Fact("bark(sound,loud)"), 80.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("teeth(grind,food)"), 80.0);
 
-        System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] Active tags after 2 ply backward searching: " + activeTags);
 
         assertEquals(activeTags, expectedActiveTagsAndBeliefs.keySet());
         for (Tag t : activeTags) {
-            assertEquals(knn.getKnowledgeNode(t).belief, 0d);
+            assertEquals(knn.getKnowledgeNode(t).getBelief(), 0d);
         }
         System.out.println("");
     }
@@ -192,31 +193,28 @@ public class KnowledgeNodeNetworkAnimalTest {
     public void lambdaSearchTest() {
         System.out.println("***Lambda Search Test***");
 
-        ArrayList<Tuple> inputs = new ArrayList<>();
-        Tuple data1 = new Tuple("mammal", 10);
-        inputs.add(data1);
         String item = "fish(vertebrate,water)";
 
+        Fact fact = new Fact("mammal(vertebrate,land)");
         Fact factToSearch = new Fact(item);
+        Set<Tag> tagsToSeach = new HashSet<>(Collections.singletonList(factToSearch));
 
-        knn.lambdaSearch(inputs, factToSearch);
+        knn.lambdaThink(0);
         Set<Tag> activeTags = knn.getActiveTags();
         Map<Tag, Double> expectedActiveTagsAndBeliefs = new HashMap<>();
-//        expectedActiveTagsAndBeliefs.put(new Fact("fur(strands,insulator)"), 100.0);
-        expectedActiveTagsAndBeliefs.put(new Fact("mammal(vertebrate,land)"), 100.0);
-//        expectedActiveTagsAndBeliefs.put(new Fact("cat(feline,length>50,weight>20)"), 100.0);
-//        expectedActiveTagsAndBeliefs.put(new Fact("fish(vertebrate,water)"), 70.0);
-//        expectedActiveTagsAndBeliefs.put(new Fact("teeth(grind,food)"), 100.0);
+        expectedActiveTagsAndBeliefs.put(fact, 100.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("teeth(grind,food)"), 100.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("fast(speed,dynamic)"), 100.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("dog(wolflike,length>50,weight>20)"), 100.0);
 
-        System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] String trying to find out a link with: " + item);
         System.out.println("[KNN] Active tags after lambda searching: " + activeTags);
 
-        assertEquals(activeTags, expectedActiveTagsAndBeliefs.keySet());
+        assertTrue(activeTags.isEmpty());
         for (Tag t : activeTags) {
-            assertEquals(knn.getKnowledgeNode(t).belief, 0d);
+            assertEquals(knn.getKnowledgeNode(t).getBelief(), 0d);
         }
-        assertEquals(knn.getKnowledgeNode(factToSearch).belief, 0d);
+        assertEquals(knn.getKnowledgeNode(factToSearch).getBelief(), 0d);
         System.out.println("");
 
     }

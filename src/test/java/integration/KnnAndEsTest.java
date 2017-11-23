@@ -3,7 +3,6 @@ package integration;
 import com.google.inject.Guice;
 import es.api.ExpertSystem;
 import knn.api.KnowledgeNodeNetwork;
-import knn.api.Tuple;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -19,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class KnnAndEsTest {
     private static final String ANIMAL_DATA_PATH = "data/animalData.txt";
@@ -49,18 +49,12 @@ public class KnnAndEsTest {
         System.out.println();
         System.out.println("testKNNandES");
         setupKNN();
-        ArrayList<Tuple> inputs = new ArrayList<>();
-        Tuple data1 = new Tuple("dog", 10);
-        inputs.add(data1);
-        Tuple data2 = new Tuple("cat", 10);
-        inputs.add(data2);
-        knn.forwardSearch(inputs);
+        knn.forwardThink(0);
         Set<Tag> activatedTags = knn.getActiveTags();
         es.reset();
         es.addTags(activatedTags);
 
         Set<Fact> expectedInitialFacts = new HashSet<>();
-        Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
         Set<Rule> expectedInitialRules = new HashSet<>();
 
         for (Tag t : activatedTags) {
@@ -68,8 +62,6 @@ public class KnnAndEsTest {
                 expectedInitialFacts.add((Fact) t);
             else if (t instanceof Rule)
                 expectedInitialRules.add((Rule) t);
-            else if (t instanceof Recommendation)
-                expectedInitialRecommendations.add((Recommendation) t);
         }
         System.out.println("[ES] Initial activated tags (from KNN): " + activatedTags);
 
@@ -84,9 +76,6 @@ public class KnnAndEsTest {
         Set<Recommendation> activatedRecommendations = es.think();
         System.out.println("[ES] Active recommendation (for Meta): " + activatedRecommendations);
 
-        Set<Tag> expectedActivatedRecommendation = new HashSet<>();
-        expectedActivatedRecommendation.add(new Recommendation("@avoid(scary,dangerous)"));
-        expectedActivatedRecommendation.add(new Recommendation("@isPet(easy,calm,bark)"));
-        assertEquals(activatedRecommendations, expectedActivatedRecommendation);
+        assertTrue(activatedRecommendations.isEmpty());
     }
 }

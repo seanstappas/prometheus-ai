@@ -3,7 +3,6 @@ package knn.api;
 import tags.Tag;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 public interface KnowledgeNodeNetwork {
@@ -52,7 +51,7 @@ public interface KnowledgeNodeNetwork {
      */
     void addActiveTag(Tag tag);
 
-    void addActiveTags(Set<Tag> tags);
+    void addActiveTags(Tag... tags);
 
     /**
      * Get access of active Tags
@@ -82,85 +81,4 @@ public interface KnowledgeNodeNetwork {
     Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply);
 
     Set<Tag> lambdaThink(int ply);
-
-    /**
-     * Lambda match, a match to find out the best relation between a know list of tags and a wanted item tag
-     *
-     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param item      the wanted item tag
-     */
-    void lambdaSearch(List<Tuple> nnOutputs, Tag item);
-
-    /**
-     * Backward searching with unlimited time
-     *
-     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param score     the minimum number of matching needed from the output list of a KN in order for that KN to
-     *                  become active. For example, if score = 0.5, than at least half of the provided input tags must
-     *                  be found in the output tags of a KN to activate that KN.
-     */
-    void backwardSearch(List<Tuple> nnOutputs, double score);
-
-    /**
-     * Creating input Tags from string in the output of Neural Network (NN)
-     * This method is used only for backward or lambda match because no excitation is needed during the Tag creation
-     *
-     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     */
-    void getInputForBackwardSearch(List<Tuple> nnOutputs);
-
-    /**
-     * Backward match with ply as input
-     *
-     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param score     indication of SIGMOID_VALUES
-     * @param ply       number of cycle the AI wanted to match
-     */
-    void backwardSearch(List<Tuple> nnOutputs, double score, int ply);
-
-    /**
-     * Forward searching with ply as number of depth
-     *
-     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     * @param ply       number of time of searching in the knowledge node network
-     */
-    void forwardSearch(List<Tuple> nnOutputs, int ply);
-
-    /**
-     * forwardSearch with unlimited time
-     *
-     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     */
-    void forwardSearch(List<Tuple> nnOutputs);
-
-    /**
-     * Creating input Tags from string in the output of Neural Network (NN)
-     * This method is used only for forward match because excitation may be active during the Tag creation
-     *
-     * @param nnOutputs a list of tuple of form (String, value) to mimic the output of Neural Network
-     */
-    void getInputForForwardSearch(List<Tuple> nnOutputs);
-
-    /**
-     * Excites a Knowledge Node.
-     *
-     * @param kn    the Knowledge Node to excite_sigmoid
-     * @param value the SIGMOID_VALUES from the neural network
-     *              If excitation leads to firing, this will add the fired kn to the activeTag.
-     */
-    void excite(KnowledgeNode kn, int value);
-
-    /**
-     * Fires a Knowledge Node.
-     *
-     * @param kn Knowledge Node to fire
-     */
-    void fire(KnowledgeNode kn);
-
-    /**
-     * Update the confidence of those active KN found in output list of a KN with its latest confidence value
-     *
-     * @param kn the kn that has a new confidence value
-     */
-    void updateConfidence(KnowledgeNode kn);
 }
