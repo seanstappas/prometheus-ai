@@ -7,7 +7,7 @@ Prometheus AI model, containing the following layers:
 
 The KNN and ES are still under active development, and the NN and META are basic skeletons at this point.
 
-![alt text](graphs/knn_new.png)
+![knn_graph](graphs/knn/knn_new.png)
 
 ## Contributing
 To contribute changes to the code base, create a branch and submit a [pull request](https://help.github.com/articles/about-pull-requests/). The branch merge will require a code review and that all tests (in the [`test`](src/test) directory) are passed. These tests will automatically be run at every change to the main branch with [Travis CI](https://travis-ci.com/seanstappas/prometheus-ai).
