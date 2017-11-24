@@ -43,7 +43,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
 
     @Override
     int getSleepDelay() {
-        return 1000;
+        return 1500;
     }
 
     @Override
@@ -111,7 +111,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     @Override
     public void buttonReleased(String id) {
         updateNodeTagClass(id);
-        saveScreenshot("");
+//        saveScreenshot("");
     }
 
     private void updateNodeTagClass(String id) {

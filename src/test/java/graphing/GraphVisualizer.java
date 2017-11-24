@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 abstract class GraphVisualizer implements ViewerListener {
+    private static final int INITIAL_DELAY = 7000;
     Graph graph;
     ViewerPipe fromViewer;
     private boolean updated = true;
@@ -43,7 +44,7 @@ abstract class GraphVisualizer implements ViewerListener {
         setupNodes();
         int iteration = 0;
         long lastTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - lastTime < getSleepDelay()) {};
+        while (System.currentTimeMillis() - lastTime < INITIAL_DELAY) {};
         if (saveScreenshot) {
             saveScreenshot(String.valueOf(iteration));
         }
