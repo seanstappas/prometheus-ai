@@ -35,5 +35,5 @@ Apache Commons Lang provides many nice objects to avoid boilerplate code for Jav
 Graphstream is used for plotting the KNN network. Details on this library can be found [here](http://graphstream-project.org/).
 
 ## Javadoc
-Javadoc can be found [here](http://cs.mcgill.ca/~sstapp/prometheus/index.html).
+Javadoc can be found [here](http://seanstappas.me/prometheus-ai/).
 
