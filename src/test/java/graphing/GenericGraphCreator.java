@@ -17,6 +17,6 @@ public class GenericGraphCreator extends KnnGraphVisualizer {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new GenericGraphCreator().visualize(true);
+        new GenericGraphCreator().visualize(false);
     }
 }

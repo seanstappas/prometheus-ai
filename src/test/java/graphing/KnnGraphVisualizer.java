@@ -111,6 +111,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     @Override
     public void buttonReleased(String id) {
         updateNodeTagClass(id);
+        saveScreenshot("");
     }
 
     private void updateNodeTagClass(String id) {

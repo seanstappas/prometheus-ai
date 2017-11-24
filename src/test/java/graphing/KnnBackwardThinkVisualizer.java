@@ -8,7 +8,7 @@ import java.util.Set;
 class KnnBackwardThinkVisualizer extends KnnGraphVisualizer {
     @Override
     String getScreenshotSavePath(String suffix) {
-        return MessageFormat.format("graphs/knn/knn_backward_think_{0}.png", suffix);
+        return MessageFormat.format("graphs/knn/backward/knn_backward_think_{0}", suffix);
     }
 
     @Override

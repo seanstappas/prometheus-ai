@@ -2,16 +2,19 @@ package graphing;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.stream.file.FileSinkSVG2;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 
 abstract class GraphVisualizer implements ViewerListener {
     Graph graph;
     ViewerPipe fromViewer;
     private boolean updated = true;
+    FileSinkSVG2 svgSink;
 
     private boolean loop = true;
 
@@ -72,10 +75,17 @@ abstract class GraphVisualizer implements ViewerListener {
         fromViewer = viewer.newViewerPipe();
         fromViewer.addViewerListener(this);
         fromViewer.addSink(graph);
+        svgSink = new FileSinkSVG2();
     }
 
-    private void saveScreenshot(String suffix) {
-        graph.addAttribute("ui.screenshot", getScreenshotSavePath(suffix));
+    void saveScreenshot(String suffix) {
+        try {
+            svgSink.writeAll(graph, MessageFormat.format("{0}.svg", getScreenshotSavePath(suffix)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        graph.addAttribute("ui.screenshot",
+                MessageFormat.format("{0}.png", getScreenshotSavePath(suffix)));
     }
 
     @Override
