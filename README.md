@@ -14,7 +14,7 @@ To contribute changes to the code base, create a branch and submit a [pull reque
 
 ## Background
 ### Prometheus Theory
-For a basic and slightly outdated overview of Prometheus, see the [report provided in the `docs` directory](docs/reports/prometheus-ai-1.pdf). For further background on the theory of Prometheus, contact [Prof. Vybihal](http://www.cs.mcgill.ca/~jvybihal/).
+For a basic and slightly outdated overview of Prometheus, see the [report provided in the `reports` directory](reports/prometheus-ai-1.pdf). For further background on the theory of Prometheus, contact [Prof. Vybihal](http://www.cs.mcgill.ca/~jvybihal/).
 
 ### Maven
 This project is a Java Maven project, with library dependencies specified in the [`pom.xml`](pom.xml) file. Maven allows dependencies to be specified in a file without needing to keep track of jar files. An introduction to Maven can be found [here](https://maven.apache.org/what-is-maven.html).
