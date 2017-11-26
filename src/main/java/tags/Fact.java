@@ -116,9 +116,10 @@ public class Fact extends Predicate {
     public VariableReturn getMatchResult(Fact inputFact) {
 
         VariableReturn result = new VariableReturn();
-        if (noMatchPredicateName(inputFact, result)) return result;
-        if (noMatchArgumentsSize(inputFact, result)) return result;
-        if (noMatchArguments(result, inputFact.arguments)) return result;
+        result.setFactMatch(false);
+        if (!matchPredicateName(inputFact, result)) return result;
+        if (!matchArgumentsSize(inputFact, result)) return result;
+        if (!matchArguments(result, inputFact.arguments)) return result;
         result.setFactMatch(true);
         return result;
     }
@@ -126,20 +127,20 @@ public class Fact extends Predicate {
 
     public boolean matches(Fact inputFact) {
         VariableReturn result = new VariableReturn();
-        return !noMatchPredicateName(inputFact, result)
-                && !noMatchArgumentsSize(inputFact, result)
-                && !noMatchArguments(result, inputFact.arguments);
+        return matchPredicateName(inputFact, result)
+                && matchArgumentsSize(inputFact, result)
+                && matchArguments(result, inputFact.arguments);
     }
 
-    private boolean noMatchPredicateName(Fact inputFact, VariableReturn result) {
+    private boolean matchPredicateName(Fact inputFact, VariableReturn result) {
         if (!this.predicateName.equals(inputFact.predicateName)) {
             result.setFactMatch(false);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
-    private boolean noMatchArguments(VariableReturn result, List<Argument> iterInputFactArguments) {
+    private boolean matchArguments(VariableReturn result, List<Argument> iterInputFactArguments) {
         Iterator iterFact = this.arguments.iterator();
         Iterator iterInputFact = iterInputFactArguments.iterator();
 
@@ -156,7 +157,7 @@ public class Fact extends Predicate {
             }
             result.setFactMatch(argFact.matches(argInputFact));
             if (!result.isFactMatch()) {
-                return true;
+                return false;
             }
         }
         if (iterInputFact.hasNext()) {
@@ -167,16 +168,16 @@ public class Fact extends Predicate {
         return false;
     }
 
-    private boolean noMatchArgumentsSize(Fact inputFact, VariableReturn result) {
+    private boolean matchArgumentsSize(Fact inputFact, VariableReturn result) {
         if (inputFact.arguments.size() > this.arguments.size()) {
             for (int i = this.arguments.size(); i < inputFact.arguments.size(); i++) {
                 if (!inputFact.arguments.get(i).getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
                     result.setFactMatch(false);
-                    return true;
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     @Override

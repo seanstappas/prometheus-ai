@@ -35,7 +35,6 @@ class ThinkCycleExecutor {
      * @return the activated Predicates as a result of thinking
      */
     Set<Predicate> thinkCycle() {
-        Set<Predicate> activatedPredicates = new HashSet<>();
         Set<Rule> pendingActivatedRules = new HashSet<>();
         Map<String, Argument> pendingReplacementPairs = new HashMap<>();
         for (Rule rule : readyRules) {
@@ -50,8 +49,7 @@ class ThinkCycleExecutor {
                 pendingActivatedRules.add(rule);
             }
         }
-        activateRules(activatedPredicates, pendingActivatedRules, pendingReplacementPairs);
-        return activatedPredicates;
+        return activateRules(pendingActivatedRules, pendingReplacementPairs);
     }
 
     /**
@@ -105,7 +103,8 @@ class ThinkCycleExecutor {
         }
     }
 
-    private void activateRules(Set<Predicate> activatedPredicates, Set<Rule> pendingActivatedRules, Map<String, Argument> pendingReplacementPairs) {
+    private Set<Predicate> activateRules(Set<Rule> pendingActivatedRules, Map<String, Argument> pendingReplacementPairs) {
+        Set<Predicate> activatedPredicates = new HashSet<>();
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
             activeRules.add(rule);
@@ -115,5 +114,6 @@ class ThinkCycleExecutor {
                 addPredicate(predicate);
             }
         }
+        return activatedPredicates;
     }
 }
