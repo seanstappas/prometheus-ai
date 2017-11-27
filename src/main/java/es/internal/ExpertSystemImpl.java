@@ -40,13 +40,13 @@ class ExpertSystemImpl implements ExpertSystem {
     }
 
     @Override
-    public Set<Recommendation> think(boolean shouldGenerateRule) {
-        return thinker.think(shouldGenerateRule, Integer.MAX_VALUE);
+    public Set<Recommendation> think(boolean generateRule) {
+        return thinker.think(generateRule, Integer.MAX_VALUE);
     }
 
     @Override
-    public Set<Recommendation> think(boolean shouldGenerateRule, int numberOfCycles) {
-        return thinker.think(shouldGenerateRule, numberOfCycles);
+    public Set<Recommendation> think(boolean generateRule, int numberOfCycles) {
+        return thinker.think(generateRule, numberOfCycles);
     }
 
     @Override

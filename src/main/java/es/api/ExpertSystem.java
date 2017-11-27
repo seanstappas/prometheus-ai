@@ -18,10 +18,10 @@ public interface ExpertSystem {
      * <p>
      * Stops once the system reaches natural quiescence and generates a new rule.
      *
-     * @param shouldGenerateRule if true generates the new rule proven by a think cycle
+     * @param generateRule if true generates the new rule proven by a think cycle
      * @return the activated Recommendations as a result of thinking
      */
-    Set<Recommendation> think(boolean shouldGenerateRule);
+    Set<Recommendation> think(boolean generateRule);
 
     /**
      * Makes the ES think for a fixed number of cycles. The number of cycles represents how much effort is being put
@@ -30,11 +30,11 @@ public interface ExpertSystem {
      * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
      * quiescence. Generates a new rule.
      *
-     * @param shouldGenerateRule if true generates the new rule proven by a think cycle
+     * @param generateRule if true generates the new rule proven by a think cycle
      * @param numberOfCycles     the number of cycles to think for
      * @return the activated Recommendations as a result of thinking
      */
-    Set<Recommendation> think(boolean shouldGenerateRule, int numberOfCycles);
+    Set<Recommendation> think(boolean generateRule, int numberOfCycles);
 
     /**
      * Generates rules from a natural language sentence

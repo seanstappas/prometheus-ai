@@ -27,7 +27,7 @@ class Thinker {
         this.thinkCycleExecutor = thinkCycleExecutorFactory.create(readyRules, activeRules, facts, recommendations);
     }
 
-    Set<Recommendation> think(boolean shouldGenerateRule, int numberOfCycles) {
+    Set<Recommendation> think(boolean generateRule, int numberOfCycles) {
         Set<Predicate> allActivatedPredicates = new HashSet<>();
         Set<Predicate> activatedPredicates;
         Set<Fact> inputFacts = new HashSet<>(facts);
@@ -42,7 +42,7 @@ class Thinker {
             if (predicate instanceof Recommendation)
                 activatedRecommendations.add((Recommendation) predicate);
         }
-        if (shouldGenerateRule) {
+        if (generateRule) {
             generateProvenRule(inputFacts, allActivatedPredicates);
         }
         return activatedRecommendations;
