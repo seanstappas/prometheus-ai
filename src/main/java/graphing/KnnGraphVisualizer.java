@@ -1,7 +1,6 @@
 package graphing;
 
 import com.google.inject.Guice;
-import integration.KnnDataLoader;
 import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
 import org.graphstream.graph.Node;
@@ -56,7 +55,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     private void loadKNN() {
         Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
         knn = prometheus.getKnowledgeNodeNetwork();
-        KnnDataLoader.loadData(knn, ANIMAL_DATA_PATH);
+        knn.loadData(ANIMAL_DATA_PATH);
         activeIDs = new HashSet<>();
     }
 

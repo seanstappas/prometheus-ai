@@ -3,6 +3,7 @@ package knn.api;
 import tags.Tag;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public interface KnowledgeNodeNetwork {
@@ -81,4 +82,8 @@ public interface KnowledgeNodeNetwork {
     Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply);
 
     Set<Tag> lambdaThink(int ply);
+
+    void loadData(String filename);
+
+    void loadData(String filename, List<KnowledgeNode> knowledgeNodes);
 }

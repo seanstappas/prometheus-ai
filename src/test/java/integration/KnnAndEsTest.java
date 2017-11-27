@@ -13,7 +13,6 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,7 +37,7 @@ public class KnnAndEsTest {
      */
     @BeforeMethod
     public void setupKNN() {
-        KnnDataLoader.loadData(knn, ANIMAL_DATA_PATH, new ArrayList<>());
+        knn.loadData(ANIMAL_DATA_PATH);
     }
 
     /**

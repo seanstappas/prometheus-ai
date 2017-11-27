@@ -33,7 +33,7 @@ public class KnowledgeNodeNetworkAnimalTest {
      */
     @BeforeMethod
     public void setupKNN() {
-        KnnDataLoader.loadData(knn, ANIMAL_DATA_PATH);
+        knn.loadData(ANIMAL_DATA_PATH);
     }
 
     /**

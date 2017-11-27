@@ -6,6 +6,8 @@ import knn.api.KnowledgeNodeNetwork;
 import tags.Tag;
 
 import javax.inject.Inject;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.*;
 
 class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
@@ -129,5 +131,32 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     @Override
     public Set<Tag> lambdaThink(int ply) {
         return lambdaSearcher.search(activeTags, ply);
+    }
+
+
+    @Override
+    public void loadData(String filename) {
+        loadData(filename, new ArrayList<>());
+    }
+
+    @Override
+    public void loadData(String filename, List<KnowledgeNode> knowledgeNodes) {
+        resetEmpty();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename)); //change the local directory for the integration file to run
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] info = line.split(";\\s+");
+                KnowledgeNode kn = new KnowledgeNode(info);
+                knowledgeNodes.add(kn);
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (KnowledgeNode knowledgeNode : knowledgeNodes) {
+            addKnowledgeNode(knowledgeNode);
+        }
     }
 }

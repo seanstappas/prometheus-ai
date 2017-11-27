@@ -32,7 +32,7 @@ public class KnowledgeNodeNetworkPetTest {
 
     @BeforeMethod
     public void setupKNN(){
-        KnnDataLoader.loadData(knn, PET_DATA_PATH, knowledgeNodes);
+        knn.loadData(PET_DATA_PATH, knowledgeNodes);
     }
 
     @Test
