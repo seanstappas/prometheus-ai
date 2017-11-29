@@ -10,7 +10,7 @@
    viewBox="0.000000 0.000000 1000.000000 1000.000000"
    id="graph"
    version="1.1"
-   sodipodi:docname="knn_simple_backward_think_0.svg"
+   sodipodi:docname="knn_simple_graph.svg"
    inkscape:version="0.92.1 r15371">
   <metadata
      id="metadata73">
@@ -20,6 +20,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -36,9 +37,9 @@
      inkscape:window-height="1027"
      id="namedview71"
      showgrid="false"
-     inkscape:zoom="0.472"
-     inkscape:cx="213.70244"
-     inkscape:cy="634.23811"
+     inkscape:zoom="0.6675088"
+     inkscape:cx="414.39402"
+     inkscape:cy="521.81096"
      inkscape:window-x="1272"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
