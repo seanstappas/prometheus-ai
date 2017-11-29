@@ -17,6 +17,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     private static final String KNN_STYLE_SHEET_PATH = "graphs/knn/knn_graph_style_sheet.css";
     private static final String ANIMAL_DATA_PATH = "data/animalData2.txt";
     private Set<String> activeIDs;
+    boolean forceContinue = false;
 
     KnowledgeNodeNetwork knn;
 
@@ -102,7 +103,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
                 updateNodeTagClass(knID);
             }
         }
-        return !activatedTags.isEmpty();
+        return !activatedTags.isEmpty() || forceContinue;
     }
 
     @Override

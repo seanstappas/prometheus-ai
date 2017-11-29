@@ -44,6 +44,7 @@ class BackwardSearcher extends Searcher<Set<Tag>> {
             allActivatedTags.addAll(activatedTags);
             currentPlyInputTags = activatedTags;
         }
+        allActivatedTags.removeIf(this.activeTags::contains);
         this.activeTags.addAll(allActivatedTags);
         return allActivatedTags;
     }
