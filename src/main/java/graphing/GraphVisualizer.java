@@ -45,15 +45,15 @@ abstract class GraphVisualizer implements ViewerListener {
         int iteration = 0;
         long lastTime = System.currentTimeMillis();
         while (System.currentTimeMillis() - lastTime < INITIAL_DELAY) {};
-        if (saveScreenshot) {
-            saveScreenshot(String.valueOf(iteration));
-        }
         lastTime = System.currentTimeMillis();
         while (loop) {
             fromViewer.pump();
             if (updated) {
                 if (System.currentTimeMillis() - lastTime >= getSleepDelay()) {
                     iteration++;
+                    if (saveScreenshot && iteration == 1) {
+                        saveScreenshot("0");
+                    }
                     updated = updateGraph();
                     if (updated && saveScreenshot) {
                         saveScreenshot(String.valueOf(iteration));

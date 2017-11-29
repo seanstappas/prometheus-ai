@@ -2,26 +2,26 @@ graph {
 }
 
 node {
-	size: 10px;
+	size: 50px;
 	fill-color: black;
 	text-mode: hidden;
 }
 
 edge {
-	arrow-size: 3px, 2px;
+	arrow-size: 15px, 10px;
 }
 
 sprite {
 }
 
 node.knowledgenode {
-	size: 20px;
+	size: 100px;
 	text-mode: hidden;
 	fill-color: #4e79a7;
 }
 
 node.active_knowledgenode {
-	size: 20px;
+	size: 100px;
 	text-mode: hidden;
 	fill-color: #e15759;
 }

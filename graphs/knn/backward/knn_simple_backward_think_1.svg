@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0.000000 0.000000 1000.000000 1000.000000" id="graph" version="1.1">
+  <defs></defs>
+  <g id="graph-misc">
+    <g id="graph-background">
+      <path style="fill:#ffffff;fill-opacity:1.000000;fill-rule:nonzero;" d=" M 0.000000 0.000000 L 1000.000000 0.000000 L 1000.000000 1000.000000 L 0.000000 1000.000000 Z"></path></g></g>
+  <g id="elements">
+    <g id="graph-background">
+      <path style="fill:#ffffff;fill-opacity:1.000000;fill-rule:nonzero;" d=" M 0.000000 0.000000 L 1000.000000 0.000000 L 1000.000000 1000.000000 L 0.000000 1000.000000 Z"></path></g>
+    <g id="egde-KnowledgeNode[inputTag=Fact[predicateName=P2,arguments=[A]],outputTags=[Fact[predicateName=P4,arguments=[A]], Fact[predicateName=P5,arguments=[A]]]]Fact[predicateName=P4,arguments=[A]]">
+      <path style="stroke:#000000;stroke-width:1.000000px;" d=" M 91.521555 754.053361 L 327.812801 852.516458"></path></g>
+    <g id="egde-KnowledgeNode[inputTag=Fact[predicateName=P2,arguments=[A]],outputTags=[Fact[predicateName=P4,arguments=[A]], Fact[predicateName=P5,arguments=[A]]]]Fact[predicateName=P5,arguments=[A]]">
+      <path style="stroke:#000000;stroke-width:1.000000px;" d=" M 91.521555 754.053361 L 30.000000 970.000000"></path></g>
+    <g id="egde-KnowledgeNode[inputTag=Fact[predicateName=P1,arguments=[A]],outputTags=[Fact[predicateName=P3,arguments=[A]], Fact[predicateName=P2,arguments=[A]]]]Fact[predicateName=P2,arguments=[A]]">
+      <path style="stroke:#000000;stroke-width:1.000000px;" d=" M 243.845191 313.876162 L 116.342572 522.773807"></path></g>
+    <g id="egde-KnowledgeNode[inputTag=Fact[predicateName=P3,arguments=[A]],outputTags=[Fact[predicateName=P7,arguments=[A]], Fact[predicateName=P6,arguments=[A]]]]Fact[predicateName=P7,arguments=[A]]">
+      <path style="stroke:#000000;stroke-width:1.000000px;" d=" M 757.940045 159.120187 L 970.000000 30.000000"></path></g>
+    <g id="egde-Fact[predicateName=P2,arguments=[A]]KnowledgeNode[inputTag=Fact[predicateName=P2,arguments=[A]],outputTags=[Fact[predicateName=P4,arguments=[A]], Fact[predicateName=P5,arguments=[A]]]]">
+      <path style="stroke:#000000;stroke-width:1.000000px;" d=" M 116.342572 522.773807 L 91.521555 754.053361"></path></g>
+    <g id="egde-KnowledgeNode[inputTag=Fact[predicateName=P1,arguments=[A]],outputTags=[Fact[predicateName=P3,arguments=[A]], Fact[predicateName=P2,arguments=[A]]]]Fact[predicateName=P3,arguments=[A]]">
+      <path style="stroke:#000000;stroke-width:1.000000px;" d=" M 243.845191 313.876162 L 491.728761 208.961751"></path></g>
+    <g id="egde-Fact[predicateName=P1,arguments=[A]]KnowledgeNode[inputTag=Fact[predicateName=P1,arguments=[A]],outputTags=[Fact[predicateName=P3,arguments=[A]], Fact[predicateName=P2,arguments=[A]]]]">
+      <path style="stroke:#000000;stroke-width:1.000000px;" d=" M 72.409468 145.595309 L 243.845191 313.876162"></path></g>
+    <g id="egde-KnowledgeNode[inputTag=Fact[predicateName=P3,arguments=[A]],outputTags=[Fact[predicateName=P7,arguments=[A]], Fact[predicateName=P6,arguments=[A]]]]Fact[predicateName=P6,arguments=[A]]">
+      <path style="stroke:#000000;stroke-width:1.000000px;" d=" M 757.940045 159.120187 L 938.048860 321.592648"></path></g>
+    <g id="egde-Fact[predicateName=P3,arguments=[A]]KnowledgeNode[inputTag=Fact[predicateName=P3,arguments=[A]],outputTags=[Fact[predicateName=P7,arguments=[A]], Fact[predicateName=P6,arguments=[A]]]]">
+      <path style="stroke:#000000;stroke-width:1.000000px;" d=" M 491.728761 208.961751 L 757.940045 159.120187"></path></g>
+    <g id="node-KnowledgeNode[inputTag=Fact[predicateName=P1,arguments=[A]],outputTags=[Fact[predicateName=P3,arguments=[A]], Fact[predicateName=P2,arguments=[A]]]]">
+      <path style="fill:#4e79a7;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(243.845191,313.876162)" d=" m -50.000000 0 a 50.000000,50.000000 0 1 0 100.000000,0 50.000000,50.000000 0 1 0 -100.000000,0 z"></path></g>
+    <g id="node-KnowledgeNode[inputTag=Fact[predicateName=P2,arguments=[A]],outputTags=[Fact[predicateName=P4,arguments=[A]], Fact[predicateName=P5,arguments=[A]]]]">
+      <path style="fill:#4e79a7;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(91.521555,754.053361)" d=" m -50.000000 0 a 50.000000,50.000000 0 1 0 100.000000,0 50.000000,50.000000 0 1 0 -100.000000,0 z"></path></g>
+    <g id="node-Fact[predicateName=P2,arguments=[A]]">
+      <path style="fill:#b07aa1;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(116.342572,522.773807)" d=" m -25.000000 0 a 25.000000,25.000000 0 1 0 50.000000,0 25.000000,25.000000 0 1 0 -50.000000,0 z"></path></g>
+    <g id="node-Fact[predicateName=P1,arguments=[A]]">
+      <path style="fill:#b07aa1;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(72.409468,145.595309)" d=" m -25.000000 0 a 25.000000,25.000000 0 1 0 50.000000,0 25.000000,25.000000 0 1 0 -50.000000,0 z"></path></g>
+    <g id="node-Fact[predicateName=P4,arguments=[A]]">
+      <path style="fill:#b07aa1;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(327.812801,852.516458)" d=" m -25.000000 0 a 25.000000,25.000000 0 1 0 50.000000,0 25.000000,25.000000 0 1 0 -50.000000,0 z"></path></g>
+    <g id="node-Fact[predicateName=P6,arguments=[A]]">
+      <path style="fill:#b07aa1;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(938.048860,321.592648)" d=" m -25.000000 0 a 25.000000,25.000000 0 1 0 50.000000,0 25.000000,25.000000 0 1 0 -50.000000,0 z"></path></g>
+    <g id="node-Fact[predicateName=P5,arguments=[A]]">
+      <path style="fill:#b07aa1;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(30.000000,970.000000)" d=" m -25.000000 0 a 25.000000,25.000000 0 1 0 50.000000,0 25.000000,25.000000 0 1 0 -50.000000,0 z"></path></g>
+    <g id="node-KnowledgeNode[inputTag=Fact[predicateName=P3,arguments=[A]],outputTags=[Fact[predicateName=P7,arguments=[A]], Fact[predicateName=P6,arguments=[A]]]]">
+      <path style="fill:#e15759;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(757.940045,159.120187)" d=" m -50.000000 0 a 50.000000,50.000000 0 1 0 100.000000,0 50.000000,50.000000 0 1 0 -100.000000,0 z"></path></g>
+    <g id="node-Fact[predicateName=P7,arguments=[A]]">
+      <path style="fill:#e15759;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(970.000000,30.000000)" d=" m -25.000000 0 a 25.000000,25.000000 0 1 0 50.000000,0 25.000000,25.000000 0 1 0 -50.000000,0 z"></path></g>
+    <g id="node-Fact[predicateName=P3,arguments=[A]]">
+      <path style="fill:#e15759;fill-opacity:1.000000;fill-rule:nonzero;" transform="translate(491.728761,208.961751)" d=" m -25.000000 0 a 25.000000,25.000000 0 1 0 50.000000,0 25.000000,25.000000 0 1 0 -50.000000,0 z"></path></g></g></svg>

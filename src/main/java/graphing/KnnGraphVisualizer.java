@@ -35,6 +35,10 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
         return activeTags;
     }
 
+    String getKnnDataPath() {
+        return ANIMAL_DATA_PATH;
+    }
+
     @Override
     String getStyleSheetPath() {
         return KNN_STYLE_SHEET_PATH;
@@ -55,7 +59,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     private void loadKNN() {
         Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
         knn = prometheus.getKnowledgeNodeNetwork();
-        knn.loadData(ANIMAL_DATA_PATH);
+        knn.loadData(getKnnDataPath());
         activeIDs = new HashSet<>();
     }
 
@@ -92,7 +96,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
             updateNodeTagClass(id);
 
             KnowledgeNode kn = knn.getKnowledgeNode(t);
-            if (kn.isFired()) {
+            if (kn != null && kn.isFired()) {
                 String knID = kn.toString();
                 activeIDs.add(knID);
                 updateNodeTagClass(knID);
