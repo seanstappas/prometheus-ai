@@ -15,10 +15,7 @@ class BackwardSearchMatcher {
             }
         }
         if (matchCount >= numRequiredMatches) {
-            boolean fired = kn.excite();
-            if (fired) {
-                return Optional.of(kn.getInputTag());
-            }
+            return Optional.of(kn.getInputTag());
         }
         return Optional.empty();
     }

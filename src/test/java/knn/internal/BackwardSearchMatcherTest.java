@@ -69,29 +69,4 @@ public class BackwardSearchMatcherTest {
         // then
         assertEquals(Optional.empty(), actualTag);
     }
-
-    @Test
-    public void mustMatchButNotFire() throws Exception {
-        Tag t1 = mock(Tag.class);
-        Tag t2 = mock(Tag.class);
-        Tag t3 = mock(Tag.class);
-        Tag t4 = mock(Tag.class);
-        Set<Tag> inputTags = new HashSet<>(Arrays.asList(t1, t2, t3));
-        KnowledgeNode kn = mock(KnowledgeNode.class);
-        Tag inputTag = mock(Tag.class);
-        Set<Tag> outputTags = new HashSet<>(Arrays.asList(t1, t2, t4));
-        int numRequiredMatches = 2;
-
-        // given
-        when(kn.getInputTag()).thenReturn(inputTag);
-        when(kn.getOutputTags()).thenReturn(outputTags);
-        when(kn.excite()).thenReturn(false);
-
-        // when
-        Optional<Tag> actualTag = backwardSearchMatcher.match(inputTags, kn, numRequiredMatches);
-
-        // then
-        assertEquals(Optional.empty(), actualTag);
-    }
-
 }
