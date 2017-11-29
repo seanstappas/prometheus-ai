@@ -39,6 +39,6 @@ class KnnSimpleLambdaThinkVisualizer extends KnnSimpleGraphVisualizer {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new KnnSimpleLambdaThinkVisualizer().visualize(true);
+        new KnnSimpleLambdaThinkVisualizer().visualize(false);
     }
 }

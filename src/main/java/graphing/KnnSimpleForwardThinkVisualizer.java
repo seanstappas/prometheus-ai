@@ -26,6 +26,6 @@ class KnnSimpleForwardThinkVisualizer extends KnnSimpleGraphVisualizer {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new KnnSimpleForwardThinkVisualizer().visualize(true);
+        new KnnSimpleForwardThinkVisualizer().visualize(false);
     }
 }

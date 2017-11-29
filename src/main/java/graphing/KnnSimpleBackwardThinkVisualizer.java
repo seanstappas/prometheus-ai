@@ -28,6 +28,6 @@ class KnnSimpleBackwardThinkVisualizer extends KnnSimpleGraphVisualizer {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new KnnSimpleBackwardThinkVisualizer().visualize(true);
+        new KnnSimpleBackwardThinkVisualizer().visualize(false);
     }
 }

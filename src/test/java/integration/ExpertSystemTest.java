@@ -415,8 +415,8 @@ public class ExpertSystemTest {
                 "When battery(low) distance(!close) do @lowpowermode() battery(conservation)"
         };
 
-        for (String sentences : sampleSentences) {
-            es.teach(sentences);
+        for (String sentence : sampleSentences) {
+            es.teach(sentence);
         }
 
         List<Rule> multipleRules =
