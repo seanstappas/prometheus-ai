@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 1017.9773 1019.4754"
+   id="graph"
+   version="1.1"
+   sodipodi:docname="knn_simple_graph_large.svg"
+   inkscape:version="0.92.1 r15371"
+   width="1017.9773"
+   height="1019.4754">
+  <metadata
+     id="metadata73">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     id="namedview71"
+     showgrid="false"
+     inkscape:zoom="0.6675088"
+     inkscape:cx="400.94221"
+     inkscape:cy="506.11342"
+     inkscape:window-x="1272"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="elements"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <defs
+     id="defs2">
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker6350"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path6348"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker6130"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path6128"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5868"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path5866"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5762"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path5760"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5704"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path5702"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5574"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path5572"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5384"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path5382"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5240"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path5238"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4571"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <g
+     id="graph-misc"
+     transform="translate(8.9886458,9.737699)">
+    <g
+       id="graph-background">
+      <path
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero"
+         d="M 0,0 H 1000 V 1000 H 0 Z"
+         id="path4"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+  <g
+     id="elements"
+     transform="translate(8.9886458,9.737699)">
+    <g
+       id="g10"
+       transform="matrix(1.0179773,0,0,1.0194754,-8.9886458,-9.737699)">
+      <path
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero"
+         d="M 0,0 H 1000 V 1000 H 0 Z"
+         id="path8"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="egde-KnowledgeNode[inputTag=Fact[predicateName=P2,arguments=[A]],outputTags=[Fact[predicateName=P4,arguments=[A]], Fact[predicateName=P5,arguments=[A]]]]Fact[predicateName=P4,arguments=[A]]"
+       transform="matrix(0.94806482,0,0,0.93482876,33.932323,10.258354)">
+      <path
+         style="stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker5762)"
+         d="M 654.0618,156.70036 846.6623,45.510737"
+         id="path12"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="egde-KnowledgeNode[inputTag=Fact[predicateName=P2,arguments=[A]],outputTags=[Fact[predicateName=P4,arguments=[A]], Fact[predicateName=P5,arguments=[A]]]]Fact[predicateName=P5,arguments=[A]]"
+       transform="matrix(0.95772069,0,0,0.95284843,27.638766,7.3479913)">
+      <path
+         style="stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker5868)"
+         d="m 654.0618,156.70036 287.73765,63.09226"
+         id="path15"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="egde-KnowledgeNode[inputTag=Fact[predicateName=P1,arguments=[A]],outputTags=[Fact[predicateName=P3,arguments=[A]], Fact[predicateName=P2,arguments=[A]]]]Fact[predicateName=P2,arguments=[A]]"
+       transform="matrix(0.94093193,0,0,0.93209324,21.102973,32.006436)">
+      <path
+         style="stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker5574)"
+         d="M 358.16828,470.81025 470.07872,330.61119"
+         id="path18"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="egde-KnowledgeNode[inputTag=Fact[predicateName=P3,arguments=[A]],outputTags=[Fact[predicateName=P7,arguments=[A]], Fact[predicateName=P6,arguments=[A]]]]Fact[predicateName=P7,arguments=[A]]"
+       transform="matrix(0.96062594,0,0,0.93633569,9.0771371,51.442712)">
+      <path
+         style="stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker6350)"
+         d="m 231.47365,808.66676 299.35993,49.73291"
+         id="path21"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="egde-Fact[predicateName=P2,arguments=[A]]KnowledgeNode[inputTag=Fact[predicateName=P2,arguments=[A]],outputTags=[Fact[predicateName=P4,arguments=[A]], Fact[predicateName=P5,arguments=[A]]]]"
+       transform="matrix(0.86670597,0,0,0.86561659,64.933813,41.573848)">
+      <path
+         style="stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker5704)"
+         d="M 487.82236,308.63026 615.86006,193.404"
+         id="path24"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="egde-KnowledgeNode[inputTag=Fact[predicateName=P1,arguments=[A]],outputTags=[Fact[predicateName=P3,arguments=[A]], Fact[predicateName=P2,arguments=[A]]]]Fact[predicateName=P3,arguments=[A]]"
+       transform="matrix(0.90447448,0,0,0.92405668,34.285598,35.706827)">
+      <path
+         style="stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker5240)"
+         d="m 358.16828,470.81025 -70.2386,144.35527"
+         id="path27"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="egde-Fact[predicateName=P1,arguments=[A]]KnowledgeNode[inputTag=Fact[predicateName=P1,arguments=[A]],outputTags=[Fact[predicateName=P3,arguments=[A]], Fact[predicateName=P2,arguments=[A]]]]"
+       transform="matrix(0.90281721,-0.00256073,0.00236139,0.97902606,1.9403664,9.1580386)">
+      <path
+         style="stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#Arrow2Lend)"
+         d="m 30,421.10621 277.79375,42.2135"
+         id="path30"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="egde-KnowledgeNode[inputTag=Fact[predicateName=P3,arguments=[A]],outputTags=[Fact[predicateName=P7,arguments=[A]], Fact[predicateName=P6,arguments=[A]]]]Fact[predicateName=P6,arguments=[A]]"
+       transform="matrix(0.93169572,0,0,0.91034179,15.899531,72.502275)">
+      <path
+         style="stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker6130)"
+         d="M 231.47365,808.66676 194.01969,942.45763"
+         id="path33"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="egde-Fact[predicateName=P3,arguments=[A]]KnowledgeNode[inputTag=Fact[predicateName=P3,arguments=[A]],outputTags=[Fact[predicateName=P7,arguments=[A]], Fact[predicateName=P6,arguments=[A]]]]"
+       transform="matrix(0.80530338,0,0,0.80481697,54.09216,124.78454)">
+      <path
+         style="stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker5384)"
+         d="M 276.8068,639.52993 245.24483,758.34897"
+         id="path36"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="node-Fact[predicateName=P7,arguments=[A]]"
+       transform="matrix(1.5,0,0,1.5,-279.63819,-429.99433)">
+      <path
+         style="fill:#b07aa1;fill-opacity:1;fill-rule:nonzero"
+         d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
+         id="path39"
+         transform="translate(559.27637,859.98866)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="node-KnowledgeNode[inputTag=Fact[predicateName=P1,arguments=[A]],outputTags=[Fact[predicateName=P3,arguments=[A]], Fact[predicateName=P2,arguments=[A]]]]"
+       transform="matrix(1.5,0,0,1.5,-179.08414,-235.40512)">
+      <path
+         style="fill:#e15759;fill-opacity:1;fill-rule:nonzero"
+         d="M -50,0 A 50,50 0 1 0 50,0 50,50 0 1 0 -50,0 Z"
+         id="path42"
+         transform="translate(358.16828,470.81025)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="node-KnowledgeNode[inputTag=Fact[predicateName=P2,arguments=[A]],outputTags=[Fact[predicateName=P4,arguments=[A]], Fact[predicateName=P5,arguments=[A]]]]"
+       transform="matrix(1.5,0,0,1.5,-327.0309,-78.35018)">
+      <path
+         style="fill:#4e79a7;fill-opacity:1;fill-rule:nonzero"
+         d="M -50,0 A 50,50 0 1 0 50,0 50,50 0 1 0 -50,0 Z"
+         id="path45"
+         transform="translate(654.0618,156.70036)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="node-KnowledgeNode[inputTag=Fact[predicateName=P3,arguments=[A]],outputTags=[Fact[predicateName=P7,arguments=[A]], Fact[predicateName=P6,arguments=[A]]]]"
+       transform="matrix(1.5,0,0,1.5,-115.73682,-404.33338)">
+      <path
+         style="fill:#4e79a7;fill-opacity:1;fill-rule:nonzero"
+         d="M -50,0 A 50,50 0 1 0 50,0 50,50 0 1 0 -50,0 Z"
+         id="path48"
+         transform="translate(231.47365,808.66676)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="node-Fact[predicateName=P2,arguments=[A]]"
+       transform="matrix(1.5,0,0,1.5,-243.91118,-154.31513)">
+      <path
+         style="fill:#e15759;fill-opacity:1;fill-rule:nonzero"
+         d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
+         id="path51"
+         transform="translate(487.82236,308.63026)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="node-Fact[predicateName=P1,arguments=[A]]"
+       transform="matrix(1.5,0,0,1.5,-15,-210.5531)">
+      <path
+         style="fill:#e15759;fill-opacity:1;fill-rule:nonzero"
+         d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
+         id="path54"
+         transform="translate(30,421.10621)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="node-Fact[predicateName=P4,arguments=[A]]"
+       transform="matrix(1.5,0,0,1.5,-435.11933,-15)">
+      <path
+         style="fill:#b07aa1;fill-opacity:1;fill-rule:nonzero"
+         d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
+         id="path57"
+         transform="translate(870.23867,30)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="node-Fact[predicateName=P3,arguments=[A]]"
+       transform="matrix(1.5,0,0,1.5,-138.4034,-319.76496)">
+      <path
+         style="fill:#e15759;fill-opacity:1;fill-rule:nonzero"
+         d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
+         id="path60"
+         transform="translate(276.8068,639.52993)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="node-Fact[predicateName=P6,arguments=[A]]"
+       transform="matrix(1.5,0,0,1.5,-94.096709,-485)">
+      <path
+         style="fill:#b07aa1;fill-opacity:1;fill-rule:nonzero"
+         d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
+         id="path63"
+         transform="translate(188.19342,970)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="node-Fact[predicateName=P5,arguments=[A]]"
+       transform="matrix(1.5,0,0,1.5,-485,-111.6083)">
+      <path
+         style="fill:#b07aa1;fill-opacity:1;fill-rule:nonzero"
+         d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
+         id="path66"
+         transform="translate(970,223.2166)"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+</svg>
