@@ -27,9 +27,11 @@ public class KnowledgeNode {
     private final double maxAge;
 
     // Modifiable fields
-    private double age = 0; // Age timestamp. Set to current UNIX time when node is newly formed.
+    private long age = 0; // Age timestamp. Set to current UNIX time when node is newly formed.
+    private long ageThreshold = 1_000_000;
     private double belief = 0;
     private double activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
+    private boolean isExpired = false; // true when the KN has exceeded its age threshold
 
     /**
      * Creates a Knowledge Node from Strings.
@@ -84,6 +86,7 @@ public class KnowledgeNode {
      */
     public double updateAge() {
         this.age = (System.currentTimeMillis() / 1000L) - this.age;
+        this.inputTag.setAge(age);
         return this.age;
     }
 
@@ -99,9 +102,14 @@ public class KnowledgeNode {
      * @return true if the KN has been newly fired, i.e., it was not fired before this excitation.
      */
     public boolean excite() {
-        double oldActivation = activation;
-        activation += ACTIVATION_INCREMENT;
-        return oldActivation < threshold && isFired();
+        if (age > ageThreshold) {
+            isExpired = true;
+            return false;
+        } else {
+            double oldActivation = activation;
+            activation += ACTIVATION_INCREMENT;
+            return oldActivation < threshold && isFired();
+        }
     }
 
     public boolean isFired() {
@@ -120,6 +128,10 @@ public class KnowledgeNode {
 
     public Set<Tag> getOutputTags() {
         return outputTags;
+    }
+
+    public boolean isExpired() {
+        return isExpired;
     }
 
     @Override

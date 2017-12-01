@@ -35,6 +35,8 @@ public interface KnowledgeNodeNetwork {
      */
     void addKnowledgeNode(KnowledgeNode kn);
 
+    void deleteOldKnowledgeNodes();
+
     /**
      * Deletes a Knowledge Node from the KNN.
      *

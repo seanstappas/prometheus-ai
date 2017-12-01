@@ -64,6 +64,22 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
+    public void deleteOldKnowledgeNodes() {
+        Set<Tag> tagsToDelete = new HashSet<>();
+        for (KnowledgeNode kn : mapKN.values()) {
+            if (kn.isExpired()) {
+                tagsToDelete.add(kn.getInputTag());
+            }
+        }
+        for (Tag t : tagsToDelete) {
+            mapKN.remove(t);
+            if (activeTags.contains(t)) {
+                activeTags.remove(t);
+            }
+        }
+    }
+
+    @Override
     public void deleteKnowledgeNode(Tag tag) {
         mapKN.remove(tag);
     }
@@ -80,7 +96,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public Set<Tag> getActiveTags() {
-        return activeTags;
+        return Collections.unmodifiableSet(activeTags);
     }
 
     @Override

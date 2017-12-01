@@ -11,8 +11,8 @@ import nn.api.NeuralNetworkFactory;
 import prometheus.api.Prometheus;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 
 class PrometheusImpl implements Prometheus{
     private NeuralNetwork nn;
@@ -28,7 +28,7 @@ class PrometheusImpl implements Prometheus{
             MetaReasonerFactory metaReasonerFactory) {
         this.nn = neuralNetworkFactory.create();
         this.es = expertSystemFactory.create(new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
-        this.knn = knowledgeNodeNetworkFactory.create(new HashMap<>(), new HashSet<>(), 1);
+        this.knn = knowledgeNodeNetworkFactory.create(new TreeMap<>(), new HashSet<>(), 1);
         this.meta = metaReasonerFactory.create();
     }
 
