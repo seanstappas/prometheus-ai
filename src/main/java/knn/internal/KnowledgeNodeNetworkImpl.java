@@ -44,7 +44,8 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
 
     @Override
     public void resetEmpty() {
-        clearKnowledgeNodes();
+        mapKN.clear();
+        activeTags.clear();
     }
 
     @Override
@@ -53,8 +54,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void clearKnowledgeNodes() {
-        mapKN.clear();
+    public void clearActiveTags() {
         activeTags.clear();
     }
 

@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 abstract class GraphVisualizer implements ViewerListener {
-    private static final int INITIAL_DELAY = 7000;
+    private static final int INITIAL_DELAY = 2000;
     Graph graph;
     ViewerPipe fromViewer;
-    private boolean updated = true;
+    boolean updated = false;
     FileSinkSVG2 svgSink;
 
     private boolean loop = true;
@@ -35,21 +35,21 @@ abstract class GraphVisualizer implements ViewerListener {
     @Override
     public abstract void buttonReleased(String id);
 
-    final void visualize() throws InterruptedException {
+    final void visualize() {
         visualize(true);
     }
 
-    final void visualize(boolean saveScreenshot) throws InterruptedException {
+    final void visualize(boolean saveScreenshot) {
         setupGraph();
         setupNodes();
-        int iteration = 0;
         long lastTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - lastTime < INITIAL_DELAY) {};
-        lastTime = System.currentTimeMillis();
+//        while (System.currentTimeMillis() - lastTime < INITIAL_DELAY) {};
+        int iteration = 0;
+        long lastT = System.currentTimeMillis();
         while (loop) {
             fromViewer.pump();
             if (updated) {
-                if (System.currentTimeMillis() - lastTime >= getSleepDelay()) {
+                if (System.currentTimeMillis() - lastT >= getSleepDelay()) {
                     iteration++;
                     if (saveScreenshot && iteration == 1) {
                         saveScreenshot("0");
@@ -58,7 +58,7 @@ abstract class GraphVisualizer implements ViewerListener {
                     if (updated && saveScreenshot) {
                         saveScreenshot(String.valueOf(iteration));
                     }
-                    lastTime = System.currentTimeMillis();
+                    lastT = System.currentTimeMillis();
                 }
             }
         }

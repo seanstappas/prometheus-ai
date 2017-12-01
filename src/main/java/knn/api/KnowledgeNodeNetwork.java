@@ -26,10 +26,7 @@ public interface KnowledgeNodeNetwork {
      */
     void save(String dbFilename);
 
-    /**
-     * Clears all the Knowledge Nodes from the KNN.
-     */
-    void clearKnowledgeNodes();
+    void clearActiveTags();
 
     /**
      * Adds a Knowledge Node to the KNN.

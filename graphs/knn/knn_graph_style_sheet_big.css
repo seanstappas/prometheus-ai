@@ -2,26 +2,26 @@ graph {
 }
 
 node {
-	size: 10px;
+	size: 30px;
 	fill-color: black;
 	text-mode: hidden;
 }
 
 edge {
-	arrow-size: 4px, 2px;
+	arrow-size: 5px, 3px;
 }
 
 sprite {
 }
 
 node.knowledgenode {
-	size: 20px;
+	size: 60px;
 	text-mode: hidden;
 	fill-color: #4e79a7;
 }
 
 node.active_knowledgenode {
-	size: 20px;
+	size: 60px;
 	text-mode: hidden;
 	fill-color: #e15759;
 }
@@ -68,18 +68,18 @@ node.clicked {
 
 node.butt {
 	shape: box;
-    size: 60px, 30px;
-    text-size: 20px;
-    text-mode: normal;
-    text-color: white;
+	size: 60px, 30px;
+	text-size: 20px;
+	text-mode: normal;
+	text-color: white;
 	fill-color: #59a14f;
 }
 
 node.butt_clicked {
-    shape: box;
-    size: 60px, 30px;
-    text-size: 20px;
-    text-mode: normal;
-    text-color: white;
-    fill-color: #e15759;
+	shape: box;
+	size: 60px, 30px;
+	text-size: 20px;
+	text-mode: normal;
+	text-color: white;
+	fill-color: #e15759;
 }
