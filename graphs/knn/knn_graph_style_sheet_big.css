@@ -4,7 +4,6 @@ graph {
 node {
 	size: 30px;
 	fill-color: black;
-	text-mode: hidden;
 }
 
 edge {
@@ -32,32 +31,26 @@ node.active {
 }
 
 node.fact {
-	text-mode: hidden;
 	fill-color: #b07aa1;
 }
 
 node.rule {
-	text-mode: hidden;
 	fill-color: #76b7b2;
 }
 
 node.recommendation {
-	text-mode: hidden;
 	fill-color: #f28e2b;
 }
 
 node.active_fact {
-	text-mode: hidden;
 	fill-color: #e15759;
 }
 
 node.active_rule {
-	text-mode: hidden;
 	fill-color: #e15759;
 }
 
 node.active_recommendation {
-	text-mode: hidden;
 	fill-color: #e15759;
 }
 
@@ -67,6 +60,7 @@ node.clicked {
 }
 
 node.butt {
+	text-background-mode: none;
 	shape: box;
 	size: 60px, 30px;
 	text-size: 20px;
@@ -76,6 +70,7 @@ node.butt {
 }
 
 node.butt_clicked {
+	text-background-mode: none;
 	shape: box;
 	size: 60px, 30px;
 	text-size: 20px;

@@ -13,4 +13,6 @@ public abstract class Tag {
     void setConfidence(double confidence) {
         this.confidence = confidence;
     }
+
+    abstract String simpleToString();
 }

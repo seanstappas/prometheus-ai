@@ -3,6 +3,7 @@ package tags;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Arguments are composed of a name and symbol
@@ -122,7 +123,7 @@ public class Argument {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
                 .append("name", name)
                 .append("symbol", symbol)
                 .toString();

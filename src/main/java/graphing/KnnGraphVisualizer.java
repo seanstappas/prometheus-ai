@@ -6,6 +6,9 @@ import knn.api.KnowledgeNodeNetwork;
 import org.graphstream.graph.Node;
 import prometheus.api.Prometheus;
 import prometheus.guice.PrometheusModule;
+import tags.Fact;
+import tags.Recommendation;
+import tags.Rule;
 import tags.Tag;
 
 import java.text.MessageFormat;
@@ -19,8 +22,14 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     private static final String RESET_ID = "reset";
     private static final String START_ID = "start";
     private static final String STOP_ID = "stop";
+    private static final String TOGGLE_LABELS_ID = "toggle_labels";
     private Set<String> activeIDs;
+    private Set<String> factIDs = new HashSet<>();
+    private Set<String> recommendationIDs = new HashSet<>();
+    private Set<String> ruleIDs = new HashSet<>();
+    private Set<String> knIDs = new HashSet<>();
     boolean forceContinue = false;
+    boolean showLabels = true;
 
     KnowledgeNodeNetwork knn;
 
@@ -65,6 +74,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
         addButton(RESET_ID, "Reset", 0, 0, false);
         addButton(START_ID, "Start", 0, 0.5, false);
         addButton(STOP_ID, "Stop", 0, 1, true);
+        addButton(TOGGLE_LABELS_ID, "Labels", 0, 1.5,false);
     }
 
     private void addButton(String id, String label, double x, double y, boolean clicked) {
@@ -87,16 +97,30 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
 
     private void addInitialNodes() {
         for (KnowledgeNode knowledgeNode : knn.getKnowledgeNodes()) {
-            String inputID = knowledgeNode.getInputTag().toString();
+            Tag inputTag = knowledgeNode.getInputTag();
+            String inputID = inputTag.toString();
+            addTagID(inputTag, inputID);
             String knID = knowledgeNode.toString();
+            knIDs.add(knID);
             graph.addEdge(inputID + knID, inputID, knID, true);
             updateNodeTagClass(inputID);
             updateNodeTagClass(knID);
             for (Tag t : knowledgeNode.getOutputTags()) {
                 String outputID = t.toString();
+                addTagID(t, outputID);
                 graph.addEdge(knID + outputID, knID, outputID, true);
                 updateNodeTagClass(outputID);
             }
+        }
+    }
+
+    private void addTagID(Tag inputTag, String inputID) {
+        if (inputTag instanceof Fact) {
+            factIDs.add(inputID);
+        } else if (inputTag instanceof Recommendation) {
+            recommendationIDs.add(inputID);
+        } else if (inputTag instanceof Rule) {
+            ruleIDs.add(inputID);
         }
     }
 
@@ -148,6 +172,16 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
             node.setAttribute("ui.class", "butt_clicked");
             graph.getNode(START_ID).setAttribute("ui.class", "butt");
             updated = false;
+        } else if (TOGGLE_LABELS_ID.equals(id)) {
+            if (showLabels)
+                node.setAttribute("ui.class", "butt_clicked");
+            else {
+                node.setAttribute("ui.class", "butt");
+            }
+            showLabels = !showLabels;
+            for (Node n : graph.getEachNode()) {
+                updateNodeTagClass(n.getId());
+            }
         } else {
             node.setAttribute("ui.class", "clicked");
         }
@@ -163,9 +197,21 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
         Node node = graph.getNode(id);
         if (RESET_ID.equals(id)) {
             node.setAttribute("ui.class", "butt");
-        } else if (!START_ID.equals(id) && !STOP_ID.equals(id)) {
-            node.addAttribute("ui.label", id);
-            String nodeType = id.split("\\[")[0].toLowerCase();
+        } else if (!START_ID.equals(id) && !STOP_ID.equals(id) && !TOGGLE_LABELS_ID.equals(id)) {
+            if (showLabels)
+                node.setAttribute("ui.label", id);
+            else
+                node.setAttribute("ui.label", "");
+            String nodeType = "";
+            if (factIDs.contains(id)) {
+                nodeType = "fact";
+            } else if (recommendationIDs.contains(id)) {
+                nodeType = "recommendation";
+            } else if (ruleIDs.contains(id)) {
+                nodeType = "rule";
+            } else if (knIDs.contains(id)) {
+                nodeType = "knowledgenode";
+            }
             if (activeIDs.contains(id)) {
                 node.setAttribute("ui.class", MessageFormat.format("active_{0}", nodeType));
             } else {

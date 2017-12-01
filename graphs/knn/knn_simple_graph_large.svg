@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -40,7 +40,7 @@
      id="namedview71"
      showgrid="false"
      inkscape:zoom="0.6675088"
-     inkscape:cx="400.94221"
+     inkscape:cx="145.51487"
      inkscape:cy="506.11342"
      inkscape:window-x="1272"
      inkscape:window-y="-8"
@@ -306,7 +306,7 @@
        id="node-Fact[predicateName=P7,arguments=[A]]"
        transform="matrix(1.5,0,0,1.5,-279.63819,-429.99433)">
       <path
-         style="fill:#b07aa1;fill-opacity:1;fill-rule:nonzero"
+         style="fill:#e15759;fill-opacity:1;fill-rule:nonzero"
          d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
          id="path39"
          transform="translate(559.27637,859.98866)"
@@ -316,7 +316,7 @@
        id="node-KnowledgeNode[inputTag=Fact[predicateName=P1,arguments=[A]],outputTags=[Fact[predicateName=P3,arguments=[A]], Fact[predicateName=P2,arguments=[A]]]]"
        transform="matrix(1.5,0,0,1.5,-179.08414,-235.40512)">
       <path
-         style="fill:#e15759;fill-opacity:1;fill-rule:nonzero"
+         style="fill:#4e79a7;fill-opacity:1;fill-rule:nonzero"
          d="M -50,0 A 50,50 0 1 0 50,0 50,50 0 1 0 -50,0 Z"
          id="path42"
          transform="translate(358.16828,470.81025)"
@@ -346,7 +346,7 @@
        id="node-Fact[predicateName=P2,arguments=[A]]"
        transform="matrix(1.5,0,0,1.5,-243.91118,-154.31513)">
       <path
-         style="fill:#e15759;fill-opacity:1;fill-rule:nonzero"
+         style="fill:#b07aa1;fill-opacity:1;fill-rule:nonzero"
          d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
          id="path51"
          transform="translate(487.82236,308.63026)"
@@ -356,7 +356,7 @@
        id="node-Fact[predicateName=P1,arguments=[A]]"
        transform="matrix(1.5,0,0,1.5,-15,-210.5531)">
       <path
-         style="fill:#e15759;fill-opacity:1;fill-rule:nonzero"
+         style="fill:#b07aa1;fill-opacity:1;fill-rule:nonzero"
          d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
          id="path54"
          transform="translate(30,421.10621)"
