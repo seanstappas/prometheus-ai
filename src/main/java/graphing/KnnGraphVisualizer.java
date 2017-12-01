@@ -12,6 +12,8 @@ import tags.Rule;
 import tags.Tag;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,7 +40,9 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     Set<Tag> getInitialActiveTags() {
         Set<Tag> activeTags = new HashSet<>();
         int i = 0;
-        for (KnowledgeNode kn : knn.getKnowledgeNodes()) {
+        ArrayList<KnowledgeNode> lstKNs = new ArrayList<>(knn.getKnowledgeNodes());
+        Collections.shuffle(lstKNs);
+        for (KnowledgeNode kn : lstKNs) {
             activeTags.add(kn.getInputTag());
             if (i == NUM_INITIAL_ACTIVE_TAGS) {
                 break;
