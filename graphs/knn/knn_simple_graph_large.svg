@@ -40,8 +40,8 @@
      id="namedview71"
      showgrid="false"
      inkscape:zoom="0.6675088"
-     inkscape:cx="145.51487"
-     inkscape:cy="506.11342"
+     inkscape:cx="305.38748"
+     inkscape:cy="489.34304"
      inkscape:window-x="1272"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -356,7 +356,7 @@
        id="node-Fact[predicateName=P1,arguments=[A]]"
        transform="matrix(1.5,0,0,1.5,-15,-210.5531)">
       <path
-         style="fill:#b07aa1;fill-opacity:1;fill-rule:nonzero"
+         style="fill:#e15759;fill-opacity:1;fill-rule:nonzero"
          d="M -25,0 A 25,25 0 1 0 25,0 25,25 0 1 0 -25,0 Z"
          id="path54"
          transform="translate(30,421.10621)"
