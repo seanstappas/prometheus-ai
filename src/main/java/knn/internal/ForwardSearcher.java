@@ -4,9 +4,13 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import tags.Tag;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Searcher which performs forward search in the KNN.
+ */
 class ForwardSearcher extends Searcher<Set<Tag>> {
     private final DirectSearcher directSearcher;
 
@@ -29,6 +33,6 @@ class ForwardSearcher extends Searcher<Set<Tag>> {
             allActivatedTags.addAll(activatedTags);
             currentPlyInputTags = activatedTags;
         }
-        return allActivatedTags;
+        return Collections.unmodifiableSet(allActivatedTags);
     }
 }

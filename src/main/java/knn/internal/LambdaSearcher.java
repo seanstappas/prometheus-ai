@@ -6,6 +6,9 @@ import tags.Tag;
 
 import java.util.Set;
 
+/**
+ * Searcher which performs lambda search in the KNN.
+ */
 class LambdaSearcher extends Searcher<Set<Tag>> {
     private final ForwardSearcher forwardSearcher;
     private final BackwardSearcher backwardSearcher;

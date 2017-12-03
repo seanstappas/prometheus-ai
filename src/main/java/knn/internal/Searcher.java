@@ -4,6 +4,9 @@ import tags.Tag;
 
 import java.util.Set;
 
+/**
+ * Interface for cascading searchers (forward, backward and lambda).
+ */
 abstract class Searcher<T> {
     abstract Set<Tag> searchInternal(T input, double ply);
 

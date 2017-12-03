@@ -5,10 +5,14 @@ import com.google.inject.assistedinject.Assisted;
 import knn.api.KnowledgeNode;
 import tags.Tag;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Searcher which performs direct search in the KNN.
+ */
 class DirectSearcher {
     private final Map<Tag, KnowledgeNode> mapKN;
     private final Set<Tag> activeTags;
@@ -38,6 +42,6 @@ class DirectSearcher {
         }
         this.activeTags.add(inputTag);
         this.activeTags.addAll(activatedTags);
-        return activatedTags; // return activated OUTPUT tags (excluding the provided input)
+        return Collections.unmodifiableSet(activatedTags);
     }
 }

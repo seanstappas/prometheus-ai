@@ -72,9 +72,6 @@ public class KnowledgeNode {
         this.maxAge = 60;
     }
 
-    /**
-     * update object confidence value
-     */
     public void updateBelief() {
         // TODO: update belief correctly
     }

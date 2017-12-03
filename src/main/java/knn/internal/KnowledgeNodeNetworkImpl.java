@@ -18,8 +18,6 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private BackwardSearcher backwardSearcher;
     private LambdaSearcher lambdaSearcher;
 
-    // TODO: Sort nodes by age before searching. (Better: order by age in map, update at search)
-
     @Inject
     public KnowledgeNodeNetworkImpl(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
@@ -38,19 +36,9 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void reset(String dbFilename) {
-
-    }
-
-    @Override
     public void resetEmpty() {
         mapKN.clear();
         activeTags.clear();
-    }
-
-    @Override
-    public void save(String dbFilename) {
-
     }
 
     @Override
@@ -64,7 +52,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void deleteOldKnowledgeNodes() {
+    public void deleteExpiredKnowledgeNodes() {
         Set<Tag> tagsToDelete = new HashSet<>();
         for (KnowledgeNode kn : mapKN.values()) {
             if (kn.isExpired()) {
@@ -149,17 +137,12 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         return lambdaSearcher.search(activeTags, ply);
     }
 
-
     @Override
-    public void loadData(String filename) {
-        loadData(filename, new ArrayList<>());
-    }
-
-    @Override
-    public void loadData(String filename, List<KnowledgeNode> knowledgeNodes) {
+    public List<KnowledgeNode> loadData(String filename) {
+        List<KnowledgeNode> knowledgeNodes = new ArrayList<>();
         resetEmpty();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(filename)); //change the local directory for the integration file to run
+            BufferedReader br = new BufferedReader(new FileReader(filename));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] info = line.split(";\\s+");
@@ -174,5 +157,16 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         for (KnowledgeNode knowledgeNode : knowledgeNodes) {
             addKnowledgeNode(knowledgeNode);
         }
+        return knowledgeNodes;
+    }
+
+    @Override
+    public void reset(String dbFilename) {
+        // TODO: Reset the KNN from a database.
+    }
+
+    @Override
+    public void save(String dbFilename) {
+        // TODO: Save the KNN to a database.
     }
 }

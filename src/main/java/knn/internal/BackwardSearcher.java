@@ -5,10 +5,14 @@ import com.google.inject.assistedinject.Assisted;
 import knn.api.KnowledgeNode;
 import tags.Tag;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Searcher which performs backward search in the KNN.
+ */
 class BackwardSearcher extends Searcher<Set<Tag>> {
     private final Map<Tag, KnowledgeNode> mapKN;
     private final Set<Tag> activeTags;
@@ -46,6 +50,6 @@ class BackwardSearcher extends Searcher<Set<Tag>> {
         }
         allActivatedTags.removeIf(this.activeTags::contains);
         this.activeTags.addAll(allActivatedTags);
-        return allActivatedTags;
+        return Collections.unmodifiableSet(allActivatedTags);
     }
 }
