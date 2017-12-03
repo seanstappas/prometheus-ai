@@ -21,7 +21,7 @@ class KnnLambdaThinkVisualizer extends KnnGraphVisualizer {
         if (swap) {
             backwardTags = knn.backwardThink(1);
             swap = !swap;
-            return backwardTags;
+            return backwrdTags;
         }
         else {
             swap = true;
