@@ -1,4 +1,4 @@
 /**
- * All classes directly relating to the Neural Network.
+ * Neural Network.
  */
 package nn;
