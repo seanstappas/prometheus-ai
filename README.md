@@ -44,7 +44,7 @@ Directory | Purpose
 
 <a name="package-structure"></a>
 ## Java Package Structure
-Each Java package (with the exception of [`tags`](src/main/java/tags/) has the following structure for its sub-packages:
+Each Java package (with the exception of [`tags`](src/main/java/tags/)) has the following structure for its sub-packages:
 
 Package | Purpose | Example
 --- | --- | ---
