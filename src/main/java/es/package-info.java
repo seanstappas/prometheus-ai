@@ -1,4 +1,4 @@
 /**
- * All classes directly relating to the Expert System.
+ * Expert System.
  */
 package es;

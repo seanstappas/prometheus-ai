@@ -8,6 +8,12 @@ import java.util.Optional;
 import java.util.Set;
 
 class RuleMerger {
+    /**
+     * Creates a merged Rule from the given Set of Rules.
+     *
+     * @param rules the rules to find a Rule-pair within.
+     * @return a merged Rule if one was found, else an empty Optional object
+     */
     Optional<Rule> makeMergedRule(Set<Rule> rules) {
         for (Rule ruleOne : rules) {
             for (Rule ruleTwo : rules) {
@@ -17,7 +23,7 @@ class RuleMerger {
                         if (match) {
                             for (Predicate outputIPredicate : ruleTwo.getOutputPredicates()) {
                                 if (!(outputIPredicate instanceof Fact) ||
-                                        !((Fact)outputIPredicate).matches(inputFact)) {
+                                        !((Fact) outputIPredicate).matches(inputFact)) {
                                     match = false;
                                     break;
                                 }

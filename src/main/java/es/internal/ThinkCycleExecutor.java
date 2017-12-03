@@ -49,11 +49,11 @@ class ThinkCycleExecutor {
                 pendingActivatedRules.add(rule);
             }
         }
-        return activateRules(pendingActivatedRules, pendingReplacementPairs);
+        return activateRulesAndReplaceVariableArguments(pendingActivatedRules, pendingReplacementPairs);
     }
 
     /**
-     * Add a Predicate to the ES. Will cast the tag to either a Rule, a Fact.
+     * Adds a Predicate to the ES. Will cast the tag to either a Rule, a Fact.
      *
      * @param predicate the Predicate to be added
      * @return <code>true</code> if the Predicate is successfully added
@@ -103,7 +103,16 @@ class ThinkCycleExecutor {
         }
     }
 
-    private Set<Predicate> activateRules(Set<Rule> pendingActivatedRules, Map<String, Argument> pendingReplacementPairs) {
+    /**
+     * Activates the Rules specified by the given pending activated Rules and pending replacement pairs
+     *
+     * @param pendingActivatedRules the pending Rules to activate
+     * @param pendingReplacementPairs the pending argument pairs to replace variable arguments with
+     * @return the set of Predicates activated
+     */
+    private Set<Predicate> activateRulesAndReplaceVariableArguments(
+            Set<Rule> pendingActivatedRules,
+            Map<String, Argument> pendingReplacementPairs) {
         Set<Predicate> activatedPredicates = new HashSet<>();
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);

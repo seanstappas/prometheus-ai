@@ -27,6 +27,17 @@ class Thinker {
         this.thinkCycleExecutor = thinkCycleExecutorFactory.create(readyRules, activeRules, facts, recommendations);
     }
 
+    /**
+     * Makes the ES think for a fixed number of cycles. The number of cycles represents how much effort is being put
+     * into thinking. Each cycle is a run-through of all the ready Rules, activating Rules if possible. Note that a Rule
+     * that is activated in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
+     * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
+     * quiescence. Generates a new rule.
+     *
+     * @param generateRule   if true generates the new rule proven by a think cycle
+     * @param numberOfCycles the number of cycles to think for
+     * @return the activated Recommendations as a result of thinking
+     */
     Set<Recommendation> think(boolean generateRule, int numberOfCycles) {
         Set<Predicate> allActivatedPredicates = new HashSet<>();
         Set<Predicate> activatedPredicates;

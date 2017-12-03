@@ -30,8 +30,8 @@ public interface ExpertSystem {
      * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
      * quiescence. Generates a new rule.
      *
-     * @param generateRule if true generates the new rule proven by a think cycle
-     * @param numberOfCycles     the number of cycles to think for
+     * @param generateRule   if true generates the new rule proven by a think cycle
+     * @param numberOfCycles the number of cycles to think for
      * @return the activated Recommendations as a result of thinking
      */
     Set<Recommendation> think(boolean generateRule, int numberOfCycles);
