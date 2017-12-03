@@ -3,7 +3,6 @@ package integration;
 import com.google.inject.Guice;
 import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
-import knn.api.Tuple;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
@@ -32,7 +31,7 @@ public class KnowledgeNodeNetworkPetTest {
 
     @BeforeMethod
     public void setupKNN(){
-        knn.loadData(PET_DATA_PATH, knowledgeNodes);
+        knowledgeNodes = knn.loadData(PET_DATA_PATH);
     }
 
     @Test
@@ -43,11 +42,6 @@ public class KnowledgeNodeNetworkPetTest {
 
     @Test
     public void createKNFromTupleTest(){
-        Tuple tp1 = new Tuple("monkey(intelligent,length>50,weight>3)", 10);
-        Tuple tp2 = new Tuple("@isAnimal(calm,bark)", 10);
-        Tuple tp3 = new Tuple("friend(nice,kind) -> @meet(community,people>2)", 10);
-        Tuple tp4 = new Tuple("chair", 10);
-
         HashMap<Tag, Double> expectedInputTags = new HashMap<>();
         expectedInputTags.put(new Fact("monkey(intelligent,length>50,weight>3)"), 0.0);
         expectedInputTags.put(new Recommendation("@isAnimal(calm,bark)"), 0.0);
@@ -59,16 +53,6 @@ public class KnowledgeNodeNetworkPetTest {
 
     @Test
     public void getInputForForwardSearchTest() throws Exception{
-        Tuple tp1 = new Tuple("monkey", 10);
-        Tuple tp2 = new Tuple("isAnimal", 10);
-        Tuple tp3 = new Tuple("{ [[friend([nice, kind]) 100.0% ]]=>[[@meet([community, people > 2]) 100.0% ]]100.0% }", 10);
-        Tuple tp4 = new Tuple("banana", 10);
-        ArrayList<Tuple> NNoutputs = new ArrayList<>();
-        NNoutputs.add(tp1);
-        NNoutputs.add(tp2);
-        NNoutputs.add(tp3);
-        NNoutputs.add(tp4);
-
         String[] info1 = {"monkey(intelligent,length>50,weight>3)", "100"};
         String[] info2 = {"@isAnimal(calm,bark)", "100"};
         String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)", "100"};
@@ -88,16 +72,6 @@ public class KnowledgeNodeNetworkPetTest {
 
     @Test
     public void getInputForBackwardSearchTest() throws Exception {
-        Tuple tp1 = new Tuple("Tiger", 10);
-        Tuple tp2 = new Tuple("isTiger", 10);
-        Tuple tp3 = new Tuple("{ [[friend([nice, kind]) 100.0% ]]=>[[@meet([community, people > 2]) 100.0% ]]100.0% }", 10);
-        Tuple tp4 = new Tuple("apple", 10);
-        ArrayList<Tuple> NNoutputs = new ArrayList<>();
-        NNoutputs.add(tp1);
-        NNoutputs.add(tp2);
-        NNoutputs.add(tp3);
-        NNoutputs.add(tp4);
-
         String[] info1 = {"Tiger(carnivore,length>50,weight>90)", "100"};
         String[] info2 = {"@isTiger(danger,run)", "100"};
         String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)", "100"};

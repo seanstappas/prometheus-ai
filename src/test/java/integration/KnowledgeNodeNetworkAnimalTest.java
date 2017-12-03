@@ -2,7 +2,6 @@ package integration;
 
 import com.google.inject.Guice;
 import knn.api.KnowledgeNodeNetwork;
-import knn.api.Tuple;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -43,12 +42,6 @@ public class KnowledgeNodeNetworkAnimalTest {
     @Test
     public void forwardSearchTest() {
         System.out.println("***Forward Search Test***");
-        ArrayList<Tuple> inputs = new ArrayList<>();
-        Tuple data1 = new Tuple("dog", 10);
-        inputs.add(data1);
-        Tuple data2 = new Tuple("cat", 10);
-        inputs.add(data2);
-
         Fact fact1 = new Fact("dog(wolflike,length>50,weight>20)");
         Fact fact2 = new Fact("cat(feline,length>50,weight>20)");
 
@@ -80,7 +73,6 @@ public class KnowledgeNodeNetworkAnimalTest {
         expectedActiveTagsAndBeliefs.put(new Rule("enemy(scary,dangerous) -> @avoid(scary,dangerous)"), 40.5);
         expectedActiveTagsAndBeliefs.put(new Rule("coward(scared,safe) loyal(easy,calm) -> @isSafe(easy,calm)"), 24.2);
 
-        System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] Active tags after foward searching: " + activeTags);
 
         assertEquals(activeTags, expectedActiveTagsAndBeliefs.keySet());
@@ -94,12 +86,6 @@ public class KnowledgeNodeNetworkAnimalTest {
     @Test
     public void forwardSearchWithPlyTest() {
         System.out.println("***Forward Search with Ply Test***");
-        ArrayList<Tuple> inputs = new ArrayList<>();
-        Tuple data1 = new Tuple("dog", 10);
-        inputs.add(data1);
-        Tuple data2 = new Tuple("cat", 10);
-        inputs.add(data2);
-
         Fact fact1 = new Fact("dog(wolflike,length>50,weight>20)");
         Fact fact2 = new Fact("cat(feline,length>50,weight>20)");
 
@@ -116,7 +102,6 @@ public class KnowledgeNodeNetworkAnimalTest {
         expectedActiveTagsAndBeliefs.put(new Fact("teeth(grind,food)"), 100.0);
         expectedActiveTagsAndBeliefs.put(new Fact("fast(speed,dynamic)"), 100.0);
 
-        System.out.println("[KNN] Inputs from Neural Network: " + inputs.toString());
         System.out.println("[KNN] Active tags after 0 ply forward searching: " + activeTags);
 
         assertEquals(activeTags, expectedActiveTagsAndBeliefs.keySet());
