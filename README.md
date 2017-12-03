@@ -17,7 +17,7 @@ For a basic overview of the theory behind Prometheus, see the reports provided i
 This project is a Java Maven project, with library dependencies specified in the [`pom.xml`](pom.xml) file. Maven allows dependencies to be specified in a file without needing to keep track of jar files. An introduction to Maven can be found [here](https://maven.apache.org/what-is-maven.html).
 
 ### Google Guice
-Google Guice is used as the backbone for the various dependencies within the code. Guice neatly allows the implementation of various important OOP principles, like dependency inversion. An introduction to Guice can be found [here](https://github.com/google/guice/wiki/Motivation). For more information about the Guice package structure used for Prometheus, see the [Java Package Structure](#package_structure) section.
+Google Guice is used as the backbone for the various dependencies within the code. Guice neatly allows the implementation of various important OOP principles, like dependency inversion. An introduction to Guice can be found [here](https://github.com/google/guice/wiki/Motivation). For more information about the Guice package structure used for Prometheus, see the [Java Package Structure](#package-structure) section.
 
 ### Mockito
 Mockito is used to create mock objects for behavior-driven unit tests. Mock objects are essentially "fake" versions of objects used to simulate dependencies in unit tests. Mockito couples very well with the dependency injection of Guice. An overview of Mockito can be found [here](http://site.mockito.org/) and an example of behavior-driven development (BDD) with Mockito can be found [here](https://www.tutorialspoint.com/mockito/mockito_bdd.htm).
