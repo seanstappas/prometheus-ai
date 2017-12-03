@@ -43,18 +43,12 @@ public class Fact extends Predicate {
      * {@code confidenceValue} defaults to 1.0
      *
      * @see #Fact(String, double)
+     * @param value the Fact value
      */
-
     public Fact(String value) {
         this(value, 1.0);
     }
 
-    /**
-     * Prints predicate name, arguments and confidence value of Fact
-     * <p>
-     * e.g. "[P(ARG1, ARG2) 100%]"
-     * @return string value of Fact
-     */
 
     /**
      * Parses a raw string into a list of string tokens that represent each argument
@@ -63,7 +57,6 @@ public class Fact extends Predicate {
      * @param tokens string input
      * @return list of string arguments
      */
-
     private List<Argument> argStringParser(String[] tokens) {
         List<Argument> argSet = new ArrayList<>();
         for (int i = 1; i < tokens.length; i++) {
@@ -80,7 +73,6 @@ public class Fact extends Predicate {
      * @param argString String token
      * @return A single argument
      */
-
     static Argument makeArgument(String argString) {
         String[] argTokens = argString.split("[=><!]");
         int lastElem = argTokens.length - 1;

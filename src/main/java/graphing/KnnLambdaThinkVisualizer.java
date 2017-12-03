@@ -6,8 +6,8 @@ import java.text.MessageFormat;
 import java.util.Set;
 
 class KnnLambdaThinkVisualizer extends KnnGraphVisualizer {
-    boolean swap = true;
-    Set<Tag> backwardTags;
+    private boolean swap = true;
+    private Set<Tag> backwardTags;
 
     @Override
     String getScreenshotSavePath(String suffix) {
@@ -24,7 +24,7 @@ class KnnLambdaThinkVisualizer extends KnnGraphVisualizer {
             return backwardTags;
         }
         else {
-            swap = !swap;
+            swap = true;
             return knn.forwardSearch(backwardTags, 1);
         }
     }

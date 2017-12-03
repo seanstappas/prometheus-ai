@@ -71,6 +71,7 @@ class ThinkCycleExecutor {
      * If inputFact contains a variable argument, matching pair placed in pendingReplacementPairs
      *
      * @param inputFact fact contained in a Rule
+     * @param pendingReplacementPairs the pending replacement pairs
      * @return true if (at least) two facts match
      */
     private boolean factsContains(Fact inputFact, Map<String, Argument> pendingReplacementPairs) {
@@ -91,6 +92,7 @@ class ThinkCycleExecutor {
      * Replaces variable argument(s) within a Predicate with a String or Numeric Argument
      *
      * @param predicate the Predicate that has arguments to replace
+     * @param pendingReplacementPairs the pending replacement pairs
      */
     private void replaceVariableArguments(Predicate predicate, Map<String, Argument> pendingReplacementPairs) {
         int argumentIndex = 0;

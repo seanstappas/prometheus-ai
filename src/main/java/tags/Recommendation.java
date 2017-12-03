@@ -41,6 +41,7 @@ public class Recommendation extends Predicate {
      * {@code confidenceValue} defaults to 1.0
      *
      * @see #Recommendation(String, double)
+     * @param value the Recommendation String value
      */
     public Recommendation(String value) {
         this(value, 1.0);

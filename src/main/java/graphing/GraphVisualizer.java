@@ -11,11 +11,10 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 abstract class GraphVisualizer implements ViewerListener {
-    private static final int INITIAL_DELAY = 2000;
     Graph graph;
-    ViewerPipe fromViewer;
+    private ViewerPipe fromViewer;
     boolean updated = false;
-    FileSinkSVG2 svgSink;
+    private FileSinkSVG2 svgSink;
 
     private boolean loop = true;
 
@@ -42,14 +41,12 @@ abstract class GraphVisualizer implements ViewerListener {
     final void visualize(boolean saveScreenshot) {
         setupGraph();
         setupNodes();
-        long lastTime = System.currentTimeMillis();
-//        while (System.currentTimeMillis() - lastTime < INITIAL_DELAY) {};
         int iteration = 0;
-        long lastT = System.currentTimeMillis();
+        long lastTime = System.currentTimeMillis();
         while (loop) {
             fromViewer.pump();
             if (updated) {
-                if (System.currentTimeMillis() - lastT >= getSleepDelay()) {
+                if (System.currentTimeMillis() - lastTime >= getSleepDelay()) {
                     iteration++;
                     if (saveScreenshot && iteration == 1) {
                         saveScreenshot("0");
@@ -58,7 +55,7 @@ abstract class GraphVisualizer implements ViewerListener {
                     if (updated && saveScreenshot) {
                         saveScreenshot(String.valueOf(iteration));
                     }
-                    lastT = System.currentTimeMillis();
+                    lastTime = System.currentTimeMillis();
                 }
             }
         }

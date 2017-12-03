@@ -16,6 +16,7 @@ nn
 nn.api
 nn.guice
 nn.internal
+prometheus
 prometheus.api
 prometheus.guice
 prometheus.internal

@@ -34,9 +34,11 @@ public class KnowledgeNode {
     private boolean isExpired = false; // true when the KN has exceeded its age threshold
 
     /**
+     *
      * Creates a Knowledge Node from Strings.
      *
      * @param data The info String to create the Knowledge Node
+     * @throws KnowledgeNodeParseException if parsing the given String data fails
      */
     @Inject
     public KnowledgeNode(

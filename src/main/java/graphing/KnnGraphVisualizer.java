@@ -31,7 +31,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     private Set<String> ruleIDs = new HashSet<>();
     private Set<String> knIDs = new HashSet<>();
     boolean forceContinue = false;
-    boolean showLabels = true;
+    private boolean showLabels = true;
 
     KnowledgeNodeNetwork knn;
 

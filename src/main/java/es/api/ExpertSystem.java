@@ -9,6 +9,7 @@ public interface ExpertSystem {
      * {@code shouldGenerateRule} defaults to false
      *
      * @see #think(boolean)
+     * @return the Set of Recommendations activated as a result of thinking.
      */
     Set<Recommendation> think();
 

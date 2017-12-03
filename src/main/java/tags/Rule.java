@@ -28,7 +28,6 @@ public class Rule extends Tag {
     /**
      * Sets confidence value of output tags to the product of the confidence value of input tags.
      */
-
     private void setOutputFactsConfidenceValue() {
         double value = 1.0;
         for (Fact fact : this.inputFacts) {
@@ -42,8 +41,9 @@ public class Rule extends Tag {
     /**
      * {@code confidenceValue} defaults to 1.0
      * @see #Rule(Set, Set, double)
+     * @param inputFacts the input Facts
+     * @param outputPredicate the output Predicates
      */
-
     public Rule(Fact[] inputFacts, Predicate[] outputPredicate) {
         this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputPredicate)), 1.0);
     }
@@ -52,8 +52,9 @@ public class Rule extends Tag {
      * {@code confidenceValue} defaults to 1.0
      *
      * @see #Rule(Set, Set, double)
+     * @param inputFacts the input Facts
+     * @param outputPredicate the output Predicates
      */
-
     public Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicate) {
         this(inputFacts, outputPredicate, 1.0);
     }
@@ -67,7 +68,6 @@ public class Rule extends Tag {
      * @param outputPredicates The output predicates of the rule.
      * @param confidenceValue  The confidence value of the Rule.
      */
-
     private Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicates, double confidenceValue) {
         this.inputFacts = new HashSet<>(inputFacts);
         this.outputPredicates = new HashSet<>(outputPredicates);
@@ -108,8 +108,9 @@ public class Rule extends Tag {
      * {@code confidenceValue} defaults to 1.0
      *
      * @see #Rule(String[], String[], double)
+     * @param inputFacts the input Facts
+     * @param outputFacts the output Facts
      */
-
     public Rule(String[] inputFacts, String[] outputFacts) {
         this(inputFacts, outputFacts, 1.0);
     }
@@ -132,7 +133,6 @@ public class Rule extends Tag {
      * @param value the Rule as string.
      * @return List of Rules.
      */
-
     public static List<Rule> makeRules(String value) {
         List<String> tokens = new ArrayList<>(Arrays.asList(value.split(" ")));
         List<Rule> ruleList = new ArrayList<>();
@@ -180,7 +180,6 @@ public class Rule extends Tag {
      * @see #makeRules(String)
      * @param string the Rule as a string.
      */
-
     public Rule(String string) {
         this.outputPredicates = new HashSet<>();
         List<String> tokens = new ArrayList<>(Arrays.asList(string.split(" ")));

@@ -4,7 +4,7 @@ import tags.Fact;
 import tags.Tag;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +16,7 @@ class KnnSimpleBackwardThinkVisualizer extends KnnSimpleGraphVisualizer {
 
     @Override
     Set<Tag> getInitialActiveTags() {
-        return new HashSet<>(Arrays.asList(
+        return new HashSet<>(Collections.singletonList(
                 new Fact("P7(A)", 100)
         ));
     }
