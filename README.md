@@ -36,11 +36,11 @@ Here is a list of the each top-level directory and its purpose.
 
 Directory | Contents
 --- | ---
-[`data`](data) | Input data files for the KNN.
-[`docs`](docs) | Javadoc files.
-[`graphs`](graphs) | Generated graphs from the various graphing tools.
-[`reports`](reports) | Reports on Prometheus.
-[`src`](src) | Source code.
+[`data/`](data) | Input data files for the KNN.
+[`docs/`](docs) | Javadoc files.
+[`graphs/`](graphs) | Generated graphs from the various graphing tools.
+[`reports/`](reports) | Reports on Prometheus.
+[`src/`](src) | Source code.
 
 <a name="package-structure"></a>
 ## Java Package Structure
