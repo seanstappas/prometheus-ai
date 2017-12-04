@@ -34,7 +34,7 @@ Graphstream is used for plotting the KNN network. Details on this library can be
 ## Directory Structure
 Here is a list of the each top-level directory and its purpose.
 
-Directory | Purpose
+Directory | Contents
 --- | ---
 [`data`](data) | Input data files for the KNN.
 [`docs`](docs) | Javadoc files.
@@ -46,7 +46,7 @@ Directory | Purpose
 ## Java Package Structure
 Each Java package (with the exception of [`tags`](src/main/java/tags/)) has the following structure for its sub-packages:
 
-Package | Purpose | Example
+Package | Contents | Example
 --- | --- | ---
 api | Public classes and interfaces. Only code relevant for a user of the package should be present here. | [es/api/](src/main/java/es/api/)
 guice | Public Guice module. This module will be used by a user of the package and should install an internal Guice module. See [`ExpertSystemModule.java`](src/main/java/es/guice/ExpertSystemModule.java) for an example. | [es/guice/](src/main/java/es/guice/)
