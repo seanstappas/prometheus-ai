@@ -48,9 +48,9 @@ Each Java package (with the exception of [`tags`](src/main/java/tags/)) has the 
 
 Package | Contents | Example
 --- | --- | ---
-api | Public classes and interfaces. Only code relevant for a user of the package should be present here. | [es/api/](src/main/java/es/api/)
-guice | Public Guice module. This module will be used by a user of the package and should install an internal Guice module. See [`ExpertSystemModule.java`](src/main/java/es/guice/ExpertSystemModule.java) for an example. | [es/guice/](src/main/java/es/guice/)
-internal | Internal classes and interfaces. Internal code that does not concern a user is found here, as well as an internal Guice module to install internal classes. See [`ExpertSystemInternalModule.java`](src/main/java/es/internal/ExpertSystemInternalModule.java) for an example. | [es/internal/](src/main/java/es/internal/)
+`api` | Public classes and interfaces. Only code relevant for a user of the package should be present here. | [es/api/](src/main/java/es/api/)
+`guice` | Public Guice module. This module will be used by a user of the package and should install an internal Guice module. See [`ExpertSystemModule.java`](src/main/java/es/guice/ExpertSystemModule.java) for an example. | [es/guice/](src/main/java/es/guice/)
+`internal` | Internal classes and interfaces. Internal code that does not concern a user is found here, as well as an internal Guice module to install internal classes. See [`ExpertSystemInternalModule.java`](src/main/java/es/internal/ExpertSystemInternalModule.java) for an example. | [es/internal/](src/main/java/es/internal/)
 
 ## Javadoc
 Javadoc can be found [here](http://seanstappas.me/prometheus-ai/).
