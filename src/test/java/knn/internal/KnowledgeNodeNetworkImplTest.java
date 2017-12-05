@@ -18,6 +18,7 @@ public class KnowledgeNodeNetworkImplTest {
     private KnowledgeNodeNetwork knn;
     private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
+    private TreeSet<KnowledgeNode> ageSortedKNs;
     private DirectSearcher directSearcher;
     private ForwardSearcher forwardSearcher;
     private BackwardSearcher backwardSearcher;
@@ -27,6 +28,7 @@ public class KnowledgeNodeNetworkImplTest {
     public void setUp() throws Exception {
         mapKN = new HashMap<>();
         activeTags = new HashSet<>();
+        ageSortedKNs = new TreeSet<>();
         directSearcher = mock(DirectSearcher.class);
         forwardSearcher = mock(ForwardSearcher.class);
         backwardSearcher = mock(BackwardSearcher.class);
@@ -35,15 +37,18 @@ public class KnowledgeNodeNetworkImplTest {
         ForwardSearcherFactory forwardSearcherFactory = mock(ForwardSearcherFactory.class);
         BackwardSearcherFactory backwardSearcherFactory = mock(BackwardSearcherFactory.class);
         LambdaSearcherFactory lambdaSearcherFactory = mock(LambdaSearcherFactory.class);
-        when(directSearcherFactory.create(mapKN, activeTags)).thenReturn(directSearcher);
+        when(directSearcherFactory.create(mapKN, activeTags, ageSortedKNs)).thenReturn(directSearcher);
         when(forwardSearcherFactory.create(directSearcher)).thenReturn(forwardSearcher);
-        when(backwardSearcherFactory.create(mapKN, activeTags, BACKWARD_SEARCH_PARTIAL_MATCH_RATIO))
+        long ageLimit = Long.MAX_VALUE;
+        when(backwardSearcherFactory.create(activeTags, ageSortedKNs, BACKWARD_SEARCH_PARTIAL_MATCH_RATIO, ageLimit))
                 .thenReturn(backwardSearcher);
         when(lambdaSearcherFactory.create(forwardSearcher, backwardSearcher)).thenReturn(lambdaSearcher);
         knn = new KnowledgeNodeNetworkImpl(
                 mapKN,
                 activeTags,
+                ageSortedKNs,
                 BACKWARD_SEARCH_PARTIAL_MATCH_RATIO,
+                ageLimit,
                 directSearcherFactory,
                 forwardSearcherFactory,
                 backwardSearcherFactory,

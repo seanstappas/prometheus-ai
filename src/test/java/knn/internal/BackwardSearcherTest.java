@@ -13,16 +13,17 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class BackwardSearcherTest {
     private BackwardSearcher backwardSearcher;
-    private Map<Tag, KnowledgeNode> mapKN;
     private BackwardSearchMatcher backwardSearchMatcher;
+    private TreeSet<KnowledgeNode> ageSortedKNs;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        mapKN = new HashMap<>();
         Set<Tag> activeTags = new HashSet<>();
         backwardSearchMatcher = mock(BackwardSearchMatcher.class);
+        ageSortedKNs = new TreeSet<>();
         double partialMatchRatio = 0.5;
-        backwardSearcher = new BackwardSearcher(mapKN, activeTags, partialMatchRatio, backwardSearchMatcher);
+        long ageLimit = Long.MAX_VALUE;
+        backwardSearcher = new BackwardSearcher(activeTags, ageSortedKNs, partialMatchRatio, ageLimit, backwardSearchMatcher);
     }
 
     @Test
@@ -35,7 +36,7 @@ public class BackwardSearcherTest {
         Tag backwardSearchMatcherTag = mock(Tag.class);
 
         // given
-        mapKN.put(mock(Tag.class), kn);
+        ageSortedKNs.add(kn);
         when(backwardSearchMatcher.match(inputTags, kn, numRequiredMatches))
                 .thenReturn(Optional.of(backwardSearchMatcherTag));
 

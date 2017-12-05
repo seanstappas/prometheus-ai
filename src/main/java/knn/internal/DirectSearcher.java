@@ -5,10 +5,7 @@ import com.google.inject.assistedinject.Assisted;
 import knn.api.KnowledgeNode;
 import tags.Tag;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Searcher which performs direct search in the KNN.
@@ -16,13 +13,16 @@ import java.util.Set;
 class DirectSearcher {
     private final Map<Tag, KnowledgeNode> mapKN;
     private final Set<Tag> activeTags;
+    private final TreeSet<KnowledgeNode> ageSortedKNs;
 
     @Inject
     public DirectSearcher(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
-            @Assisted("activeTags") Set<Tag> activeTags) {
+            @Assisted("activeTags") Set<Tag> activeTags,
+            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs) {
         this.mapKN = mapKN;
         this.activeTags = activeTags;
+        this.ageSortedKNs = ageSortedKNs;
     }
 
     /**
@@ -39,6 +39,11 @@ class DirectSearcher {
             if (fired) {
                 activatedTags.addAll(kn.getOutputTags());
             }
+
+            // Update age
+            ageSortedKNs.remove(kn);
+            kn.updateAge();
+            ageSortedKNs.add(kn);
         }
         this.activeTags.add(inputTag);
         this.activeTags.addAll(activatedTags);

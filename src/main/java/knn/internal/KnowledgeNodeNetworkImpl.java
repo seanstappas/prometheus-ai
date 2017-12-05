@@ -13,6 +13,8 @@ import java.util.*;
 class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
+    private TreeSet<KnowledgeNode> ageSortedKNs;
+
     private DirectSearcher directSearcher;
     private ForwardSearcher forwardSearcher;
     private BackwardSearcher backwardSearcher;
@@ -22,16 +24,20 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public KnowledgeNodeNetworkImpl(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
             @Assisted("activeTags") Set<Tag> activeTags,
+            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs,
             @Assisted("backwardSearchMatchRatio") double backwardSearchMatchRatio,
+            @Assisted("backwardSearchAgeLimit") long backwardSearchAgeLimit,
             DirectSearcherFactory directSearcherFactory,
             ForwardSearcherFactory forwardSearcherFactory,
             BackwardSearcherFactory backwardSearcherFactory,
             LambdaSearcherFactory lambdaSearcherFactory) {
         this.mapKN = mapKN;
         this.activeTags = activeTags;
-        this.directSearcher = directSearcherFactory.create(mapKN, activeTags);
+        this.ageSortedKNs = ageSortedKNs;
+        this.directSearcher = directSearcherFactory.create(mapKN, activeTags, ageSortedKNs);
         this.forwardSearcher = forwardSearcherFactory.create(directSearcher);
-        this.backwardSearcher = backwardSearcherFactory.create(mapKN, activeTags, backwardSearchMatchRatio);
+        this.backwardSearcher = backwardSearcherFactory.create(
+                activeTags, ageSortedKNs, backwardSearchMatchRatio, backwardSearchAgeLimit);
         this.lambdaSearcher = lambdaSearcherFactory.create(forwardSearcher, backwardSearcher);
     }
 
@@ -49,6 +55,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     @Override
     public void addKnowledgeNode(KnowledgeNode kn) {
         mapKN.put(kn.getInputTag(), kn);
+        ageSortedKNs.add(kn);
     }
 
     @Override

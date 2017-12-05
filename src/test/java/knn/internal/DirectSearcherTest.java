@@ -16,12 +16,14 @@ public class DirectSearcherTest {
     private Map<Tag, KnowledgeNode> mapKN;
     private Set<Tag> activeTags;
     private DirectSearcher directSearcher;
+    private TreeSet<KnowledgeNode> ageSortedKNs;
 
     @BeforeMethod
     public void setUp() throws Exception {
         mapKN = new HashMap<>();
         activeTags = new HashSet<>();
-        directSearcher = new DirectSearcher(mapKN, activeTags);
+        ageSortedKNs = new TreeSet<>();
+        directSearcher = new DirectSearcher(mapKN, activeTags, ageSortedKNs);
     }
 
     @Test

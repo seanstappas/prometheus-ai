@@ -6,11 +6,14 @@ import tags.Tag;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public interface KnowledgeNodeNetworkFactory {
     @Inject
     KnowledgeNodeNetwork create(
             @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
             @Assisted("activeTags") Set<Tag> activeTags,
-            @Assisted("backwardSearchMatchRatio") double backwardSearchMatchRatio);
+            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs,
+            @Assisted("backwardSearchMatchRatio") double backwardSearchMatchRatio,
+            @Assisted("backwardSearchAgeLimit") long backwardSearchAgeLimit);
 }

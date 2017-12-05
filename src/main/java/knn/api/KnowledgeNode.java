@@ -2,10 +2,7 @@ package knn.api;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.*;
 import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
@@ -15,7 +12,8 @@ import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
-public class KnowledgeNode {
+public class KnowledgeNode implements Comparable<KnowledgeNode> {
+    private static final long AGE_THRESHOLD = 1_000_000;
     private static final int ACTIVATION_INCREMENT = 100;
 
     // Final fields
@@ -28,7 +26,7 @@ public class KnowledgeNode {
 
     // Modifiable fields
     private long age = 0; // Age timestamp. Set to current UNIX time when node is newly formed.
-    private long ageThreshold = 1_000_000;
+    private long initialAgeTimeStamp = System.currentTimeMillis();
     private double belief = 0;
     private double activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
     private boolean isExpired = false; // true when the KN has exceeded its age threshold
@@ -78,15 +76,19 @@ public class KnowledgeNode {
         // TODO: update belief correctly
     }
 
+    public long getCurrentAge() {
+        return System.currentTimeMillis() - initialAgeTimeStamp;
+    }
+
     /**
      * Ages the current Knowledge Node.
      *
      * @return the age (time elapsed since initialisation/last update)
      */
-    public double updateAge() {
-        this.age = (System.currentTimeMillis() / 1000L) - this.age;
-        this.inputTag.setAge(age);
-        return this.age;
+    public long updateAge() {
+        age = System.currentTimeMillis() - initialAgeTimeStamp;
+        initialAgeTimeStamp = System.currentTimeMillis();
+        return age;
     }
 
     public double getBelief() {
@@ -101,7 +103,7 @@ public class KnowledgeNode {
      * @return true if the KN has been newly fired, i.e., it was not fired before this excitation.
      */
     public boolean excite() {
-        if (age > ageThreshold) {
+        if (age > AGE_THRESHOLD) {
             isExpired = true;
             return false;
         } else {
@@ -118,7 +120,6 @@ public class KnowledgeNode {
     public double getActivation() {
         return activation;
     }
-
 
     public Tag getInputTag() {
         return inputTag;
@@ -173,5 +174,14 @@ public class KnowledgeNode {
                 .append(belief)
                 .append(activation)
                 .toHashCode();
+    }
+
+    @Override
+    public int compareTo(KnowledgeNode o) {
+        return new CompareToBuilder()
+                .append(this.age, o.age)
+                .append(this.hashCode(), o.hashCode()) // Prevents duplicate items in age-sorted set.
+                .toComparison();
+
     }
 }
