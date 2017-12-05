@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,10 +17,6 @@ import java.util.List;
  */
 
 public class Fact extends Predicate {
-
-    private String predicateName;
-    private List<Argument> arguments;
-
     /**
      * Constructs a Fact object from a string
      * <p>
@@ -36,7 +33,7 @@ public class Fact extends Predicate {
 
         this.predicateName = tokens[0];
         this.arguments = argStringParser(tokens);
-        this.setConfidence(confidenceValue);
+        this.confidence = confidenceValue;
     }
 
     /**
@@ -47,6 +44,17 @@ public class Fact extends Predicate {
      */
     public Fact(String value) {
         this(value, 1.0);
+    }
+
+    Fact(String predicateName, List<Argument> arguments, double confidence) {
+        this.predicateName = predicateName;
+        this.arguments = arguments;
+        this.confidence = confidence;
+    }
+
+    @Override
+    Predicate getPredicateCopy() {
+        return new Fact(predicateName, arguments, confidence);
     }
 
 
@@ -93,7 +101,7 @@ public class Fact extends Predicate {
 
     @Override
     public List<Argument> getArguments() {
-        return arguments;
+        return Collections.unmodifiableList(arguments);
     }
 
     /**

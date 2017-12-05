@@ -89,23 +89,6 @@ class ThinkCycleExecutor {
     }
 
     /**
-     * Replaces variable argument(s) within a Predicate with a String or Numeric Argument
-     *
-     * @param predicate the Predicate that has arguments to replace
-     * @param pendingReplacementPairs the pending replacement pairs
-     */
-    private void replaceVariableArguments(Predicate predicate, Map<String, Argument> pendingReplacementPairs) {
-        int argumentIndex = 0;
-
-        for (Argument argument : predicate.getArguments()) {
-            if (pendingReplacementPairs.containsKey(argument.getName())) {
-                predicate.getArguments().set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
-            }
-            argumentIndex++;
-        }
-    }
-
-    /**
      * Activates the Rules specified by the given pending activated Rules and pending replacement pairs
      *
      * @param pendingActivatedRules the pending Rules to activate
@@ -118,12 +101,15 @@ class ThinkCycleExecutor {
         Set<Predicate> activatedPredicates = new HashSet<>();
         for (Rule rule : pendingActivatedRules) {
             readyRules.remove(rule);
-            activeRules.add(rule);
+            Set<Predicate> modifiedOutputPredicates = new HashSet<>();
             for (Predicate predicate : rule.getOutputPredicates()) {
-                replaceVariableArguments(predicate, pendingReplacementPairs);
-                activatedPredicates.add(predicate);
-                addPredicate(predicate);
+                Predicate replacedVarArgsPredicate = predicate.replaceVariableArguments(pendingReplacementPairs);
+                modifiedOutputPredicates.add(replacedVarArgsPredicate);
+                activatedPredicates.add(replacedVarArgsPredicate);
+                addPredicate(replacedVarArgsPredicate);
             }
+            Rule modifiedRule = new Rule(rule.getInputFacts(), modifiedOutputPredicates, rule.getConfidence());
+            activeRules.add(modifiedRule);
         }
         return activatedPredicates;
     }

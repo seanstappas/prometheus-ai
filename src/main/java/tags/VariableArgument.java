@@ -21,14 +21,14 @@ final class VariableArgument extends Argument {
         super(tokens);
 
         if (tokens[0].equals("*")) {
-            this.setSymbol(ArgTypes.MATCHALL);
-            this.setName("*");
+            this.symbol = ArgTypes.MATCHALL;
+            this.name = "*";
         } else if (tokens[0].equals("?")) {
-            this.setSymbol(ArgTypes.MATCHONE);
-            this.setName("?");
+            this.symbol = ArgTypes.MATCHONE;
+            this.name = "?";
         } else if (tokens[0].charAt(0) == '&') {
-            this.setSymbol(ArgTypes.VAR);
-            this.setName(tokens[0]);
+            this.symbol = ArgTypes.VAR;
+            this.name = tokens[0];
         }
     }
 

@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,9 +15,6 @@ import java.util.List;
  * Recommendations are composed of a predicate name and a set of arguments: @P(ARG1, ARG2, ...)
  */
 public class Recommendation extends Predicate {
-    private String predicateName;
-    private List<Argument> arguments;
-
     /**
      * Constructs a Recommendation object from a string
      * <p>
@@ -34,7 +32,7 @@ public class Recommendation extends Predicate {
 
         this.predicateName = tokens[0].replace("@", "");
         this.arguments = argStringParser(tokens);
-        this.setConfidence(confidenceValue);
+        this.confidence = confidenceValue;
     }
 
     /**
@@ -45,6 +43,17 @@ public class Recommendation extends Predicate {
      */
     public Recommendation(String value) {
         this(value, 1.0);
+    }
+
+    Recommendation(String predicateName, List<Argument> arguments, double confidence) {
+        this.predicateName = predicateName;
+        this.arguments = arguments;
+        this.confidence = confidence;
+    }
+
+    @Override
+    Predicate getPredicateCopy() {
+        return new Recommendation(predicateName, arguments, confidence);
     }
 
     /**
@@ -80,7 +89,7 @@ public class Recommendation extends Predicate {
     }
 
     public List<Argument> getArguments() {
-        return arguments;
+        return Collections.unmodifiableList(arguments);
     }
 
     /**

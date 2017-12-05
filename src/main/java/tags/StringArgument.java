@@ -53,7 +53,7 @@ final class StringArgument extends Argument {
 
         isNeg = (string.contains("!"));
         value = tokens[tokens.length - 1];
-        setSymbol(ArgTypes.STRING);
+        symbol = ArgTypes.STRING;
     }
 
     /**

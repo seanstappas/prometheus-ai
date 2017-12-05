@@ -86,29 +86,21 @@ final class NumericArgument extends Argument {
         this.isNeg = (string.contains("!"));
 
         if (string.contains("=")) {
-            this.setSymbol(ArgTypes.EQ);
+            this.symbol = ArgTypes.EQ;
         } else if (string.contains(">")) {
-            this.setSymbol(ArgTypes.GT);
+            this.symbol = ArgTypes.GT;
         } else if (string.contains("<")) {
-            this.setSymbol(ArgTypes.LT);
+            this.symbol = ArgTypes.LT;
         } else {
-            this.setSymbol(ArgTypes.INT);
+            this.symbol = ArgTypes.INT;
         }
 
         this.value = Integer.parseInt(tokens[tokens.length - 1]);
 
     }
 
-    public void setNeg(boolean neg) {
-        isNeg = neg;
-    }
-
     public int getValue() {
         return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 
     /**

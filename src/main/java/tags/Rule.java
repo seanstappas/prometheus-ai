@@ -18,11 +18,11 @@ public class Rule extends Tag {
     private Set<Predicate> outputPredicates;
 
     public Set<Fact> getInputFacts() {
-        return inputFacts;
+        return Collections.unmodifiableSet(inputFacts);
     }
 
     public Set<Predicate> getOutputPredicates() {
-        return outputPredicates;
+        return Collections.unmodifiableSet(outputPredicates);
     }
 
     /**
@@ -34,7 +34,7 @@ public class Rule extends Tag {
             value = value * fact.getConfidence();
         }
         for (Predicate outputPredicate : this.outputPredicates) {
-            outputPredicate.setConfidence(value);
+            outputPredicate.confidence = value;
         }
     }
 
@@ -42,10 +42,10 @@ public class Rule extends Tag {
      * {@code confidenceValue} defaults to 1.0
      * @see #Rule(Set, Set, double)
      * @param inputFacts the input Facts
-     * @param outputPredicate the output Predicates
+     * @param outputPredicates the output Predicates
      */
-    public Rule(Fact[] inputFacts, Predicate[] outputPredicate) {
-        this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputPredicate)), 1.0);
+    public Rule(Fact[] inputFacts, Predicate[] outputPredicates) {
+        this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputPredicates)), 1.0);
     }
 
     /**
@@ -53,10 +53,10 @@ public class Rule extends Tag {
      *
      * @see #Rule(Set, Set, double)
      * @param inputFacts the input Facts
-     * @param outputPredicate the output Predicates
+     * @param outputPredicates the output Predicates
      */
-    public Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicate) {
-        this(inputFacts, outputPredicate, 1.0);
+    public Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicates) {
+        this(inputFacts, outputPredicates, 1.0);
     }
 
     /**
@@ -68,10 +68,10 @@ public class Rule extends Tag {
      * @param outputPredicates The output predicates of the rule.
      * @param confidenceValue  The confidence value of the Rule.
      */
-    private Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicates, double confidenceValue) {
+    public Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicates, double confidenceValue) {
         this.inputFacts = new HashSet<>(inputFacts);
         this.outputPredicates = new HashSet<>(outputPredicates);
-        this.setConfidence(confidenceValue);
+        this.confidence = confidenceValue;
 
         setOutputFactsConfidenceValue();
     }
@@ -91,7 +91,7 @@ public class Rule extends Tag {
         for (String outputPredicate : outputPredicates) {
             addOutputPredicate(outputPredicate);
         }
-        this.setConfidence(confidenceValue);
+        this.confidence = confidenceValue;
     }
 
     private void addOutputPredicate(String outputPredicate) {
@@ -196,7 +196,7 @@ public class Rule extends Tag {
         }
 
         this.inputFacts = new HashSet<>(Arrays.asList(inputFacts));
-        this.setConfidence(1.0);
+        this.confidence = 1.0;
     }
 
     /**

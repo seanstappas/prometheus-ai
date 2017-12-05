@@ -11,16 +11,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Argument {
 
-    private String name;
-    private ArgTypes symbol;
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSymbol(ArgTypes symbol) {
-        this.symbol = symbol;
-    }
+    String name;
+    ArgTypes symbol;
 
     public enum ArgTypes {
         /**
