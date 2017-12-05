@@ -2,7 +2,6 @@ package knn.api;
 
 import tags.Tag;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -67,11 +66,11 @@ public interface KnowledgeNodeNetwork {
     KnowledgeNode getKnowledgeNode(Tag tag);
 
     /**
-     * Gets all the KNs in the KNN.
+     * Gets all the KNs in the KNN, sorted by age.
      *
      * @return all the KNs in the KNN
      */
-    Collection<KnowledgeNode> getKnowledgeNodes();
+    Set<KnowledgeNode> getKnowledgeNodes();
 
 
     /**

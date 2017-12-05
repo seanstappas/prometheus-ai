@@ -35,15 +35,16 @@ class DirectSearcher {
         Set<Tag> activatedTags = new HashSet<>();
         if (mapKN.containsKey(inputTag)) {
             KnowledgeNode kn = mapKN.get(inputTag);
+            ageSortedKNs.remove(kn);
             boolean fired = kn.excite();
+            ageSortedKNs.add(kn);
             if (fired) {
                 activatedTags.addAll(kn.getOutputTags());
+            } else if (kn.isExpired()) {
+                mapKN.remove(kn.getInputTag());
+                activeTags.remove(kn.getInputTag());
+                ageSortedKNs.remove(kn);
             }
-
-            // Update age
-            ageSortedKNs.remove(kn);
-            kn.updateAge();
-            ageSortedKNs.add(kn);
         }
         this.activeTags.add(inputTag);
         this.activeTags.addAll(activatedTags);

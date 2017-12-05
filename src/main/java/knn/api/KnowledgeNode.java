@@ -72,10 +72,6 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
         this.maxAge = 60;
     }
 
-    public void updateBelief() {
-        // TODO: update belief correctly
-    }
-
     public long getCurrentAge() {
         return System.currentTimeMillis() - initialAgeTimeStamp;
     }
@@ -83,12 +79,10 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
     /**
      * Ages the current Knowledge Node.
      *
-     * @return the age (time elapsed since initialisation/last update)
      */
-    public long updateAge() {
+    private void updateAge() {
         age = System.currentTimeMillis() - initialAgeTimeStamp;
         initialAgeTimeStamp = System.currentTimeMillis();
-        return age;
     }
 
     public double getBelief() {
@@ -107,6 +101,7 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
             isExpired = true;
             return false;
         } else {
+            updateAge();
             double oldActivation = activation;
             activation += ACTIVATION_INCREMENT;
             return oldActivation < threshold && isFired();

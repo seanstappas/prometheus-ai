@@ -45,6 +45,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     public void resetEmpty() {
         mapKN.clear();
         activeTags.clear();
+        ageSortedKNs.clear();
     }
 
     @Override
@@ -64,13 +65,12 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         for (KnowledgeNode kn : mapKN.values()) {
             if (kn.isExpired()) {
                 tagsToDelete.add(kn.getInputTag());
+                ageSortedKNs.remove(kn);
             }
         }
         for (Tag t : tagsToDelete) {
             mapKN.remove(t);
-            if (activeTags.contains(t)) {
-                activeTags.remove(t);
-            }
+            activeTags.remove(t);
         }
     }
 
@@ -100,8 +100,8 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public Collection<KnowledgeNode> getKnowledgeNodes() {
-        return Collections.unmodifiableCollection(mapKN.values());
+    public Set<KnowledgeNode> getKnowledgeNodes() {
+        return Collections.unmodifiableSet(ageSortedKNs);
     }
 
     @Override
