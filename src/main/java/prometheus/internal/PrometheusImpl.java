@@ -15,43 +15,44 @@ import nn.api.NeuralNetworkFactory;
 import prometheus.api.Prometheus;
 
 class PrometheusImpl implements Prometheus {
-  private NeuralNetwork nn;
-  private KnowledgeNodeNetwork knn;
-  private ExpertSystem es;
-  private MetaReasoner meta;
+    private NeuralNetwork nn;
+    private KnowledgeNodeNetwork knn;
+    private ExpertSystem es;
+    private MetaReasoner meta;
 
-  @Inject
-  public PrometheusImpl(
-      NeuralNetworkFactory neuralNetworkFactory,
-      ExpertSystemFactory expertSystemFactory,
-      KnowledgeNodeNetworkFactory knowledgeNodeNetworkFactory,
-      MetaReasonerFactory metaReasonerFactory) {
-    this.nn = neuralNetworkFactory.create();
-    this.es = expertSystemFactory
-        .create(new HashSet<>(), new HashSet<>(), new HashSet<>(),
-            new HashSet<>());
-    this.knn = knowledgeNodeNetworkFactory.create(
-        new HashMap<>(), new HashSet<>(), new TreeSet<>(), 1, Long.MAX_VALUE);
-    this.meta = metaReasonerFactory.create();
-  }
+    @Inject
+    public PrometheusImpl(
+            NeuralNetworkFactory neuralNetworkFactory,
+            ExpertSystemFactory expertSystemFactory,
+            KnowledgeNodeNetworkFactory knowledgeNodeNetworkFactory,
+            MetaReasonerFactory metaReasonerFactory) {
+        this.nn = neuralNetworkFactory.create();
+        this.es = expertSystemFactory
+                .create(new HashSet<>(), new HashSet<>(), new HashSet<>(),
+                        new HashSet<>());
+        this.knn = knowledgeNodeNetworkFactory.create(
+                new HashMap<>(), new HashSet<>(), new TreeSet<>(), 1,
+                Long.MAX_VALUE);
+        this.meta = metaReasonerFactory.create();
+    }
 
-  @Override
-  public NeuralNetwork getNeuralNetwork() {
-    return nn;
-  }
+    @Override
+    public NeuralNetwork getNeuralNetwork() {
+        return nn;
+    }
 
-  @Override
-  public KnowledgeNodeNetwork getKnowledgeNodeNetwork() {
-    return knn;
-  }
+    @Override
+    public KnowledgeNodeNetwork getKnowledgeNodeNetwork() {
+        return knn;
+    }
 
-  @Override
-  public ExpertSystem getExpertSystem() {
-    return es;
-  }
+    @Override
+    public ExpertSystem getExpertSystem() {
+        return es;
+    }
 
-  @Override
-  public MetaReasoner getMetaReasoner() {
-    return meta;
-  }
+    @Override
+    public MetaReasoner getMetaReasoner() {
+        return meta;
+    }
 }

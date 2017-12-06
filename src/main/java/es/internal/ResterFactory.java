@@ -6,7 +6,7 @@ import com.google.inject.assistedinject.Assisted;
 import tags.Rule;
 
 interface ResterFactory {
-  @Inject
-  Rester create(
-      @Assisted("readyRules") Set<Rule> readyRules);
+    @Inject
+    Rester create(
+            @Assisted("readyRules") Set<Rule> readyRules);
 }

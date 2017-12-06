@@ -6,11 +6,11 @@ import meta.api.MetaReasoner;
 import nn.api.NeuralNetwork;
 
 public interface Prometheus {
-  NeuralNetwork getNeuralNetwork();
+    NeuralNetwork getNeuralNetwork();
 
-  KnowledgeNodeNetwork getKnowledgeNodeNetwork();
+    KnowledgeNodeNetwork getKnowledgeNodeNetwork();
 
-  ExpertSystem getExpertSystem();
+    ExpertSystem getExpertSystem();
 
-  MetaReasoner getMetaReasoner();
+    MetaReasoner getMetaReasoner();
 }

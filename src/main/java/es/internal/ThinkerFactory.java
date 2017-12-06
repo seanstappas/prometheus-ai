@@ -8,10 +8,10 @@ import tags.Recommendation;
 import tags.Rule;
 
 interface ThinkerFactory {
-  @Inject
-  Thinker create(
-      @Assisted("readyRules") Set<Rule> readyRules,
-      @Assisted("activeRules") Set<Rule> activeRules,
-      @Assisted("facts") Set<Fact> facts,
-      @Assisted("recommendations") Set<Recommendation> recommendations);
+    @Inject
+    Thinker create(
+            @Assisted("readyRules") Set<Rule> readyRules,
+            @Assisted("activeRules") Set<Rule> activeRules,
+            @Assisted("facts") Set<Fact> facts,
+            @Assisted("recommendations") Set<Recommendation> recommendations);
 }

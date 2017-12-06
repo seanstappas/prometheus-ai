@@ -5,11 +5,11 @@ package tags;
  * value.
  */
 public abstract class Tag {
-  double confidence;
+    double confidence;
 
-  public double getConfidence() {
-    return confidence;
-  }
+    public double getConfidence() {
+        return confidence;
+    }
 
-  abstract String simpleToString();
+    abstract String simpleToString();
 }

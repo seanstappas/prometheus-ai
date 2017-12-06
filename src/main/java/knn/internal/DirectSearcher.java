@@ -14,43 +14,43 @@ import tags.Tag;
  * Searcher which performs direct search in the KNN.
  */
 class DirectSearcher {
-  private final Map<Tag, KnowledgeNode> mapKN;
-  private final Set<Tag> activeTags;
-  private final TreeSet<KnowledgeNode> ageSortedKNs;
+    private final Map<Tag, KnowledgeNode> mapKN;
+    private final Set<Tag> activeTags;
+    private final TreeSet<KnowledgeNode> ageSortedKNs;
 
-  @Inject
-  public DirectSearcher(
-      @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
-      @Assisted("activeTags") Set<Tag> activeTags,
-      @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs) {
-    this.mapKN = mapKN;
-    this.activeTags = activeTags;
-    this.ageSortedKNs = ageSortedKNs;
-  }
-
-  /**
-   * Search for the given input Tag in the KN map.
-   *
-   * @param inputTag the input Tag to search for
-   * @return the activated output tags (excluding the given input Tag)
-   */
-  Set<Tag> search(Tag inputTag) {
-    Set<Tag> activatedTags = new HashSet<>();
-    if (mapKN.containsKey(inputTag)) {
-      KnowledgeNode kn = mapKN.get(inputTag);
-      ageSortedKNs.remove(kn);
-      boolean fired = kn.excite();
-      ageSortedKNs.add(kn);
-      if (fired) {
-        activatedTags.addAll(kn.getOutputTags());
-      } else if (kn.isExpired()) {
-        mapKN.remove(kn.getInputTag());
-        activeTags.remove(kn.getInputTag());
-        ageSortedKNs.remove(kn);
-      }
+    @Inject
+    public DirectSearcher(
+            @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
+            @Assisted("activeTags") Set<Tag> activeTags,
+            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs) {
+        this.mapKN = mapKN;
+        this.activeTags = activeTags;
+        this.ageSortedKNs = ageSortedKNs;
     }
-    this.activeTags.add(inputTag);
-    this.activeTags.addAll(activatedTags);
-    return Collections.unmodifiableSet(activatedTags);
-  }
+
+    /**
+     * Search for the given input Tag in the KN map.
+     *
+     * @param inputTag the input Tag to search for
+     * @return the activated output tags (excluding the given input Tag)
+     */
+    Set<Tag> search(Tag inputTag) {
+        Set<Tag> activatedTags = new HashSet<>();
+        if (mapKN.containsKey(inputTag)) {
+            KnowledgeNode kn = mapKN.get(inputTag);
+            ageSortedKNs.remove(kn);
+            boolean fired = kn.excite();
+            ageSortedKNs.add(kn);
+            if (fired) {
+                activatedTags.addAll(kn.getOutputTags());
+            } else if (kn.isExpired()) {
+                mapKN.remove(kn.getInputTag());
+                activeTags.remove(kn.getInputTag());
+                ageSortedKNs.remove(kn);
+            }
+        }
+        this.activeTags.add(inputTag);
+        this.activeTags.addAll(activatedTags);
+        return Collections.unmodifiableSet(activatedTags);
+    }
 }

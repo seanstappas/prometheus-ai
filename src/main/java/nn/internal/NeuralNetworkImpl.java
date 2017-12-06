@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import nn.api.NeuralNetwork;
 
 class NeuralNetworkImpl implements NeuralNetwork {
-  @Inject
-  public NeuralNetworkImpl() {
-  }
+    @Inject
+    public NeuralNetworkImpl() {
+    }
 }

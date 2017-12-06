@@ -1,5 +1,4 @@
 /**
  * Integration tests.
  */
-
 package integration;

@@ -6,7 +6,7 @@ import com.google.inject.assistedinject.Assisted;
 import tags.Rule;
 
 interface TeacherFactory {
-  @Inject
-  Teacher create(
-      @Assisted("readyRules") Set<Rule> readyRules);
+    @Inject
+    Teacher create(
+            @Assisted("readyRules") Set<Rule> readyRules);
 }

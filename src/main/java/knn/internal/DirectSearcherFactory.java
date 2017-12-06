@@ -9,9 +9,9 @@ import knn.api.KnowledgeNode;
 import tags.Tag;
 
 interface DirectSearcherFactory {
-  @Inject
-  DirectSearcher create(
-      @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
-      @Assisted("activeTags") Set<Tag> activeTags,
-      @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs);
+    @Inject
+    DirectSearcher create(
+            @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
+            @Assisted("activeTags") Set<Tag> activeTags,
+            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs);
 }

@@ -8,10 +8,10 @@ import knn.api.KnowledgeNode;
 import tags.Tag;
 
 interface BackwardSearcherFactory {
-  @Inject
-  BackwardSearcher create(
-      @Assisted("activeTags") Set<Tag> activeTags,
-      @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs,
-      @Assisted("partialMatchRatio") double partialMatchRatio,
-      @Assisted("ageLimit") long ageLimit);
+    @Inject
+    BackwardSearcher create(
+            @Assisted("activeTags") Set<Tag> activeTags,
+            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs,
+            @Assisted("partialMatchRatio") double partialMatchRatio,
+            @Assisted("ageLimit") long ageLimit);
 }

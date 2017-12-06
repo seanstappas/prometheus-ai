@@ -8,12 +8,12 @@ import nn.guice.NeuralNetworkModule;
 import prometheus.internal.PrometheusInternalModule;
 
 public class PrometheusModule extends AbstractModule {
-  protected void configure() {
-    install(new NeuralNetworkModule());
-    install(new KnowledgeNodeNetworkModule());
-    install(new ExpertSystemModule());
-    install(new MetaReasonerModule());
+    protected void configure() {
+        install(new NeuralNetworkModule());
+        install(new KnowledgeNodeNetworkModule());
+        install(new ExpertSystemModule());
+        install(new MetaReasonerModule());
 
-    install(new PrometheusInternalModule());
-  }
+        install(new PrometheusInternalModule());
+    }
 }
