@@ -9,10 +9,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 interface BackwardSearcherFactory {
-    @Inject
-    BackwardSearcher create(
-            @Assisted("activeTags") Set<Tag> activeTags,
-            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs,
-            @Assisted("partialMatchRatio") double partialMatchRatio,
-            @Assisted("ageLimit") long ageLimit);
+  @Inject
+  BackwardSearcher create(
+      @Assisted("activeTags") Set<Tag> activeTags,
+      @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs,
+      @Assisted("partialMatchRatio") double partialMatchRatio,
+      @Assisted("ageLimit") long ageLimit);
 }

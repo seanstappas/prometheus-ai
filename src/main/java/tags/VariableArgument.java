@@ -8,46 +8,48 @@ package tags;
 
 final class VariableArgument extends Argument {
 
-    /**
-     * Constructor of variable Arguments
-     * <p>
-     * Arguments must be a string made up of alpha characters, as well as one of ["*", "?", {@literal &}] characters
-     * @param string argument as a string
-     * @param tokens argument as tokens, split on mathematical symbols
-     */
+  /**
+   * Constructor of variable Arguments
+   * <p>
+   * Arguments must be a string made up of alpha characters, as well as one of ["*", "?", {@literal &}] characters
+   *
+   * @param string argument as a string
+   * @param tokens argument as tokens, split on mathematical symbols
+   */
 
-    VariableArgument(String string, String[] tokens) {
+  VariableArgument(String string, String[] tokens) {
 
-        super(tokens);
+    super(tokens);
 
-        if (tokens[0].equals("*")) {
-            this.symbol = ArgTypes.MATCHALL;
-            this.name = "*";
-        } else if (tokens[0].equals("?")) {
-            this.symbol = ArgTypes.MATCHONE;
-            this.name = "?";
-        } else if (tokens[0].charAt(0) == '&') {
-            this.symbol = ArgTypes.VAR;
-            this.name = tokens[0];
-        }
+    if (tokens[0].equals("*")) {
+      this.symbol = ArgTypes.MATCHALL;
+      this.name = "*";
+    } else if (tokens[0].equals("?")) {
+      this.symbol = ArgTypes.MATCHONE;
+      this.name = "?";
+    } else if (tokens[0].charAt(0) == '&') {
+      this.symbol = ArgTypes.VAR;
+      this.name = tokens[0];
     }
+  }
 
-    /**
-     * Prints name (when appropriate), and type
-     * @return Variable argument as string.
-     */
+  /**
+   * Prints name (when appropriate), and type
+   *
+   * @return Variable argument as string.
+   */
 
-    @Override
-    public String toString() {
-        switch (getSymbol()) {
-            case MATCHONE:
-                return "?";
-            case MATCHALL:
-                return "*";
-            case VAR:
-                return getName() + "";
-            default:
-                return super.toString();
-        }
+  @Override
+  public String toString() {
+    switch (getSymbol()) {
+      case MATCHONE:
+        return "?";
+      case MATCHALL:
+        return "*";
+      case VAR:
+        return getName() + "";
+      default:
+        return super.toString();
     }
+  }
 }

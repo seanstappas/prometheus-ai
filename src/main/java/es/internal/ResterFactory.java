@@ -7,7 +7,7 @@ import tags.Rule;
 import java.util.Set;
 
 interface ResterFactory {
-    @Inject
-    Rester create(
-            @Assisted("readyRules") Set<Rule> readyRules);
+  @Inject
+  Rester create(
+      @Assisted("readyRules") Set<Rule> readyRules);
 }

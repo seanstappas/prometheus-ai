@@ -8,29 +8,30 @@ import java.util.Map;
  */
 
 public abstract class Predicate extends Tag {
-    String predicateName;
-    List<Argument> arguments;
+  String predicateName;
+  List<Argument> arguments;
 
-    public abstract String getPredicateName();
-    public abstract List<Argument> getArguments();
+  public abstract String getPredicateName();
 
-    abstract Predicate getPredicateCopy();
+  public abstract List<Argument> getArguments();
 
-    /**
-     * Returns a copy of the current Predicate with replaced variable argument(s) with a String or Numeric Argument.
-     *
-     * @param pendingReplacementPairs the pending replacement pairs
-     * @return a copy of the current Predicate with replaced variable argument(s) with a String or Numeric Argument.
-     */
-    public Predicate replaceVariableArguments(Map<String, Argument> pendingReplacementPairs) {
-        Predicate p = getPredicateCopy();
-        int argumentIndex = 0;
-        for (Argument argument : p.arguments) {
-            if (pendingReplacementPairs.containsKey(argument.getName())) {
-                arguments.set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
-            }
-            argumentIndex++;
-        }
-        return p;
+  abstract Predicate getPredicateCopy();
+
+  /**
+   * Returns a copy of the current Predicate with replaced variable argument(s) with a String or Numeric Argument.
+   *
+   * @param pendingReplacementPairs the pending replacement pairs
+   * @return a copy of the current Predicate with replaced variable argument(s) with a String or Numeric Argument.
+   */
+  public Predicate replaceVariableArguments(Map<String, Argument> pendingReplacementPairs) {
+    Predicate p = getPredicateCopy();
+    int argumentIndex = 0;
+    for (Argument argument : p.arguments) {
+      if (pendingReplacementPairs.containsKey(argument.getName())) {
+        arguments.set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
+      }
+      argumentIndex++;
     }
+    return p;
+  }
 }

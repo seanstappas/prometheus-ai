@@ -7,7 +7,7 @@ import tags.Rule;
 import java.util.Set;
 
 interface TeacherFactory {
-    @Inject
-    Teacher create(
-            @Assisted("readyRules") Set<Rule> readyRules);
+  @Inject
+  Teacher create(
+      @Assisted("readyRules") Set<Rule> readyRules);
 }

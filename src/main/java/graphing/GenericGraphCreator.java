@@ -6,17 +6,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class GenericGraphCreator extends KnnGraphVisualizer {
-    @Override
-    String getScreenshotSavePath(String suffix) {
-        return "graphs/knn/knn_graph.png";
-    }
+  public static void main(String[] args) throws InterruptedException {
+    new GenericGraphCreator().visualize(false);
+  }
 
-    @Override
-    Set<Tag> search() {
-        return new HashSet<>();
-    }
+  @Override
+  String getScreenshotSavePath(String suffix) {
+    return "graphs/knn/knn_graph.png";
+  }
 
-    public static void main(String[] args) throws InterruptedException {
-        new GenericGraphCreator().visualize(false);
-    }
+  @Override
+  Set<Tag> search() {
+    return new HashSet<>();
+  }
 }

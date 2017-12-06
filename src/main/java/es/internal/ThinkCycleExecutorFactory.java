@@ -9,10 +9,10 @@ import tags.Rule;
 import java.util.Set;
 
 interface ThinkCycleExecutorFactory {
-    @Inject
-    ThinkCycleExecutor create(
-            @Assisted("readyRules") Set<Rule> readyRules,
-            @Assisted("activeRules") Set<Rule> activeRules,
-            @Assisted("facts") Set<Fact> facts,
-            @Assisted("recommendations") Set<Recommendation> recommendations);
+  @Inject
+  ThinkCycleExecutor create(
+      @Assisted("readyRules") Set<Rule> readyRules,
+      @Assisted("activeRules") Set<Rule> activeRules,
+      @Assisted("facts") Set<Fact> facts,
+      @Assisted("recommendations") Set<Recommendation> recommendations);
 }

@@ -16,35 +16,35 @@ import java.util.Set;
 import static org.testng.AssertJUnit.assertEquals;
 
 public class KnowledgeNodeNetworkTest {
-    private static final String ANIMAL_DATA_PATH = "data/animalData.txt";
-    private KnowledgeNodeNetwork knn;
+  private static final String ANIMAL_DATA_PATH = "data/animalData.txt";
+  private KnowledgeNodeNetwork knn;
 
-    @BeforeTest
-    public void setup() {
-        Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
-        knn = prometheus.getKnowledgeNodeNetwork();
+  @BeforeTest
+  public void setup() {
+    Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
+    knn = prometheus.getKnowledgeNodeNetwork();
+  }
+
+  @BeforeMethod
+  public void setupKNN() {
+    knn.loadData(ANIMAL_DATA_PATH);
+  }
+
+  @Test
+  public void testForwardThink() throws Exception {
+    Set<Tag> expectedActivatedTags = new HashSet<>();
+    int i = 0;
+    for (KnowledgeNode kn : knn.getKnowledgeNodes()) {
+      knn.addActiveTag(kn.getInputTag());
+      expectedActivatedTags.addAll(kn.getOutputTags());
+      if (i == knn.getKnowledgeNodes().size() / 2) {
+        break;
+      }
+      i++;
     }
 
-    @BeforeMethod
-    public void setupKNN() {
-        knn.loadData(ANIMAL_DATA_PATH);
-    }
+    Set<Tag> actualActivatedTags = knn.forwardThink(1);
 
-    @Test
-    public void testForwardThink() throws Exception {
-        Set<Tag> expectedActivatedTags = new HashSet<>();
-        int i = 0;
-        for (KnowledgeNode kn : knn.getKnowledgeNodes()) {
-            knn.addActiveTag(kn.getInputTag());
-            expectedActivatedTags.addAll(kn.getOutputTags());
-            if (i == knn.getKnowledgeNodes().size() / 2) {
-                break;
-            }
-            i++;
-        }
-
-        Set<Tag> actualActivatedTags = knn.forwardThink(1);
-
-        assertEquals(expectedActivatedTags, actualActivatedTags);
-    }
+    assertEquals(expectedActivatedTags, actualActivatedTags);
+  }
 }

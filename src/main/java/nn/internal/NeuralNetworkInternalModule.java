@@ -6,9 +6,9 @@ import nn.api.NeuralNetwork;
 import nn.api.NeuralNetworkFactory;
 
 public class NeuralNetworkInternalModule extends AbstractModule {
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(NeuralNetwork.class, NeuralNetworkImpl.class)
-                .build(NeuralNetworkFactory.class));
-    }
+  protected void configure() {
+    install(new FactoryModuleBuilder()
+        .implement(NeuralNetwork.class, NeuralNetworkImpl.class)
+        .build(NeuralNetworkFactory.class));
+  }
 }

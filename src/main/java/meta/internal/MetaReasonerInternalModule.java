@@ -6,9 +6,9 @@ import meta.api.MetaReasoner;
 import meta.api.MetaReasonerFactory;
 
 public class MetaReasonerInternalModule extends AbstractModule {
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(MetaReasoner.class, MetaReasonerImpl.class)
-                .build(MetaReasonerFactory.class));
-    }
+  protected void configure() {
+    install(new FactoryModuleBuilder()
+        .implement(MetaReasoner.class, MetaReasonerImpl.class)
+        .build(MetaReasonerFactory.class));
+  }
 }

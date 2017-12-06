@@ -7,153 +7,164 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Subclass for arguments that have integer values
  * <p>
  * If argument has a negative value, isNeg == true.
- *  i.e. "ARG != 5" {@literal ->} this.value==5; this.isNeg==true
+ * i.e. "ARG != 5" {@literal ->} this.value==5; this.isNeg==true
  */
 
 final class NumericArgument extends Argument {
 
-    private boolean isNeg;
-    private int value;
+  private boolean isNeg;
+  private int value;
 
-    private boolean isNeg() {
-        return isNeg;
+  /**
+   * Constructor of numeric arguments
+   * <p>
+   * Arguments must be a string that is purely numeric e.g. "5
+   * or composed of a name delimited by {@literal ["<",">,"="]}
+   *
+   * @param string argument as a string
+   * @param tokens argument as tokens, split on mathematic symbols
+   */
+
+  NumericArgument(String string, String[] tokens) {
+
+    super(tokens);
+    this.isNeg = (string.contains("!"));
+
+    if (string.contains("=")) {
+      this.symbol = ArgTypes.EQ;
+    } else if (string.contains(">")) {
+      this.symbol = ArgTypes.GT;
+    } else if (string.contains("<")) {
+      this.symbol = ArgTypes.LT;
+    } else {
+      this.symbol = ArgTypes.INT;
     }
 
-    /**
-     * Compares two numeric arguments to see if they match
-     *
-     * @param that numericArgument to compare with this
-     * @return true if matching
-     */
+    this.value = Integer.parseInt(tokens[tokens.length - 1]);
 
-    boolean matches(NumericArgument that) {
-        if (!this.getName().equals(that.getName())) {
-            return false;
-        }
-        if (this.isNeg && that.isNeg) {
-            return false;
-        }
-        if (this.isNeg || that.isNeg) {
-            return (this.value != that.value);
-        }
+  }
 
-        switch (this.getSymbol()) {
-            case EQ:
-                switch (that.getSymbol()) {
-                    case EQ:
-                        return this.value == that.value;
-                    case GT:
-                        return this.value > that.value;
-                    case LT:
-                        return this.value < that.value;
-                }
-            case GT:
-                switch (that.getSymbol()) {
-                    case EQ:
-                        return that.value > this.value;
-                    case GT:
-                        return false;
-                    case LT:
-                        return false;
-                }
-            case LT:
-                switch (that.getSymbol()) {
-                    case EQ:
-                        return that.value < this.value;
-                    case GT:
-                        return false;
-                    case LT:
-                        return false;
-                }
-            default:
-                return true;
-        }
+  private boolean isNeg() {
+    return isNeg;
+  }
+
+  /**
+   * Compares two numeric arguments to see if they match
+   *
+   * @param that numericArgument to compare with this
+   * @return true if matching
+   */
+
+  boolean matches(NumericArgument that) {
+    if (!this.getName().equals(that.getName())) {
+      return false;
+    }
+    if (this.isNeg && that.isNeg) {
+      return false;
+    }
+    if (this.isNeg || that.isNeg) {
+      return (this.value != that.value);
     }
 
-    /**
-     * Constructor of numeric arguments
-     * <p>
-     * Arguments must be a string that is purely numeric e.g. "5
-     *  or composed of a name delimited by {@literal ["<",">,"="]}
-     *
-     * @param string argument as a string
-     * @param tokens argument as tokens, split on mathematic symbols
-     */
+    switch (this.getSymbol()) {
+      case EQ:
+        switch (that.getSymbol()) {
+          case EQ:
+            return this.value == that.value;
+          case GT:
+            return this.value > that.value;
+          case LT:
+            return this.value < that.value;
+        }
+      case GT:
+        switch (that.getSymbol()) {
+          case EQ:
+            return that.value > this.value;
+          case GT:
+            return false;
+          case LT:
+            return false;
+        }
+      case LT:
+        switch (that.getSymbol()) {
+          case EQ:
+            return that.value < this.value;
+          case GT:
+            return false;
+          case LT:
+            return false;
+        }
+      default:
+        return true;
+    }
+  }
 
-    NumericArgument(String string, String[] tokens) {
+  public int getValue() {
+    return value;
+  }
 
-        super(tokens);
-        this.isNeg = (string.contains("!"));
-
-        if (string.contains("=")) {
-            this.symbol = ArgTypes.EQ;
-        } else if (string.contains(">")) {
-            this.symbol = ArgTypes.GT;
-        } else if (string.contains("<")) {
-            this.symbol = ArgTypes.LT;
+  /**
+   * Prints name (when appropriate), symbol and value
+   *
+   * @return the Argument as a String.
+   */
+  @Override
+  public String toString() {
+    switch (getSymbol()) {
+      case INT:
+        if (!isNeg()) {
+          return "" + value;
         } else {
-            this.symbol = ArgTypes.INT;
+          return "!" + value;
         }
-
-        this.value = Integer.parseInt(tokens[tokens.length - 1]);
-
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    /**
-     * Prints name (when appropriate), symbol and value
-     * @return the Argument as a String.
-     */
-    @Override
-    public String toString() {
-        switch (getSymbol()) {
-            case INT:
-                if (!isNeg()) {
-                    return "" + value;
-                } else {
-                    return "!" + value;
-                }
-            case EQ:
-                if (!isNeg()) {
-                    return getName() + " = " + value;
-                } else return getName() + " !=" + value;
-            case LT:
-                if (!isNeg()) {
-                    return getName() + " < " + value;
-                } else return getName() + " !<" + value;
-            case GT:
-                if (!isNeg()) {
-                    return getName() + " > " + value;
-                } else return getName() + " !>" + value;
-            default:
-                return super.toString();
+      case EQ:
+        if (!isNeg()) {
+          return getName() + " = " + value;
+        } else {
+          return getName() + " !=" + value;
         }
+      case LT:
+        if (!isNeg()) {
+          return getName() + " < " + value;
+        } else {
+          return getName() + " !<" + value;
+        }
+      case GT:
+        if (!isNeg()) {
+          return getName() + " > " + value;
+        } else {
+          return getName() + " !>" + value;
+        }
+      default:
+        return super.toString();
+    }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        NumericArgument that = (NumericArgument) o;
-
-        return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(isNeg, that.isNeg)
-                .append(value, that.value)
-                .isEquals();
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
-                .append(isNeg)
-                .append(value)
-                .toHashCode();
-    }
+    NumericArgument that = (NumericArgument) o;
+
+    return new EqualsBuilder()
+        .appendSuper(super.equals(o))
+        .append(isNeg, that.isNeg)
+        .append(value, that.value)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder()
+        .appendSuper(super.hashCode())
+        .append(isNeg)
+        .append(value)
+        .toHashCode();
+  }
 }

@@ -9,25 +9,25 @@ import java.util.HashSet;
 import java.util.Set;
 
 class KnnSimpleBackwardThinkVisualizer extends KnnSimpleGraphVisualizer {
-    @Override
-    String getScreenshotSavePath(String suffix) {
-        return MessageFormat.format("graphs/knn/backward/knn_simple_backward_think_{0}", suffix);
-    }
+  public static void main(String[] args) throws InterruptedException {
+    new KnnSimpleBackwardThinkVisualizer().visualize(false);
+  }
 
-    @Override
-    Set<Tag> getInitialActiveTags() {
-        return new HashSet<>(Collections.singletonList(
-                new Fact("P7(A)", 100)
-        ));
-    }
+  @Override
+  String getScreenshotSavePath(String suffix) {
+    return MessageFormat.format("graphs/knn/backward/knn_simple_backward_think_{0}", suffix);
+  }
 
-    @Override
-    Set<Tag> search() {
-        knn.setBackwardSearchMatchRatio(1d / knn.getActiveTags().size());
-        return knn.backwardThink(1);
-    }
+  @Override
+  Set<Tag> getInitialActiveTags() {
+    return new HashSet<>(Collections.singletonList(
+        new Fact("P7(A)", 100)
+    ));
+  }
 
-    public static void main(String[] args) throws InterruptedException {
-        new KnnSimpleBackwardThinkVisualizer().visualize(false);
-    }
+  @Override
+  Set<Tag> search() {
+    knn.setBackwardSearchMatchRatio(1d / knn.getActiveTags().size());
+    return knn.backwardThink(1);
+  }
 }
