@@ -53,20 +53,6 @@ class ThinkCycleExecutor {
     }
 
     /**
-     * Adds a Predicate to the ES. Will cast the tag to either a Rule, a Fact.
-     *
-     * @param predicate the Predicate to be added
-     * @return <code>true</code> if the Predicate is successfully added
-     */
-    private boolean addPredicate(Predicate predicate) {
-        if (predicate instanceof Fact)
-            return facts.add((Fact) predicate);
-        else if (predicate instanceof Recommendation)
-            return recommendations.add((Recommendation) predicate);
-        return false;
-    }
-
-    /**
      * Checks if a particular fact getMatchResult with any other fact in the ES
      * If inputFact contains a variable argument, matching pair placed in pendingReplacementPairs
      *
@@ -112,5 +98,19 @@ class ThinkCycleExecutor {
             activeRules.add(modifiedRule);
         }
         return activatedPredicates;
+    }
+
+    /**
+     * Adds a Predicate to the ES. Will cast the tag to either a Rule, a Fact.
+     *
+     * @param predicate the Predicate to be added
+     * @return <code>true</code> if the Predicate is successfully added
+     */
+    private boolean addPredicate(Predicate predicate) {
+        if (predicate instanceof Fact)
+            return facts.add((Fact) predicate);
+        else if (predicate instanceof Recommendation)
+            return recommendations.add((Recommendation) predicate);
+        return false;
     }
 }
