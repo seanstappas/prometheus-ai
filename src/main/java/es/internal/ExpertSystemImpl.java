@@ -1,15 +1,14 @@
 package es.internal;
 
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.Set;
 import com.google.inject.assistedinject.Assisted;
 import es.api.ExpertSystem;
 import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
-
-import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Set;
 
 
 class ExpertSystemImpl implements ExpertSystem {

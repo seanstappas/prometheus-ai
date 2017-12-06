@@ -1,5 +1,10 @@
 package graphing;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import com.google.inject.Guice;
 import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
@@ -11,11 +16,6 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 abstract class KnnGraphVisualizer extends GraphVisualizer {
   private static final int NUM_INITIAL_ACTIVE_TAGS = 5;

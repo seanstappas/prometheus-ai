@@ -1,5 +1,7 @@
 package integration;
 
+import java.util.HashSet;
+import java.util.Set;
 import com.google.inject.Guice;
 import es.api.ExpertSystem;
 import knn.api.KnowledgeNodeNetwork;
@@ -12,9 +14,6 @@ import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;

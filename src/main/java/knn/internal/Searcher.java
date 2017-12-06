@@ -1,8 +1,7 @@
 package knn.internal;
 
-import tags.Tag;
-
 import java.util.Set;
+import tags.Tag;
 
 /**
  * Interface for cascading searchers (forward, backward and lambda).

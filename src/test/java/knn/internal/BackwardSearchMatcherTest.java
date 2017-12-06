@@ -1,14 +1,13 @@
 package knn.internal;
 
-import knn.api.KnowledgeNode;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import tags.Tag;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import knn.api.KnowledgeNode;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import tags.Tag;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

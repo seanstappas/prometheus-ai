@@ -1,5 +1,9 @@
 package prometheus.internal;
 
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeSet;
 import es.api.ExpertSystem;
 import es.api.ExpertSystemFactory;
 import knn.api.KnowledgeNodeNetwork;
@@ -9,11 +13,6 @@ import meta.api.MetaReasonerFactory;
 import nn.api.NeuralNetwork;
 import nn.api.NeuralNetworkFactory;
 import prometheus.api.Prometheus;
-
-import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.TreeSet;
 
 class PrometheusImpl implements Prometheus {
   private NeuralNetwork nn;

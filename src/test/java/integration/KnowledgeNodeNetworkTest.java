@@ -1,5 +1,7 @@
 package integration;
 
+import java.util.HashSet;
+import java.util.Set;
 import com.google.inject.Guice;
 import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
@@ -9,9 +11,6 @@ import org.testng.annotations.Test;
 import prometheus.api.Prometheus;
 import prometheus.guice.PrometheusModule;
 import tags.Tag;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.testng.AssertJUnit.assertEquals;
 

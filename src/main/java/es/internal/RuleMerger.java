@@ -1,11 +1,10 @@
 package es.internal;
 
+import java.util.Optional;
+import java.util.Set;
 import tags.Fact;
 import tags.Predicate;
 import tags.Rule;
-
-import java.util.Optional;
-import java.util.Set;
 
 class RuleMerger {
   /**

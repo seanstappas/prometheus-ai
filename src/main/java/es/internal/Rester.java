@@ -1,10 +1,9 @@
 package es.internal;
 
-import com.google.inject.assistedinject.Assisted;
-import tags.Rule;
-
 import javax.inject.Inject;
 import java.util.Set;
+import com.google.inject.assistedinject.Assisted;
+import tags.Rule;
 
 class Rester {
   private Set<Rule> readyRules;

@@ -1,5 +1,10 @@
 package es.internal;
 
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import com.google.inject.assistedinject.Assisted;
 import tags.Argument;
 import tags.Fact;
@@ -7,12 +12,6 @@ import tags.Predicate;
 import tags.Recommendation;
 import tags.Rule;
 import tags.VariableReturn;
-
-import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 class ThinkCycleExecutor {
   private Set<Rule> readyRules;

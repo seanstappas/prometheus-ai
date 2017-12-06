@@ -1,14 +1,13 @@
 package es.internal;
 
+import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.Set;
 import com.google.inject.assistedinject.Assisted;
 import tags.Fact;
 import tags.Predicate;
 import tags.Recommendation;
 import tags.Rule;
-
-import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.Set;
 
 class Thinker {
   private final ThinkCycleExecutor thinkCycleExecutor;

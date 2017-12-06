@@ -1,9 +1,8 @@
 package graphing;
 
-import tags.Tag;
-
 import java.util.HashSet;
 import java.util.Set;
+import tags.Tag;
 
 public class GenericGraphCreator extends KnnGraphVisualizer {
   public static void main(String[] args) throws InterruptedException {

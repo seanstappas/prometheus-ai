@@ -1,12 +1,11 @@
 package knn.api;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import tags.Tag;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import tags.Tag;
 
 public interface KnowledgeNodeNetworkFactory {
   @Inject

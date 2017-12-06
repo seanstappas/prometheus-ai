@@ -1,14 +1,13 @@
 package graphing;
 
+import java.io.IOException;
+import java.text.MessageFormat;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.stream.file.FileSinkSVG2;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
-
-import java.io.IOException;
-import java.text.MessageFormat;
 
 abstract class GraphVisualizer implements ViewerListener {
   Graph graph;

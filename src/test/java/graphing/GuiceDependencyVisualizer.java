@@ -1,17 +1,16 @@
 package graphing;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.grapher.graphviz.GraphvizGrapher;
-import com.google.inject.grapher.graphviz.GraphvizModule;
-import prometheus.guice.PrometheusModule;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.grapher.graphviz.GraphvizGrapher;
+import com.google.inject.grapher.graphviz.GraphvizModule;
+import prometheus.guice.PrometheusModule;
 
 public class GuiceDependencyVisualizer {
   private static final String GRAPH_SAVE_PATH = "graphs/guice/guice_graph.dot";

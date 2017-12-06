@@ -1,8 +1,7 @@
 package nn.internal;
 
-import nn.api.NeuralNetwork;
-
 import javax.inject.Inject;
+import nn.api.NeuralNetwork;
 
 class NeuralNetworkImpl implements NeuralNetwork {
   @Inject

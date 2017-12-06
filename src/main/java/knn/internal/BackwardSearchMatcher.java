@@ -1,10 +1,9 @@
 package knn.internal;
 
-import knn.api.KnowledgeNode;
-import tags.Tag;
-
 import java.util.Optional;
 import java.util.Set;
+import knn.api.KnowledgeNode;
+import tags.Tag;
 
 /**
  * Matcher which checks if a given KN matches a set of input Tags. Used during

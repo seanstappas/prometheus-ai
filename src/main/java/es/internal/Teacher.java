@@ -1,8 +1,5 @@
 package es.internal;
 
-import com.google.inject.assistedinject.Assisted;
-import tags.Rule;
-
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import com.google.inject.assistedinject.Assisted;
+import tags.Rule;
 
 class Teacher {
   private static final Set<String> INPUT_TOKENS =

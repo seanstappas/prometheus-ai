@@ -1,10 +1,9 @@
 package knn.internal;
 
+import java.util.Set;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import tags.Tag;
-
-import java.util.Set;
 
 /**
  * Searcher which performs lambda search in the KNN.

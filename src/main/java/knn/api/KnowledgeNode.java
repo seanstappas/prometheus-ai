@@ -1,5 +1,9 @@
 package knn.api;
 
+import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -11,11 +15,6 @@ import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
-
-import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 public class KnowledgeNode implements Comparable<KnowledgeNode> {
   private static final long AGE_THRESHOLD = 1_000_000;

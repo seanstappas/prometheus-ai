@@ -1,11 +1,5 @@
 package knn.internal;
 
-import knn.api.KnowledgeNode;
-import knn.api.KnowledgeNodeNetwork;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import tags.Tag;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +7,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import knn.api.KnowledgeNode;
+import knn.api.KnowledgeNodeNetwork;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import tags.Tag;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

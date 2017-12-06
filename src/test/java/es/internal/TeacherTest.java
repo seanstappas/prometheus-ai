@@ -1,13 +1,12 @@
 package es.internal;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import tags.Fact;
 import tags.Rule;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.testng.AssertJUnit.assertEquals;
 

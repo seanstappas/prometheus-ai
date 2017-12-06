@@ -1,11 +1,10 @@
 package es.api;
 
+import java.util.Set;
 import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
-
-import java.util.Set;
 
 public interface ExpertSystem {
   /**

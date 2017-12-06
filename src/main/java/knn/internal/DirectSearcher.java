@@ -1,15 +1,14 @@
 package knn.internal;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import knn.api.KnowledgeNode;
-import tags.Tag;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import knn.api.KnowledgeNode;
+import tags.Tag;
 
 /**
  * Searcher which performs direct search in the KNN.

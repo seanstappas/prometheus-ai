@@ -1,5 +1,6 @@
 package integration;
 
+import java.util.HashMap;
 import com.google.inject.Guice;
 import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
@@ -13,8 +14,6 @@ import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
-
-import java.util.HashMap;
 
 public class KnowledgeNodeNetworkPetTest {
   private static final String PET_DATA_PATH = "data/petData.txt";

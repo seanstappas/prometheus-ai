@@ -1,8 +1,7 @@
 package meta.internal;
 
-import meta.api.MetaReasoner;
-
 import javax.inject.Inject;
+import meta.api.MetaReasoner;
 
 class MetaReasonerImpl implements MetaReasoner {
   @Inject

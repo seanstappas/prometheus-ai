@@ -1,13 +1,12 @@
 package knn.internal;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import knn.api.KnowledgeNode;
 import tags.Tag;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 interface DirectSearcherFactory {
   @Inject

@@ -1,13 +1,12 @@
 package knn.internal;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import tags.Tag;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import tags.Tag;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;

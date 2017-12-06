@@ -1,5 +1,7 @@
 package es.internal;
 
+import java.util.HashSet;
+import java.util.Set;
 import es.api.ExpertSystem;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -7,9 +9,6 @@ import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

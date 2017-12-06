@@ -1,5 +1,8 @@
 package integration;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import com.google.inject.Guice;
 import knn.api.KnowledgeNodeNetwork;
 import org.testng.annotations.BeforeMethod;
@@ -10,10 +13,6 @@ import prometheus.guice.PrometheusModule;
 import tags.Fact;
 import tags.Rule;
 import tags.Tag;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;

@@ -1,5 +1,9 @@
 package integration;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import com.google.inject.Guice;
 import es.api.ExpertSystem;
 import org.testng.annotations.BeforeMethod;
@@ -9,11 +13,6 @@ import prometheus.guice.PrometheusModule;
 import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.testng.AssertJUnit.assertEquals;
 

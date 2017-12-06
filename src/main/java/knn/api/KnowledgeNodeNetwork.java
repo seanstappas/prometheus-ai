@@ -1,9 +1,8 @@
 package knn.api;
 
-import tags.Tag;
-
 import java.util.List;
 import java.util.Set;
+import tags.Tag;
 
 public interface KnowledgeNodeNetwork {
 

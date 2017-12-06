@@ -1,12 +1,11 @@
 package es.api;
 
+import java.util.Set;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import tags.Fact;
 import tags.Recommendation;
 import tags.Rule;
-
-import java.util.Set;
 
 public interface ExpertSystemFactory {
   @Inject

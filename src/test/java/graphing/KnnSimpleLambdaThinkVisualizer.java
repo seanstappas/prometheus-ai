@@ -1,12 +1,11 @@
 package graphing;
 
-import tags.Fact;
-import tags.Tag;
-
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import tags.Fact;
+import tags.Tag;
 
 class KnnSimpleLambdaThinkVisualizer extends KnnSimpleGraphVisualizer {
   private boolean shouldBackwardSearch = true;

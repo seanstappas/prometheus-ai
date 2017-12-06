@@ -1,5 +1,9 @@
 package integration;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import com.google.inject.Guice;
 import es.api.ExpertSystem;
 import org.testng.annotations.BeforeMethod;
@@ -11,11 +15,6 @@ import tags.Predicate;
 import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 

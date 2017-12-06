@@ -1,10 +1,5 @@
 package knn.internal;
 
-import com.google.inject.assistedinject.Assisted;
-import knn.api.KnowledgeNode;
-import knn.api.KnowledgeNodeNetwork;
-import tags.Tag;
-
 import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -17,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import com.google.inject.assistedinject.Assisted;
+import knn.api.KnowledgeNode;
+import knn.api.KnowledgeNodeNetwork;
+import tags.Tag;
 
 class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
   private Map<Tag, KnowledgeNode> mapKN;

@@ -1,9 +1,8 @@
 package graphing;
 
-import tags.Tag;
-
 import java.text.MessageFormat;
 import java.util.Set;
+import tags.Tag;
 
 class KnnLambdaThinkVisualizer extends KnnGraphVisualizer {
   private boolean swap = true;
