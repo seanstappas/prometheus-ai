@@ -22,6 +22,35 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.9</version>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <haltOnFailure>true</haltOnFailure>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -104,8 +133,6 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.7.9</version>
         </dependency>
-
-
     </dependencies>
 
     <reporting>
@@ -126,14 +153,6 @@
                     <configLocation>sun_checks.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>false</failsOnError>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.9</version>
-                <configuration>
-                    <haltOnFailure>true</haltOnFailure>
                 </configuration>
             </plugin>
         </plugins>
