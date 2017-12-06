@@ -6,9 +6,12 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
+/**
+ * Expert System (ES).
+ */
 public interface ExpertSystem {
     /**
-     * {@code shouldGenerateRule} defaults to false
+     * Makes the ES think.
      *
      * @return the Set of Recommendations activated as a result of thinking.
      * @see #think(boolean)
