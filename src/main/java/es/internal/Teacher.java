@@ -12,8 +12,10 @@ import java.util.Optional;
 import java.util.Set;
 
 class Teacher {
-  private static final Set<String> INPUT_TOKENS = new HashSet<>(Arrays.asList("if", "when", "while", "first"));
-  private static final Set<String> OUTPUT_TOKENS = new HashSet<>(Arrays.asList("then", "next", "do"));
+  private static final Set<String> INPUT_TOKENS =
+      new HashSet<>(Arrays.asList("if", "when", "while", "first"));
+  private static final Set<String> OUTPUT_TOKENS =
+      new HashSet<>(Arrays.asList("then", "next", "do"));
   private Set<Rule> readyRules;
 
   @Inject
@@ -33,7 +35,8 @@ class Teacher {
     List<String> tokenList = new ArrayList<>();
     tokenList.addAll(Arrays.asList(tokens));
     int ruleIndices[] = findRuleIndices(tokenList);
-    makeTaughtRule(tokenList, ruleIndices[0], ruleIndices[1]).ifPresent(readyRules::add);
+    makeTaughtRule(tokenList, ruleIndices[0], ruleIndices[1])
+        .ifPresent(readyRules::add);
   }
 
   /**
@@ -58,22 +61,29 @@ class Teacher {
   }
 
   /**
-   * Makes a taught rule from the given token list and indices of the input and output tokens.
+   * Makes a taught rule from the given token list and indices of the input and
+   * output tokens.
    *
    * @param tokenList   the token list
    * @param inputIndex  the index of the input token
    * @param outputIndex the index of the output token
-   * @return an Optional object containing the taught rule if the given indices are valid, otherwise an empty Optional
-   * object
+   * @return an Optional object containing the taught rule if the given indices are valid, otherwise
+   * an empty Optional object
    */
-  private Optional<Rule> makeTaughtRule(List<String> tokenList, int inputIndex, int outputIndex) {
+  private Optional<Rule> makeTaughtRule(List<String> tokenList, int inputIndex,
+                                        int outputIndex) {
     if (inputIndex < outputIndex) {
-      String[] inputFacts = tokenList.subList(inputIndex + 1, outputIndex).toArray(new String[0]);
-      String[] outputFacts = tokenList.subList(outputIndex + 1, tokenList.size()).toArray(new String[0]);
+      String[] inputFacts =
+          tokenList.subList(inputIndex + 1, outputIndex).toArray(new String[0]);
+      String[] outputFacts =
+          tokenList.subList(outputIndex + 1, tokenList.size())
+              .toArray(new String[0]);
       return Optional.of(new Rule(inputFacts, outputFacts));
     } else if (inputIndex > outputIndex) {
-      String[] inputFacts = tokenList.subList(inputIndex + 1, tokenList.size()).toArray(new String[0]);
-      String[] outputFacts = tokenList.subList(outputIndex + 1, inputIndex).toArray(new String[0]);
+      String[] inputFacts = tokenList.subList(inputIndex + 1, tokenList.size())
+          .toArray(new String[0]);
+      String[] outputFacts =
+          tokenList.subList(outputIndex + 1, inputIndex).toArray(new String[0]);
       return Optional.of(new Rule(inputFacts, outputFacts));
     }
     return Optional.empty();

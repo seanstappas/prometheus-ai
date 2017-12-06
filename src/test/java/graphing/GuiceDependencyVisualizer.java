@@ -21,9 +21,12 @@ public class GuiceDependencyVisualizer {
     graph(GRAPH_SAVE_PATH, injector);
   }
 
-  private static void graph(String filename, Injector demoInjector) throws IOException {
+  private static void graph(String filename, Injector demoInjector)
+      throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    PrintWriter out = new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8), true);
+    PrintWriter out =
+        new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8),
+            true);
 
     Injector injector = Guice.createInjector(new GraphvizModule());
     GraphvizGrapher renderer = injector.getInstance(GraphvizGrapher.class);

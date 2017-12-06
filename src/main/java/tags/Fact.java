@@ -10,18 +10,20 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Represents a fact in the Expert System. Facts are calculus predicates that represent something that is seen as
- * true.
+ * Represents a fact in the Expert System. Facts are calculus predicates that
+ * represent something that is seen as true.
  * <p>
- * Facts are composed of a predicate name and a set of arguments: P(ARG1, ARG2, ...)
+ * Facts are composed of a predicate name and a set of arguments: P(ARG1, ARG2,
+ * ...)
  */
 
 public class Fact extends Predicate {
   /**
    * Constructs a Fact object from a string
    * <p>
-   * NB: There should be no space characters between the arguments in a string i.e. "P(ARG1,ARG2,ARG3...)".
-   * Arguments are delimited by commas within parenthesis.
+   * NB: There should be no space characters between the arguments in a string
+   * i.e. "P(ARG1,ARG2,ARG3...)". Arguments are delimited by commas within
+   * parenthesis.
    *
    * @param value           String input
    * @param confidenceValue double in range [0,1] i.e. 0.n representing n0% confidence
@@ -55,7 +57,8 @@ public class Fact extends Predicate {
   /**
    * Calls the appropriate Argument constructor on a string token.
    * <p>
-   * If argument is numeric {@literal ->} NumericArgument; If contains {@literal [?*&]} {@literal ->} VariableArgument; Else {@literal ->}StringArgument
+   * If argument is numeric {@literal ->} NumericArgument; If contains {@literal
+   * [?*&]} {@literal ->} VariableArgument; Else {@literal ->}StringArgument
    *
    * @param argString String token
    * @return A single argument
@@ -66,7 +69,8 @@ public class Fact extends Predicate {
 
     if (argTokens[lastElem].matches("-?\\d+(\\.\\d+)?")) {
       return new NumericArgument(argString, argTokens);
-    } else if (argTokens[lastElem].matches("[?*]") || argTokens[lastElem].charAt(0) == '&') {
+    } else if (argTokens[lastElem].matches("[?*]") ||
+        argTokens[lastElem].charAt(0) == '&') {
       return new VariableArgument(argString, argTokens);
     } else {
       return new StringArgument(argString, argTokens);
@@ -79,7 +83,8 @@ public class Fact extends Predicate {
   }
 
   /**
-   * Parses a raw string into a list of string tokens that represent each argument
+   * Parses a raw string into a list of string tokens that represent each
+   * argument
    * <p>
    *
    * @param tokens string input
@@ -107,7 +112,8 @@ public class Fact extends Predicate {
   /**
    * Compares two facts to see if they are compatible.
    * <p>
-   * If matching occurs on a variable argument, return object includes a list of tuple[s].
+   * If matching occurs on a variable argument, return object includes a list of
+   * tuple[s].
    *
    * @param inputFact fact contained in a Rule
    * @return true if facts are 'matched' (notice not necessarily equal)
@@ -145,14 +151,16 @@ public class Fact extends Predicate {
     return true;
   }
 
-  private boolean matchArguments(VariableReturn result, List<Argument> iterInputFactArguments) {
+  private boolean matchArguments(VariableReturn result,
+                                 List<Argument> iterInputFactArguments) {
     Iterator iterFact = this.arguments.iterator();
     Iterator iterInputFact = iterInputFactArguments.iterator();
 
     while (iterFact.hasNext()) {
       Argument argFact = (Argument) iterFact.next();
       Argument argInputFact = (Argument) iterInputFact.next();
-      if (argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL) || argInputFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
+      if (argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL) ||
+          argInputFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
         result.setFactMatch(true);
         return true;
       }
@@ -167,7 +175,8 @@ public class Fact extends Predicate {
     }
     if (iterInputFact.hasNext()) {
       Argument argFact = (Argument) iterInputFact.next();
-      result.setFactMatch((argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)));
+      result.setFactMatch(
+          (argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)));
       return true;
     }
     return false;
@@ -176,7 +185,8 @@ public class Fact extends Predicate {
   private boolean matchArgumentsSize(Fact inputFact, VariableReturn result) {
     if (inputFact.arguments.size() > this.arguments.size()) {
       for (int i = this.arguments.size(); i < inputFact.arguments.size(); i++) {
-        if (!inputFact.arguments.get(i).getSymbol().equals(Argument.ArgTypes.MATCHALL)) {
+        if (!inputFact.arguments.get(i).getSymbol()
+            .equals(Argument.ArgTypes.MATCHALL)) {
           result.setFactMatch(false);
           return false;
         }

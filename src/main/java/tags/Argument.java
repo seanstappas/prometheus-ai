@@ -17,8 +17,9 @@ public class Argument {
   /**
    * Constructor for Argument
    * <p>
-   * Attempts to split an argument string (e.g. height=10) on the mathematical symbol (in this case 10),
-   * assigns name to first token, if there are multiple tokens
+   * Attempts to split an argument string (e.g. height=10) on the mathematical
+   * symbol (in this case 10), assigns name to first token, if there are
+   * multiple tokens
    *
    * @param tokens argument string split on mathematical symbols
    */
@@ -52,7 +53,8 @@ public class Argument {
         if (inputFact.symbol.equals(ArgTypes.VAR)) {
           return true;
         }
-        if (inputFact.symbol.equals(ArgTypes.STRING) || inputFact.symbol.equals(ArgTypes.VAR)) {
+        if (inputFact.symbol.equals(ArgTypes.STRING) ||
+            inputFact.symbol.equals(ArgTypes.VAR)) {
           return ((StringArgument) this).matches((StringArgument) inputFact);
         }
         return (inputFact.symbol.equals(ArgTypes.MATCHONE));
@@ -131,7 +133,8 @@ public class Argument {
      */
     LT,
     /**
-     * argument getMatchResult on a corresponding argument in a fact with same predicate name (see BASH '?')
+     * argument getMatchResult on a corresponding argument in a fact with same
+     * predicate name (see BASH '?')
      */
     MATCHONE,
     /**
@@ -139,7 +142,8 @@ public class Argument {
      */
     VAR,
     /**
-     * argument getMatchResult on &gt; 0 arguments in a fact with same predicate name (see BASH '*')
+     * argument getMatchResult on &gt; 0 arguments in a fact with same predicate
+     * name (see BASH '*')
      */
     MATCHALL,
     /**

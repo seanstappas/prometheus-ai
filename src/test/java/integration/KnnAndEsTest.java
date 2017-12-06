@@ -26,14 +26,16 @@ public class KnnAndEsTest {
 
   @BeforeTest
   public void setup() {
-    Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
+    Prometheus prometheus = Guice.createInjector(new PrometheusModule())
+        .getInstance(Prometheus.class);
     es = prometheus.getExpertSystem();
     knn = prometheus.getKnowledgeNodeNetwork();
   }
 
 
   /**
-   * Sets up a KNN by reading a input data file (in this case called petData.txt.txt)
+   * Sets up a KNN by reading a input data file (in this case called
+   * petData.txt.txt)
    */
   @BeforeMethod
   public void setupKNN() {
@@ -63,7 +65,8 @@ public class KnnAndEsTest {
         expectedInitialRules.add((Rule) t);
       }
     }
-    System.out.println("[ES] Initial activated tags (from KNN): " + activatedTags);
+    System.out
+        .println("[ES] Initial activated tags (from KNN): " + activatedTags);
 
     Set<Fact> initialFacts = es.getFacts();
     assertEquals(initialFacts, expectedInitialFacts);
@@ -74,7 +77,8 @@ public class KnnAndEsTest {
     System.out.println("[ES] Initial rules (for ES): " + initialRules);
 
     Set<Recommendation> activatedRecommendations = es.think();
-    System.out.println("[ES] Active recommendation (for Meta): " + activatedRecommendations);
+    System.out.println(
+        "[ES] Active recommendation (for Meta): " + activatedRecommendations);
 
     assertTrue(activatedRecommendations.isEmpty());
   }

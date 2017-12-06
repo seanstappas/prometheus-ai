@@ -15,7 +15,8 @@ class KnnSimpleForwardThinkVisualizer extends KnnSimpleGraphVisualizer {
 
   @Override
   String getScreenshotSavePath(String suffix) {
-    return MessageFormat.format("graphs/knn/forward/knn_simple_forward_think_{0}", suffix);
+    return MessageFormat
+        .format("graphs/knn/forward/knn_simple_forward_think_{0}", suffix);
   }
 
   @Override

@@ -35,7 +35,8 @@ class ThinkCycleExecutor {
   /**
    * Makes the ES think for a single cycle.
    * <p>
-   * Output predicates of activated rules are replaced if they contain variable arguments e.g. &x
+   * Output predicates of activated rules are replaced if they contain variable
+   * arguments e.g. &x
    *
    * @return the activated Predicates as a result of thinking
    */
@@ -54,18 +55,21 @@ class ThinkCycleExecutor {
         pendingActivatedRules.add(rule);
       }
     }
-    return activateRulesAndReplaceVariableArguments(pendingActivatedRules, pendingReplacementPairs);
+    return activateRulesAndReplaceVariableArguments(pendingActivatedRules,
+        pendingReplacementPairs);
   }
 
   /**
-   * Checks if a particular fact getMatchResult with any other fact in the ES
-   * If inputFact contains a variable argument, matching pair placed in pendingReplacementPairs
+   * Checks if a particular fact getMatchResult with any other fact in the ES If
+   * inputFact contains a variable argument, matching pair placed in
+   * pendingReplacementPairs
    *
    * @param inputFact               fact contained in a Rule
    * @param pendingReplacementPairs the pending replacement pairs
    * @return true if (at least) two facts match
    */
-  private boolean factsContains(Fact inputFact, Map<String, Argument> pendingReplacementPairs) {
+  private boolean factsContains(Fact inputFact,
+                                Map<String, Argument> pendingReplacementPairs) {
     boolean result = false;
     for (Fact f : facts) {
       VariableReturn matchesResult = f.getMatchResult(inputFact);
@@ -80,7 +84,8 @@ class ThinkCycleExecutor {
   }
 
   /**
-   * Activates the Rules specified by the given pending activated Rules and pending replacement pairs
+   * Activates the Rules specified by the given pending activated Rules and
+   * pending replacement pairs
    *
    * @param pendingActivatedRules   the pending Rules to activate
    * @param pendingReplacementPairs the pending argument pairs to replace variable arguments with
@@ -94,12 +99,15 @@ class ThinkCycleExecutor {
       readyRules.remove(rule);
       Set<Predicate> modifiedOutputPredicates = new HashSet<>();
       for (Predicate predicate : rule.getOutputPredicates()) {
-        Predicate replacedVarArgsPredicate = predicate.replaceVariableArguments(pendingReplacementPairs);
+        Predicate replacedVarArgsPredicate =
+            predicate.replaceVariableArguments(pendingReplacementPairs);
         modifiedOutputPredicates.add(replacedVarArgsPredicate);
         activatedPredicates.add(replacedVarArgsPredicate);
         addPredicate(replacedVarArgsPredicate);
       }
-      Rule modifiedRule = new Rule(rule.getInputFacts(), modifiedOutputPredicates, rule.getConfidence());
+      Rule modifiedRule =
+          new Rule(rule.getInputFacts(), modifiedOutputPredicates,
+              rule.getConfidence());
       activeRules.add(modifiedRule);
     }
     return activatedPredicates;

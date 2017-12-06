@@ -31,10 +31,13 @@ public class ThinkerTest {
     facts = new HashSet<>();
     recommendations = new HashSet<>();
     thinkCycleExecutor = mock(ThinkCycleExecutor.class);
-    ThinkCycleExecutorFactory thinkCycleExecutorFactory = mock(ThinkCycleExecutorFactory.class);
-    when(thinkCycleExecutorFactory.create(readyRules, activeRules, facts, recommendations))
+    ThinkCycleExecutorFactory thinkCycleExecutorFactory =
+        mock(ThinkCycleExecutorFactory.class);
+    when(thinkCycleExecutorFactory
+        .create(readyRules, activeRules, facts, recommendations))
         .thenReturn(thinkCycleExecutor);
-    thinker = new Thinker(readyRules, activeRules, facts, recommendations, thinkCycleExecutorFactory);
+    thinker = new Thinker(readyRules, activeRules, facts, recommendations,
+        thinkCycleExecutorFactory);
   }
 
   @Test
@@ -44,16 +47,19 @@ public class ThinkerTest {
         recommendation,
         mock(Fact.class)
     ));
-    Set<Recommendation> expectedActivatedRecommendations = Collections.singleton(recommendation);
+    Set<Recommendation> expectedActivatedRecommendations =
+        Collections.singleton(recommendation);
 
     // given
     when(thinkCycleExecutor.thinkCycle()).thenReturn(activatedPredicates);
 
     // when
-    Set<Recommendation> actualActivatedRecommendations = thinker.think(false, 1);
+    Set<Recommendation> actualActivatedRecommendations =
+        thinker.think(false, 1);
 
     // then
-    assertEquals(expectedActivatedRecommendations, actualActivatedRecommendations);
+    assertEquals(expectedActivatedRecommendations,
+        actualActivatedRecommendations);
   }
 
 }

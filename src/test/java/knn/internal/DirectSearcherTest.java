@@ -34,7 +34,8 @@ public class DirectSearcherTest {
   @Test
   public void mustDirectSearch() throws Exception {
     Tag inputTag = mock(Tag.class);
-    Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+    Set<Tag> outputTags = new HashSet<>(
+        Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
     KnowledgeNode kn = mock(KnowledgeNode.class);
 
 

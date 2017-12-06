@@ -47,14 +47,16 @@ class BackwardSearcher extends Searcher<Set<Tag>> {
     Set<Tag> allActivatedTags = new HashSet<>();
     Set<Tag> currentPlyInputTags = new HashSet<>(inputTags);
     for (int i = 0; i < ply && !currentPlyInputTags.isEmpty(); i++) {
-      int numRequiredMatches = (int) (partialMatchRatio * currentPlyInputTags.size());
+      int numRequiredMatches =
+          (int) (partialMatchRatio * currentPlyInputTags.size());
       Set<Tag> activatedTags = new HashSet<>();
       // Iterate over the KNs in order of increasing age
       for (KnowledgeNode kn : ageSortedKNs) {
         if (kn.getCurrentAge() > ageLimit) { // Age limit reached.
           break;
         }
-        backwardSearchMatcher.match(currentPlyInputTags, kn, numRequiredMatches).ifPresent(activatedTags::add);
+        backwardSearchMatcher.match(currentPlyInputTags, kn, numRequiredMatches)
+            .ifPresent(activatedTags::add);
       }
       allActivatedTags.addAll(activatedTags);
       currentPlyInputTags = activatedTags;

@@ -19,8 +19,8 @@ class Rester {
   }
 
   /**
-   * Iterates over rule set, checks if new merged rules are valid, and repeatedly generates new merged rules from
-   * current set of new rules.
+   * Iterates over rule set, checks if new merged rules are valid, and
+   * repeatedly generates new merged rules from current set of new rules.
    * <p>
    * i.e. rule 1 = A -> B, rule 2 = B -> C, rule 3 = A -> C
    *

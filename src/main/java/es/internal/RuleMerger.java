@@ -31,7 +31,8 @@ class RuleMerger {
             }
           }
           if (match) {
-            Rule mergedRule = new Rule(ruleTwo.getInputFacts(), ruleOne.getOutputPredicates());
+            Rule mergedRule = new Rule(ruleTwo.getInputFacts(),
+                ruleOne.getOutputPredicates());
             return Optional.of(mergedRule);
           }
         }

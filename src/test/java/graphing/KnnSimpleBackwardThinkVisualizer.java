@@ -15,7 +15,8 @@ class KnnSimpleBackwardThinkVisualizer extends KnnSimpleGraphVisualizer {
 
   @Override
   String getScreenshotSavePath(String suffix) {
-    return MessageFormat.format("graphs/knn/backward/knn_simple_backward_think_{0}", suffix);
+    return MessageFormat
+        .format("graphs/knn/backward/knn_simple_backward_think_{0}", suffix);
   }
 
   @Override

@@ -22,7 +22,8 @@ public class SimpleExpertSystemTest {
 
   @BeforeMethod
   public void setUp() throws Exception {
-    Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
+    Prometheus prometheus = Guice.createInjector(new PrometheusModule())
+        .getInstance(Prometheus.class);
     es = prometheus.getExpertSystem();
   }
 
@@ -47,7 +48,8 @@ public class SimpleExpertSystemTest {
     }
 
 
-    Set<Rule> expectedReadyRules = new HashSet<>(Collections.singletonList(new Rule("G(*), A(*) -> H(*)")));
+    Set<Rule> expectedReadyRules = new HashSet<>(
+        Collections.singletonList(new Rule("G(*), A(*) -> H(*)")));
     Set<Rule> expectedActiveRules = new HashSet<>(Arrays.asList(
         new Rule("A(*), B(*) -> D(*)"),
         new Rule("D(*), B(*) -> E(*)"),
@@ -59,10 +61,11 @@ public class SimpleExpertSystemTest {
         new Fact("D(*)"),
         new Fact("E(*)"),
         new Fact("F(*)")));
-    Set<Recommendation> expectedActiveRecommendations = new HashSet<>(Arrays.asList(
-        new Recommendation("@X(*)"),
-        new Recommendation("@Y(*)"),
-        new Recommendation("@Z(*)")));
+    Set<Recommendation> expectedActiveRecommendations =
+        new HashSet<>(Arrays.asList(
+            new Recommendation("@X(*)"),
+            new Recommendation("@Y(*)"),
+            new Recommendation("@Z(*)")));
 
     assertEquals(expectedReadyRules, es.getReadyRules());
     assertEquals(expectedActiveRules, es.getActiveRules());

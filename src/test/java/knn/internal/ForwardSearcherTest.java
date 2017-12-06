@@ -33,8 +33,10 @@ public class ForwardSearcherTest {
     Tag t3 = mock(Tag.class);
     Tag t4 = mock(Tag.class);
     Set<Tag> inputTags = new HashSet<>(Arrays.asList(t1, t2));
-    Set<Tag> directActivatedTags1 = new HashSet<>(Collections.singletonList(t3));
-    Set<Tag> directActivatedTags2 = new HashSet<>(Collections.singletonList(t4));
+    Set<Tag> directActivatedTags1 =
+        new HashSet<>(Collections.singletonList(t3));
+    Set<Tag> directActivatedTags2 =
+        new HashSet<>(Collections.singletonList(t4));
     int ply = Integer.MAX_VALUE;
     Set<Tag> expectedAllActivatedTags = new HashSet<>(Arrays.asList(t3, t4));
 
@@ -45,7 +47,8 @@ public class ForwardSearcherTest {
     when(directSearcher.search(t4)).thenReturn(Collections.emptySet());
 
     // when
-    Set<Tag> actualAllActivatedTags = forwardSearcher.searchInternal(inputTags, ply);
+    Set<Tag> actualAllActivatedTags =
+        forwardSearcher.searchInternal(inputTags, ply);
 
     // then
     assertEquals(expectedAllActivatedTags, actualAllActivatedTags);

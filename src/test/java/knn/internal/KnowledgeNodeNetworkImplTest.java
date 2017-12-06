@@ -39,16 +39,25 @@ public class KnowledgeNodeNetworkImplTest {
     forwardSearcher = mock(ForwardSearcher.class);
     backwardSearcher = mock(BackwardSearcher.class);
     lambdaSearcher = mock(LambdaSearcher.class);
-    DirectSearcherFactory directSearcherFactory = mock(DirectSearcherFactory.class);
-    ForwardSearcherFactory forwardSearcherFactory = mock(ForwardSearcherFactory.class);
-    BackwardSearcherFactory backwardSearcherFactory = mock(BackwardSearcherFactory.class);
-    LambdaSearcherFactory lambdaSearcherFactory = mock(LambdaSearcherFactory.class);
-    when(directSearcherFactory.create(mapKN, activeTags, ageSortedKNs)).thenReturn(directSearcher);
-    when(forwardSearcherFactory.create(directSearcher)).thenReturn(forwardSearcher);
+    DirectSearcherFactory directSearcherFactory =
+        mock(DirectSearcherFactory.class);
+    ForwardSearcherFactory forwardSearcherFactory =
+        mock(ForwardSearcherFactory.class);
+    BackwardSearcherFactory backwardSearcherFactory =
+        mock(BackwardSearcherFactory.class);
+    LambdaSearcherFactory lambdaSearcherFactory =
+        mock(LambdaSearcherFactory.class);
+    when(directSearcherFactory.create(mapKN, activeTags, ageSortedKNs))
+        .thenReturn(directSearcher);
+    when(forwardSearcherFactory.create(directSearcher))
+        .thenReturn(forwardSearcher);
     long ageLimit = Long.MAX_VALUE;
-    when(backwardSearcherFactory.create(activeTags, ageSortedKNs, BACKWARD_SEARCH_PARTIAL_MATCH_RATIO, ageLimit))
+    when(backwardSearcherFactory
+        .create(activeTags, ageSortedKNs, BACKWARD_SEARCH_PARTIAL_MATCH_RATIO,
+            ageLimit))
         .thenReturn(backwardSearcher);
-    when(lambdaSearcherFactory.create(forwardSearcher, backwardSearcher)).thenReturn(lambdaSearcher);
+    when(lambdaSearcherFactory.create(forwardSearcher, backwardSearcher))
+        .thenReturn(lambdaSearcher);
     knn = new KnowledgeNodeNetworkImpl(
         mapKN,
         activeTags,
@@ -64,7 +73,8 @@ public class KnowledgeNodeNetworkImplTest {
   @Test
   public void mustDirectSearch() throws Exception {
     Tag inputTag = mock(Tag.class);
-    Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+    Set<Tag> outputTags = new HashSet<>(
+        Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
 
     // given
     when(directSearcher.search(inputTag)).thenReturn(outputTags);
@@ -78,8 +88,10 @@ public class KnowledgeNodeNetworkImplTest {
 
   @Test
   public void mustForwardSearch() throws Exception {
-    Set<Tag> inputTags = new HashSet<>(Collections.singletonList(mock(Tag.class)));
-    Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+    Set<Tag> inputTags =
+        new HashSet<>(Collections.singletonList(mock(Tag.class)));
+    Set<Tag> outputTags = new HashSet<>(
+        Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
     int ply = 5;
 
     // given
@@ -94,7 +106,8 @@ public class KnowledgeNodeNetworkImplTest {
 
   @Test
   public void mustForwardThink() throws Exception {
-    Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+    Set<Tag> outputTags = new HashSet<>(
+        Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
     int ply = 5;
 
     // given
@@ -109,8 +122,10 @@ public class KnowledgeNodeNetworkImplTest {
 
   @Test
   public void mustBackwardSearch() throws Exception {
-    Set<Tag> inputTags = new HashSet<>(Collections.singletonList(mock(Tag.class)));
-    Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+    Set<Tag> inputTags =
+        new HashSet<>(Collections.singletonList(mock(Tag.class)));
+    Set<Tag> outputTags = new HashSet<>(
+        Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
     int ply = 5;
 
     // given
@@ -125,7 +140,8 @@ public class KnowledgeNodeNetworkImplTest {
 
   @Test
   public void mustBackwardThink() throws Exception {
-    Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+    Set<Tag> outputTags = new HashSet<>(
+        Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
     int ply = 5;
 
     // given
@@ -140,8 +156,10 @@ public class KnowledgeNodeNetworkImplTest {
 
   @Test
   public void mustLambdaSearch() throws Exception {
-    Set<Tag> inputTags = new HashSet<>(Collections.singletonList(mock(Tag.class)));
-    Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+    Set<Tag> inputTags =
+        new HashSet<>(Collections.singletonList(mock(Tag.class)));
+    Set<Tag> outputTags = new HashSet<>(
+        Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
     int ply = 5;
 
     // given
@@ -156,7 +174,8 @@ public class KnowledgeNodeNetworkImplTest {
 
   @Test
   public void mustLambdaThink() throws Exception {
-    Set<Tag> outputTags = new HashSet<>(Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
+    Set<Tag> outputTags = new HashSet<>(
+        Arrays.asList(mock(Tag.class), mock(Tag.class), mock(Tag.class)));
     int ply = 5;
 
     // given

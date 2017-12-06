@@ -21,7 +21,8 @@ public class KnowledgeNodeNetworkTest {
 
   @BeforeTest
   public void setup() {
-    Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
+    Prometheus prometheus = Guice.createInjector(new PrometheusModule())
+        .getInstance(Prometheus.class);
     knn = prometheus.getKnowledgeNodeNetwork();
   }
 

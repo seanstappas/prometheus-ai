@@ -14,9 +14,9 @@ import java.util.Set;
 /**
  * Represents a rule in the expert system.
  * <p>
- * Rules are many-to-many structures with Facts as inputs and Predicates (Facts and
- * Recommendations) as outputs.
- * They only activate when all the input Facts are active.
+ * Rules are many-to-many structures with Facts as inputs and Predicates (Facts
+ * and Recommendations) as outputs. They only activate when all the input Facts
+ * are active.
  */
 public class Rule extends Tag {
   private Set<Fact> inputFacts;
@@ -30,7 +30,8 @@ public class Rule extends Tag {
    * @see #Rule(Set, Set, double)
    */
   public Rule(Fact[] inputFacts, Predicate[] outputPredicates) {
-    this(new HashSet<>(Arrays.asList(inputFacts)), new HashSet<>(Arrays.asList(outputPredicates)), 1.0);
+    this(new HashSet<>(Arrays.asList(inputFacts)),
+        new HashSet<>(Arrays.asList(outputPredicates)), 1.0);
   }
 
   /**
@@ -47,13 +48,15 @@ public class Rule extends Tag {
   /**
    * Creates a Rule from a set of input Facts and output Predicates.
    * <p>
-   * Confidence value of output tags set to the product of the confidence value of input tags.
+   * Confidence value of output tags set to the product of the confidence value
+   * of input tags.
    *
    * @param inputFacts       The condition facts of the rule.
    * @param outputPredicates The output predicates of the rule.
    * @param confidenceValue  The confidence value of the Rule.
    */
-  public Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicates, double confidenceValue) {
+  public Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicates,
+              double confidenceValue) {
     this.inputFacts = new HashSet<>(inputFacts);
     this.outputPredicates = new HashSet<>(outputPredicates);
     this.confidence = confidenceValue;
@@ -68,7 +71,8 @@ public class Rule extends Tag {
    * @param outputPredicates The output Tags, in String form.
    * @param confidenceValue  The confidence value of the Rule.
    */
-  private Rule(String[] inputFacts, String[] outputPredicates, double confidenceValue) {
+  private Rule(String[] inputFacts, String[] outputPredicates,
+               double confidenceValue) {
     this.inputFacts = new HashSet<>();
     this.outputPredicates = new HashSet<>();
     for (String inputFact : inputFacts) {
@@ -102,7 +106,8 @@ public class Rule extends Tag {
     List<String> tokens = new ArrayList<>(Arrays.asList(string.split(" ")));
     int outputFactIndex = tokens.indexOf("->");
 
-    for (String outputFact : tokens.subList(outputFactIndex + 1, tokens.size())) {
+    for (String outputFact : tokens
+        .subList(outputFactIndex + 1, tokens.size())) {
       this.addOutputPredicate(outputFact);
     }
 
@@ -123,12 +128,14 @@ public class Rule extends Tag {
    * <p>
    * "P1(ARG1,ARG2) P2(ARG3) {@literal ->} @P3(ARG4,ARG5,ARG6)"
    * <p>
-   * NB: 1. Tags are separated by " " 2. arguments with a fact tag are separated by ","
-   * 3. all facts on the left of {@literal "->"} are input facts, on the right are output tags
-   * 4. if an output tag is preceeded by "@", it is a recommendation, otherwise it is a fact
+   * NB: 1. Tags are separated by " " 2. arguments with a fact tag are separated
+   * by "," 3. all facts on the left of {@literal "->"} are input facts, on the
+   * right are output tags 4. if an output tag is preceeded by "@", it is a
+   * recommendation, otherwise it is a fact
    * <p>
-   * NB: rules may include OR: "P1(ARG1,ARG2) P2(ARG3) OR P3(ARG4,ARG5) P4(ARG6,ARG7) {@literal ->} @P3(ARG4,ARG5,ARG6)"
-   * in this case, two rules are returned "P1(ARG1,ARG2) P2(ARG3) {@literal ->} @P3(ARG4,ARG5,ARG6)" and
+   * NB: rules may include OR: "P1(ARG1,ARG2) P2(ARG3) OR P3(ARG4,ARG5)
+   * P4(ARG6,ARG7) {@literal ->} @P3(ARG4,ARG5,ARG6)" in this case, two rules
+   * are returned "P1(ARG1,ARG2) P2(ARG3) {@literal ->} @P3(ARG4,ARG5,ARG6)" and
    * "P3(ARG4,ARG5) P4(ARG6,ARG7) {@literal ->} @P3(ARG4,ARG5,ARG6)"
    *
    * @param value the Rule as string.
@@ -140,7 +147,8 @@ public class Rule extends Tag {
 
     int outputPredicateIndex = tokens.indexOf("->");
 
-    Predicate[] outputPredicates = makeOutputPredicateList(tokens, outputPredicateIndex);
+    Predicate[] outputPredicates =
+        makeOutputPredicateList(tokens, outputPredicateIndex);
 
     List<Fact> inputFactList = new ArrayList<>();
 
@@ -149,7 +157,8 @@ public class Rule extends Tag {
         Fact IPredicate = new Fact(tokens.get(i));
         inputFactList.add(IPredicate);
       } else {
-        Fact[] inputFacts = inputFactList.toArray(new Fact[inputFactList.size()]);
+        Fact[] inputFacts =
+            inputFactList.toArray(new Fact[inputFactList.size()]);
         Rule rule = new Rule(inputFacts, outputPredicates);
         ruleList.add(rule);
 
@@ -159,8 +168,10 @@ public class Rule extends Tag {
     return ruleList;
   }
 
-  private static Predicate[] makeOutputPredicateList(List<String> tokens, int outputPredicateIndex) {
-    Predicate[] outputPredicates = new Predicate[tokens.size() - outputPredicateIndex - 1];
+  private static Predicate[] makeOutputPredicateList(List<String> tokens,
+                                                     int outputPredicateIndex) {
+    Predicate[] outputPredicates =
+        new Predicate[tokens.size() - outputPredicateIndex - 1];
 
     for (int i = outputPredicateIndex + 1; i < tokens.size(); i++) {
       if (!tokens.get(i).contains("@")) {
@@ -183,7 +194,8 @@ public class Rule extends Tag {
   }
 
   /**
-   * Sets confidence value of output tags to the product of the confidence value of input tags.
+   * Sets confidence value of output tags to the product of the confidence value
+   * of input tags.
    */
   private void setOutputFactsConfidenceValue() {
     double value = 1.0;

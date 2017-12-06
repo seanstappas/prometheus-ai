@@ -24,16 +24,20 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
   // Final fields
   private final Tag inputTag;
   private final Set<Tag> outputTags;  // Integer is the value of confidence
-  private final int threshold; // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
+  private final int threshold;
+  // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
   private final int strength; // Which strength approach to take?
   private final double maxAge;
 
   // Modifiable fields
-  private long age = 0; // Age timestamp. Set to current UNIX time when node is newly formed.
+  private long age = 0;
+  // Age timestamp. Set to current UNIX time when node is newly formed.
   private long initialAgeTimeStamp = System.currentTimeMillis();
   private double belief = 0;
-  private double activation = 0; // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
-  private boolean isExpired = false; // true when the KN has exceeded its age threshold
+  private double activation = 0;
+  // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
+  private boolean isExpired = false;
+  // true when the KN has exceeded its age threshold
 
   /**
    * Creates a Knowledge Node from Strings.
@@ -181,7 +185,8 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
   public int compareTo(KnowledgeNode o) {
     return new CompareToBuilder()
         .append(this.age, o.age)
-        .append(this.hashCode(), o.hashCode()) // Prevents duplicate items in age-sorted set.
+        .append(this.hashCode(),
+            o.hashCode()) // Prevents duplicate items in age-sorted set.
         .toComparison();
 
   }

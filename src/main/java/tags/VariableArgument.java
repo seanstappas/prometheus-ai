@@ -11,7 +11,8 @@ final class VariableArgument extends Argument {
   /**
    * Constructor of variable Arguments
    * <p>
-   * Arguments must be a string made up of alpha characters, as well as one of ["*", "?", {@literal &}] characters
+   * Arguments must be a string made up of alpha characters, as well as one of
+   * ["*", "?", {@literal &}] characters
    *
    * @param string argument as a string
    * @param tokens argument as tokens, split on mathematical symbols

@@ -62,9 +62,11 @@ abstract class GraphVisualizer implements ViewerListener {
   }
 
   private void setupGraph() {
-    System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+    System.setProperty("org.graphstream.ui.renderer",
+        "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
     graph = new SingleGraph("graph");
-    graph.addAttribute("ui.stylesheet", MessageFormat.format("url({0})", getStyleSheetPath()));
+    graph.addAttribute("ui.stylesheet",
+        MessageFormat.format("url({0})", getStyleSheetPath()));
     graph.setAutoCreate(true);
     graph.setStrict(false);
     graph.addAttribute("ui.quality");
@@ -78,7 +80,8 @@ abstract class GraphVisualizer implements ViewerListener {
 
   void saveScreenshot(String suffix) {
     try {
-      svgSink.writeAll(graph, MessageFormat.format("{0}.svg", getScreenshotSavePath(suffix)));
+      svgSink.writeAll(graph,
+          MessageFormat.format("{0}.svg", getScreenshotSavePath(suffix)));
     } catch (IOException e) {
       e.printStackTrace();
     }

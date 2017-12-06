@@ -27,7 +27,9 @@ public class BackwardSearcherTest {
     ageSortedKNs = new TreeSet<>();
     double partialMatchRatio = 0.5;
     long ageLimit = Long.MAX_VALUE;
-    backwardSearcher = new BackwardSearcher(activeTags, ageSortedKNs, partialMatchRatio, ageLimit, backwardSearchMatcher);
+    backwardSearcher =
+        new BackwardSearcher(activeTags, ageSortedKNs, partialMatchRatio,
+            ageLimit, backwardSearchMatcher);
   }
 
   @Test

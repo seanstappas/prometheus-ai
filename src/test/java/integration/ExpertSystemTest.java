@@ -24,7 +24,8 @@ public class ExpertSystemTest {
 
   @BeforeMethod
   public void setUp() throws Exception {
-    Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
+    Prometheus prometheus = Guice.createInjector(new PrometheusModule())
+        .getInstance(Prometheus.class);
     es = prometheus.getExpertSystem();
   }
 
@@ -36,20 +37,34 @@ public class ExpertSystemTest {
         new Fact("Aardvark(brown,strange,speed=slow", 0.9),
         new Fact("Bat(black,speed=10)", 0.6)
     };
-    Recommendation recX = new Recommendation("Run(north,quickly,speed!=slow)", 0.2);
-    Recommendation recY = new Recommendation("Hide(safelocation,manner=stealth)", 0.8);
+    Recommendation recX =
+        new Recommendation("Run(north,quickly,speed!=slow)", 0.2);
+    Recommendation recY =
+        new Recommendation("Hide(safelocation,manner=stealth)", 0.8);
     Recommendation recZ = new Recommendation("Fight(aggressive)", 0.8);
     Recommendation[] testRecommendations = {recX, recY};
     Fact[] outputPredicates1 = {new Fact("Dog(friendly,breed=pug,age<2)", 0.3)};
-    Fact[] outputPredicates2 = {new Fact("Elephant(&x,size=big,intelligent)", 0.1)};
-    Fact[] outputPredicates3 = {new Fact("Frog(colour=green,slimy,sound=ribbit)", 0.8)};
+    Fact[] outputPredicates2 =
+        {new Fact("Elephant(&x,size=big,intelligent)", 0.1)};
+    Fact[] outputPredicates3 =
+        {new Fact("Frog(colour=green,slimy,sound=ribbit)", 0.8)};
     Fact[] outputPredicates4 = {new Fact("Hog(&x,size=huge,&y,big)", 0.5)};
-    Rule unactivatedRule = new Rule(new Fact[] {new Fact("Goose(loud,nationality=canadian,wingspan=4)", 0.5), new Fact("Aardvark(brown,?,speed=slow)", 0.8)}, testFacts);
-    Rule rule1 = new Rule(new Fact[] {new Fact("Aardvark(brown,strange,?)", 0.2), new Fact("Bat(black,speed>9,*)", 0.7)}, outputPredicates1);
-    Rule rule2 = new Rule(new Fact[] {new Fact("Dog(&x,breed=pug,age=1)", 0.7), new Fact("Bat(*)", 1.0)}, outputPredicates2);
-    Rule rule3 = new Rule(new Fact[] {new Fact("Dog(friendly,breed=pug,age=1)", 0.9), new Fact("Elephant(friendly,size=big,intelligent)", 0.8)}, outputPredicates3);
-    Rule rule4 = new Rule(new Fact[] {new Fact("Frog(&x,slimy,&y)", 0.6), new Fact("Elephant(*)", 0.7)}, outputPredicates4);
-    Rule rule5 = new Rule(new Fact[] {new Fact("Hog(*)", 0.2), new Fact("Frog(?,slimy,sound=ribbit)", 0.9)}, new Predicate[] {recZ});
+    Rule unactivatedRule = new Rule(new Fact[] {
+        new Fact("Goose(loud,nationality=canadian,wingspan=4)", 0.5),
+        new Fact("Aardvark(brown,?,speed=slow)", 0.8)}, testFacts);
+    Rule rule1 = new Rule(
+        new Fact[] {new Fact("Aardvark(brown,strange,?)", 0.2),
+            new Fact("Bat(black,speed>9,*)", 0.7)}, outputPredicates1);
+    Rule rule2 = new Rule(new Fact[] {new Fact("Dog(&x,breed=pug,age=1)", 0.7),
+        new Fact("Bat(*)", 1.0)}, outputPredicates2);
+    Rule rule3 = new Rule(
+        new Fact[] {new Fact("Dog(friendly,breed=pug,age=1)", 0.9),
+            new Fact("Elephant(friendly,size=big,intelligent)", 0.8)},
+        outputPredicates3);
+    Rule rule4 = new Rule(new Fact[] {new Fact("Frog(&x,slimy,&y)", 0.6),
+        new Fact("Elephant(*)", 0.7)}, outputPredicates4);
+    Rule rule5 = new Rule(new Fact[] {new Fact("Hog(*)", 0.2),
+        new Fact("Frog(?,slimy,sound=ribbit)", 0.9)}, new Predicate[] {recZ});
     Rule[] testRules = {
         rule1,
         rule2,
@@ -79,7 +94,8 @@ public class ExpertSystemTest {
     Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
     expectedInitialRecommendations.addAll(Arrays.asList(testRecommendations));
     assertEquals(initialRecommendations, expectedInitialRecommendations);
-    System.out.println("[ES] Initial recommendations: " + initialRecommendations);
+    System.out
+        .println("[ES] Initial recommendations: " + initialRecommendations);
 
     Set<Rule> initialRules = es.getReadyRules();
     Set<Rule> expectedInitialRules = new HashSet<>();
@@ -91,7 +107,8 @@ public class ExpertSystemTest {
     Set<Tag> expectedActivatedRecommendations = new HashSet<>();
     expectedActivatedRecommendations.add(recZ);
     assertEquals(activatedRecommendations, expectedActivatedRecommendations);
-    System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
+    System.out
+        .println("[ES] Activated recommendations: " + activatedRecommendations);
 
     Set<Fact> facts = es.getFacts();
     Set<Fact> expectedFacts = new HashSet<>();
@@ -137,21 +154,36 @@ public class ExpertSystemTest {
         new Fact("Bat(black,speed=10)")
     };
     Recommendation recX = new Recommendation("Run(north,quickly,speed!=slow)");
-    Recommendation recY = new Recommendation("Hide(safelocation,manner=stealth)");
+    Recommendation recY =
+        new Recommendation("Hide(safelocation,manner=stealth)");
     Recommendation recZ = new Recommendation("Fight(aggressive)");
     Recommendation[] testRecommendations = {recX, recY};
     Fact[] outputPredicates1 = {new Fact("Dog(friendly,breed=pug,age<2)")};
     Fact[] outputPredicates2 = {new Fact("Elephant(&x,size=big,intelligent)")};
-    Fact[] outputPredicates3 = {new Fact("Frog(colour=green,slimy,sound=ribbit)")};
+    Fact[] outputPredicates3 =
+        {new Fact("Frog(colour=green,slimy,sound=ribbit)")};
     Fact[] outputPredicates4 = {new Fact("Hog(&x,size=huge,&y,big)")};
     Fact outputFact = new Fact("Iguana(!big)");
-    Rule unactivatedRule = new Rule(new Fact[] {new Fact("Goose(loud,nationality=canadian,wingspan=4)"), new Fact("Aardvark(brown,?,speed=slow)")}, outputPredicates4);
-    Rule rule1 = new Rule(new Fact[] {new Fact("Aardvark(brown,strange,?)"), new Fact("Bat(black,speed>9)")}, outputPredicates1);
-    Rule rule2 = new Rule(new Fact[] {new Fact("Dog(&x,breed=pug,age=1)"), new Fact("Bat(*)")}, outputPredicates2);
-    Rule rule3 = new Rule(new Fact[] {new Fact("Dog(friendly,breed=pug,age=1)"), new Fact("Elephant(friendly,size=big,intelligent)")}, outputPredicates3);
-    Rule rule4 = new Rule(new Fact[] {new Fact("Frog(&x,slimy,&y)"), new Fact("Elephant(*)")}, outputPredicates4);
-    Rule rule5 = new Rule(new Fact[] {new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")}, new Predicate[] {recZ, outputFact});
-    Rule rule6 = new Rule(new Fact[] {new Fact("Hog(*)"), new Fact("Iguana(small)")}, new Predicate[] {recY});
+    Rule unactivatedRule = new Rule(
+        new Fact[] {new Fact("Goose(loud,nationality=canadian,wingspan=4)"),
+            new Fact("Aardvark(brown,?,speed=slow)")}, outputPredicates4);
+    Rule rule1 = new Rule(new Fact[] {new Fact("Aardvark(brown,strange,?)"),
+        new Fact("Bat(black,speed>9)")}, outputPredicates1);
+    Rule rule2 = new Rule(
+        new Fact[] {new Fact("Dog(&x,breed=pug,age=1)"), new Fact("Bat(*)")},
+        outputPredicates2);
+    Rule rule3 = new Rule(new Fact[] {new Fact("Dog(friendly,breed=pug,age=1)"),
+        new Fact("Elephant(friendly,size=big,intelligent)")},
+        outputPredicates3);
+    Rule rule4 = new Rule(
+        new Fact[] {new Fact("Frog(&x,slimy,&y)"), new Fact("Elephant(*)")},
+        outputPredicates4);
+    Rule rule5 = new Rule(
+        new Fact[] {new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")},
+        new Predicate[] {recZ, outputFact});
+    Rule rule6 =
+        new Rule(new Fact[] {new Fact("Hog(*)"), new Fact("Iguana(small)")},
+            new Predicate[] {recY});
     Rule[] testRules = {
         rule1,
         rule2,
@@ -182,7 +214,8 @@ public class ExpertSystemTest {
     Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
     expectedInitialRecommendations.addAll(Arrays.asList(testRecommendations));
     assertEquals(initialRecommendations, expectedInitialRecommendations);
-    System.out.println("[ES] Initial recommendations: " + initialRecommendations);
+    System.out
+        .println("[ES] Initial recommendations: " + initialRecommendations);
 
     Set<Rule> initialRules = es.getReadyRules();
     Set<Rule> expectedInitialRules = new HashSet<>();
@@ -194,7 +227,8 @@ public class ExpertSystemTest {
     Set<Tag> expectedActivatedRecommendations = new HashSet<>();
     expectedActivatedRecommendations.add(recZ);
     assertEquals(activatedRecommendations, expectedActivatedRecommendations);
-    System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
+    System.out
+        .println("[ES] Activated recommendations: " + activatedRecommendations);
 
     Set<Fact> facts = es.getFacts();
     Set<Fact> expectedFacts = new HashSet<>();
@@ -246,14 +280,18 @@ public class ExpertSystemTest {
         new Fact("Bat(black,speed=10)")
     };
     Recommendation recX = new Recommendation("Run(north,quickly,speed!=slow)");
-    Recommendation recY = new Recommendation("Hide(safelocation,manner=stealth)");
+    Recommendation recY =
+        new Recommendation("Hide(safelocation,manner=stealth)");
     Recommendation recZ = new Recommendation("Fight(aggressive)");
     Recommendation[] testRecommendations = {recX, recY};
     Fact[] outputPredicates1 = {new Fact("Dog(friendly,breed=pug,age<2)")};
     Fact[] outputPredicates2 = {new Fact("Elephant(&x,size=big,intelligent)")};
-    Fact[] outputPredicates3 = {new Fact("Frog(colour=green,slimy,sound=ribbit)")};
+    Fact[] outputPredicates3 =
+        {new Fact("Frog(colour=green,slimy,sound=ribbit)")};
     Fact[] outputPredicates4 = {new Fact("Hog(&x,size=huge,&y,big)")};
-    Rule unactivatedRule = new Rule(new Fact[] {new Fact("Goose(loud,nationality=canadian,wingspan=4)"), new Fact("Aardvark(brown,?,speed=slow)")}, outputPredicates4);
+    Rule unactivatedRule = new Rule(
+        new Fact[] {new Fact("Goose(loud,nationality=canadian,wingspan=4)"),
+            new Fact("Aardvark(brown,?,speed=slow)")}, outputPredicates4);
     Rule provenRule = new Rule(
         new Fact[] {
             new Fact("Aardvark(brown,strange,speed=slow"),
@@ -264,11 +302,20 @@ public class ExpertSystemTest {
             new Fact("Hog(colour=green,size=huge,sound=ribbit,big)"),
             new Recommendation("Fight(aggressive)"),
             new Fact("Frog(colour=green,slimy,sound=ribbit)")});
-    Rule rule1 = new Rule(new Fact[] {new Fact("Aardvark(brown,strange,?)"), new Fact("Bat(black,speed>9)")}, outputPredicates1);
-    Rule rule2 = new Rule(new Fact[] {new Fact("Dog(&x,breed=pug,age=1)"), new Fact("Bat(*)")}, outputPredicates2);
-    Rule rule3 = new Rule(new Fact[] {new Fact("Dog(friendly,breed=pug,age=1)"), new Fact("Elephant(friendly,size=big,intelligent)")}, outputPredicates3);
-    Rule rule4 = new Rule(new Fact[] {new Fact("Frog(&x,slimy,&y)"), new Fact("Elephant(*)")}, outputPredicates4);
-    Rule rule5 = new Rule(new Fact[] {new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")}, new Predicate[] {recZ});
+    Rule rule1 = new Rule(new Fact[] {new Fact("Aardvark(brown,strange,?)"),
+        new Fact("Bat(black,speed>9)")}, outputPredicates1);
+    Rule rule2 = new Rule(
+        new Fact[] {new Fact("Dog(&x,breed=pug,age=1)"), new Fact("Bat(*)")},
+        outputPredicates2);
+    Rule rule3 = new Rule(new Fact[] {new Fact("Dog(friendly,breed=pug,age=1)"),
+        new Fact("Elephant(friendly,size=big,intelligent)")},
+        outputPredicates3);
+    Rule rule4 = new Rule(
+        new Fact[] {new Fact("Frog(&x,slimy,&y)"), new Fact("Elephant(*)")},
+        outputPredicates4);
+    Rule rule5 = new Rule(
+        new Fact[] {new Fact("Hog(*)"), new Fact("Frog(?,slimy,sound=ribbit)")},
+        new Predicate[] {recZ});
     Rule[] testRules = {
         rule1,
         rule2,
@@ -298,7 +345,8 @@ public class ExpertSystemTest {
     Set<Recommendation> expectedInitialRecommendations = new HashSet<>();
     expectedInitialRecommendations.addAll(Arrays.asList(testRecommendations));
     assertEquals(initialRecommendations, expectedInitialRecommendations);
-    System.out.println("[ES] Initial recommendations: " + initialRecommendations);
+    System.out
+        .println("[ES] Initial recommendations: " + initialRecommendations);
 
     Set<Rule> initialRules = es.getReadyRules();
     Set<Rule> expectedInitialRules = new HashSet<>();
@@ -310,7 +358,8 @@ public class ExpertSystemTest {
     Set<Tag> expectedActivatedRecommendations = new HashSet<>();
     expectedActivatedRecommendations.add(recZ);
     assertEquals(activatedRecommendations, expectedActivatedRecommendations);
-    System.out.println("[ES] Activated recommendations: " + activatedRecommendations);
+    System.out
+        .println("[ES] Activated recommendations: " + activatedRecommendations);
 
     Set<Fact> facts = es.getFacts();
     Set<Fact> expectedFacts = new HashSet<>();
@@ -393,10 +442,15 @@ public class ExpertSystemTest {
 //        System.out.println(actual.getOutputPredicates().iterator().next().hashCode());
 
     assertEquals(expected.getOutputPredicates(), actual.getOutputPredicates());
-    assertEquals(expected.getOutputPredicates().iterator().next(), actual.getOutputPredicates().iterator().next());
-    assertEquals(actual.getOutputPredicates().iterator().next(), expected.getOutputPredicates().iterator().next());
-    assertEquals(actual.getOutputPredicates().iterator().next().getArguments(), expected.getOutputPredicates().iterator().next().getArguments());
-    assertEquals(expected.getOutputPredicates().iterator().next().getArguments(), actual.getOutputPredicates().iterator().next().getArguments());
+    assertEquals(expected.getOutputPredicates().iterator().next(),
+        actual.getOutputPredicates().iterator().next());
+    assertEquals(actual.getOutputPredicates().iterator().next(),
+        expected.getOutputPredicates().iterator().next());
+    assertEquals(actual.getOutputPredicates().iterator().next().getArguments(),
+        expected.getOutputPredicates().iterator().next().getArguments());
+    assertEquals(
+        expected.getOutputPredicates().iterator().next().getArguments(),
+        actual.getOutputPredicates().iterator().next().getArguments());
 //        assertEquals(actual.getOutputPredicates(), expected.getOutputPredicates());
 
 //        assertEquals(expected, actual); // TODO: Why does a.equals(b) but not b.equals(a) ?
@@ -405,7 +459,8 @@ public class ExpertSystemTest {
   }
 
   /**
-   * Tests the teach functionality (basic) and Rule generation with OR of the ES.
+   * Tests the teach functionality (basic) and Rule generation with OR of the
+   * ES.
    */
 
   @Test
@@ -424,7 +479,8 @@ public class ExpertSystemTest {
     }
 
     List<Rule> multipleRules =
-        Rule.makeRules("eyes(multiple) wings(2) OR legs(8) diet(carnivorous) -> insect() @investigate()");
+        Rule.makeRules(
+            "eyes(multiple) wings(2) OR legs(8) diet(carnivorous) -> insect() @investigate()");
     for (Rule rule : multipleRules) {
       es.addReadyRule(rule);
     }
@@ -439,12 +495,15 @@ public class ExpertSystemTest {
         new Predicate[] {new Recommendation("@retreat(quickly,carefully)")});
     Rule rule3 = new Rule(
         new Fact[] {new Fact("eyes(multiple)"), new Fact("wings(2)")},
-        new Predicate[] {new Fact("insect()"), new Recommendation("@investigate()")});
+        new Predicate[] {new Fact("insect()"),
+            new Recommendation("@investigate()")});
     Rule rule4 = new Rule(
         new Fact[] {new Fact("legs(8)"), new Fact("diet(carnivorous)")},
-        new Predicate[] {new Fact("insect()"), new Recommendation("@investigate()")});
+        new Predicate[] {new Fact("insect()"),
+            new Recommendation("@investigate()")});
 
-    Rule rule5 = new Rule("battery(low) distance(!close) -> @lowpowermode() battery(conservation)");
+    Rule rule5 = new Rule(
+        "battery(low) distance(!close) -> @lowpowermode() battery(conservation)");
 
     expectedTaughtSentences.add(rule1);
     expectedTaughtSentences.add(rule2);

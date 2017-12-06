@@ -18,7 +18,8 @@ final class StringArgument extends Argument {
   /**
    * Constructor of string Arguments
    * <p>
-   * Arguments must be a string made up of alpha characters, can contain ["=", "!"] characters
+   * Arguments must be a string made up of alpha characters, can contain ["=",
+   * "!"] characters
    *
    * @param string argument as a string
    * @param tokens argument as tokens, split on mathematical symbols

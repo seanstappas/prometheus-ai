@@ -9,18 +9,20 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents a recommendation in the Expert System. Recommendations are for specific actions to be taken (walk, stop,
- * etc.).
+ * Represents a recommendation in the Expert System. Recommendations are for
+ * specific actions to be taken (walk, stop, etc.).
  * <p>
- * Recommendations are composed of a predicate name and a set of arguments: @P(ARG1, ARG2, ...)
+ * Recommendations are composed of a predicate name and a set of arguments:
+ *
+ * @P(ARG1, ARG2, ...)
  */
 public class Recommendation extends Predicate {
   /**
    * Constructs a Recommendation object from a string
    * <p>
-   * NB: There should be no space characters between the arguments in a string i.e. "@P(ARG1,ARG2,ARG3...)"
-   * Recommendation strings begin with "@" character.
-   * Arguments are delimited by commas within parenthesis.
+   * NB: There should be no space characters between the arguments in a string
+   * i.e. "@P(ARG1,ARG2,ARG3...)" Recommendation strings begin with "@"
+   * character. Arguments are delimited by commas within parenthesis.
    *
    * @param value           String input
    * @param confidenceValue double in range [0,1] i.e. 0.n representing n0% confidence
@@ -45,7 +47,8 @@ public class Recommendation extends Predicate {
     this(value, 1.0);
   }
 
-  Recommendation(String predicateName, List<Argument> arguments, double confidence) {
+  Recommendation(String predicateName, List<Argument> arguments,
+                 double confidence) {
     this.predicateName = predicateName;
     this.arguments = arguments;
     this.confidence = confidence;
@@ -70,7 +73,8 @@ public class Recommendation extends Predicate {
   }
 
   /**
-   * Parses a raw string into a list of string tokens that represent each argument
+   * Parses a raw string into a list of string tokens that represent each
+   * argument
    *
    * @param tokens string input
    * @return list of string arguments

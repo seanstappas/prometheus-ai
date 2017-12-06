@@ -34,7 +34,8 @@ class ExpertSystemImpl implements ExpertSystem {
     this.activeRules = activeRules;
     this.facts = facts;
     this.recommendations = recommendations;
-    this.thinker = thinkerFactory.create(readyRules, activeRules, facts, recommendations);
+    this.thinker =
+        thinkerFactory.create(readyRules, activeRules, facts, recommendations);
     this.teacher = teacherFactory.create(readyRules);
     this.rester = resterFactory.create(readyRules);
   }

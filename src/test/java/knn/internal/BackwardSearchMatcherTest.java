@@ -40,7 +40,8 @@ public class BackwardSearchMatcherTest {
     when(kn.excite()).thenReturn(true);
 
     // when
-    Optional<Tag> actualTag = backwardSearchMatcher.match(inputTags, kn, numRequiredMatches);
+    Optional<Tag> actualTag =
+        backwardSearchMatcher.match(inputTags, kn, numRequiredMatches);
 
     // then
     assertEquals(Optional.of(inputTag), actualTag);
@@ -64,7 +65,8 @@ public class BackwardSearchMatcherTest {
     when(kn.excite()).thenReturn(true);
 
     // when
-    Optional<Tag> actualTag = backwardSearchMatcher.match(inputTags, kn, numRequiredMatches);
+    Optional<Tag> actualTag =
+        backwardSearchMatcher.match(inputTags, kn, numRequiredMatches);
 
     // then
     assertEquals(Optional.empty(), actualTag);

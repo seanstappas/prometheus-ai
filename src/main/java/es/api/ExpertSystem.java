@@ -17,8 +17,8 @@ public interface ExpertSystem {
   Set<Recommendation> think();
 
   /**
-   * Continuously iterates through the read Rules, checking Facts and Recommendations, and activating Rules if
-   * possible.
+   * Continuously iterates through the read Rules, checking Facts and
+   * Recommendations, and activating Rules if possible.
    * <p>
    * Stops once the system reaches natural quiescence and generates a new rule.
    *
@@ -28,10 +28,12 @@ public interface ExpertSystem {
   Set<Recommendation> think(boolean generateRule);
 
   /**
-   * Makes the ES think for a fixed number of cycles. The number of cycles represents how much effort is being put
-   * into thinking. Each cycle is a run-through of all the ready Rules, activating Rules if possible. Note that a Rule
-   * that is activated in a cycle is not iterated over in that same cycle, and must wait until the next cycle to
-   * cascade further activation. This is threshold quiescence, which may or may not correspond with natural
+   * Makes the ES think for a fixed number of cycles. The number of cycles
+   * represents how much effort is being put into thinking. Each cycle is a
+   * run-through of all the ready Rules, activating Rules if possible. Note that
+   * a Rule that is activated in a cycle is not iterated over in that same
+   * cycle, and must wait until the next cycle to cascade further activation.
+   * This is threshold quiescence, which may or may not correspond with natural
    * quiescence. Generates a new rule.
    *
    * @param generateRule   if true generates the new rule proven by a think cycle
@@ -43,8 +45,9 @@ public interface ExpertSystem {
   /**
    * Generates rules from a natural language sentence
    * <p>
-   * NB: Sentences must contain one token from {"if", "when", "while", "first"}, and one token from {"then", "next",
-   * "do"}, to denote input facts and output predicates respectively.
+   * NB: Sentences must contain one token from {"if", "when", "while", "first"},
+   * and one token from {"then", "next", "do"}, to denote input facts and output
+   * predicates respectively.
    * <p>
    * e.g. "If Human(near) Then Move(steps=10)"
    *
@@ -79,7 +82,8 @@ public interface ExpertSystem {
   void addTags(Set<Tag> tags);
 
   /**
-   * Adds a Tag to the ES. Will cast the tag to either a Rule, a Fact, or a Recommendation.
+   * Adds a Tag to the ES. Will cast the tag to either a Rule, a Fact, or a
+   * Recommendation.
    *
    * @param tag the Tag to be added
    * @return <code>true</code> if the Tag is successfully added

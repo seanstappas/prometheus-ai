@@ -19,7 +19,8 @@ import java.util.Set;
 
 abstract class KnnGraphVisualizer extends GraphVisualizer {
   private static final int NUM_INITIAL_ACTIVE_TAGS = 5;
-  private static final String KNN_STYLE_SHEET_PATH = "graphs/knn/knn_graph_style_sheet.css";
+  private static final String KNN_STYLE_SHEET_PATH =
+      "graphs/knn/knn_graph_style_sheet.css";
   private static final String ANIMAL_DATA_PATH = "data/animalData2.txt";
   private static final String RESET_ID = "reset";
   private static final String START_ID = "start";
@@ -80,7 +81,8 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     addButton(TOGGLE_LABELS_ID, "Labels", 0, 1.5, false);
   }
 
-  private void addButton(String id, String label, double x, double y, boolean clicked) {
+  private void addButton(String id, String label, double x, double y,
+                         boolean clicked) {
     Node node = graph.addNode(id);
     node.addAttribute("layout.frozen");
     node.addAttribute("xy", x, y);
@@ -93,7 +95,8 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
   }
 
   private void loadKNN() {
-    Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
+    Prometheus prometheus = Guice.createInjector(new PrometheusModule())
+        .getInstance(Prometheus.class);
     knn = prometheus.getKnowledgeNodeNetwork();
     knn.loadData(getKnnDataPath());
     activeIDs = new HashSet<>();
@@ -201,7 +204,8 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     Node node = graph.getNode(id);
     if (RESET_ID.equals(id)) {
       node.setAttribute("ui.class", "butt");
-    } else if (!START_ID.equals(id) && !STOP_ID.equals(id) && !TOGGLE_LABELS_ID.equals(id)) {
+    } else if (!START_ID.equals(id) && !STOP_ID.equals(id) &&
+        !TOGGLE_LABELS_ID.equals(id)) {
       if (showLabels) {
         node.setAttribute("ui.label", id);
       } else {
@@ -218,7 +222,8 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
         nodeType = "knowledgenode";
       }
       if (activeIDs.contains(id)) {
-        node.setAttribute("ui.class", MessageFormat.format("active_{0}", nodeType));
+        node.setAttribute("ui.class",
+            MessageFormat.format("active_{0}", nodeType));
       } else {
         node.setAttribute("ui.class", nodeType);
       }

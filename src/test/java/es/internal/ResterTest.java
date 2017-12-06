@@ -29,7 +29,8 @@ public class ResterTest {
     Rule mergedRule = mock(Rule.class);
 
     // given
-    when(ruleMerger.makeMergedRule(readyRules)).thenReturn(Optional.of(mergedRule));
+    when(ruleMerger.makeMergedRule(readyRules))
+        .thenReturn(Optional.of(mergedRule));
 
     // when
     rester.rest(1);

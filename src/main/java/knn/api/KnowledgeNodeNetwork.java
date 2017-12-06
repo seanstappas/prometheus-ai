@@ -25,7 +25,8 @@ public interface KnowledgeNodeNetwork {
   void addKnowledgeNode(KnowledgeNode kn);
 
   /**
-   * Deletes expired KNs from the KNN, i.e., ones who have aged beyond their age threshold.
+   * Deletes expired KNs from the KNN, i.e., ones who have aged beyond their age
+   * threshold.
    */
   void deleteExpiredKnowledgeNodes();
 
@@ -91,8 +92,8 @@ public interface KnowledgeNodeNetwork {
   Set<Tag> forwardSearch(Set<Tag> inputTags, int ply);
 
   /**
-   * Performs forward thinking in the KNN. Note that this is equivalent to forward searching with all the currently
-   * active Tags as input.
+   * Performs forward thinking in the KNN. Note that this is equivalent to
+   * forward searching with all the currently active Tags as input.
    *
    * @param ply the ply of the search. If set to 0, the search continues until quiescence.
    * @return the Set of activated Tags resulting from searching (excluding the input Tags)
@@ -109,8 +110,8 @@ public interface KnowledgeNodeNetwork {
   Set<Tag> backwardSearch(Set<Tag> inputTags, int ply);
 
   /**
-   * Performs backward thinking in the KNN. Note that this is equivalent to backward searching with all the currently
-   * active Tags as input.
+   * Performs backward thinking in the KNN. Note that this is equivalent to
+   * backward searching with all the currently active Tags as input.
    *
    * @param ply the ply of the search. If set to 0, the search continues until quiescence.
    * @return the Set of activated Tags resulting from searching (excluding the input Tags)
@@ -118,8 +119,9 @@ public interface KnowledgeNodeNetwork {
   Set<Tag> backwardThink(int ply);
 
   /**
-   * Sets the search matching ratio for backward search, i.e., the ratio of search input Tags that must be found in
-   * the output Tags of a KN to activate its input Tag. See {@link knn.internal.BackwardSearchMatcher} the
+   * Sets the search matching ratio for backward search, i.e., the ratio of
+   * search input Tags that must be found in the output Tags of a KN to activate
+   * its input Tag. See {@link knn.internal.BackwardSearchMatcher} the
    * implementation of backward search matching.
    *
    * @param ratio the backward search match ratio
@@ -136,8 +138,8 @@ public interface KnowledgeNodeNetwork {
   Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply);
 
   /**
-   * Performs lambda thinking in the KNN. Note that this is equivalent to lambda searching with all the currently
-   * active Tags as input.
+   * Performs lambda thinking in the KNN. Note that this is equivalent to lambda
+   * searching with all the currently active Tags as input.
    *
    * @param ply the ply of the search. If set to 0, the search continues until quiescence.
    * @return the Set of activated Tags resulting from searching (excluding the input Tags)

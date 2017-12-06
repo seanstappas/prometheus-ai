@@ -28,7 +28,8 @@ public class ThinkCycleExecutorTest {
     activeRules = new HashSet<>();
     facts = new HashSet<>();
     recommendations = new HashSet<>();
-    thinkCycleExecutor = new ThinkCycleExecutor(readyRules, activeRules, facts, recommendations);
+    thinkCycleExecutor =
+        new ThinkCycleExecutor(readyRules, activeRules, facts, recommendations);
   }
 
   @Test

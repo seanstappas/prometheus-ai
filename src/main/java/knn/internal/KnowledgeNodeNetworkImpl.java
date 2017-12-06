@@ -42,11 +42,14 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     this.mapKN = mapKN;
     this.activeTags = activeTags;
     this.ageSortedKNs = ageSortedKNs;
-    this.directSearcher = directSearcherFactory.create(mapKN, activeTags, ageSortedKNs);
+    this.directSearcher =
+        directSearcherFactory.create(mapKN, activeTags, ageSortedKNs);
     this.forwardSearcher = forwardSearcherFactory.create(directSearcher);
     this.backwardSearcher = backwardSearcherFactory.create(
-        activeTags, ageSortedKNs, backwardSearchMatchRatio, backwardSearchAgeLimit);
-    this.lambdaSearcher = lambdaSearcherFactory.create(forwardSearcher, backwardSearcher);
+        activeTags, ageSortedKNs, backwardSearchMatchRatio,
+        backwardSearchAgeLimit);
+    this.lambdaSearcher =
+        lambdaSearcherFactory.create(forwardSearcher, backwardSearcher);
   }
 
   @Override
@@ -157,7 +160,8 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     List<KnowledgeNode> knowledgeNodes = new ArrayList<>();
     resetEmpty();
     try {
-      BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF-8"));
+      BufferedReader br = new BufferedReader(
+          new InputStreamReader(new FileInputStream(filename), "UTF-8"));
       String line;
       while ((line = br.readLine()) != null) {
         String[] info = line.split(";\\s+");

@@ -18,17 +18,21 @@ public abstract class Predicate extends Tag {
   abstract Predicate getPredicateCopy();
 
   /**
-   * Returns a copy of the current Predicate with replaced variable argument(s) with a String or Numeric Argument.
+   * Returns a copy of the current Predicate with replaced variable argument(s)
+   * with a String or Numeric Argument.
    *
    * @param pendingReplacementPairs the pending replacement pairs
-   * @return a copy of the current Predicate with replaced variable argument(s) with a String or Numeric Argument.
+   * @return a copy of the current Predicate with replaced variable argument(s) with a String or
+   * Numeric Argument.
    */
-  public Predicate replaceVariableArguments(Map<String, Argument> pendingReplacementPairs) {
+  public Predicate replaceVariableArguments(
+      Map<String, Argument> pendingReplacementPairs) {
     Predicate p = getPredicateCopy();
     int argumentIndex = 0;
     for (Argument argument : p.arguments) {
       if (pendingReplacementPairs.containsKey(argument.getName())) {
-        arguments.set(argumentIndex, pendingReplacementPairs.get(argument.getName()));
+        arguments.set(argumentIndex,
+            pendingReplacementPairs.get(argument.getName()));
       }
       argumentIndex++;
     }

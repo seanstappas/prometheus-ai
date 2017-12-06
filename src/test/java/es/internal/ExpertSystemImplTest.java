@@ -39,12 +39,14 @@ public class ExpertSystemImplTest {
     teacher = mock(Teacher.class);
     rester = mock(Rester.class);
     ThinkerFactory thinkerFactory = mock(ThinkerFactory.class);
-    when(thinkerFactory.create(readyRules, activeRules, facts, recommendations)).thenReturn(thinker);
+    when(thinkerFactory.create(readyRules, activeRules, facts, recommendations))
+        .thenReturn(thinker);
     TeacherFactory teacherFactory = mock(TeacherFactory.class);
     when(teacherFactory.create(readyRules)).thenReturn(teacher);
     ResterFactory resterFactory = mock(ResterFactory.class);
     when(resterFactory.create(readyRules)).thenReturn(rester);
-    es = new ExpertSystemImpl(readyRules, activeRules, facts, recommendations, thinkerFactory, teacherFactory, resterFactory);
+    es = new ExpertSystemImpl(readyRules, activeRules, facts, recommendations,
+        thinkerFactory, teacherFactory, resterFactory);
   }
 
   @Test
