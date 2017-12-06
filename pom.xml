@@ -29,6 +29,8 @@
                 <version>0.7.9</version>
                 <configuration>
                     <haltOnFailure>true</haltOnFailure>
+                    <destFile>${project.artifactId}/target/jacoco.exec</destFile>
+                    <dataFile>${project.artifactId}/target/jacoco.exec</dataFile>
                 </configuration>
                 <executions>
                     <execution>
