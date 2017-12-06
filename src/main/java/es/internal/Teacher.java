@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import java.util.*;
 
 class Teacher {
+    private static final Set<String> INPUT_TOKENS = new HashSet<>(Arrays.asList("if", "when", "while", "first"));
+    private static final Set<String> OUTPUT_TOKENS = new HashSet<>(Arrays.asList("then", "next", "do"));
     private Set<Rule> readyRules;
 
     @Inject
@@ -24,9 +26,7 @@ class Teacher {
     void teach(String sentence) {
         String[] tokens = sentence.split("\\s");
         List<String> tokenList = new ArrayList<>();
-        for (String token : tokens) {
-            tokenList.add(token.toLowerCase());
-        }
+        tokenList.addAll(Arrays.asList(tokens));
         int ruleIndices[] = findRuleIndices(tokenList);
         makeTaughtRule(tokenList, ruleIndices[0], ruleIndices[1]).ifPresent(readyRules::add);
     }
@@ -39,22 +39,16 @@ class Teacher {
      */
     private int[] findRuleIndices(List<String> tokenList) {
         int inputIndex = -1;
-        String[] inputTokens = {"if", "when", "while", "first"};
-        for (String inputToken : inputTokens) {
-            if (tokenList.contains(inputToken)) {
-                inputIndex = tokenList.indexOf(inputToken);
-                break;
+        int outputIndex = -1;
+
+        for (String token : tokenList) {
+            if (INPUT_TOKENS.contains(token.toLowerCase())) {
+                inputIndex = tokenList.indexOf(token);
+            } else if (OUTPUT_TOKENS.contains(token.toLowerCase())) {
+                outputIndex = tokenList.indexOf(token);
             }
         }
 
-        int outputIndex = -1;
-        String[] outputTokens = {"then", "next", "do"};
-        for (String outputToken : outputTokens) {
-            if (tokenList.contains(outputToken)) {
-                outputIndex = tokenList.indexOf(outputToken);
-                break;
-            }
-        }
         return new int[]{inputIndex, outputIndex};
     }
 
