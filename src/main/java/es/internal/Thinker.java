@@ -12,8 +12,8 @@ import java.util.Set;
 
 class Thinker {
     private final ThinkCycleExecutor thinkCycleExecutor;
-    private Set<Rule> readyRules;
-    private Set<Fact> facts;
+    private final Set<Rule> readyRules;
+    private final Set<Fact> facts;
 
     @Inject
     public Thinker(
@@ -60,7 +60,8 @@ class Thinker {
     }
 
     /**
-     * Generates a rule from the facts present in the ES at the beginning of think() and the predicates activated before quiescence
+     * Generates a rule from the facts present in the ES at the beginning of think() and the predicates activated before
+     * quiescence
      * <p>
      * Adds generate rule to ES
      *

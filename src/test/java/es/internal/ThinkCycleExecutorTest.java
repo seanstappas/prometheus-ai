@@ -37,8 +37,8 @@ public class ThinkCycleExecutorTest {
         Fact fact = new Fact("P(A)");
         Recommendation recommendation = new Recommendation("@P(B)");
         Rule rule = new Rule(
-                new HashSet<>(Collections.singletonList(fact)),
-                new HashSet<>(Collections.singletonList(recommendation)));
+                Collections.singleton(fact),
+                Collections.singleton(recommendation));
         Set<Predicate> expectedActivatedPredicates = new HashSet<>(
                 Collections.singletonList(recommendation)
         );
