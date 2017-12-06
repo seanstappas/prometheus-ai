@@ -18,8 +18,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * are active.
  */
 public class Rule extends Tag {
-    private Set<Fact> inputFacts;
-    private Set<Predicate> outputPredicates;
+    private final Set<Fact> inputFacts;
+    private final Set<Predicate> outputPredicates;
 
     /**
      * {@code confidenceValue} defaults to 1.0
@@ -28,7 +28,7 @@ public class Rule extends Tag {
      * @param outputPredicates the output Predicates
      * @see #Rule(Set, Set, double)
      */
-    public Rule(Fact[] inputFacts, Predicate[] outputPredicates) {
+    public Rule(final Fact[] inputFacts, final Predicate[] outputPredicates) {
         this(new HashSet<>(Arrays.asList(inputFacts)),
                 new HashSet<>(Arrays.asList(outputPredicates)), 1.0);
     }
@@ -40,7 +40,8 @@ public class Rule extends Tag {
      * @param outputPredicates the output Predicates
      * @see #Rule(Set, Set, double)
      */
-    public Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicates) {
+    public Rule(final Set<Fact> inputFacts,
+                final Set<Predicate> outputPredicates) {
         this(inputFacts, outputPredicates, 1.0);
     }
 
@@ -54,8 +55,9 @@ public class Rule extends Tag {
      * @param outputPredicates The output predicates of the rule.
      * @param confidenceValue  The confidence value of the Rule.
      */
-    public Rule(Set<Fact> inputFacts, Set<Predicate> outputPredicates,
-                double confidenceValue) {
+    public Rule(final Set<Fact> inputFacts,
+                final Set<Predicate> outputPredicates,
+                final double confidenceValue) {
         this.inputFacts = new HashSet<>(inputFacts);
         this.outputPredicates = new HashSet<>(outputPredicates);
         this.confidence = confidenceValue;
@@ -70,14 +72,14 @@ public class Rule extends Tag {
      * @param outputPredicates The output Tags, in String form.
      * @param confidenceValue  The confidence value of the Rule.
      */
-    private Rule(String[] inputFacts, String[] outputPredicates,
-                 double confidenceValue) {
+    private Rule(final String[] inputFacts, final String[] outputPredicates,
+                 final double confidenceValue) {
         this.inputFacts = new HashSet<>();
         this.outputPredicates = new HashSet<>();
-        for (String inputFact : inputFacts) {
+        for (final String inputFact : inputFacts) {
             this.inputFacts.add(new Fact(inputFact));
         }
-        for (String outputPredicate : outputPredicates) {
+        for (final String outputPredicate : outputPredicates) {
             addOutputPredicate(outputPredicate);
         }
         this.confidence = confidenceValue;
@@ -90,7 +92,7 @@ public class Rule extends Tag {
      * @param outputFacts the output Facts
      * @see #Rule(String[], String[], double)
      */
-    public Rule(String[] inputFacts, String[] outputFacts) {
+    public Rule(final String[] inputFacts, final String[] outputFacts) {
         this(inputFacts, outputFacts, 1.0);
     }
 
@@ -100,19 +102,20 @@ public class Rule extends Tag {
      * @param string the Rule as a string.
      * @see #makeRules(String)
      */
-    public Rule(String string) {
+    public Rule(final String string) {
         this.outputPredicates = new HashSet<>();
-        List<String> tokens = new ArrayList<>(Arrays.asList(string.split(" ")));
-        int outputFactIndex = tokens.indexOf("->");
+        final List<String> tokens =
+                new ArrayList<>(Arrays.asList(string.split(" ")));
+        final int outputFactIndex = tokens.indexOf("->");
 
-        for (String outputFact : tokens
+        for (final String outputFact : tokens
                 .subList(outputFactIndex + 1, tokens.size())) {
             this.addOutputPredicate(outputFact);
         }
 
-        Fact[] inputFacts = new Fact[outputFactIndex];
+        final Fact[] inputFacts = new Fact[outputFactIndex];
         for (int i = 0; i < inputFacts.length; i++) {
-            Fact fact = new Fact(tokens.get(i));
+            final Fact fact = new Fact(tokens.get(i));
             inputFacts[i] = fact;
         }
 
@@ -140,25 +143,26 @@ public class Rule extends Tag {
      * @param value the Rule as string.
      * @return List of Rules.
      */
-    public static List<Rule> makeRules(String value) {
-        List<String> tokens = new ArrayList<>(Arrays.asList(value.split(" ")));
-        List<Rule> ruleList = new ArrayList<>();
+    public static List<Rule> makeRules(final String value) {
+        final List<String> tokens =
+                new ArrayList<>(Arrays.asList(value.split(" ")));
+        final List<Rule> ruleList = new ArrayList<>();
 
-        int outputPredicateIndex = tokens.indexOf("->");
+        final int outputPredicateIndex = tokens.indexOf("->");
 
-        Predicate[] outputPredicates =
+        final Predicate[] outputPredicates =
                 makeOutputPredicateList(tokens, outputPredicateIndex);
 
-        List<Fact> inputFactList = new ArrayList<>();
+        final List<Fact> inputFactList = new ArrayList<>();
 
         for (int i = 0; i < outputPredicateIndex + 1; i++) {
-            if (!tokens.get(i).equals("OR") & !tokens.get(i).equals("->")) {
-                Fact IPredicate = new Fact(tokens.get(i));
-                inputFactList.add(IPredicate);
+            if (!tokens.get(i).equals("OR") && !tokens.get(i).equals("->")) {
+                final Fact predicate = new Fact(tokens.get(i));
+                inputFactList.add(predicate);
             } else {
-                Fact[] inputFacts =
+                final Fact[] inputFacts =
                         inputFactList.toArray(new Fact[inputFactList.size()]);
-                Rule rule = new Rule(inputFacts, outputPredicates);
+                final Rule rule = new Rule(inputFacts, outputPredicates);
                 ruleList.add(rule);
 
                 inputFactList.clear();
@@ -167,17 +171,18 @@ public class Rule extends Tag {
         return ruleList;
     }
 
-    private static Predicate[] makeOutputPredicateList(List<String> tokens,
-                                                       int outputPredicateIndex) {
-        Predicate[] outputPredicates =
+    private static Predicate[] makeOutputPredicateList(
+            final List<String> tokens,
+            final int outputPredicateIndex) {
+        final Predicate[] outputPredicates =
                 new Predicate[tokens.size() - outputPredicateIndex - 1];
 
         for (int i = outputPredicateIndex + 1; i < tokens.size(); i++) {
             if (!tokens.get(i).contains("@")) {
-                Fact fact = new Fact(tokens.get(i));
+                final Fact fact = new Fact(tokens.get(i));
                 outputPredicates[i - outputPredicateIndex - 1] = fact;
             } else {
-                Recommendation rec = new Recommendation(tokens.get(i));
+                final Recommendation rec = new Recommendation(tokens.get(i));
                 outputPredicates[i - outputPredicateIndex - 1] = rec;
             }
         }
@@ -198,20 +203,20 @@ public class Rule extends Tag {
      */
     private void setOutputFactsConfidenceValue() {
         double value = 1.0;
-        for (Fact fact : this.inputFacts) {
+        for (final Fact fact : this.inputFacts) {
             value = value * fact.getConfidence();
         }
-        for (Predicate outputPredicate : this.outputPredicates) {
+        for (final Predicate outputPredicate : this.outputPredicates) {
             outputPredicate.confidence = value;
         }
     }
 
-    private void addOutputPredicate(String outputPredicate) {
+    private void addOutputPredicate(final String outputPredicate) {
         if (!outputPredicate.contains("@")) {
-            Fact p = new Fact(outputPredicate);
+            final Fact p = new Fact(outputPredicate);
             this.outputPredicates.add(p);
         } else {
-            Recommendation p = new Recommendation(outputPredicate);
+            final Recommendation p = new Recommendation(outputPredicate);
             this.outputPredicates.add(p);
         }
     }
@@ -229,7 +234,7 @@ public class Rule extends Tag {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -238,7 +243,7 @@ public class Rule extends Tag {
             return false;
         }
 
-        Rule rule = (Rule) o;
+        final Rule rule = (Rule) o;
 
         return new EqualsBuilder()
                 .append(inputFacts, rule.inputFacts)
