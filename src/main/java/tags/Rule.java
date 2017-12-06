@@ -144,7 +144,7 @@ public class Rule extends Tag {
         List<Fact> inputFactList = new ArrayList<>();
 
         for (int i = 0; i < outputPredicateIndex + 1; i++) {
-            if (!tokens.get(i).equals("OR") & !tokens.get(i).equals("->")) {
+            if (!tokens.get(i).equals("OR") && !tokens.get(i).equals("->")) {
                 Fact IPredicate = new Fact(tokens.get(i));
                 inputFactList.add(IPredicate);
             }

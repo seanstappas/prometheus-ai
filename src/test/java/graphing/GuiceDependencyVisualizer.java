@@ -6,10 +6,8 @@ import com.google.inject.grapher.graphviz.GraphvizGrapher;
 import com.google.inject.grapher.graphviz.GraphvizModule;
 import prometheus.guice.PrometheusModule;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class GuiceDependencyVisualizer {
     private static final String GRAPH_SAVE_PATH = "graphs/guice/guice_graph.dot";
@@ -21,7 +19,7 @@ public class GuiceDependencyVisualizer {
 
     private static void graph(String filename, Injector demoInjector) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintWriter out = new PrintWriter(baos);
+        PrintWriter out = new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8), true);
 
         Injector injector = Guice.createInjector(new GraphvizModule());
         GraphvizGrapher renderer = injector.getInstance(GraphvizGrapher.class);

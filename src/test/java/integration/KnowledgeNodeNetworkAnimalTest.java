@@ -182,7 +182,6 @@ public class KnowledgeNodeNetworkAnimalTest {
 
         Fact fact = new Fact("mammal(vertebrate,land)");
         Fact factToSearch = new Fact(item);
-        Set<Tag> tagsToSeach = new HashSet<>(Collections.singletonList(factToSearch));
 
         knn.lambdaThink(0);
         Set<Tag> activeTags = knn.getActiveTags();

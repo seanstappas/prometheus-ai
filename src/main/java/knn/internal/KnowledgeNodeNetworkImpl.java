@@ -7,7 +7,8 @@ import tags.Tag;
 
 import javax.inject.Inject;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
@@ -149,7 +150,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
         List<KnowledgeNode> knowledgeNodes = new ArrayList<>();
         resetEmpty();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename),"UTF-8"));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] info = line.split(";\\s+");

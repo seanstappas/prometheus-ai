@@ -14,14 +14,11 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class KnowledgeNodeNetworkPetTest {
     private static final String PET_DATA_PATH = "data/petData.txt";
     private KnowledgeNodeNetwork knn;
-    private List<KnowledgeNode> knowledgeNodes = new ArrayList<>();
 
     @BeforeTest
     public void setup() {
@@ -31,7 +28,7 @@ public class KnowledgeNodeNetworkPetTest {
 
     @BeforeMethod
     public void setupKNN(){
-        knowledgeNodes = knn.loadData(PET_DATA_PATH);
+        knn.loadData(PET_DATA_PATH);
     }
 
     @Test
