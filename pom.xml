@@ -33,7 +33,7 @@
                 <executions>
                     <execution>
                         <id>analyze-compile</id>
-                        <phase>compile</phase>
+                        <phase>site</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
