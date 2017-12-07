@@ -1,11 +1,13 @@
 package knn.api;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -22,6 +24,7 @@ import tags.Tag;
 public final class KnowledgeNode implements Comparable<KnowledgeNode> {
     private static final long AGE_THRESHOLD = 1_000_000;
     private static final int ACTIVATION_INCREMENT = 100;
+    private static final int DEFAULT_THRESHOLD = 100;
     private static final int DEFAULT_BELIEF = 0;
     private static final int DEFAULT_STRENGTH = 1;
 
@@ -65,9 +68,16 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
             throw new KnowledgeNodeParseException(MessageFormat.format(
                     "Invalid input tag: {0}.", data[0]));
         }
-        this.threshold = Integer.parseInt(data[1]);
 
-        for (int i = 2; i < data.length; i += 2) {
+        int startOutputIndex = 1;
+        if (data.length > 1 && StringUtils.isNumeric(data[1])) {
+            this.threshold = Integer.parseInt(data[1]);
+            startOutputIndex++;
+        } else {
+            this.threshold = DEFAULT_THRESHOLD;
+        }
+
+        for (int i = startOutputIndex; i < data.length; i += startOutputIndex) {
             if (data[i].charAt(0) == '@') {
                 this.outputTags.add(new Recommendation(data[i]));
             } else if (data[i].contains("->")) {
@@ -79,8 +89,8 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
                         "Invalid output tag: {0}.", data[i]));
             }
         }
-        belief = DEFAULT_BELIEF;
-        strength = DEFAULT_STRENGTH;
+        this.belief = DEFAULT_BELIEF;
+        this.strength = DEFAULT_STRENGTH;
     }
 
     public KnowledgeNode(final String data) throws KnowledgeNodeParseException {
@@ -94,8 +104,8 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
         this.inputTag = inputTag;
         this.outputTags = outputTags;
         this.threshold = threshold;
-        belief = DEFAULT_BELIEF;
-        strength = DEFAULT_STRENGTH;
+        this.belief = DEFAULT_BELIEF;
+        this.strength = DEFAULT_STRENGTH;
     }
 
     public KnowledgeNode(

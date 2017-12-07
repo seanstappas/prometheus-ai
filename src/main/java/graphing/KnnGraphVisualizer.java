@@ -281,30 +281,32 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
      */
     private void updateNodeTagClass(final String id) {
         final Node node = getGraph().getNode(id);
-        if (RESET_ID.equals(id)) {
-            node.setAttribute("ui.class", "butt");
-        } else if (!START_ID.equals(id) && !STOP_ID.equals(id)
-                && !TOGGLE_LABELS_ID.equals(id)) {
-            if (showLabels) {
-                node.setAttribute("ui.label", id);
-            } else {
-                node.setAttribute("ui.label", "");
-            }
-            String nodeType = "";
-            if (factIDs.contains(id)) {
-                nodeType = "fact";
-            } else if (recommendationIDs.contains(id)) {
-                nodeType = "recommendation";
-            } else if (ruleIDs.contains(id)) {
-                nodeType = "rule";
-            } else if (knIDs.contains(id)) {
-                nodeType = "knowledgenode";
-            }
-            if (activeIDs.contains(id)) {
-                node.setAttribute("ui.class",
-                        MessageFormat.format("active_{0}", nodeType));
-            } else {
-                node.setAttribute("ui.class", nodeType);
+        if (node != null) {
+            if (RESET_ID.equals(id)) {
+                node.setAttribute("ui.class", "butt");
+            } else if (!START_ID.equals(id) && !STOP_ID.equals(id)
+                    && !TOGGLE_LABELS_ID.equals(id)) {
+                if (showLabels) {
+                    node.setAttribute("ui.label", id);
+                } else {
+                    node.setAttribute("ui.label", "");
+                }
+                String nodeType = "";
+                if (factIDs.contains(id)) {
+                    nodeType = "fact";
+                } else if (recommendationIDs.contains(id)) {
+                    nodeType = "recommendation";
+                } else if (ruleIDs.contains(id)) {
+                    nodeType = "rule";
+                } else if (knIDs.contains(id)) {
+                    nodeType = "knowledgenode";
+                }
+                if (activeIDs.contains(id)) {
+                    node.setAttribute("ui.class",
+                            MessageFormat.format("active_{0}", nodeType));
+                } else {
+                    node.setAttribute("ui.class", nodeType);
+                }
             }
         }
     }

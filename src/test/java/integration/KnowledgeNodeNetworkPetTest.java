@@ -50,9 +50,9 @@ public class KnowledgeNodeNetworkPetTest {
 
     @Test
     public void getInputForForwardSearchTest() throws Exception{
-        String[] info1 = {"monkey(intelligent,length>50,weight>3)", "100"};
-        String[] info2 = {"@isAnimal(calm,bark)", "100"};
-        String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)", "100"};
+        String[] info1 = {"monkey(intelligent,length>50,weight>3)"};
+        String[] info2 = {"@isAnimal(calm,bark)"};
+        String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)"};
         knn.addKnowledgeNode(new KnowledgeNode(info1));
         knn.addKnowledgeNode(new KnowledgeNode(info2));
         knn.addKnowledgeNode(new KnowledgeNode(info3));
@@ -69,9 +69,9 @@ public class KnowledgeNodeNetworkPetTest {
 
     @Test
     public void getInputForBackwardSearchTest() throws Exception {
-        String[] info1 = {"Tiger(carnivore,length>50,weight>90)", "100"};
-        String[] info2 = {"@isTiger(danger,run)", "100"};
-        String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)", "100"};
+        String[] info1 = {"Tiger(carnivore,length>50,weight>90)"};
+        String[] info2 = {"@isTiger(danger,run)"};
+        String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)"};
         knn.addKnowledgeNode(new KnowledgeNode(info1));
         knn.addKnowledgeNode(new KnowledgeNode(info2));
         knn.addKnowledgeNode(new KnowledgeNode(info3));
@@ -88,11 +88,11 @@ public class KnowledgeNodeNetworkPetTest {
 
     @Test
     public void knToStringTest()  throws Exception{
-        String[] info1 = {"Tiger(carnivore,length>50,weight>90)", "100", "monkey(intelligent,length>50,weight>3)", "100"};
+        String[] info1 = {"Tiger(carnivore,length>50,weight>90)", "monkey(intelligent,length>50,weight>3)"};
         KnowledgeNode kn1 = new KnowledgeNode(info1);
-        String[] info2 = {"@isTiger(danger,run)", "100"};
+        String[] info2 = {"@isTiger(danger,run)"};
         KnowledgeNode kn2 = new KnowledgeNode(info2);
-        String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)", "100"};
+        String[] info3 = {"friend(nice,kind) -> @meet(community,people>2)"};
         KnowledgeNode kn3 = new KnowledgeNode(info3);
         System.out.println("[knToStringTest]: "+ kn1.toString());
         System.out.println("[knToStringTest]: "+ kn2.toString());

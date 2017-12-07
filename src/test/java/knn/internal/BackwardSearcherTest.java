@@ -35,7 +35,7 @@ public class BackwardSearcherTest {
                 mock(Tag.class), mock(Tag.class), mock(Tag.class), mock(Tag.class)));
         final int ply = 5;
         final int numRequiredMatches = 2;
-        final KnowledgeNode kn = new KnowledgeNode("P(A); 100; P(B)");
+        final KnowledgeNode kn = new KnowledgeNode("P(A); P(B)");
         final Tag backwardSearchMatcherTag = mock(Tag.class);
 
         // given
