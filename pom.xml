@@ -59,6 +59,7 @@
                     </execution>
                     <execution>
                         <id>default-report</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
