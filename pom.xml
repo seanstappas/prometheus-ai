@@ -85,6 +85,7 @@
                             </rules>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>prepare-integration-tests</id>
                         <phase>pre-integration-test</phase>
