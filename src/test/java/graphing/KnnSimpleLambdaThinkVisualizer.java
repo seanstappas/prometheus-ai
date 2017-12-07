@@ -7,6 +7,9 @@ import java.util.Set;
 import tags.Fact;
 import tags.Tag;
 
+/**
+ * KNN simple lambda think visualizer.
+ */
 class KnnSimpleLambdaThinkVisualizer extends KnnSimpleGraphVisualizer {
     private boolean shouldBackwardSearch = true;
 
@@ -20,7 +23,7 @@ class KnnSimpleLambdaThinkVisualizer extends KnnSimpleGraphVisualizer {
     @Override
     Set<Tag> getInitialActiveTags() {
         return new HashSet<>(Collections.singletonList(
-                new Fact("P7(A)", 100)
+                new Fact("P7(A)")
         ));
     }
 
@@ -40,6 +43,6 @@ class KnnSimpleLambdaThinkVisualizer extends KnnSimpleGraphVisualizer {
     }
 
     public static void main(final String[] args) throws InterruptedException {
-        new KnnSimpleLambdaThinkVisualizer().visualize(false);
+        new KnnSimpleLambdaThinkVisualizer().visualize(false, true);
     }
 }

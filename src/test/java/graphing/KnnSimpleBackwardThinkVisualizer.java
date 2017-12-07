@@ -7,6 +7,9 @@ import java.util.Set;
 import tags.Fact;
 import tags.Tag;
 
+/**
+ * KNN simple backward think visualizer.
+ */
 class KnnSimpleBackwardThinkVisualizer extends KnnSimpleGraphVisualizer {
     @Override
     String getScreenshotSavePath(final String suffix) {
@@ -18,7 +21,7 @@ class KnnSimpleBackwardThinkVisualizer extends KnnSimpleGraphVisualizer {
     @Override
     Set<Tag> getInitialActiveTags() {
         return new HashSet<>(Collections.singletonList(
-                new Fact("P7(A)", 100)
+                new Fact("P7(A)")
         ));
     }
 
@@ -30,6 +33,6 @@ class KnnSimpleBackwardThinkVisualizer extends KnnSimpleGraphVisualizer {
     }
 
     public static void main(final String[] args) throws InterruptedException {
-        new KnnSimpleBackwardThinkVisualizer().visualize(false);
+        new KnnSimpleBackwardThinkVisualizer().visualize(false, true);
     }
 }

@@ -9,7 +9,7 @@ import tags.Tag;
  */
 public final class GenericGraphCreator extends KnnGraphVisualizer {
     public static void main(final String[] args) throws InterruptedException {
-        new GenericGraphCreator().visualize(false);
+        new GenericGraphCreator().visualize(false, true);
     }
 
     @Override

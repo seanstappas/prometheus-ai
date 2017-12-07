@@ -72,14 +72,18 @@ abstract class GraphVisualizer implements ViewerListener {
      *
      * @param saveScreenshot true if the graph should be saved to screenshot at
      *                       every iteration
+     * @param display        true if the visualization should display in a new
+     *                       window
      */
-    final void visualize(final boolean saveScreenshot) {
-        setupGraph();
+    final void visualize(final boolean saveScreenshot, final boolean display) {
+        setupGraph(display);
         setupNodes();
         int iteration = 0;
         long lastTime = System.currentTimeMillis();
         while (loop) {
-            fromViewer.pump();
+            if (display) {
+                fromViewer.pump();
+            }
             if (updated) {
                 if (System.currentTimeMillis() - lastTime >= getSleepDelay()) {
                     iteration++;
@@ -91,6 +95,9 @@ abstract class GraphVisualizer implements ViewerListener {
                         saveScreenshot(String.valueOf(iteration));
                     }
                     lastTime = System.currentTimeMillis();
+                    if (!display) {
+                        loop = false;
+                    }
                 }
             }
         }
@@ -98,8 +105,10 @@ abstract class GraphVisualizer implements ViewerListener {
 
     /**
      * Sets up the graph.
+     *
+     * @param display true if the visualization should display in a new window
      */
-    private void setupGraph() {
+    private void setupGraph(final boolean display) {
         System.setProperty("org.graphstream.ui.renderer",
                 "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
         graph = new SingleGraph("graph");
@@ -109,10 +118,12 @@ abstract class GraphVisualizer implements ViewerListener {
         graph.setStrict(false);
         graph.addAttribute("ui.quality");
         graph.addAttribute("ui.antialias");
-        final Viewer viewer = graph.display();
-        fromViewer = viewer.newViewerPipe();
-        fromViewer.addViewerListener(this);
-        fromViewer.addSink(graph);
+        if (display) {
+            final Viewer viewer = graph.display();
+            fromViewer = viewer.newViewerPipe();
+            fromViewer.addViewerListener(this);
+            fromViewer.addSink(graph);
+        }
         svgSink = new FileSinkSVG2();
     }
 

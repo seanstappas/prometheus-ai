@@ -4,6 +4,9 @@ import java.text.MessageFormat;
 import java.util.Set;
 import tags.Tag;
 
+/**
+ * KNN lambda think visualizer.
+ */
 class KnnLambdaThinkVisualizer extends KnnGraphVisualizer {
     private boolean swap = true;
     private Set<Tag> backwardTags;
@@ -30,6 +33,6 @@ class KnnLambdaThinkVisualizer extends KnnGraphVisualizer {
     }
 
     public static void main(final String[] args) throws InterruptedException {
-        new KnnLambdaThinkVisualizer().visualize(false);
+        new KnnLambdaThinkVisualizer().visualize(false, true);
     }
 }

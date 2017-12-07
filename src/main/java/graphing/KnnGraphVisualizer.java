@@ -39,6 +39,7 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
     private KnowledgeNodeNetwork knn;
     private Set<String> activeIDs;
     private boolean showLabels = true;
+    private int sleepDelay = SLEEP_DELAY;
 
     /**
      * Searches in the KNN.
@@ -54,7 +55,16 @@ abstract class KnnGraphVisualizer extends GraphVisualizer {
 
     @Override
     int getSleepDelay() {
-        return SLEEP_DELAY;
+        return sleepDelay;
+    }
+
+    /**
+     * Sets the sleep delay.
+     *
+     * @param sleepDelay the sleep delay between graph updates.
+     */
+    void setSleepDelay(final int sleepDelay) {
+        this.sleepDelay = sleepDelay;
     }
 
     @Override

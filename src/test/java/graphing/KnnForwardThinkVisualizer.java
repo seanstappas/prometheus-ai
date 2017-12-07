@@ -4,10 +4,14 @@ import java.text.MessageFormat;
 import java.util.Set;
 import tags.Tag;
 
+/**
+ * KNN forward think visualizer.
+ */
 class KnnForwardThinkVisualizer extends KnnGraphVisualizer {
     @Override
     String getScreenshotSavePath(final String suffix) {
-        return MessageFormat.format("graphs/knn/forward/knn_forward_think_{0}", suffix);
+        return MessageFormat
+                .format("graphs/knn/forward/knn_forward_think_{0}", suffix);
     }
 
     @Override
@@ -16,6 +20,6 @@ class KnnForwardThinkVisualizer extends KnnGraphVisualizer {
     }
 
     public static void main(final String[] args) throws InterruptedException {
-        new KnnForwardThinkVisualizer().visualize(false);
+        new KnnForwardThinkVisualizer().visualize(false, true);
     }
 }
