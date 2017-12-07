@@ -28,7 +28,6 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.9</version>
                 <configuration>
-                    <haltOnFailure>true</haltOnFailure>
                     <destFile>${project.artifactId}/target/jacoco.exec</destFile>
                     <dataFile>${project.artifactId}/target/jacoco.exec</dataFile>
                 </configuration>
@@ -85,7 +84,6 @@
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError>
                 </configuration>
                 <executions>
                     <execution>
@@ -101,9 +99,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>3.0.5</version>
-                <configuration>
-                    <failOnError>true</failOnError>
-                </configuration>
                 <executions>
                     <execution>
                         <id>findbugs-check-phase</id>
