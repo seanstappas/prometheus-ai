@@ -14,7 +14,7 @@ import tags.Tag;
  * Implementation of the ES.
  */
 class ExpertSystemImpl implements ExpertSystem {
-    final Thinker thinker;
+    private final Thinker thinker;
     private final Teacher teacher;
     private final Rester rester;
     private final Set<Rule> readyRules;
