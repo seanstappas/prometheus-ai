@@ -22,12 +22,14 @@ import tags.Tag;
 public final class KnowledgeNode implements Comparable<KnowledgeNode> {
     private static final long AGE_THRESHOLD = 1_000_000;
     private static final int ACTIVATION_INCREMENT = 100;
+    private static final int DEFAULT_BELIEF = 0;
+    private static final int DEFAULT_STRENGTH = 1;
 
     private final Tag inputTag;
     private final Set<Tag> outputTags;
     private final int threshold;
-    private final double belief = 0;
-    private final int strength = 1;
+    private final double belief;
+    private final int strength;
 
     /**
      * Age timestamp. Set to current UNIX time when node is newly formed.
@@ -77,6 +79,8 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
                         "Invalid output tag: {0}.", data[i]));
             }
         }
+        belief = DEFAULT_BELIEF;
+        strength = DEFAULT_STRENGTH;
     }
 
     public KnowledgeNode(final String data) throws KnowledgeNodeParseException {
@@ -90,6 +94,21 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
         this.inputTag = inputTag;
         this.outputTags = outputTags;
         this.threshold = threshold;
+        belief = DEFAULT_BELIEF;
+        strength = DEFAULT_STRENGTH;
+    }
+
+    public KnowledgeNode(
+            final Tag inputTag,
+            final Set<Tag> outputTags,
+            final int threshold,
+            final double belief,
+            final int strength) throws KnowledgeNodeParseException {
+        this.inputTag = inputTag;
+        this.outputTags = outputTags;
+        this.threshold = threshold;
+        this.belief = belief;
+        this.strength = strength;
     }
 
     /**
