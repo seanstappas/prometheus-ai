@@ -59,13 +59,13 @@
                     </execution>
                     <execution>
                         <id>default-report</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>default-check</id>
+                        <phase>site</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
