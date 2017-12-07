@@ -73,7 +73,7 @@
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
-                        <phase>install</phase>
+                        <phase>clean</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
