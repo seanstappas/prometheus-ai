@@ -90,7 +90,7 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
     public KnowledgeNode(
             final Tag inputTag,
             final Set<Tag> outputTags,
-            final int threshold) throws KnowledgeNodeParseException {
+            final int threshold) {
         this.inputTag = inputTag;
         this.outputTags = outputTags;
         this.threshold = threshold;
@@ -103,7 +103,7 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
             final Set<Tag> outputTags,
             final int threshold,
             final double belief,
-            final int strength) throws KnowledgeNodeParseException {
+            final int strength) {
         this.inputTag = inputTag;
         this.outputTags = outputTags;
         this.threshold = threshold;
