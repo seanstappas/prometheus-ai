@@ -4,4 +4,4 @@ jdk:
 script:
   - mvn site
   - mvn test -B
-  - mvn clean jacoco:prepare-agent install
+  - mvn clean install

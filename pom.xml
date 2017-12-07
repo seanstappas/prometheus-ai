@@ -33,7 +33,7 @@
                 <executions>
                     <execution>
                         <id>analyze-compile</id>
-                        <phase>site</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
@@ -53,14 +53,9 @@
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
+                        <phase>install</phase>
                         <goals>
                             <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>default-report</id>
-                        <goals>
-                            <goal>report</goal>
                         </goals>
                     </execution>
                     <execution>
@@ -97,27 +92,6 @@
                                     </limits>
                                 </rule>
                             </rules>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>prepare-integration-tests</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                        <configuration>
-                            <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
                         </configuration>
                     </execution>
                 </executions>
