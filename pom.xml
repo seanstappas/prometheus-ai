@@ -42,7 +42,7 @@
                     </execution>
                     <execution>
                         <id>jacoco-check-phase</id>
-                        <phase>install</phase>
+                        <phase>post-clean</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
@@ -91,7 +91,7 @@
                 <executions>
                     <execution>
                         <id>checkstyle-check-phase</id>
-                        <phase>install</phase>
+                        <phase>post-clean</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
@@ -109,7 +109,7 @@
                 <executions>
                     <execution>
                         <id>findbugs-check-phase</id>
-                        <phase>install</phase>
+                        <phase>post-clean</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
