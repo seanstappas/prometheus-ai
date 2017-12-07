@@ -156,7 +156,7 @@ public final class Rule extends Tag {
         final List<Fact> inputFactList = new ArrayList<>();
 
         for (int i = 0; i < outputPredicateIndex + 1; i++) {
-            if (!tokens.get(i).equals("OR") && !tokens.get(i).equals("->")) {
+            if (!tokens.get(i).equals("OR") & !tokens.get(i).equals("->")) {
                 final Fact predicate = new Fact(tokens.get(i));
                 inputFactList.add(predicate);
             } else {
