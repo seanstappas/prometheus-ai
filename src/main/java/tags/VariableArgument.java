@@ -1,5 +1,8 @@
 package tags;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Subclass for arguments that have variable values
  * <p>
@@ -18,7 +21,6 @@ final class VariableArgument extends Argument {
      * @param tokens argument as tokens, split on mathematical symbols
      */
     VariableArgument(final String string, final String[] tokens) {
-
         super(tokens);
 
         if (tokens[0].equals("*")) {
@@ -50,5 +52,44 @@ final class VariableArgument extends Argument {
             default:
                 return super.toString();
         }
+    }
+
+    /**
+     * Equals method. Only override this method if additional fields are added
+     * to the subclass.
+     *
+     * @param o the object to compare to.
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Argument argument = (Argument) o;
+
+        return new EqualsBuilder()
+                .append(getName(), argument.getName())
+                .append(getSymbol(), argument.getSymbol())
+                .isEquals();
+    }
+
+    /**
+     * Hashcode method. Only override this method if additional fields are added
+     * to the subclass.
+     *
+     * @return the hash code of the object
+     */
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(getName())
+                .append(getSymbol())
+                .toHashCode();
     }
 }

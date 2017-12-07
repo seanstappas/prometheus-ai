@@ -160,7 +160,6 @@ final class NumericArgument extends Argument {
         final NumericArgument that = (NumericArgument) o;
 
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
                 .append(isNeg, that.isNeg)
                 .append(value, that.value)
                 .isEquals();
@@ -169,7 +168,6 @@ final class NumericArgument extends Argument {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
                 .append(isNeg)
                 .append(value)
                 .toHashCode();

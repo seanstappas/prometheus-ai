@@ -1,8 +1,5 @@
 package tags;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 /**
  * Arguments are composed of a name and symbol.
  */
@@ -30,7 +27,7 @@ public abstract class Argument {
     /**
      * @return the name of the argument
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
@@ -39,14 +36,14 @@ public abstract class Argument {
      *
      * @param name the name
      */
-    public void setName(final String name) {
+    final void setName(final String name) {
         this.name = name;
     }
 
     /**
      * @return the symbol of the argument
      */
-    public ArgType getSymbol() {
+    public final ArgType getSymbol() {
         return symbol;
     }
 
@@ -55,7 +52,7 @@ public abstract class Argument {
      *
      * @param symbol the symbol
      */
-    public void setSymbol(final ArgType symbol) {
+    final void setSymbol(final ArgType symbol) {
         this.symbol = symbol;
     }
 
@@ -102,45 +99,6 @@ public abstract class Argument {
     }
 
     /**
-     * Equals method. Only override this method if additional fields are added
-     * to the subclass.
-     *
-     * @param o the object to compare to.
-     * @return true if the objects are equal
-     */
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final Argument argument = (Argument) o;
-
-        return new EqualsBuilder()
-                .append(name, argument.name)
-                .append(symbol, argument.symbol)
-                .isEquals();
-    }
-
-    /**
-     * Hashcode method. Only override this method if additional fields are added
-     * to the subclass.
-     *
-     * @return the hash code of the object
-     */
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .append(name)
-                .append(symbol)
-                .toHashCode();
-    }
-
-    /**
      * Argument type.
      */
     public enum ArgType {
@@ -180,4 +138,3 @@ public abstract class Argument {
         INT
     }
 }
-
