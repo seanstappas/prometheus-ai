@@ -13,7 +13,7 @@ import tags.Tag;
  * Searcher which performs backward search in the KNN.
  */
 class BackwardSearcher extends Searcher<Set<Tag>> {
-    private final Set<Tag> activeTags;
+    final Set<Tag> activeTags;
     private final BackwardSearchMatcher backwardSearchMatcher;
     private final TreeSet<KnowledgeNode> ageSortedKNs;
     private double partialMatchRatio;
