@@ -56,7 +56,7 @@ public abstract class Predicate extends Tag {
      * @return a copy of the current Predicate with replaced variable
      * argument(s) with a String or Numeric Argument.
      */
-    public Predicate replaceVariableArguments(
+    public final Predicate replaceVariableArguments(
             final Map<String, Argument> pendingReplacementPairs) {
         final Predicate p = getPredicateCopy();
         int argumentIndex = 0;
