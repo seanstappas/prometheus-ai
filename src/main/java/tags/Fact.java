@@ -2,7 +2,6 @@ package tags;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -16,7 +15,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * ...)
  */
 
-public class Fact extends Predicate {
+public final class Fact extends Predicate {
     /**
      * Constructs a Fact object from a string
      * <p>
@@ -29,29 +28,30 @@ public class Fact extends Predicate {
      *                        confidence
      */
 
-    public Fact(String value, double confidenceValue) {
+    public Fact(final String value, final double confidenceValue) {
 
-        String[] tokens = value.split("[(),]");
+        final String[] tokens = value.split("[(),]");
 
-        this.predicateName = tokens[0];
-        this.arguments = argStringParser(tokens);
-        this.confidence = confidenceValue;
+        this.setPredicateName(tokens[0]);
+        this.setArguments(argStringParser(tokens));
+        this.setConfidence(confidenceValue);
     }
 
     /**
-     * {@code confidenceValue} defaults to 1.0
+     * {@code confidenceValue} defaults to 1.0.
      *
      * @param value the Fact value
      * @see #Fact(String, double)
      */
-    public Fact(String value) {
+    public Fact(final String value) {
         this(value, 1.0);
     }
 
-    Fact(String predicateName, List<Argument> arguments, double confidence) {
-        this.predicateName = predicateName;
-        this.arguments = arguments;
-        this.confidence = confidence;
+    Fact(final String predicateName, final List<Argument> arguments,
+         final double confidence) {
+        this.setPredicateName(predicateName);
+        this.setArguments(arguments);
+        this.setConfidence(confidence);
     }
 
     /**
@@ -64,14 +64,14 @@ public class Fact extends Predicate {
      * @param argString String token
      * @return A single argument
      */
-    static Argument makeArgument(String argString) {
-        String[] argTokens = argString.split("[=><!]");
-        int lastElem = argTokens.length - 1;
+    static Argument makeArgument(final String argString) {
+        final String[] argTokens = argString.split("[=><!]");
+        final int lastElem = argTokens.length - 1;
 
         if (argTokens[lastElem].matches("-?\\d+(\\.\\d+)?")) {
             return new NumericArgument(argString, argTokens);
-        } else if (argTokens[lastElem].matches("[?*]") ||
-                argTokens[lastElem].charAt(0) == '&') {
+        } else if (argTokens[lastElem].matches("[?*]")
+                || argTokens[lastElem].charAt(0) == '&') {
             return new VariableArgument(argString, argTokens);
         } else {
             return new StringArgument(argString, argTokens);
@@ -80,34 +80,24 @@ public class Fact extends Predicate {
 
     @Override
     Predicate getPredicateCopy() {
-        return new Fact(predicateName, arguments, confidence);
+        return new Fact(getPredicateName(), getArguments(), getConfidence());
     }
 
     /**
      * Parses a raw string into a list of string tokens that represent each
-     * argument
+     * argument.
      * <p>
      *
      * @param tokens string input
      * @return list of string arguments
      */
-    private List<Argument> argStringParser(String[] tokens) {
-        List<Argument> argSet = new ArrayList<>();
+    private List<Argument> argStringParser(final String[] tokens) {
+        final List<Argument> argSet = new ArrayList<>();
         for (int i = 1; i < tokens.length; i++) {
-            Argument argument = makeArgument(tokens[i]);
+            final Argument argument = makeArgument(tokens[i]);
             argSet.add(argument);
         }
         return argSet;
-    }
-
-    @Override
-    public String getPredicateName() {
-        return predicateName;
-    }
-
-    @Override
-    public List<Argument> getArguments() {
-        return Collections.unmodifiableList(arguments);
     }
 
     /**
@@ -119,9 +109,9 @@ public class Fact extends Predicate {
      * @param inputFact fact contained in a Rule
      * @return true if facts are 'matched' (notice not necessarily equal)
      */
-    public VariableReturn getMatchResult(Fact inputFact) {
+    public VariableReturn getMatchResult(final Fact inputFact) {
 
-        VariableReturn result = new VariableReturn();
+        final VariableReturn result = new VariableReturn();
         result.setFactMatch(false);
         if (!matchPredicateName(inputFact, result)) {
             return result;
@@ -129,44 +119,68 @@ public class Fact extends Predicate {
         if (!matchArgumentsSize(inputFact, result)) {
             return result;
         }
-        if (!matchArguments(result, inputFact.arguments)) {
+        if (!matchArguments(result, inputFact.getArguments())) {
             return result;
         }
         result.setFactMatch(true);
         return result;
     }
 
-
-    public boolean matches(Fact inputFact) {
-        VariableReturn result = new VariableReturn();
-        return matchPredicateName(inputFact, result)
-                && matchArgumentsSize(inputFact, result)
-                && matchArguments(result, inputFact.arguments);
+    /**
+     * Checks if the Fact matches the current fact.
+     *
+     * @param fact the fact to check
+     * @return true if the Fact matches the current fact
+     */
+    public boolean matches(final Fact fact) {
+        if (this.equals(fact)) {
+            return true;
+        }
+        final VariableReturn result = new VariableReturn();
+        return matchPredicateName(fact, result)
+                && matchArgumentsSize(fact, result)
+                && matchArguments(result, fact.getArguments());
     }
 
-    private boolean matchPredicateName(Fact inputFact, VariableReturn result) {
-        if (!this.predicateName.equals(inputFact.predicateName)) {
+    /**
+     * Checks if the predicate names match.
+     *
+     * @param fact   the fact to check
+     * @param result the result of the matching
+     * @return true if the Facts match
+     */
+    private boolean matchPredicateName(final Fact fact,
+                                       final VariableReturn result) {
+        if (!this.getPredicateName().equals(fact.getPredicateName())) {
             result.setFactMatch(false);
             return false;
         }
         return true;
     }
 
-    private boolean matchArguments(VariableReturn result,
-                                   List<Argument> iterInputFactArguments) {
-        Iterator iterFact = this.arguments.iterator();
-        Iterator iterInputFact = iterInputFactArguments.iterator();
+    /**
+     * Checks if the Fact arguments match.
+     *
+     * @param result    the result of matching
+     * @param arguments the fact arguments
+     * @return true if the facts match
+     */
+    private boolean matchArguments(
+            final VariableReturn result,
+            final List<Argument> arguments) {
+        final Iterator iterFact = this.getArguments().iterator();
+        final Iterator iterInputFact = arguments.iterator();
 
         while (iterFact.hasNext()) {
-            Argument argFact = (Argument) iterFact.next();
-            Argument argInputFact = (Argument) iterInputFact.next();
-            if (argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL) ||
-                    argInputFact.getSymbol()
-                            .equals(Argument.ArgTypes.MATCHALL)) {
+            final Argument argFact = (Argument) iterFact.next();
+            final Argument argInputFact = (Argument) iterInputFact.next();
+            if (argFact.getSymbol().equals(Argument.ArgType.MATCHALL)
+                    || argInputFact.getSymbol()
+                    .equals(Argument.ArgType.MATCHALL)) {
                 result.setFactMatch(true);
                 return true;
             }
-            if (argInputFact.getSymbol().equals(Argument.ArgTypes.VAR)) {
+            if (argInputFact.getSymbol().equals(Argument.ArgType.VAR)) {
                 result.setFactMatch(true);
                 result.getPairs().put(argInputFact.getName(), argFact);
             }
@@ -176,20 +190,29 @@ public class Fact extends Predicate {
             }
         }
         if (iterInputFact.hasNext()) {
-            Argument argFact = (Argument) iterInputFact.next();
+            final Argument argFact = (Argument) iterInputFact.next();
             result.setFactMatch(
-                    (argFact.getSymbol().equals(Argument.ArgTypes.MATCHALL)));
+                    (argFact.getSymbol().equals(Argument.ArgType.MATCHALL)));
             return true;
         }
         return false;
     }
 
-    private boolean matchArgumentsSize(Fact inputFact, VariableReturn result) {
-        if (inputFact.arguments.size() > this.arguments.size()) {
-            for (int i = this.arguments.size(); i < inputFact.arguments.size();
+    /**
+     * Checks if the argument sizes match.
+     *
+     * @param fact   the fact to check
+     * @param result the result of matching
+     * @return true if the facts match
+     */
+    private boolean matchArgumentsSize(final Fact fact,
+                                       final VariableReturn result) {
+        if (fact.getArguments().size() > this.getArguments().size()) {
+            for (int i = this.getArguments().size();
+                 i < fact.getArguments().size();
                  i++) {
-                if (!inputFact.arguments.get(i).getSymbol()
-                        .equals(Argument.ArgTypes.MATCHALL)) {
+                if (!fact.getArguments().get(i).getSymbol()
+                        .equals(Argument.ArgType.MATCHALL)) {
                     result.setFactMatch(false);
                     return false;
                 }
@@ -204,7 +227,7 @@ public class Fact extends Predicate {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -213,19 +236,19 @@ public class Fact extends Predicate {
             return false;
         }
 
-        Fact fact = (Fact) o;
+        final Fact fact = (Fact) o;
 
         return new EqualsBuilder()
-                .append(predicateName, fact.predicateName)
-                .append(arguments, fact.arguments)
+                .append(getPredicateName(), fact.getPredicateName())
+                .append(getArguments(), fact.getArguments())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(predicateName)
-                .append(arguments)
+                .append(getPredicateName())
+                .append(getArguments())
                 .toHashCode();
     }
 
@@ -233,7 +256,7 @@ public class Fact extends Predicate {
     String simpleToString() {
         return MessageFormat.format(
                 "{0}{1}",
-                predicateName,
-                arguments);
+                getPredicateName(),
+                getArguments());
     }
 }

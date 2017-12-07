@@ -17,12 +17,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * and Recommendations) as outputs. They only activate when all the input Facts
  * are active.
  */
-public class Rule extends Tag {
+public final class Rule extends Tag {
     private final Set<Fact> inputFacts;
     private final Set<Predicate> outputPredicates;
 
     /**
-     * {@code confidenceValue} defaults to 1.0
+     * {@code confidenceValue} defaults to 1.0.
      *
      * @param inputFacts       the input Facts
      * @param outputPredicates the output Predicates
@@ -34,7 +34,7 @@ public class Rule extends Tag {
     }
 
     /**
-     * {@code confidenceValue} defaults to 1.0
+     * {@code confidenceValue} defaults to 1.0.
      *
      * @param inputFacts       the input Facts
      * @param outputPredicates the output Predicates
@@ -53,27 +53,27 @@ public class Rule extends Tag {
      *
      * @param inputFacts       The condition facts of the rule.
      * @param outputPredicates The output predicates of the rule.
-     * @param confidenceValue  The confidence value of the Rule.
+     * @param confidence       The confidence value of the Rule.
      */
     public Rule(final Set<Fact> inputFacts,
                 final Set<Predicate> outputPredicates,
-                final double confidenceValue) {
+                final double confidence) {
         this.inputFacts = new HashSet<>(inputFacts);
         this.outputPredicates = new HashSet<>(outputPredicates);
-        this.confidence = confidenceValue;
+        this.setConfidence(confidence);
 
         setOutputFactsConfidenceValue();
     }
 
     /**
-     * Creates a Rule from string Arrays
+     * Creates a Rule from string Arrays.
      *
      * @param inputFacts       The input Facts, in String form.
      * @param outputPredicates The output Tags, in String form.
-     * @param confidenceValue  The confidence value of the Rule.
+     * @param confidence       The confidence value of the Rule.
      */
     private Rule(final String[] inputFacts, final String[] outputPredicates,
-                 final double confidenceValue) {
+                 final double confidence) {
         this.inputFacts = new HashSet<>();
         this.outputPredicates = new HashSet<>();
         for (final String inputFact : inputFacts) {
@@ -82,11 +82,11 @@ public class Rule extends Tag {
         for (final String outputPredicate : outputPredicates) {
             addOutputPredicate(outputPredicate);
         }
-        this.confidence = confidenceValue;
+        this.setConfidence(confidence);
     }
 
     /**
-     * {@code confidenceValue} defaults to 1.0
+     * {@code confidenceValue} defaults to 1.0.
      *
      * @param inputFacts  the input Facts
      * @param outputFacts the output Facts
@@ -97,7 +97,7 @@ public class Rule extends Tag {
     }
 
     /**
-     * Create a single rule from a string
+     * Create a single rule from a string.
      *
      * @param string the Rule as a string.
      * @see #makeRules(String)
@@ -113,14 +113,14 @@ public class Rule extends Tag {
             this.addOutputPredicate(outputFact);
         }
 
-        final Fact[] inputFacts = new Fact[outputFactIndex];
-        for (int i = 0; i < inputFacts.length; i++) {
+        final Fact[] arrInputFacts = new Fact[outputFactIndex];
+        for (int i = 0; i < arrInputFacts.length; i++) {
             final Fact fact = new Fact(tokens.get(i));
-            inputFacts[i] = fact;
+            arrInputFacts[i] = fact;
         }
 
-        this.inputFacts = new HashSet<>(Arrays.asList(inputFacts));
-        this.confidence = 1.0;
+        this.inputFacts = new HashSet<>(Arrays.asList(arrInputFacts));
+        this.setConfidence(1.0);
     }
 
     /**
@@ -151,7 +151,7 @@ public class Rule extends Tag {
         final int outputPredicateIndex = tokens.indexOf("->");
 
         final Predicate[] outputPredicates =
-                makeOutputPredicateList(tokens, outputPredicateIndex);
+                makeOutputPredicates(tokens, outputPredicateIndex);
 
         final List<Fact> inputFactList = new ArrayList<>();
 
@@ -171,7 +171,14 @@ public class Rule extends Tag {
         return ruleList;
     }
 
-    private static Predicate[] makeOutputPredicateList(
+    /**
+     * Makes an array of output Predicates.
+     *
+     * @param tokens               the tokens
+     * @param outputPredicateIndex the index of the output predicate
+     * @return the array of output Predicates.
+     */
+    private static Predicate[] makeOutputPredicates(
             final List<String> tokens,
             final int outputPredicateIndex) {
         final Predicate[] outputPredicates =
@@ -189,10 +196,16 @@ public class Rule extends Tag {
         return outputPredicates;
     }
 
+    /**
+     * @return the input Facts
+     */
     public Set<Fact> getInputFacts() {
         return Collections.unmodifiableSet(inputFacts);
     }
 
+    /**
+     * @return the output Predicates
+     */
     public Set<Predicate> getOutputPredicates() {
         return Collections.unmodifiableSet(outputPredicates);
     }
@@ -207,10 +220,15 @@ public class Rule extends Tag {
             value = value * fact.getConfidence();
         }
         for (final Predicate outputPredicate : this.outputPredicates) {
-            outputPredicate.confidence = value;
+            outputPredicate.setConfidence(value);
         }
     }
 
+    /**
+     * Adds an output predicate.
+     *
+     * @param outputPredicate the output Predicate to add
+     */
     private void addOutputPredicate(final String outputPredicate) {
         if (!outputPredicate.contains("@")) {
             final Fact p = new Fact(outputPredicate);

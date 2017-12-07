@@ -1,19 +1,20 @@
 package graphing;
 
-import tags.Fact;
-import tags.Tag;
-
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import tags.Fact;
+import tags.Tag;
 
 class KnnSimpleLambdaThinkVisualizer extends KnnSimpleGraphVisualizer {
     private boolean shouldBackwardSearch = true;
 
     @Override
-    String getScreenshotSavePath(String suffix) {
-        return MessageFormat.format("graphs/knn/lambda/knn_simple_lambda_think_{0}", suffix);
+    String getScreenshotSavePath(final String suffix) {
+        return MessageFormat
+                .format("graphs/knn/lambda/knn_simple_lambda_think_{0}",
+                        suffix);
     }
 
     @Override
@@ -26,19 +27,19 @@ class KnnSimpleLambdaThinkVisualizer extends KnnSimpleGraphVisualizer {
     @Override
     Set<Tag> search() {
         if (shouldBackwardSearch) {
-            knn.setBackwardSearchMatchRatio(1d / knn.getActiveTags().size());
-            Set<Tag> backwardTags = knn.backwardThink(1);
+            getKnn().setBackwardSearchMatchRatio(
+                    1d / getKnn().getActiveTags().size());
+            final Set<Tag> backwardTags = getKnn().backwardThink(1);
             shouldBackwardSearch = !backwardTags.isEmpty();
-            forceContinue = true;
+            setForceContinue(true);
             return backwardTags;
-        }
-        else {
-            forceContinue = false;
-            return knn.forwardThink(1);
+        } else {
+            setForceContinue(false);
+            return getKnn().forwardThink(1);
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(final String[] args) throws InterruptedException {
         new KnnSimpleLambdaThinkVisualizer().visualize(false);
     }
 }

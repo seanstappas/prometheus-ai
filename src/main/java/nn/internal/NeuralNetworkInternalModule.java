@@ -5,7 +5,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import nn.api.NeuralNetwork;
 import nn.api.NeuralNetworkFactory;
 
-public class NeuralNetworkInternalModule extends AbstractModule {
+/**
+ * Internal Guice module for the NN.
+ */
+public final class NeuralNetworkInternalModule extends AbstractModule {
+    @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
                 .implement(NeuralNetwork.class, NeuralNetworkImpl.class)

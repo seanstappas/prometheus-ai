@@ -3,7 +3,11 @@ package knn.guice;
 import com.google.inject.AbstractModule;
 import knn.internal.KnowledgeNodeNetworkInternalModule;
 
-public class KnowledgeNodeNetworkModule extends AbstractModule {
+/**
+ * Public Guice module for the KNN.
+ */
+public final class KnowledgeNodeNetworkModule extends AbstractModule {
+    @Override
     protected void configure() {
         install(new KnowledgeNodeNetworkInternalModule());
     }

@@ -5,11 +5,26 @@ package tags;
  * value.
  */
 public abstract class Tag {
-    double confidence;
+    private double confidence;
 
-    public double getConfidence() {
+    /**
+     * @return the confidence of the Tag
+     */
+    public final double getConfidence() {
         return confidence;
     }
 
+    /**
+     * Sets the confidence of the Tag.
+     *
+     * @param confidence the confidence of the Tag
+     */
+    final void setConfidence(final double confidence) {
+        this.confidence = confidence;
+    }
+
+    /**
+     * @return a simple String representation of the Tag
+     */
     abstract String simpleToString();
 }

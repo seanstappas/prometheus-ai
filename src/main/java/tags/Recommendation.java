@@ -2,7 +2,6 @@ package tags;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,9 +11,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * specific actions to be taken (walk, stop, etc.).
  * <p>
  * Recommendations are composed of a predicate name and a set of arguments:
- * @P(ARG1, ARG2, ...)
+ * <p>
+ * "@P(ARG1, ARG2, ...)"
  */
-public class Recommendation extends Predicate {
+public final class Recommendation extends Predicate {
     /**
      * Constructs a Recommendation object from a string
      * <p>
@@ -22,39 +22,38 @@ public class Recommendation extends Predicate {
      * i.e. "@P(ARG1,ARG2,ARG3...)" Recommendation strings begin with "@"
      * character. Arguments are delimited by commas within parenthesis.
      *
-     * @param value           String input
-     * @param confidenceValue double in range [0,1] i.e. 0.n representing n0%
-     *                        confidence
+     * @param value      String input
+     * @param confidence double in range [0,1] i.e. 0.n representing n0%
+     *                   confidence
      */
 
-    public Recommendation(String value, double confidenceValue) {
+    public Recommendation(final String value, final double confidence) {
+        final String[] tokens = value.split("[(),]");
 
-        String[] tokens = value.split("[(),]");
-
-        this.predicateName = tokens[0].replace("@", "");
-        this.arguments = argStringParser(tokens);
-        this.confidence = confidenceValue;
+        this.setPredicateName(tokens[0].replace("@", ""));
+        this.setArguments(argStringParser(tokens));
+        this.setConfidence(confidence);
     }
 
     /**
-     * {@code confidenceValue} defaults to 1.0
+     * {@code confidenceValue} defaults to 1.0.
      *
      * @param value the Recommendation String value
      * @see #Recommendation(String, double)
      */
-    public Recommendation(String value) {
+    public Recommendation(final String value) {
         this(value, 1.0);
     }
 
-    Recommendation(String predicateName, List<Argument> arguments,
-                   double confidence) {
-        this.predicateName = predicateName;
-        this.arguments = arguments;
-        this.confidence = confidence;
+    Recommendation(final String predicateName, final List<Argument> arguments,
+                   final double confidence) {
+        this.setPredicateName(predicateName);
+        this.setArguments(arguments);
+        this.setConfidence(confidence);
     }
 
     /**
-     * Calls the appropriate Argument constructor on a string token
+     * Calls the appropriate Argument constructor on a string token.
      * <p>
      *
      * @param argString String token
@@ -62,38 +61,30 @@ public class Recommendation extends Predicate {
      * @see Fact#makeArgument(String)
      */
 
-    private static Argument makeArgument(String argString) {
+    private static Argument makeArgument(final String argString) {
         return Fact.makeArgument(argString);
     }
 
     @Override
     Predicate getPredicateCopy() {
-        return new Recommendation(predicateName, arguments, confidence);
+        return new Recommendation(getPredicateName(), getArguments(),
+                getConfidence());
     }
 
     /**
      * Parses a raw string into a list of string tokens that represent each
-     * argument
+     * argument.
      *
      * @param tokens string input
      * @return list of string arguments
      */
-
-    private List<Argument> argStringParser(String[] tokens) {
-        List<Argument> argSet = new ArrayList<>();
+    private List<Argument> argStringParser(final String[] tokens) {
+        final List<Argument> argSet = new ArrayList<>();
         for (int i = 1; i < tokens.length; i++) {
-            Argument argument = makeArgument(tokens[i]);
+            final Argument argument = makeArgument(tokens[i]);
             argSet.add(argument);
         }
         return argSet;
-    }
-
-    public String getPredicateName() {
-        return predicateName;
-    }
-
-    public List<Argument> getArguments() {
-        return Collections.unmodifiableList(arguments);
     }
 
     /**
@@ -109,7 +100,7 @@ public class Recommendation extends Predicate {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -118,19 +109,19 @@ public class Recommendation extends Predicate {
             return false;
         }
 
-        Recommendation that = (Recommendation) o;
+        final Recommendation that = (Recommendation) o;
 
         return new EqualsBuilder()
-                .append(predicateName, that.predicateName)
-                .append(arguments, that.arguments)
+                .append(getPredicateName(), that.getPredicateName())
+                .append(getArguments(), that.getArguments())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(predicateName)
-                .append(arguments)
+                .append(getPredicateName())
+                .append(getArguments())
                 .toHashCode();
     }
 
@@ -138,8 +129,8 @@ public class Recommendation extends Predicate {
     String simpleToString() {
         return MessageFormat.format(
                 "@{0}{1}",
-                predicateName,
-                arguments);
+                getPredicateName(),
+                getArguments());
     }
 }
 

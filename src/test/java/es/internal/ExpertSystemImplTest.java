@@ -37,25 +37,26 @@ public class ExpertSystemImplTest {
         thinker = mock(Thinker.class);
         teacher = mock(Teacher.class);
         rester = mock(Rester.class);
-        ThinkerFactory thinkerFactory = mock(ThinkerFactory.class);
+        final ThinkerFactory thinkerFactory = mock(ThinkerFactory.class);
         when(thinkerFactory.create(readyRules, activeRules, facts, recommendations)).thenReturn(thinker);
-        TeacherFactory teacherFactory = mock(TeacherFactory.class);
+        final TeacherFactory teacherFactory = mock(TeacherFactory.class);
         when(teacherFactory.create(readyRules)).thenReturn(teacher);
-        ResterFactory resterFactory = mock(ResterFactory.class);
+        final ResterFactory resterFactory = mock(ResterFactory.class);
         when(resterFactory.create(readyRules)).thenReturn(rester);
         es = new ExpertSystemImpl(readyRules, activeRules, facts, recommendations, thinkerFactory, teacherFactory, resterFactory);
     }
 
     @Test
     public void mustThink() throws Exception {
-        Set<Recommendation> expected = new HashSet<>();
-        expected.add(mock(Recommendation.class));
+        final Set<Recommendation> expected = new HashSet<>();
+        final Recommendation recommendation = new Recommendation("@P(A)");
+        expected.add(recommendation);
 
         // given
         when(thinker.think(false, Integer.MAX_VALUE)).thenReturn(expected);
 
         // when
-        Set<Recommendation> actual = es.think();
+        final Set<Recommendation> actual = es.think();
 
         // then
         assertEquals(actual, expected);
@@ -63,14 +64,15 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustThinkWithoutRuleGeneration() throws Exception {
-        Set<Recommendation> expected = new HashSet<>();
-        expected.add(mock(Recommendation.class));
+        final Set<Recommendation> expected = new HashSet<>();
+        final Recommendation recommendation = new Recommendation("@P(A)");
+        expected.add(recommendation);
 
         // given
         when(thinker.think(false, Integer.MAX_VALUE)).thenReturn(expected);
 
         // when
-        Set<Recommendation> actual = es.think(false);
+        final Set<Recommendation> actual = es.think(false);
 
         // then
         assertEquals(actual, expected);
@@ -78,14 +80,15 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustThinkWithRuleGeneration() throws Exception {
-        Set<Recommendation> expected = new HashSet<>();
-        expected.add(mock(Recommendation.class));
+        final Set<Recommendation> expected = new HashSet<>();
+        final Recommendation recommendation = new Recommendation("@P(A)");
+        expected.add(recommendation);
 
         // given
         when(thinker.think(true, Integer.MAX_VALUE)).thenReturn(expected);
 
         // when
-        Set<Recommendation> actual = es.think(true);
+        final Set<Recommendation> actual = es.think(true);
 
         // then
         assertEquals(actual, expected);
@@ -93,14 +96,15 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustThinkWithRuleGenerationAndCycles() throws Exception {
-        Set<Recommendation> expected = new HashSet<>();
-        expected.add(mock(Recommendation.class));
+        final Set<Recommendation> expected = new HashSet<>();
+        final Recommendation recommendation = new Recommendation("@P(A)");
+        expected.add(recommendation);
 
         // given
         when(thinker.think(true, NUM_TEST_CYCLES)).thenReturn(expected);
 
         // when
-        Set<Recommendation> actual = es.think(true, NUM_TEST_CYCLES);
+        final Set<Recommendation> actual = es.think(true, NUM_TEST_CYCLES);
 
         // then
         assertEquals(actual, expected);
@@ -121,10 +125,12 @@ public class ExpertSystemImplTest {
     @Test
     public void mustResetRulesFactsAndRecommendations() throws Exception {
         // given
-        readyRules.add(mock(Rule.class));
-        activeRules.add(mock(Rule.class));
-        facts.add(mock(Fact.class));
-        recommendations.add(mock(Recommendation.class));
+        readyRules.add(new Rule("P(A) -> P(B)"));
+        activeRules.add(new Rule("P(C) -> P(D)"));
+        final Fact fact = new Fact("P(A)");
+        facts.add(fact);
+        final Recommendation recommendation = new Recommendation("@P(A)");
+        recommendations.add(recommendation);
 
         // when
         es.reset();
@@ -139,8 +145,8 @@ public class ExpertSystemImplTest {
     @Test
     public void mustDeactivateRules() throws Exception {
         // given
-        Rule readyRule = mock(Rule.class);
-        Rule activeRule = mock(Rule.class);
+        final Rule readyRule = new Rule("P(A) -> P(B)");
+        final Rule activeRule = new Rule("P(C) -> P(D)");
         readyRules.add(readyRule);
         activeRules.add(activeRule);
 
@@ -155,10 +161,10 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustAddTags() throws Exception {
-        Set<Tag> tags = new HashSet<>();
-        Rule rule = mock(Rule.class);
-        Fact fact = mock(Fact.class);
-        Recommendation recommendation = mock(Recommendation.class);
+        final Set<Tag> tags = new HashSet<>();
+        final Rule rule = new Rule("P(A) -> P(B)");
+        final Fact fact = new Fact("P(A)");
+        final Recommendation recommendation = new Recommendation("@P(A)");
         tags.add(rule);
         tags.add(fact);
         tags.add(recommendation);
@@ -175,10 +181,10 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustNotAddInvalidTag() throws Exception {
-        Tag tag = mock(Tag.class);
+        final Tag tag = mock(Tag.class);
 
         // when
-        boolean actualAddResult = es.addTag(tag);
+        final boolean actualAddResult = es.addTag(tag);
 
         // then
         assertFalse(actualAddResult);
@@ -186,7 +192,7 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustAddRuleTag() throws Exception {
-        Rule rule = mock(Rule.class);
+        final Rule rule = new Rule("P(A) -> P(B)");
 
         // when
         es.addTag(rule);
@@ -198,7 +204,7 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustAddFactTag() throws Exception {
-        Fact fact = mock(Fact.class);
+        final Fact fact = new Fact("P(A)");
 
         // when
         es.addTag(fact);
@@ -209,7 +215,7 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustAddRecommendationTag() throws Exception {
-        Recommendation recommendation = mock(Recommendation.class);
+        final Recommendation recommendation = new Recommendation("@P(A)");
 
         // when
         es.addTag(recommendation);
@@ -220,7 +226,7 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustAddRule() throws Exception {
-        Rule rule = mock(Rule.class);
+        final Rule rule = new Rule("P(A) -> P(B)");
 
         // when
         es.addReadyRule(rule);
@@ -232,7 +238,7 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustAddFact() throws Exception {
-        Fact fact = mock(Fact.class);
+        final Fact fact = new Fact("P(A)");
 
         // when
         es.addFact(fact);
@@ -243,7 +249,7 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustAddRecommendation() throws Exception {
-        Recommendation recommendation = mock(Recommendation.class);
+        final Recommendation recommendation = new Recommendation("@P(A)");
 
         // when
         es.addRecommendation(recommendation);
@@ -254,7 +260,7 @@ public class ExpertSystemImplTest {
 
     @Test
     public void mustRemoveFact() throws Exception {
-        Fact fact = mock(Fact.class);
+        final Fact fact = new Fact("P(A)");
 
         // given
         facts.add(fact);
@@ -269,10 +275,11 @@ public class ExpertSystemImplTest {
     @Test
     public void mustGetRecommendations() throws Exception {
         // given
-        recommendations.add(mock(Recommendation.class));
+        final Recommendation recommendation = new Recommendation("@P(A)");
+        recommendations.add(recommendation);
 
         // when
-        Set<Recommendation> actualRecommendations = es.getRecommendations();
+        final Set<Recommendation> actualRecommendations = es.getRecommendations();
 
         // then
         assertEquals(actualRecommendations, recommendations);
@@ -281,10 +288,10 @@ public class ExpertSystemImplTest {
     @Test
     public void mustGetReadyRules() throws Exception {
         // given
-        readyRules.add(mock(Rule.class));
+        readyRules.add(new Rule("P(A) -> P(B)"));
 
         // when
-        Set<Rule> actualReadyRules = es.getReadyRules();
+        final Set<Rule> actualReadyRules = es.getReadyRules();
 
         // then
         assertEquals(actualReadyRules, readyRules);
@@ -293,10 +300,10 @@ public class ExpertSystemImplTest {
     @Test
     public void mustGetActiveRules() throws Exception {
         // given
-        activeRules.add(mock(Rule.class));
+        activeRules.add(new Rule("P(A) -> P(B)"));
 
         // when
-        Set<Rule> actualActiveRules = es.getActiveRules();
+        final Set<Rule> actualActiveRules = es.getActiveRules();
 
         // then
         assertEquals(actualActiveRules, activeRules);
@@ -305,10 +312,11 @@ public class ExpertSystemImplTest {
     @Test
     public void mustGetFacts() throws Exception {
         // given
-        facts.add(mock(Fact.class));
+        final Fact fact = new Fact("P(A)");
+        facts.add(fact);
 
         // when
-        Set<Fact> actualFacts = es.getFacts();
+        final Set<Fact> actualFacts = es.getFacts();
 
         // then
         assertEquals(actualFacts, facts);

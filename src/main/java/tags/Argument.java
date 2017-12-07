@@ -2,17 +2,13 @@ package tags;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Arguments are composed of a name and symbol
+ * Arguments are composed of a name and symbol.
  */
-
-public class Argument {
-
-    String name;
-    ArgTypes symbol;
+public abstract class Argument {
+    private String name;
+    private ArgType symbol;
 
     /**
      * Constructor for Argument
@@ -23,8 +19,7 @@ public class Argument {
      *
      * @param tokens argument string split on mathematical symbols
      */
-
-    Argument(String[] tokens) {
+    Argument(final String[] tokens) {
         if (tokens.length > 1) {
             this.name = tokens[0];
         } else {
@@ -32,50 +27,73 @@ public class Argument {
         }
     }
 
+    /**
+     * @return the name of the argument
+     */
     public String getName() {
         return name;
     }
 
-    public ArgTypes getSymbol() {
+    /**
+     * Sets the name of the argument.
+     *
+     * @param name the name
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the symbol of the argument
+     */
+    public ArgType getSymbol() {
         return symbol;
     }
 
     /**
-     * Compares two arguments, calling appropriate overloaded method
+     * Sets the symbol of the argument.
+     *
+     * @param symbol the symbol
+     */
+    public void setSymbol(final ArgType symbol) {
+        this.symbol = symbol;
+    }
+
+    /**
+     * Compares two arguments, calling appropriate overloaded method.
      *
      * @param inputFact argument from rule-set
      * @return true if two arguments match
      */
-
-    boolean matches(Argument inputFact) {
+    final boolean matches(final Argument inputFact) {
         switch (this.symbol) {
             case STRING:
-                if (inputFact.symbol.equals(ArgTypes.VAR)) {
+                if (inputFact.symbol.equals(ArgType.VAR)) {
                     return true;
                 }
-                if (inputFact.symbol.equals(ArgTypes.STRING) ||
-                        inputFact.symbol.equals(ArgTypes.VAR)) {
+                if (inputFact.symbol.equals(ArgType.STRING)
+                        || inputFact.symbol.equals(ArgType.VAR)) {
                     return ((StringArgument) this)
                             .matches((StringArgument) inputFact);
                 }
-                return (inputFact.symbol.equals(ArgTypes.MATCHONE));
+                return (inputFact.symbol.equals(ArgType.MATCHONE));
             case EQ:
             case GT:
             case LT:
             case INT:
-                if (inputFact.symbol.equals(ArgTypes.VAR)) {
+                if (inputFact.symbol.equals(ArgType.VAR)) {
                     return true;
                 }
-                if (inputFact.symbol.equals(ArgTypes.INT) ||
-                        inputFact.symbol.equals(ArgTypes.EQ) ||
-                        inputFact.symbol.equals(ArgTypes.LT) ||
-                        inputFact.symbol.equals(ArgTypes.GT)) {
+                if (inputFact.symbol.equals(ArgType.INT)
+                        || inputFact.symbol.equals(ArgType.EQ)
+                        || inputFact.symbol.equals(ArgType.LT)
+                        || inputFact.symbol.equals(ArgType.GT)) {
                     return ((NumericArgument) this)
                             .matches((NumericArgument) inputFact);
                 }
-                return (inputFact.symbol.equals(ArgTypes.MATCHONE));
+                return (inputFact.symbol.equals(ArgType.MATCHONE));
             case MATCHONE:
-                return !inputFact.symbol.equals(ArgTypes.VAR);
+                return !inputFact.symbol.equals(ArgType.VAR);
             case VAR:
                 return false;
             default:
@@ -83,16 +101,15 @@ public class Argument {
         }
     }
 
+    /**
+     * Equals method. Only override this method if additional fields are added
+     * to the subclass.
+     *
+     * @param o the object to compare to.
+     * @return true if the objects are equal
+     */
     @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
-                .append("name", name)
-                .append("symbol", symbol)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -101,7 +118,7 @@ public class Argument {
             return false;
         }
 
-        Argument argument = (Argument) o;
+        final Argument argument = (Argument) o;
 
         return new EqualsBuilder()
                 .append(name, argument.name)
@@ -109,6 +126,12 @@ public class Argument {
                 .isEquals();
     }
 
+    /**
+     * Hashcode method. Only override this method if additional fields are added
+     * to the subclass.
+     *
+     * @return the hash code of the object
+     */
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
@@ -117,39 +140,42 @@ public class Argument {
                 .toHashCode();
     }
 
-    public enum ArgTypes {
+    /**
+     * Argument type.
+     */
+    public enum ArgType {
         /**
-         * argument is made up of a string (e.g. tall)
+         * Argument is made up of a string (e.g. tall).
          */
         STRING,
         /**
-         * argument is a name equal to an integer (e.g. height = 10)
+         * Argument is a name equal to an integer (e.g. height = 10).
          */
         EQ,
         /**
-         * argument is a name greater than an integer (e.g. height &gt; 10)
+         * Argument is a name greater than an integer (e.g. height &gt; 10).
          */
         GT,
         /**
-         * argument is a name less that an integer (e.g. height &lt; 10)
+         * Argument is a name less that an integer (e.g. height &lt; 10).
          */
         LT,
         /**
-         * argument getMatchResult on a corresponding argument in a fact with
-         * same predicate name (see BASH '?')
+         * Argument getMatchResult on a corresponding argument in a fact with
+         * same predicate name (see BASH '?').
          */
         MATCHONE,
         /**
-         * argument is a variable integer (e.g. height = {@literal &x})
+         * Argument is a variable integer (e.g. height = {@literal &x}).
          */
         VAR,
         /**
-         * argument getMatchResult on &gt; 0 arguments in a fact with same
-         * predicate name (see BASH '*')
+         * Argument getMatchResult on &gt; 0 arguments in a fact with same
+         * predicate name (see BASH '*').
          */
         MATCHALL,
         /**
-         * argument is made up of an integer value (e.g. 10)
+         * Argument is made up of an integer value (e.g. 10).
          */
         INT
     }

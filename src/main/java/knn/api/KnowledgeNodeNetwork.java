@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Set;
 import tags.Tag;
 
+/**
+ * The Knowledge Node Network (KNN).
+ */
 public interface KnowledgeNodeNetwork {
 
     /**

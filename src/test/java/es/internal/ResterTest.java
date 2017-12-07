@@ -1,12 +1,11 @@
 package es.internal;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import tags.Rule;
-
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import tags.Rule;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -26,7 +25,7 @@ public class ResterTest {
 
     @Test
     public void mustRestWithNewRules() throws Exception {
-        Rule mergedRule = mock(Rule.class);
+        final Rule mergedRule = new Rule("P(A) -> P(B)");
 
         // given
         when(ruleMerger.makeMergedRule(readyRules)).thenReturn(Optional.of(mergedRule));

@@ -1,7 +1,7 @@
 package nn.api;
 
 /**
- * Created by Sean on 10/13/2017.
+ * Neural Network (NN).
  */
 public interface NeuralNetwork {
 }

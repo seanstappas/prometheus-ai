@@ -9,53 +9,51 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * If argument has a negative value, isNeg == true.
  * i.e. "ARG != 5" {@literal ->} this.value==5; this.isNeg==true
  */
-
 final class NumericArgument extends Argument {
-
-    private boolean isNeg;
-    private int value;
+    private final boolean isNeg;
+    private final int value;
 
     /**
-     * Constructor of numeric arguments
+     * Constructor of numeric arguments.
      * <p>
      * Arguments must be a string that is purely numeric e.g. "5
      * or composed of a name delimited by {@literal ["<",">,"="]}
      *
      * @param string argument as a string
-     * @param tokens argument as tokens, split on mathematic symbols
+     * @param tokens argument as tokens, split on mathematiccal symbols
      */
-
-    NumericArgument(String string, String[] tokens) {
-
+    NumericArgument(final String string, final String[] tokens) {
         super(tokens);
         this.isNeg = (string.contains("!"));
 
         if (string.contains("=")) {
-            this.symbol = ArgTypes.EQ;
+            this.setSymbol(ArgType.EQ);
         } else if (string.contains(">")) {
-            this.symbol = ArgTypes.GT;
+            this.setSymbol(ArgType.GT);
         } else if (string.contains("<")) {
-            this.symbol = ArgTypes.LT;
+            this.setSymbol(ArgType.LT);
         } else {
-            this.symbol = ArgTypes.INT;
+            this.setSymbol(ArgType.INT);
         }
 
         this.value = Integer.parseInt(tokens[tokens.length - 1]);
 
     }
 
+    /**
+     * @return true if the numeric argument is negated
+     */
     private boolean isNeg() {
         return isNeg;
     }
 
     /**
-     * Compares two numeric arguments to see if they match
+     * Compares two numeric arguments to see if they match.
      *
      * @param that numericArgument to compare with this
      * @return true if matching
      */
-
-    boolean matches(NumericArgument that) {
+    boolean matches(final NumericArgument that) {
         if (!this.getName().equals(that.getName())) {
             return false;
         }
@@ -75,6 +73,8 @@ final class NumericArgument extends Argument {
                         return this.value > that.value;
                     case LT:
                         return this.value < that.value;
+                    default:
+                        return false;
                 }
             case GT:
                 switch (that.getSymbol()) {
@@ -83,6 +83,8 @@ final class NumericArgument extends Argument {
                     case GT:
                         return false;
                     case LT:
+                        return false;
+                    default:
                         return false;
                 }
             case LT:
@@ -93,18 +95,23 @@ final class NumericArgument extends Argument {
                         return false;
                     case LT:
                         return false;
+                    default:
+                        return false;
                 }
             default:
                 return true;
         }
     }
 
+    /**
+     * @return the value of the numeric argument
+     */
     public int getValue() {
         return value;
     }
 
     /**
-     * Prints name (when appropriate), symbol and value
+     * Prints name (when appropriate), symbol and value.
      *
      * @return the Argument as a String.
      */
@@ -141,7 +148,7 @@ final class NumericArgument extends Argument {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -150,7 +157,7 @@ final class NumericArgument extends Argument {
             return false;
         }
 
-        NumericArgument that = (NumericArgument) o;
+        final NumericArgument that = (NumericArgument) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

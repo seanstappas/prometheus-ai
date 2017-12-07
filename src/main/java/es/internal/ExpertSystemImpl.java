@@ -10,24 +10,28 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
+/**
+ * Implementation of the ES.
+ */
 class ExpertSystemImpl implements ExpertSystem {
     private final Thinker thinker;
     private final Teacher teacher;
     private final Rester rester;
-    private Set<Rule> readyRules;
-    private Set<Rule> activeRules;
-    private Set<Fact> facts;
-    private Set<Recommendation> recommendations;
+    private final Set<Rule> readyRules;
+    private final Set<Rule> activeRules;
+    private final Set<Fact> facts;
+    private final Set<Recommendation> recommendations;
 
     @Inject
-    public ExpertSystemImpl(
-            @Assisted("readyRules") Set<Rule> readyRules,
-            @Assisted("activeRules") Set<Rule> activeRules,
-            @Assisted("facts") Set<Fact> facts,
-            @Assisted("recommendations") Set<Recommendation> recommendations,
-            ThinkerFactory thinkerFactory,
-            TeacherFactory teacherFactory,
-            ResterFactory resterFactory) {
+    ExpertSystemImpl(
+            @Assisted("readyRules") final Set<Rule> readyRules,
+            @Assisted("activeRules") final Set<Rule> activeRules,
+            @Assisted("facts") final Set<Fact> facts,
+            @Assisted("recommendations")
+            final Set<Recommendation> recommendations,
+            final ThinkerFactory thinkerFactory,
+            final TeacherFactory teacherFactory,
+            final ResterFactory resterFactory) {
         this.readyRules = readyRules;
         this.activeRules = activeRules;
         this.facts = facts;
@@ -44,22 +48,23 @@ class ExpertSystemImpl implements ExpertSystem {
     }
 
     @Override
-    public Set<Recommendation> think(boolean generateRule) {
+    public Set<Recommendation> think(final boolean generateRule) {
         return thinker.think(generateRule, Integer.MAX_VALUE);
     }
 
     @Override
-    public Set<Recommendation> think(boolean generateRule, int numberOfCycles) {
+    public Set<Recommendation> think(final boolean generateRule,
+                                     final int numberOfCycles) {
         return thinker.think(generateRule, numberOfCycles);
     }
 
     @Override
-    public void teach(String sentence) {
+    public void teach(final String sentence) {
         teacher.teach(sentence);
     }
 
     @Override
-    public void rest(int numberOfCycles) {
+    public void rest(final int numberOfCycles) {
         rester.rest(numberOfCycles);
     }
 
@@ -78,14 +83,14 @@ class ExpertSystemImpl implements ExpertSystem {
     }
 
     @Override
-    public void addTags(Set<Tag> tags) {
-        for (Tag t : tags) {
+    public void addTags(final Set<Tag> tags) {
+        for (final Tag t : tags) {
             addTag(t);
         }
     }
 
     @Override
-    public boolean addTag(Tag tag) {
+    public boolean addTag(final Tag tag) {
         if (tag instanceof Rule) {
             return addReadyRule((Rule) tag);
         } else if (tag instanceof Fact) {
@@ -97,27 +102,27 @@ class ExpertSystemImpl implements ExpertSystem {
     }
 
     @Override
-    public boolean addReadyRule(Rule rule) {
+    public boolean addReadyRule(final Rule rule) {
         return readyRules.add(rule);
     }
 
     @Override
-    public boolean removeReadyRule(Rule rule) {
+    public boolean removeReadyRule(final Rule rule) {
         return readyRules.remove(rule);
     }
 
     @Override
-    public boolean addFact(Fact fact) {
+    public boolean addFact(final Fact fact) {
         return facts.add(fact);
     }
 
     @Override
-    public boolean removeFact(Fact fact) {
+    public boolean removeFact(final Fact fact) {
         return facts.remove(fact);
     }
 
     @Override
-    public boolean addRecommendation(Recommendation rec) {
+    public boolean addRecommendation(final Recommendation rec) {
         return recommendations.add(rec);
     }
 

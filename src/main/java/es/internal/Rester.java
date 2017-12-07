@@ -5,14 +5,17 @@ import java.util.Set;
 import com.google.inject.assistedinject.Assisted;
 import tags.Rule;
 
+/**
+ * Rests the ES, generating merged rules.
+ */
 class Rester {
-    private Set<Rule> readyRules;
-    private RuleMerger ruleMerger;
+    private final Set<Rule> readyRules;
+    private final RuleMerger ruleMerger;
 
     @Inject
-    public Rester(
-            @Assisted("readyRules") Set<Rule> readyRules,
-            RuleMerger ruleMerger) {
+    Rester(
+            @Assisted("readyRules") final Set<Rule> readyRules,
+            final RuleMerger ruleMerger) {
         this.readyRules = readyRules;
         this.ruleMerger = ruleMerger;
     }
@@ -26,7 +29,7 @@ class Rester {
      * @param numberOfCycles how many cycles over the rule-set to attempt to
      *                       merge
      */
-    void rest(int numberOfCycles) {
+    void rest(final int numberOfCycles) {
         for (int i = 0; i < numberOfCycles; i++) {
             ruleMerger.makeMergedRule(readyRules).ifPresent(readyRules::add);
         }

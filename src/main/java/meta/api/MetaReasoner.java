@@ -1,7 +1,7 @@
 package meta.api;
 
 /**
- * Created by Sean on 10/13/2017.
+ * The Meta Reasoner (META).
  */
 public interface MetaReasoner {
 }

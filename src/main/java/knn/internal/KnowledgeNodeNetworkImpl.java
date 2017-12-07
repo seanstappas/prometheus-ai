@@ -17,28 +17,32 @@ import knn.api.KnowledgeNode;
 import knn.api.KnowledgeNodeNetwork;
 import tags.Tag;
 
+/**
+ * Implementation of the KNN.
+ */
 class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
-    private Map<Tag, KnowledgeNode> mapKN;
-    private Set<Tag> activeTags;
-    private TreeSet<KnowledgeNode> ageSortedKNs;
+    private final Map<Tag, KnowledgeNode> mapKN;
+    private final Set<Tag> activeTags;
+    private final TreeSet<KnowledgeNode> ageSortedKNs;
 
-    private DirectSearcher directSearcher;
-    private ForwardSearcher forwardSearcher;
-    private BackwardSearcher backwardSearcher;
-    private LambdaSearcher lambdaSearcher;
+    private final DirectSearcher directSearcher;
+    private final ForwardSearcher forwardSearcher;
+    private final BackwardSearcher backwardSearcher;
+    private final LambdaSearcher lambdaSearcher;
 
     @Inject
-    public KnowledgeNodeNetworkImpl(
-            @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
-            @Assisted("activeTags") Set<Tag> activeTags,
-            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs,
-            @Assisted("backwardSearchMatchRatio")
-                    double backwardSearchMatchRatio,
-            @Assisted("backwardSearchAgeLimit") long backwardSearchAgeLimit,
-            DirectSearcherFactory directSearcherFactory,
-            ForwardSearcherFactory forwardSearcherFactory,
-            BackwardSearcherFactory backwardSearcherFactory,
-            LambdaSearcherFactory lambdaSearcherFactory) {
+    KnowledgeNodeNetworkImpl(
+            @Assisted("mapKN") final Map<Tag, KnowledgeNode> mapKN,
+            @Assisted("activeTags") final Set<Tag> activeTags,
+            @Assisted("ageSortedKNs") final TreeSet<KnowledgeNode> ageSortedKNs,
+            @Assisted("backwardSearchMatchRatio") final
+            double backwardSearchMatchRatio,
+            @Assisted("backwardSearchAgeLimit")
+            final long backwardSearchAgeLimit,
+            final DirectSearcherFactory directSearcherFactory,
+            final ForwardSearcherFactory forwardSearcherFactory,
+            final BackwardSearcherFactory backwardSearcherFactory,
+            final LambdaSearcherFactory lambdaSearcherFactory) {
         this.mapKN = mapKN;
         this.activeTags = activeTags;
         this.ageSortedKNs = ageSortedKNs;
@@ -65,38 +69,38 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public void addKnowledgeNode(KnowledgeNode kn) {
+    public void addKnowledgeNode(final KnowledgeNode kn) {
         mapKN.put(kn.getInputTag(), kn);
         ageSortedKNs.add(kn);
     }
 
     @Override
     public void deleteExpiredKnowledgeNodes() {
-        Set<Tag> tagsToDelete = new HashSet<>();
-        for (KnowledgeNode kn : mapKN.values()) {
+        final Set<Tag> tagsToDelete = new HashSet<>();
+        for (final KnowledgeNode kn : mapKN.values()) {
             if (kn.isExpired()) {
                 tagsToDelete.add(kn.getInputTag());
                 ageSortedKNs.remove(kn);
             }
         }
-        for (Tag t : tagsToDelete) {
+        for (final Tag t : tagsToDelete) {
             mapKN.remove(t);
             activeTags.remove(t);
         }
     }
 
     @Override
-    public void deleteKnowledgeNode(Tag tag) {
+    public void deleteKnowledgeNode(final Tag tag) {
         mapKN.remove(tag);
     }
 
     @Override
-    public void addActiveTag(Tag tag) {
+    public void addActiveTag(final Tag tag) {
         activeTags.add(tag);
     }
 
     @Override
-    public void addActiveTags(Tag... tags) {
+    public void addActiveTags(final Tag... tags) {
         activeTags.addAll(Arrays.asList(tags));
     }
 
@@ -106,7 +110,7 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public KnowledgeNode getKnowledgeNode(Tag tag) {
+    public KnowledgeNode getKnowledgeNode(final Tag tag) {
         return mapKN.get(tag);
     }
 
@@ -116,77 +120,75 @@ class KnowledgeNodeNetworkImpl implements KnowledgeNodeNetwork {
     }
 
     @Override
-    public Set<Tag> directSearch(Tag inputTag) {
+    public Set<Tag> directSearch(final Tag inputTag) {
         return directSearcher.search(inputTag);
     }
 
     @Override
-    public Set<Tag> forwardSearch(Set<Tag> inputTags, int ply) {
+    public Set<Tag> forwardSearch(final Set<Tag> inputTags, final int ply) {
         return forwardSearcher.search(inputTags, ply);
     }
 
     @Override
-    public Set<Tag> forwardThink(int ply) {
+    public Set<Tag> forwardThink(final int ply) {
         return forwardSearcher.search(activeTags, ply);
     }
 
     @Override
-    public Set<Tag> backwardSearch(Set<Tag> inputTags, int ply) {
+    public Set<Tag> backwardSearch(final Set<Tag> inputTags, final int ply) {
         return backwardSearcher.search(inputTags, ply);
     }
 
     @Override
-    public Set<Tag> backwardThink(int ply) {
+    public Set<Tag> backwardThink(final int ply) {
         return backwardSearcher.search(activeTags, ply);
     }
 
     @Override
-    public void setBackwardSearchMatchRatio(double ratio) {
-        backwardSearcher.setMatchRatio(ratio);
+    public void setBackwardSearchMatchRatio(final double ratio) {
+        backwardSearcher.setPartialMatchRatio(ratio);
     }
 
     @Override
-    public Set<Tag> lambdaSearch(Set<Tag> inputTags, int ply) {
+    public Set<Tag> lambdaSearch(final Set<Tag> inputTags, final int ply) {
         return lambdaSearcher.search(inputTags, ply);
     }
 
     @Override
-    public Set<Tag> lambdaThink(int ply) {
+    public Set<Tag> lambdaThink(final int ply) {
         return lambdaSearcher.search(activeTags, ply);
     }
 
     @Override
-    public List<KnowledgeNode> loadData(String filename) {
-        List<KnowledgeNode> knowledgeNodes = new ArrayList<>();
+    public List<KnowledgeNode> loadData(final String filename) {
+        final List<KnowledgeNode> knowledgeNodes = new ArrayList<>();
         resetEmpty();
         try {
-            BufferedReader br = new BufferedReader(
+            final BufferedReader br = new BufferedReader(
                     new InputStreamReader(new FileInputStream(filename),
                             "UTF-8"));
             String line;
             while ((line = br.readLine()) != null) {
-                String[] info = line.split(";\\s+");
-                KnowledgeNode kn = new KnowledgeNode(info);
+                final String[] info = line.split(";\\s+");
+                final KnowledgeNode kn = new KnowledgeNode(info);
                 knowledgeNodes.add(kn);
             }
             br.close();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 
-        for (KnowledgeNode knowledgeNode : knowledgeNodes) {
+        for (final KnowledgeNode knowledgeNode : knowledgeNodes) {
             addKnowledgeNode(knowledgeNode);
         }
         return knowledgeNodes;
     }
 
     @Override
-    public void reset(String dbFilename) {
-        // TODO: Reset the KNN from a database.
+    public void reset(final String dbFilename) {
     }
 
     @Override
-    public void save(String dbFilename) {
-        // TODO: Save the KNN to a database.
+    public void save(final String dbFilename) {
     }
 }

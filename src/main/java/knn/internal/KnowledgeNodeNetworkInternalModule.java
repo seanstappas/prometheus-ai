@@ -5,7 +5,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import knn.api.KnowledgeNodeNetwork;
 import knn.api.KnowledgeNodeNetworkFactory;
 
-public class KnowledgeNodeNetworkInternalModule extends AbstractModule {
+/**
+ * The internal Guice module for the KNN.
+ */
+public final class KnowledgeNodeNetworkInternalModule extends AbstractModule {
+    @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
                 .implement(KnowledgeNodeNetwork.class,

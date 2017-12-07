@@ -5,7 +5,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import meta.api.MetaReasoner;
 import meta.api.MetaReasonerFactory;
 
-public class MetaReasonerInternalModule extends AbstractModule {
+/**
+ * Internal Guice module for the META.
+ */
+public final class MetaReasonerInternalModule extends AbstractModule {
+    @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
                 .implement(MetaReasoner.class, MetaReasonerImpl.class)

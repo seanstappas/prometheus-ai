@@ -1,35 +1,35 @@
 package graphing;
 
-import tags.Tag;
-
 import java.text.MessageFormat;
 import java.util.Set;
+import tags.Tag;
 
 class KnnLambdaThinkVisualizer extends KnnGraphVisualizer {
     private boolean swap = true;
     private Set<Tag> backwardTags;
 
     @Override
-    String getScreenshotSavePath(String suffix) {
-        return MessageFormat.format("graphs/knn/lambda/knn_lambda_think_{0}", suffix);
+    String getScreenshotSavePath(final String suffix) {
+        return MessageFormat
+                .format("graphs/knn/lambda/knn_lambda_think_{0}", suffix);
     }
 
     @Override
     Set<Tag> search() {
-        knn.setBackwardSearchMatchRatio(1d / knn.getActiveTags().size());
+        getKnn().setBackwardSearchMatchRatio(
+                1d / getKnn().getActiveTags().size());
 
         if (swap) {
-            backwardTags = knn.backwardThink(1);
+            backwardTags = getKnn().backwardThink(1);
             swap = !swap;
             return backwardTags;
-        }
-        else {
+        } else {
             swap = true;
-            return knn.forwardSearch(backwardTags, 1);
+            return getKnn().forwardSearch(backwardTags, 1);
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(final String[] args) throws InterruptedException {
         new KnnLambdaThinkVisualizer().visualize(false);
     }
 }

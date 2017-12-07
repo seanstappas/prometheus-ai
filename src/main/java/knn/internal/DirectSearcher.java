@@ -19,10 +19,11 @@ class DirectSearcher {
     private final TreeSet<KnowledgeNode> ageSortedKNs;
 
     @Inject
-    public DirectSearcher(
-            @Assisted("mapKN") Map<Tag, KnowledgeNode> mapKN,
-            @Assisted("activeTags") Set<Tag> activeTags,
-            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs) {
+    DirectSearcher(
+            @Assisted("mapKN") final Map<Tag, KnowledgeNode> mapKN,
+            @Assisted("activeTags") final Set<Tag> activeTags,
+            @Assisted("ageSortedKNs")
+            final TreeSet<KnowledgeNode> ageSortedKNs) {
         this.mapKN = mapKN;
         this.activeTags = activeTags;
         this.ageSortedKNs = ageSortedKNs;
@@ -34,12 +35,12 @@ class DirectSearcher {
      * @param inputTag the input Tag to search for
      * @return the activated output tags (excluding the given input Tag)
      */
-    Set<Tag> search(Tag inputTag) {
-        Set<Tag> activatedTags = new HashSet<>();
+    Set<Tag> search(final Tag inputTag) {
+        final Set<Tag> activatedTags = new HashSet<>();
         if (mapKN.containsKey(inputTag)) {
-            KnowledgeNode kn = mapKN.get(inputTag);
+            final KnowledgeNode kn = mapKN.get(inputTag);
             ageSortedKNs.remove(kn);
-            boolean fired = kn.excite();
+            final boolean fired = kn.excite();
             ageSortedKNs.add(kn);
             if (fired) {
                 activatedTags.addAll(kn.getOutputTags());

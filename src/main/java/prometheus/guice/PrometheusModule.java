@@ -7,7 +7,11 @@ import meta.guice.MetaReasonerModule;
 import nn.guice.NeuralNetworkModule;
 import prometheus.internal.PrometheusInternalModule;
 
-public class PrometheusModule extends AbstractModule {
+/**
+ * Public Guice module for Prometheus.
+ */
+public final class PrometheusModule extends AbstractModule {
+    @Override
     protected void configure() {
         install(new NeuralNetworkModule());
         install(new KnowledgeNodeNetworkModule());

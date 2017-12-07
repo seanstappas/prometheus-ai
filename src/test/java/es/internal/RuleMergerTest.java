@@ -1,14 +1,13 @@
 package es.internal;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import tags.Fact;
 import tags.Predicate;
 import tags.Rule;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -26,87 +25,73 @@ public class RuleMergerTest {
 
     @Test
     public void mustMakeEmptyRule() throws Exception {
-        Set<Rule> rules = new HashSet<>();
-        Rule rule1 = mock(Rule.class);
-        Rule rule2 = mock(Rule.class);
-        rules.add(rule1);
-        rules.add(rule2);
+        try {
+            final Set<Rule> rules = new HashSet<>();
 
-        Set<Fact> facts1 = new HashSet<>();
-        Fact fact1 = mock(Fact.class);
-        facts1.add(fact1);
+            final Set<Fact> facts1 = new HashSet<>();
+            final Fact fact1 = mock(Fact.class);
+            facts1.add(fact1);
 
 
-        Set<Fact> facts2 = new HashSet<>();
-        Fact fact2 = mock(Fact.class);
-        facts2.add(fact2);
+            final Set<Fact> facts2 = new HashSet<>();
+            final Fact fact2 = mock(Fact.class);
+            facts2.add(fact2);
 
-        Set<Predicate> predicates1 = new HashSet<>();
-        Fact p1 = mock(Fact.class);
-        predicates1.add(p1);
-
-
-        Set<Predicate> predicates2 = new HashSet<>();
-        Fact p2 = mock(Fact.class);
-        predicates2.add(p2);
-
-        // given
-        when(fact1.matches(p2)).thenReturn(false);
-        when(fact2.matches(p1)).thenReturn(false);
-
-        when(rule1.getInputFacts()).thenReturn(facts1);
-        when(rule1.getOutputPredicates()).thenReturn(predicates1);
-        when(rule2.getInputFacts()).thenReturn(facts2);
-        when(rule2.getOutputPredicates()).thenReturn(predicates2);
+            final Set<Predicate> predicates1 = new HashSet<>();
+            final Fact p1 = mock(Fact.class);
+            predicates1.add(p1);
 
 
-        // when
-        Optional<Rule> actual = ruleMerger.makeMergedRule(rules);
+            final Set<Predicate> predicates2 = new HashSet<>();
+            final Fact p2 = mock(Fact.class);
+            predicates2.add(p2);
 
-        // then
-        assertEquals(actual, Optional.empty());
+            // given
+            when(fact1.matches(p2)).thenReturn(false);
+            when(fact2.matches(p1)).thenReturn(false);
+
+            final Rule rule1 = new Rule(facts1, predicates1);
+            final Rule rule2 = new Rule(facts2, predicates2);
+            rules.add(rule1);
+            rules.add(rule2);
+
+
+            // when
+            final Optional<Rule> actual = ruleMerger.makeMergedRule(rules);
+
+            // then
+            assertEquals(actual, Optional.empty());
+
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void mustMakeMergedRule() throws Exception {
-        Set<Rule> rules = new HashSet<>();
-        Rule rule1 = mock(Rule.class);
-        Rule rule2 = mock(Rule.class);
-        rules.add(rule1);
-        rules.add(rule2);
-
-        Set<Fact> facts1 = new HashSet<>();
-        Fact fact1 = mock(Fact.class);
-        facts1.add(fact1);
-
-
-        Set<Fact> facts2 = new HashSet<>();
-        Fact fact2 = mock(Fact.class);
-        facts2.add(fact2);
-
-        Set<Predicate> predicates1 = new HashSet<>();
-        Fact p1 = mock(Fact.class);
-        predicates1.add(p1);
-
-
-        Set<Predicate> predicates2 = new HashSet<>();
-        Fact p2 = mock(Fact.class);
-        predicates2.add(p2);
+        final Set<Rule> rules = new HashSet<>();
+        final Set<Fact> facts1 = new HashSet<>();
+        final Set<Fact> facts2 = new HashSet<>();
+        final Set<Predicate> predicates1 = new HashSet<>();
+        final Set<Predicate> predicates2 = new HashSet<>();
 
         // given
-        when(p2.matches(fact1)).thenReturn(false);
-        when(fact1.matches(p2)).thenReturn(false);
+        final Fact fact1 = new Fact("P(A)");
+        facts1.add(fact1);
+        final Fact p1 = new Fact("P(B)");
+        predicates1.add(p1);
+        final Rule rule1 = new Rule(facts1, predicates1);
+        rules.add(rule1);
 
-        when(p1.matches(fact2)).thenReturn(true);
-        when(fact2.matches(p1)).thenReturn(true);
-
-        when(rule1.getInputFacts()).thenReturn(facts1);
-        when(rule1.getOutputPredicates()).thenReturn(predicates1);
-        when(rule2.getInputFacts()).thenReturn(facts2);
-        when(rule2.getOutputPredicates()).thenReturn(predicates2);
+        final Fact fact2 = new Fact("P(B)");
+        facts2.add(fact2);
+        final Fact p2 = new Fact("P(C)");
+        predicates2.add(p2);
+        final Rule rule2 = new Rule(facts2, predicates2);
+        rules.add(rule2);
 
         // when
-        Optional<Rule> actual = ruleMerger.makeMergedRule(rules);
+        final Optional<Rule> actual = ruleMerger.makeMergedRule(rules);
 
         // then
         assertNotEquals(actual, Optional.empty());

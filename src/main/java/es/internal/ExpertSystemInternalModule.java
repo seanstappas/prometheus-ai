@@ -5,7 +5,11 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import es.api.ExpertSystem;
 import es.api.ExpertSystemFactory;
 
-public class ExpertSystemInternalModule extends AbstractModule {
+/**
+ * Internal Guice module for the ES.
+ */
+public final class ExpertSystemInternalModule extends AbstractModule {
+    @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
                 .implement(ExpertSystem.class, ExpertSystemImpl.class)

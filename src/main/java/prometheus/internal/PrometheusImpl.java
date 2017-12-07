@@ -14,18 +14,21 @@ import nn.api.NeuralNetwork;
 import nn.api.NeuralNetworkFactory;
 import prometheus.api.Prometheus;
 
+/**
+ * Implementation of Prometheus AI.
+ */
 class PrometheusImpl implements Prometheus {
-    private NeuralNetwork nn;
-    private KnowledgeNodeNetwork knn;
-    private ExpertSystem es;
-    private MetaReasoner meta;
+    private final NeuralNetwork nn;
+    private final KnowledgeNodeNetwork knn;
+    private final ExpertSystem es;
+    private final MetaReasoner meta;
 
     @Inject
-    public PrometheusImpl(
-            NeuralNetworkFactory neuralNetworkFactory,
-            ExpertSystemFactory expertSystemFactory,
-            KnowledgeNodeNetworkFactory knowledgeNodeNetworkFactory,
-            MetaReasonerFactory metaReasonerFactory) {
+    PrometheusImpl(
+            final NeuralNetworkFactory neuralNetworkFactory,
+            final ExpertSystemFactory expertSystemFactory,
+            final KnowledgeNodeNetworkFactory knowledgeNodeNetworkFactory,
+            final MetaReasonerFactory metaReasonerFactory) {
         this.nn = neuralNetworkFactory.create();
         this.es = expertSystemFactory
                 .create(new HashSet<>(), new HashSet<>(), new HashSet<>(),

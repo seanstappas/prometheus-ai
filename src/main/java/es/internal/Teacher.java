@@ -10,16 +10,19 @@ import java.util.Set;
 import com.google.inject.assistedinject.Assisted;
 import tags.Rule;
 
+/**
+ * Teacher which creates Rules from natural language sentences.
+ */
 class Teacher {
     private static final Set<String> INPUT_TOKENS =
             new HashSet<>(Arrays.asList("if", "when", "while", "first"));
     private static final Set<String> OUTPUT_TOKENS =
             new HashSet<>(Arrays.asList("then", "next", "do"));
-    private Set<Rule> readyRules;
+    private final Set<Rule> readyRules;
 
     @Inject
-    public Teacher(
-            @Assisted("readyRules") Set<Rule> readyRules) {
+    Teacher(
+            @Assisted("readyRules") final Set<Rule> readyRules) {
         this.readyRules = readyRules;
     }
 
@@ -29,11 +32,11 @@ class Teacher {
      *
      * @param sentence the sentence to learn from
      */
-    void teach(String sentence) {
-        String[] tokens = sentence.split("\\s");
-        List<String> tokenList = new ArrayList<>();
+    void teach(final String sentence) {
+        final String[] tokens = sentence.split("\\s");
+        final List<String> tokenList = new ArrayList<>();
         tokenList.addAll(Arrays.asList(tokens));
-        int ruleIndices[] = findRuleIndices(tokenList);
+        final int[] ruleIndices = findRuleIndices(tokenList);
         makeTaughtRule(tokenList, ruleIndices[0], ruleIndices[1])
                 .ifPresent(readyRules::add);
     }
@@ -45,11 +48,11 @@ class Teacher {
      * @return the indices of the input and output tokens in the given token
      * list, respectively.
      */
-    private int[] findRuleIndices(List<String> tokenList) {
+    private int[] findRuleIndices(final List<String> tokenList) {
         int inputIndex = -1;
         int outputIndex = -1;
 
-        for (String token : tokenList) {
+        for (final String token : tokenList) {
             if (INPUT_TOKENS.contains(token.toLowerCase())) {
                 inputIndex = tokenList.indexOf(token);
             } else if (OUTPUT_TOKENS.contains(token.toLowerCase())) {
@@ -70,20 +73,22 @@ class Teacher {
      * @return an Optional object containing the taught rule if the given
      * indices are valid, otherwise an empty Optional object
      */
-    private Optional<Rule> makeTaughtRule(List<String> tokenList,
-                                          int inputIndex, int outputIndex) {
+    private Optional<Rule> makeTaughtRule(final List<String> tokenList,
+                                          final int inputIndex,
+                                          final int outputIndex) {
         if (inputIndex < outputIndex) {
-            String[] inputFacts = tokenList.subList(inputIndex + 1, outputIndex)
-                    .toArray(new String[0]);
-            String[] outputFacts =
+            final String[] inputFacts =
+                    tokenList.subList(inputIndex + 1, outputIndex)
+                            .toArray(new String[0]);
+            final String[] outputFacts =
                     tokenList.subList(outputIndex + 1, tokenList.size())
                             .toArray(new String[0]);
             return Optional.of(new Rule(inputFacts, outputFacts));
         } else if (inputIndex > outputIndex) {
-            String[] inputFacts =
+            final String[] inputFacts =
                     tokenList.subList(inputIndex + 1, tokenList.size())
                             .toArray(new String[0]);
-            String[] outputFacts =
+            final String[] outputFacts =
                     tokenList.subList(outputIndex + 1, inputIndex)
                             .toArray(new String[0]);
             return Optional.of(new Rule(inputFacts, outputFacts));

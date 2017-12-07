@@ -16,27 +16,29 @@ import tags.Recommendation;
 import tags.Rule;
 import tags.Tag;
 
-public class KnowledgeNode implements Comparable<KnowledgeNode> {
+/**
+ * The Knowledge Node.
+ */
+public final class KnowledgeNode implements Comparable<KnowledgeNode> {
     private static final long AGE_THRESHOLD = 1_000_000;
     private static final int ACTIVATION_INCREMENT = 100;
 
-    // Final fields
     private final Tag inputTag;
-    private final Set<Tag> outputTags;  // Integer is the value of confidence
+    private final Set<Tag> outputTags;
     private final int threshold;
-            // limit: When activation > threshold : fires output tags (outputFacts array). These tags can be lists of rules or facts.
-    private final int strength; // Which strength approach to take?
-    private final double maxAge;
+    private final double belief = 0;
+    private final int strength = 1;
 
-    // Modifiable fields
+    /**
+     * Age timestamp. Set to current UNIX time when node is newly formed.
+     */
     private long age = 0;
-            // Age timestamp. Set to current UNIX time when node is newly formed.
     private long initialAgeTimeStamp = System.currentTimeMillis();
-    private double belief = 0;
     private double activation = 0;
-            // int starts at 0 goes to 1 (can be sigmoid, or jump to 1). Increases when sees tag.
+    /**
+     * true when the KN has exceeded its age threshold.
+     */
     private boolean isExpired = false;
-            // true when the KN has exceeded its age threshold
 
     /**
      * Creates a Knowledge Node from Strings.
@@ -47,7 +49,7 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
      */
     @Inject
     public KnowledgeNode(
-            @Assisted("data") String[] data)
+            @Assisted("data") final String[] data)
             throws KnowledgeNodeParseException {
         this.outputTags = new HashSet<>();
 
@@ -75,12 +77,49 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
                         "Invalid output tag: {0}.", data[i]));
             }
         }
-        this.strength = 1;
-        this.maxAge = 60;
     }
 
+    public KnowledgeNode(final String data) throws KnowledgeNodeParseException {
+        this(data.split(";\\s+"));
+    }
+
+    public KnowledgeNode(
+            final Tag inputTag,
+            final Set<Tag> outputTags,
+            final int threshold) throws KnowledgeNodeParseException {
+        this.inputTag = inputTag;
+        this.outputTags = outputTags;
+        this.threshold = threshold;
+    }
+
+    /**
+     * @return the current age of the KN
+     */
     public long getCurrentAge() {
         return System.currentTimeMillis() - initialAgeTimeStamp;
+    }
+
+    /**
+     * @return the belief associated with the KN
+     */
+    public double getBelief() {
+        return belief;
+    }
+
+    /**
+     * @return true if the KN has been newly fired, i.e., it was not fired
+     * before this excitation
+     */
+    public boolean excite() {
+        if (age > AGE_THRESHOLD) {
+            isExpired = true;
+            return false;
+        } else {
+            updateAge();
+            final double oldActivation = activation;
+            activation += ACTIVATION_INCREMENT;
+            return oldActivation < threshold && isFired();
+        }
     }
 
     /**
@@ -91,47 +130,30 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
         initialAgeTimeStamp = System.currentTimeMillis();
     }
 
-    public double getBelief() {
-        return belief;
-    }
-
-    public void setBelief(double belief) {
-        this.belief = belief;
-    }
-
     /**
-     * @return true if the KN has been newly fired, i.e., it was not fired
-     * before this excitation.
+     * @return true if the KN is fired
      */
-    public boolean excite() {
-        if (age > AGE_THRESHOLD) {
-            isExpired = true;
-            return false;
-        } else {
-            updateAge();
-            double oldActivation = activation;
-            activation += ACTIVATION_INCREMENT;
-            return oldActivation < threshold && isFired();
-        }
-    }
-
     public boolean isFired() {
         return activation >= threshold;
     }
 
-    public double getActivation() {
-        return activation;
-    }
-
+    /**
+     * @return the input Tag of the KN
+     */
     public Tag getInputTag() {
         return inputTag;
     }
 
-
+    /**
+     * @return the output Tags of the KN
+     */
     public Set<Tag> getOutputTags() {
         return Collections.unmodifiableSet(outputTags);
     }
 
+    /**
+     * @return true if the KN is expired
+     */
     public boolean isExpired() {
         return isExpired;
     }
@@ -145,7 +167,7 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -154,12 +176,11 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
             return false;
         }
 
-        KnowledgeNode that = (KnowledgeNode) o;
+        final KnowledgeNode that = (KnowledgeNode) o;
 
         return new EqualsBuilder()
                 .append(threshold, that.threshold)
                 .append(strength, that.strength)
-                .append(maxAge, that.maxAge)
                 .append(age, that.age)
                 .append(belief, that.belief)
                 .append(activation, that.activation)
@@ -175,7 +196,6 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
                 .append(outputTags)
                 .append(threshold)
                 .append(strength)
-                .append(maxAge)
                 .append(age)
                 .append(belief)
                 .append(activation)
@@ -183,11 +203,10 @@ public class KnowledgeNode implements Comparable<KnowledgeNode> {
     }
 
     @Override
-    public int compareTo(KnowledgeNode o) {
+    public int compareTo(final KnowledgeNode o) {
         return new CompareToBuilder()
                 .append(this.age, o.age)
-                .append(this.hashCode(),
-                        o.hashCode()) // Prevents duplicate items in age-sorted set.
+                .append(this.hashCode(), o.hashCode())
                 .toComparison();
 
     }

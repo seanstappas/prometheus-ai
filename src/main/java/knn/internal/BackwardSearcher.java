@@ -20,12 +20,12 @@ class BackwardSearcher extends Searcher<Set<Tag>> {
     private long ageLimit;
 
     @Inject
-    public BackwardSearcher(
-            @Assisted("activeTags") Set<Tag> activeTags,
-            @Assisted("ageSortedKNs") TreeSet<KnowledgeNode> ageSortedKNs,
-            @Assisted("partialMatchRatio") double partialMatchRatio,
-            @Assisted("ageLimit") long ageLimit,
-            BackwardSearchMatcher backwardSearchMatcher) {
+    BackwardSearcher(
+            @Assisted("activeTags") final Set<Tag> activeTags,
+            @Assisted("ageSortedKNs") final TreeSet<KnowledgeNode> ageSortedKNs,
+            @Assisted("partialMatchRatio") final double partialMatchRatio,
+            @Assisted("ageLimit") final long ageLimit,
+            final BackwardSearchMatcher backwardSearchMatcher) {
         this.activeTags = activeTags;
         this.partialMatchRatio = partialMatchRatio;
         this.ageLimit = ageLimit;
@@ -33,24 +33,34 @@ class BackwardSearcher extends Searcher<Set<Tag>> {
         this.ageSortedKNs = ageSortedKNs;
     }
 
-    void setMatchRatio(double partialMatchRatio) {
+    /**
+     * Sets the partial match ratio for backward search.
+     *
+     * @param partialMatchRatio the partial match ratio
+     */
+    void setPartialMatchRatio(final double partialMatchRatio) {
         this.partialMatchRatio = partialMatchRatio;
     }
 
-    void setAgeLimit(long ageLimit) {
+    /**
+     * Sets the KN age limit for backward search.
+     *
+     * @param ageLimit the age limit
+     */
+    void setAgeLimit(final long ageLimit) {
         this.ageLimit = ageLimit;
     }
 
     @Override
-    public Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
-        Set<Tag> allActivatedTags = new HashSet<>();
+    public Set<Tag> searchInternal(final Set<Tag> inputTags, final double ply) {
+        final Set<Tag> allActivatedTags = new HashSet<>();
         Set<Tag> currentPlyInputTags = new HashSet<>(inputTags);
         for (int i = 0; i < ply && !currentPlyInputTags.isEmpty(); i++) {
-            int numRequiredMatches =
+            final int numRequiredMatches =
                     (int) (partialMatchRatio * currentPlyInputTags.size());
-            Set<Tag> activatedTags = new HashSet<>();
+            final Set<Tag> activatedTags = new HashSet<>();
             // Iterate over the KNs in order of increasing age
-            for (KnowledgeNode kn : ageSortedKNs) {
+            for (final KnowledgeNode kn : ageSortedKNs) {
                 if (kn.getCurrentAge() > ageLimit) { // Age limit reached.
                     break;
                 }

@@ -21,10 +21,10 @@ class BackwardSearchMatcher {
      * @return the activated input Tag of the KN if there is a match, otherwise
      * an empty Optional object.
      */
-    public Optional<Tag> match(Set<Tag> inputTags, KnowledgeNode kn,
-                               int numRequiredMatches) {
+    public Optional<Tag> match(final Set<Tag> inputTags, final KnowledgeNode kn,
+                               final int numRequiredMatches) {
         int matchCount = 0;
-        for (Tag t : inputTags) {
+        for (final Tag t : inputTags) {
             if (kn.getOutputTags().contains(t)) {
                 matchCount++;
             }

@@ -8,12 +8,12 @@ import java.util.HashMap;
 
 public class VariableReturn {
     /**
-     * True if two facts match
+     * True if two facts match.
      */
     private boolean factMatch;
     /**
      * `pairs` specifies a variable argument that may be replaced:
-     * k: name of argument to replace, v: argument to replace it with
+     * k: name of argument to replace, v: argument to replace it with.
      */
     private HashMap<String, Argument> pairs;
 
@@ -27,20 +27,35 @@ public class VariableReturn {
     }
 
 
-    public boolean isFactMatch() {
+    /**
+     * @return true if the Facts match
+     */
+    public final boolean isFactMatch() {
         return factMatch;
     }
 
-    public void setFactMatch(boolean factMatch) {
+    /**
+     * Sets if the Facts match.
+     *
+     * @param factMatch true if the Facts match
+     */
+    final void setFactMatch(final boolean factMatch) {
         this.factMatch = factMatch;
     }
 
-
-    public HashMap<String, Argument> getPairs() {
+    /**
+     * @return the pairs of the variable return
+     */
+    public final HashMap<String, Argument> getPairs() {
         return pairs;
     }
 
-    public void setPairs(HashMap<String, Argument> pairs) {
+    /**
+     * Sets the variable pairs.
+     *
+     * @param pairs the variable pairs
+     */
+    final void setPairs(final HashMap<String, Argument> pairs) {
         this.pairs = pairs;
     }
 }

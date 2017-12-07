@@ -13,16 +13,16 @@ class LambdaSearcher extends Searcher<Set<Tag>> {
     private final BackwardSearcher backwardSearcher;
 
     @Inject
-    public LambdaSearcher(
-            @Assisted ForwardSearcher forwardSearcher,
-            @Assisted BackwardSearcher backwardSearcher) {
+    LambdaSearcher(
+            @Assisted final ForwardSearcher forwardSearcher,
+            @Assisted final BackwardSearcher backwardSearcher) {
         this.forwardSearcher = forwardSearcher;
         this.backwardSearcher = backwardSearcher;
     }
 
     @Override
-    Set<Tag> searchInternal(Set<Tag> inputTags, double ply) {
-        Set<Tag> backwardTags = backwardSearcher.search(inputTags, ply);
+    Set<Tag> searchInternal(final Set<Tag> inputTags, final double ply) {
+        final Set<Tag> backwardTags = backwardSearcher.search(inputTags, ply);
         return forwardSearcher.search(backwardTags, ply);
     }
 }

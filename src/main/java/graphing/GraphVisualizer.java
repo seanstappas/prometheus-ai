@@ -9,22 +9,56 @@ import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
 
+/**
+ * Graph visualizer with multiple abstract methods.
+ */
 abstract class GraphVisualizer implements ViewerListener {
-    Graph graph;
-    boolean updated = false;
+    private Graph graph;
+    private boolean updated = false;
     private ViewerPipe fromViewer;
     private FileSinkSVG2 svgSink;
-
     private boolean loop = true;
 
+    /**
+     * @return the GraphStream graph object
+     */
+    public Graph getGraph() {
+        return graph;
+    }
+
+    /**
+     * Sets the graph to be updated.
+     *
+     * @param updated if the graph should be updated.
+     */
+    public void setUpdated(final boolean updated) {
+        this.updated = updated;
+    }
+
+    /**
+     * @return the path to the CSS stylesheet of the graph
+     */
     abstract String getStyleSheetPath();
 
+    /**
+     * @param suffix the suffix to apply to the screenshot path
+     * @return the screenshot path
+     */
     abstract String getScreenshotSavePath(String suffix);
 
+    /**
+     * @return the sleep delay between graph updates
+     */
     abstract int getSleepDelay();
 
+    /**
+     * Sets up the graph nodes.
+     */
     abstract void setupNodes();
 
+    /**
+     * @return if the graph was changed
+     */
     abstract boolean updateGraph();
 
     @Override
@@ -33,11 +67,13 @@ abstract class GraphVisualizer implements ViewerListener {
     @Override
     public abstract void buttonReleased(String id);
 
-    final void visualize() {
-        visualize(true);
-    }
-
-    final void visualize(boolean saveScreenshot) {
+    /**
+     * Visualize the graph.
+     *
+     * @param saveScreenshot true if the graph should be saved to screenshot at
+     *                       every iteration
+     */
+    final void visualize(final boolean saveScreenshot) {
         setupGraph();
         setupNodes();
         int iteration = 0;
@@ -60,6 +96,9 @@ abstract class GraphVisualizer implements ViewerListener {
         }
     }
 
+    /**
+     * Sets up the graph.
+     */
     private void setupGraph() {
         System.setProperty("org.graphstream.ui.renderer",
                 "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
@@ -70,18 +109,23 @@ abstract class GraphVisualizer implements ViewerListener {
         graph.setStrict(false);
         graph.addAttribute("ui.quality");
         graph.addAttribute("ui.antialias");
-        Viewer viewer = graph.display();
+        final Viewer viewer = graph.display();
         fromViewer = viewer.newViewerPipe();
         fromViewer.addViewerListener(this);
         fromViewer.addSink(graph);
         svgSink = new FileSinkSVG2();
     }
 
-    void saveScreenshot(String suffix) {
+    /**
+     * Saves the graph to a screenshot.
+     *
+     * @param suffix the suffix to apply to the screenshot.
+     */
+    void saveScreenshot(final String suffix) {
         try {
             svgSink.writeAll(graph, MessageFormat
                     .format("{0}.svg", getScreenshotSavePath(suffix)));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         graph.addAttribute("ui.screenshot",
@@ -89,7 +133,7 @@ abstract class GraphVisualizer implements ViewerListener {
     }
 
     @Override
-    public final void viewClosed(String viewName) {
+    public final void viewClosed(final String viewName) {
         loop = false;
     }
 }

@@ -1,21 +1,52 @@
 package tags;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Interface for Predicates (Implemented by Fact and Recommendation)
+ * Interface for Predicates (Implemented by Fact and Recommendation).
  */
-
 public abstract class Predicate extends Tag {
-    String predicateName;
-    List<Argument> arguments;
+    private String predicateName;
+    private List<Argument> arguments;
 
-    public abstract String getPredicateName();
-
-    public abstract List<Argument> getArguments();
-
+    /**
+     * @return a copy of the current Predicate
+     */
     abstract Predicate getPredicateCopy();
+
+    /**
+     * @return the predicate name
+     */
+    public final String getPredicateName() {
+        return predicateName;
+    }
+
+    /**
+     * Sets the predicate name.
+     *
+     * @param predicateName the predicate name
+     */
+    final void setPredicateName(final String predicateName) {
+        this.predicateName = predicateName;
+    }
+
+    /**
+     * @return the arguments
+     */
+    public final List<Argument> getArguments() {
+        return Collections.unmodifiableList(arguments);
+    }
+
+    /**
+     * Sets the arguments.
+     *
+     * @param arguments the arguments
+     */
+    final void setArguments(final List<Argument> arguments) {
+        this.arguments = arguments;
+    }
 
     /**
      * Returns a copy of the current Predicate with replaced variable
@@ -26,10 +57,10 @@ public abstract class Predicate extends Tag {
      * argument(s) with a String or Numeric Argument.
      */
     public Predicate replaceVariableArguments(
-            Map<String, Argument> pendingReplacementPairs) {
-        Predicate p = getPredicateCopy();
+            final Map<String, Argument> pendingReplacementPairs) {
+        final Predicate p = getPredicateCopy();
         int argumentIndex = 0;
-        for (Argument argument : p.arguments) {
+        for (final Argument argument : p.arguments) {
             if (pendingReplacementPairs.containsKey(argument.getName())) {
                 arguments.set(argumentIndex,
                         pendingReplacementPairs.get(argument.getName()));
