@@ -1,6 +1,5 @@
 language: java
 jdk:
   - oraclejdk8
-install: true
 script:
-  - mvn clean install jacoco:check checkstyle:check findbugs:check
+  - mvn clean verify
