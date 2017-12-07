@@ -1,5 +1,5 @@
 # Prometheus AI
-[![Build Status](https://travis-ci.com/seanstappas/prometheus-ai.svg?token=M6twmiyvmcf8gr3QqV6C&branch=master)](https://travis-ci.com/seanstappas/prometheus-ai)
+[![Build Status](https://travis-ci.org/seanstappas/prometheus-ai.svg?branch=master)](https://travis-ci.org/seanstappas/prometheus-ai)
 
 Prometheus AI model, containing the following layers:
 * [Neural Network (NN)](src/main/java/nn)
