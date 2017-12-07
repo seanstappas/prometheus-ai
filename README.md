@@ -12,7 +12,7 @@ The NN and META are basic skeletons at this point.
 ![knn_graph](graphs/knn/knn_new.png)
 
 ## Background
-For a basic overview of the theory behind Prometheus, see the reports provided in the [`reports` directory](reports). For further background on the theory of Prometheus, contact [Prof. Vybihal](http://www.cs.mcgill.ca/~jvybihal/).
+For a basic overview of the theory and design behind Prometheus, see the reports provided in the [`reports` directory](reports). For further background on the theory of Prometheus, contact [Prof. Vybihal](http://www.cs.mcgill.ca/~jvybihal/).
 
 ## Dependencies
 ### Java 8
