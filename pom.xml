@@ -65,7 +65,7 @@
                     </execution>
                     <execution>
                         <id>default-check</id>
-                        <phase>site</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
