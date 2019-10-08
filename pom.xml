@@ -12,6 +12,7 @@
     <artifactId>prometheus-ai</artifactId>
     <version>1.0</version>
     <build>
+        <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

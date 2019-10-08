@@ -49,3 +49,7 @@ Temporary Items
 *.iml
 
 *.class
+
+target/
+.attach*
+.idea/
