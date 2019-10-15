@@ -1,5 +1,0 @@
-/**
- * Expert System.
- */
-
-package es;
