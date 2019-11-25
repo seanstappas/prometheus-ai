@@ -38,6 +38,8 @@ public class LambdaSearcherTest {
         // when
         Set<Tag> activatedTags = lambdaSearcher.searchInternal(inputTags, ply);
 
+        System.out.println("\n**Lambda Search with Ply Test**");
+
         // then
         assertEquals(forwardTags, activatedTags);
     }

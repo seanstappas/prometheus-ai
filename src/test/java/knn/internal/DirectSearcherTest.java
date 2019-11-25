@@ -46,5 +46,7 @@ public class DirectSearcherTest {
         assertEquals(activatedTags, outputTags);
         assertTrue(activeTags.contains(inputTag));
         assertTrue(activeTags.containsAll(outputTags));
+
+        System.out.println("\n**Testing Direct Search with input and output tags**");
     }
 }

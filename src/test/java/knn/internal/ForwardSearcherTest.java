@@ -47,5 +47,6 @@ public class ForwardSearcherTest {
         // then
         assertEquals(expectedAllActivatedTags, actualAllActivatedTags);
         verify(directSearcher, times(4)).search(any(Tag.class));
+        System.out.println("**Test Froward Search with Ply test");
     }
 }

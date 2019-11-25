@@ -38,6 +38,8 @@ public class BackwardSearchMatcherTest {
 
         // then
         assertEquals(Optional.of(inputTag), actualTag);
+
+        System.out.println("\n**Testing Backward search with found match**");
     }
 
     @Test
@@ -58,5 +60,7 @@ public class BackwardSearchMatcherTest {
 
         // then
         assertEquals(Optional.empty(), actualTag);
+
+        System.out.println("\n**Testing Backward search with no match**");
     }
 }
