@@ -48,5 +48,7 @@ public class BackwardSearcherTest {
 
         // then
         assertTrue(allActivatedTags.contains(backwardSearchMatcherTag));
+
+        System.out.println("\n**Testing Backward Search with Ply Test**");
     }
 }

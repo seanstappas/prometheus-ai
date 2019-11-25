@@ -45,6 +45,8 @@ public class KnowledgeNodeNetworkTest {
 
         Set<Tag> actualActivatedTags = knn.forwardThink(1);
 
+        System.out.println("\n**Testing ForwardThink with Ply Test**");
+
         assertEquals(expectedActivatedTags, actualActivatedTags);
     }
 }
