@@ -33,9 +33,8 @@ public class DeleteKnowledgeNode {
     }
 
 
-
     @Test(expectedExceptions =  KnowledgeNodeParseException.class)
-    public void mustFailParsingKn() throws Exception{
+    public void deleteKN() throws Exception{
         System.out.println("**Test KnowledgeNode API-- delete existing node**");
         new KnowledgeNode("x");
         tags.Tag t1 = new Fact("P(A)");

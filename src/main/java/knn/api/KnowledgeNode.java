@@ -21,24 +21,24 @@ import tags.Tag;
  * The Knowledge Node.
  */
 public final class KnowledgeNode implements Comparable<KnowledgeNode> {
-    private static final long AGE_THRESHOLD = 1_000_000;
-    private static final int ACTIVATION_INCREMENT = 100;
-    private static final int DEFAULT_THRESHOLD = 100;
-    private static final int DEFAULT_BELIEF = 0;
-    private static final int DEFAULT_STRENGTH = 1;
+    public static final long AGE_THRESHOLD = 1_000_000;
+    public static final int ACTIVATION_INCREMENT = 100;
+    public static final int DEFAULT_THRESHOLD = 100;
+    public static final int DEFAULT_BELIEF = 0;
+    public static final int DEFAULT_STRENGTH = 1;
 
     private final Tag inputTag;
     private final Set<Tag> outputTags;
-    private final int threshold;
-    private final double belief;
-    private final int strength;
+    public final int threshold;
+    public final double belief;
+    public final int strength;
 
     /**
      * Age timestamp. Set to current UNIX time when node is newly formed.
      */
     private long age = 0;
     private long initialAgeTimeStamp = System.currentTimeMillis();
-    private double activation = 0;
+    public double activation = 0;
     /**
      * true when the KN has exceeded its age threshold.
      */
