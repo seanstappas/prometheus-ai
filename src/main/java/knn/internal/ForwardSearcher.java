@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import knn.api.KnowledgeNode;
 import tags.Tag;
 
 /**
@@ -21,6 +22,7 @@ class ForwardSearcher extends Searcher<Set<Tag>> {
 
     @Override
     Set<Tag> searchInternal(final Set<Tag> inputTags, final double ply) {
+        KnowledgeNode.incrementAgeGlobalCounter();
         final Set<Tag> allActivatedTags = new HashSet<>();
         Set<Tag> currentPlyInputTags = new HashSet<>(inputTags);
         for (int i = 0; i < ply && !currentPlyInputTags.isEmpty(); i++) {

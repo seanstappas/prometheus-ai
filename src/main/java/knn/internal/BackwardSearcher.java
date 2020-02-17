@@ -53,6 +53,7 @@ class BackwardSearcher extends Searcher<Set<Tag>> {
 
     @Override
     public Set<Tag> searchInternal(final Set<Tag> inputTags, final double ply) {
+        KnowledgeNode.incrementAgeGlobalCounter();
         final Set<Tag> allActivatedTags = new HashSet<>();
         Set<Tag> currentPlyInputTags = new HashSet<>(inputTags);
         for (int i = 0; i < ply && !currentPlyInputTags.isEmpty(); i++) {
