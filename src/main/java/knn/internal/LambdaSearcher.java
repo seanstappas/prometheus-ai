@@ -3,6 +3,7 @@ package knn.internal;
 import java.util.Set;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import knn.api.KnowledgeNode;
 import tags.Tag;
 
 /**
@@ -23,6 +24,7 @@ class LambdaSearcher extends Searcher<Set<Tag>> {
     @Override
     Set<Tag> searchInternal(final Set<Tag> inputTags, final double ply) {
         final Set<Tag> backwardTags = backwardSearcher.search(inputTags, ply);
+        KnowledgeNode.decrementAgeGlobalCounter();
         return forwardSearcher.search(backwardTags, ply);
     }
 }

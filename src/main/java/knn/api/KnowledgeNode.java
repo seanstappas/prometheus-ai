@@ -21,11 +21,14 @@ import tags.Tag;
  * The Knowledge Node.
  */
 public final class KnowledgeNode implements Comparable<KnowledgeNode> {
-    private static final long AGE_THRESHOLD = 1_000_000;
+    //private static final long AGE_THRESHOLD = 1_000_000;
     private static final int ACTIVATION_INCREMENT = 100;
     private static final int DEFAULT_THRESHOLD = 100;
     private static final int DEFAULT_BELIEF = 0;
     private static final int DEFAULT_STRENGTH = 1;
+    private static final int AGE_THRESHOLD = 60;
+
+    private static long globalAgeCounter = 0;
 
     private final Tag inputTag;
     private final Set<Tag> outputTags;
@@ -37,7 +40,7 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
      * Age timestamp. Set to current UNIX time when node is newly formed.
      */
     private long age = 0;
-    private long initialAgeTimeStamp = System.currentTimeMillis();
+    private long initialAgeCounter = globalAgeCounter;
     private double activation = 0;
     /**
      * true when the KN has exceeded its age threshold.
@@ -121,10 +124,29 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
     }
 
     /**
+     * increments the global age counter of all KN
+     */
+
+    public static void incrementAgeGlobalCounter() { globalAgeCounter++; }
+
+    /**
+     * decrements the global age counter of all KN
+     */
+
+    public static void decrementAgeGlobalCounter() { globalAgeCounter--; }
+
+    /**
+     * @return the age treshold of all KN
+     */
+    public static long getAgeTreshold() {
+        return AGE_THRESHOLD;
+    }
+
+    /**
      * @return the current age of the KN
      */
     public long getCurrentAge() {
-        return System.currentTimeMillis() - initialAgeTimeStamp;
+        return globalAgeCounter - initialAgeCounter;
     }
 
     /**
@@ -154,8 +176,8 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
      * Ages the current Knowledge Node.
      */
     private void updateAge() {
-        age = System.currentTimeMillis() - initialAgeTimeStamp;
-        initialAgeTimeStamp = System.currentTimeMillis();
+        age = globalAgeCounter - initialAgeCounter;
+        initialAgeCounter = globalAgeCounter;
     }
 
     /**
