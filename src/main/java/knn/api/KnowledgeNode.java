@@ -21,7 +21,6 @@ import tags.Tag;
  * The Knowledge Node.
  */
 public final class KnowledgeNode implements Comparable<KnowledgeNode> {
-    //private static final long AGE_THRESHOLD = 1_000_000;
     private static final int ACTIVATION_INCREMENT = 100;
     private static final int DEFAULT_THRESHOLD = 100;
     private static final int DEFAULT_BELIEF = 0;
@@ -126,13 +125,11 @@ public final class KnowledgeNode implements Comparable<KnowledgeNode> {
     /**
      * increments the global age counter of all KN
      */
-
     public static void incrementAgeGlobalCounter() { globalAgeCounter++; }
 
     /**
      * decrements the global age counter of all KN
      */
-
     public static void decrementAgeGlobalCounter() { globalAgeCounter--; }
 
     /**

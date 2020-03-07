@@ -28,7 +28,7 @@ class ForwardSearcher extends Searcher<Set<Tag>> {
         for (int i = 0; i < ply && !currentPlyInputTags.isEmpty(); i++) {
             final Set<Tag> activatedTags = new HashSet<>();
             for (final Tag t : currentPlyInputTags) {
-                final Set<Tag> directActivatedTags = directSearcher.search(t);
+                final Set<Tag> directActivatedTags = directSearcher.searchWithoutAging(t);
                 activatedTags.addAll(directActivatedTags);
             }
             allActivatedTags.addAll(activatedTags);
