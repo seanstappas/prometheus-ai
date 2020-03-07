@@ -53,8 +53,6 @@ public class KnowledgeNodeNetworkImplTest {
                 forwardSearcherFactory,
                 backwardSearcherFactory,
                 lambdaSearcherFactory);
-
-
     }
 
     @Test
@@ -70,8 +68,6 @@ public class KnowledgeNodeNetworkImplTest {
 
         // then
         assertEquals(outputTags, activatedTags);
-
-        System.out.println("**Testing DirectSearch**");
     }
 
     @Test
@@ -88,8 +84,6 @@ public class KnowledgeNodeNetworkImplTest {
 
         // then
         assertEquals(outputTags, activatedTags);
-
-        System.out.println("**Testing ForwardSearch with ply test**");
     }
 
     @Test
@@ -105,8 +99,6 @@ public class KnowledgeNodeNetworkImplTest {
 
         // then
         assertEquals(outputTags, activatedTags);
-
-        System.out.println("**Testing ForwardThink with ply test**");
     }
 
     @Test
@@ -123,8 +115,6 @@ public class KnowledgeNodeNetworkImplTest {
 
         // then
         assertEquals(outputTags, activatedTags);
-
-        System.out.println("**Testing BackwardSearch with ply test**");
     }
 
     @Test
@@ -140,8 +130,6 @@ public class KnowledgeNodeNetworkImplTest {
 
         // then
         assertEquals(outputTags, activatedTags);
-
-        System.out.println("**Testing BackwardThink with ply test**");
     }
 
     @Test
@@ -158,8 +146,6 @@ public class KnowledgeNodeNetworkImplTest {
 
         // then
         assertEquals(outputTags, activatedTags);
-
-        System.out.println("**Testing LambdaSearch with ply test**");
     }
 
     @Test
@@ -175,8 +161,6 @@ public class KnowledgeNodeNetworkImplTest {
 
         // then
         assertEquals(outputTags, activatedTags);
-
-        System.out.println("**Testing LambdaThink with ply test**");
     }
 
 }
