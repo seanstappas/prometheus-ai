@@ -30,7 +30,7 @@ public class ForwardSearchIntegrationTest {
 
 
     @BeforeTest
-    public void setup() {
+    public void setupKNN() {
         Prometheus prometheus = Guice.createInjector(new PrometheusModule()).getInstance(Prometheus.class);
         knn = prometheus.getKnowledgeNodeNetwork();
         directSearcher = mock(DirectSearcher.class);
@@ -38,7 +38,7 @@ public class ForwardSearchIntegrationTest {
     }
 
     @Test
-    public void setupKNN() throws KnowledgeNodeParseException {
+    public void mustForwardTest() throws KnowledgeNodeParseException {
         knn.loadData(PET_DATA_PATH);
         String[] info1 = {"Tiger(carnivore,length>50,weight>90)"};
         String[] info2 = {"@isTiger(danger,run)"};

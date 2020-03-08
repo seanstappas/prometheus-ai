@@ -40,7 +40,7 @@ public class ActivationTest {
      *
      */
     @Test
-    public void forwardSearchTest() {
+    public void forwardSearchActivationTest() {
         System.out.println("***Forward Search Activation Test***");
         Fact fact1 = new Fact("dog(wolflike,length>50,weight>20)");
         Fact fact2 = new Fact("cat(feline,length>50,weight>20)");
