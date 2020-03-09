@@ -36,16 +36,16 @@ public class ForwardSearcherTest {
         Set<Tag> expectedAllActivatedTags = new HashSet<>(Arrays.asList(t3, t4));
 
         // given
-        when(directSearcher.search(t1)).thenReturn(directActivatedTags1);
-        when(directSearcher.search(t2)).thenReturn(directActivatedTags2);
-        when(directSearcher.search(t3)).thenReturn(Collections.emptySet());
-        when(directSearcher.search(t4)).thenReturn(Collections.emptySet());
+        when(directSearcher.searchWithoutAging(t1)).thenReturn(directActivatedTags1);
+        when(directSearcher.searchWithoutAging(t2)).thenReturn(directActivatedTags2);
+        when(directSearcher.searchWithoutAging(t3)).thenReturn(Collections.emptySet());
+        when(directSearcher.searchWithoutAging(t4)).thenReturn(Collections.emptySet());
 
         // when
         Set<Tag> actualAllActivatedTags = forwardSearcher.searchInternal(inputTags, ply);
 
         // then
         assertEquals(expectedAllActivatedTags, actualAllActivatedTags);
-        verify(directSearcher, times(4)).search(any(Tag.class));
+        verify(directSearcher, times(4)).searchWithoutAging(any(Tag.class));
     }
 }

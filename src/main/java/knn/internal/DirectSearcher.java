@@ -36,6 +36,11 @@ class DirectSearcher {
      * @return the activated output tags (excluding the given input Tag)
      */
     Set<Tag> search(final Tag inputTag) {
+        KnowledgeNode.incrementAgeGlobalCounter();
+        return searchWithoutAging(inputTag);
+    }
+
+    Set<Tag> searchWithoutAging(final Tag inputTag) {
         final Set<Tag> activatedTags = new HashSet<>();
         if (mapKN.containsKey(inputTag)) {
             final KnowledgeNode kn = mapKN.get(inputTag);
