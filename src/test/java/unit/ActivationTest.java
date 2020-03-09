@@ -36,7 +36,7 @@ public class ActivationTest {
     }
 
     /**
-     * Test the forward Search of the Knowledge Node network
+     * Test the forward Search Activation of the Knowledge Node network
      *
      */
     @Test
@@ -78,11 +78,53 @@ public class ActivationTest {
 
 
         assertEquals(activeTags, expectedActiveTagsAndBeliefs.keySet());
+        /*
         for (Tag t : activeTags) {
             if (knn.getKnowledgeNode(t).activation >= knn.getKnowledgeNode(t).threshold){
                 System.out.println("**Activation successful for Forward Search**");
             }
+        }*/
+
+    }
+
+    /**
+     * Test the backward Search Activation of the Knowledge Node network
+     *
+     */
+    @Test
+    public void backwardSearchActivationTest() {
+        System.out.println("***Backward Search Activation Test***");
+        Fact fact1 = new Fact("calm(safe>5)");
+        Fact fact2 = new Fact("coward(scared,safe)");
+        knn.addActiveTags(fact1, fact2);
+
+        knn.setBackwardSearchMatchRatio(0.5);
+        knn.backwardThink(0);
+        Set<Tag> activeTags = knn.getActiveTags();
+        Map<Tag, Double> expectedActiveTagsAndBeliefs = new HashMap<>();
+        expectedActiveTagsAndBeliefs.put(fact1, 100.0);
+        expectedActiveTagsAndBeliefs.put(fact2, 100.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("fast(speed,dynamic)"), 40.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("fur(strands,insulator)"), 80.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("mammal(vertebrate,land)"), 80.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("bird(vertebrate,air)"), 30.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("feathers(floating,insulator,flight)"), 30.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("dog(wolflike,length>50,weight>20)"), 60.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("bark(sound,loud)"), 80.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("teeth(grind,food)"), 80.0);
+        expectedActiveTagsAndBeliefs.put(new Fact("cat(feline,length>50,weight>20)"), 80.0);
+
+        System.out.println("[KNN] Active tags after backward searching: " + activeTags);
+
+        assertEquals(activeTags, expectedActiveTagsAndBeliefs.keySet());
+        for (Tag t : activeTags) {
+            assertEquals(knn.getKnowledgeNode(t).getBelief(), 0d);
+            System.out.println("activation: ");
+            System.out.println(knn.getKnowledgeNode(t).activation);
+            System.out.println("threshold:");
+            System.out.println(knn.getKnowledgeNode(t).threshold);
         }
+        System.out.println("");
 
     }
 
